@@ -1,0 +1,34 @@
+{
+	"folders": [
+		{
+			"name": "GEM Platform",
+			"path": "."
+		}
+	],
+	"extensions": {
+		"recommendations": [
+			"ms-python.python",
+			"mubaidr.vuejs-extension-pack",
+			"msjsdiag.debugger-for-chrome",
+			"mikestead.dotenv",
+			"PeterJausovec.vscode-docker",
+			"aaron-bond.better-comments"
+		]
+	},
+	"settings": {
+		"python.pythonPath": "/usr/local/bin/python3",
+    	"python.linting.enabled": true,
+		"prettier.eslintIntegration": true,
+		"eslint.autoFixOnSave": true,
+		"eslint.validate": [
+			{
+				"autoFix": true,
+				"language": "javascript"
+			},
+			{
+				"autoFix": true,
+				"language": "vue"
+			}
+		]
+	}
+}

@@ -1,0 +1,31 @@
+<template>
+  <component :is="controlType"/>
+</template>
+
+<script>
+import AcquaintanceView from './stages/views/AcquaintanceView.vue';
+import ConnectedView from './stages/views/ConnectedView.vue';
+import BallotView from './stages/views/BallotView.vue';
+import BallotResultsView from './stages/views/BallotResultsView.vue';
+import CommentsView from './stages/views/CommentsView.vue';
+import DiscussionView from './stages/views/DiscussionView.vue';
+
+export default {
+  name: 'StageViewPresenter',
+  components: {
+    ConnectedView,
+    AcquaintanceView,
+    BallotView,
+    BallotResultsView,
+    CommentsView,
+    DiscussionView,
+  },
+  computed: {
+    controlType() {
+      const stage = this.$store.getters.meetingStageType;
+      const shortType = stage.replace('Stage', '');
+      return `${shortType}View`;
+    },
+  },
+};
+</script>
