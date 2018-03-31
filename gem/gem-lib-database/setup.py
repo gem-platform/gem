@@ -8,11 +8,11 @@ setup(name='gem_database',
       author_email='advaita.krishna.das@gmail.com',
       license='MIT',
       packages=['gem', 'gem.db'],
-      #setup_requires=[
+      # setup_requires=[
       #    'pytest-runner'
-      #],
+      # ],
       install_requires=[
-          'pymongo',
+          'mongoengine',
       ],
       tests_require=[
           'pytest'

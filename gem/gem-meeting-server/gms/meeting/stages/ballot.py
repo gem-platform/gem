@@ -35,7 +35,7 @@ class BallotMeetingStage(MeetingStage):
         Returns:
             float -- Progress in percents.
         """
-        # it's imposible to calculate percentage without context
+        # it's impossible to calculate percentage without context
         # (we need: users online) so raise an exception
         if not self.meeting.context:
             raise Exception("No context provided")
