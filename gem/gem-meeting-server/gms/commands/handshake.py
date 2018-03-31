@@ -24,7 +24,7 @@ def disconnect(context, sid):
 
 def handshake(context, sid, data):
     """Handshake message received."""
-    logging.info("Handshake recieved from '%s'", sid)
+    logging.info("Handshake received from '%s'", sid)
 
     # find user by specified credentials
     token = data.get("token", None)
@@ -49,7 +49,7 @@ def handshake(context, sid, data):
         "message": "Welcome, {}!".format(user.name),
         "state": meeting_state,
         "user": {
-            "id": user.id,
+            "id": str(user.id),
             "name": user.name,
         }
     }

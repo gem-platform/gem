@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import AgendaView from './stages/views/AgendaView.vue';
 import AcquaintanceView from './stages/views/AcquaintanceView.vue';
 import ConnectedView from './stages/views/ConnectedView.vue';
 import BallotView from './stages/views/BallotView.vue';
@@ -13,6 +14,7 @@ import DiscussionView from './stages/views/DiscussionView.vue';
 export default {
   name: 'StageViewPresenter',
   components: {
+    AgendaView,
     ConnectedView,
     AcquaintanceView,
     BallotView,

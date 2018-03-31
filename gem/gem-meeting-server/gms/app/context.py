@@ -75,7 +75,7 @@ class Context:
         """
         # todo: token != user_id
         allowed_users = self.__meeting.allowed_users
-        users = filter(lambda x: x.id == token, allowed_users)
+        users = filter(lambda x: str(x.id) == token, allowed_users)
         users = list(users)
         if len(users) == 1:
             return users[0]

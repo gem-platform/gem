@@ -1,4 +1,4 @@
-"""Restarts application if any file chaged."""
+"""Restarts application if any file changed."""
 import time
 
 from watchdog.events import PatternMatchingEventHandler
@@ -33,7 +33,7 @@ class MyHandler(PatternMatchingEventHandler):
 
 if __name__ == "__main__":
     restart()
-    
+
     event_handler = MyHandler()
     observer = Observer()
     observer.schedule(event_handler, path='.', recursive=True)

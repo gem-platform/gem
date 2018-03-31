@@ -5,7 +5,7 @@ class MeetingSerializer:
     """Meeting model serializer."""
 
     def __init__(self):
-        """Initiallizes new instance of the MeetingSerializer class."""
+        """Initializes new instance of the MeetingSerializer class."""
         self.__stage_serializer = MeetingStageSerializer()
         # todo: proposal serializer
         # todo: user serializer
@@ -32,11 +32,11 @@ class MeetingSerializer:
         # convert array of proposals to dict keyed by proposal id
         # [proposal1, proposal2] -> { proposal1.id: proposal, ...}
         # reason: it's easy to access by id on client
-        proposals = {p.id: p for p in meeting.proposals}
+        proposals = {str(p.id): p for p in meeting.proposals}
         proposals = {k: self.__map_proposal(v) for k, v in proposals.items()}
 
         # convert array of users to dict keyed by user id
-        users = {u.id: self.__map_user(u) for u in meeting.allowed_users}
+        users = {str(u.id): self.__map_user(u) for u in meeting.allowed_users}
 
         # return list of all stages with theirs current states
         # list of proposals used in current meeting
@@ -62,7 +62,7 @@ class MeetingSerializer:
 
     def __map_user(self, user):
         return {
-            "id": user.id,
+            "id": str(user.id),
             "name": user.name
         }
 
@@ -72,7 +72,7 @@ class MeetingStageSerializer:
 
     def __init__(self):
         """Initialize new instance of the MeetingStageSerializer class."""
-        self.__selrializers = {
+        self.__serializers = {
             "AgendaMeetingStage": AgendaMeetingStageSerializer(),
             "AcquaintanceMeetingStage": AcquaintanceMeetingStageSerializer(),
             "BallotMeetingStage": BallotMeetingStageSerializer(),
@@ -83,7 +83,7 @@ class MeetingStageSerializer:
 
     def serialize(self, stage):
         stage_type = stage.__class__.__name__
-        serializer = self.__selrializers.get(stage_type, None)
+        serializer = self.__serializers.get(stage_type, None)
         if serializer:
             return serializer.serialize(stage)
         return None
@@ -95,7 +95,7 @@ class AcquaintanceMeetingStageSerializer:
     def serialize(self, stage):
         return {
             "type": "AcquaintanceStage",
-            "proposalId": stage.group.proposal.id
+            "proposalId": str(stage.group.proposal.id)
         }
 
 
@@ -112,7 +112,7 @@ class BallotMeetingStageSerializer:
         return {
             "type": "BallotStage",
             "progress": stage.progress,
-            "proposalId": stage.group.proposal.id
+            "proposalId": str(stage.group.proposal.id)
         }
 
 
@@ -121,7 +121,7 @@ class BallotResultsMeetingStageSerializer:
         return {
             "type": "BallotResultsStage",
             "votes": stage.ballot.votes,
-            "proposalId": stage.group.proposal.id
+            "proposalId": str(stage.group.proposal.id)
         }
 
 
@@ -131,7 +131,7 @@ class CommentsMeetingStageSerializer:
         return {
             "type": "CommentsStage",
             "comments": list(comments),
-            "proposalId": stage.group.proposal.id
+            "proposalId": str(stage.group.proposal.id)
         }
 
     @staticmethod
@@ -154,5 +154,5 @@ class DiscussionMeetingStageSerializer:
             "type": "DiscussionStage",
             "queue": list(user_ids),
             "speaker": speaker_id,
-            "proposalId": stage.group.proposal.id
+            "proposalId": str(stage.group.proposal.id)
         }
