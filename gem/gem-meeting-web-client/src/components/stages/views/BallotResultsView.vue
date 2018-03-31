@@ -15,16 +15,18 @@ export default {
       const { users } = this.$store.getters;
       const voteKeys = Object.keys(votes);
       const result = voteKeys.map(x => ({
-        name: users[x].name, value: votes[x], all: users[x],
+        name: users[x].name,
+        value: votes[x],
+        all: users[x]
       }));
       return result;
     },
     columns() {
       return [
         { field: 'name', label: 'Name' },
-        { field: 'value', label: 'Value', width: '100' },
+        { field: 'value', label: 'Value', width: '100' }
       ];
-    },
-  },
+    }
+  }
 };
 </script>

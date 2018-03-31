@@ -17,13 +17,13 @@ export default {
       const { speaker } = this.$store.getters.meetingStageState;
       const { users } = this.$store.getters;
       return users[speaker];
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
 .speaker-name {
-  font-size: 350%
+  font-size: 350%;
 }
 </style>

@@ -7,7 +7,7 @@ describe('MeetingScreenTopPanel.vue', () => {
   it('displays specified message', () => {
     wrapper.setProps({
       title: 'Test Proposal',
-      subtitle: 'Discussion',
+      subtitle: 'Discussion'
     });
     expect(wrapper.find('.title').text()).toBe('Test Proposal');
     expect(wrapper.find('.subtitle').text()).toBe('Discussion');

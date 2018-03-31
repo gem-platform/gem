@@ -3,7 +3,7 @@ export default {
     stageIndex: -1, // current stage number
     stages: {}, // stages states keyed by index
     proposals: {}, // proposals keyed by proposalId
-    users: {}, // list of users keyed by Id
+    users: {} // list of users keyed by Id
   },
   mutations: {
     setStageIndex(state, index) {
@@ -23,7 +23,7 @@ export default {
     },
     setUserData(state, data) {
       state.user = data;
-    },
+    }
   },
   actions: {
     meetingStage(context, data) {
@@ -45,7 +45,7 @@ export default {
     },
     user(context, user) {
       context.commit('setUserData', user);
-    },
+    }
   },
   getters: {
     meetingStageType(state) {
@@ -69,14 +69,17 @@ export default {
     },
     proposal(state) {
       // no meeting info received yet
-      if (!state.stages) { return undefined; }
-      if (!state.proposals) { return undefined; }
+      if (!state.stages || !state.proposals) {
+        return undefined;
+      }
 
       const { stageIndex } = state;
       const stage = state.stages[stageIndex];
       const { proposalId } = stage;
 
-      if (!proposalId) { return undefined; }
+      if (!proposalId) {
+        return undefined;
+      }
 
       return state.proposals[proposalId];
     },
@@ -85,6 +88,6 @@ export default {
     },
     user(state) {
       return state.user;
-    },
-  },
+    }
+  }
 };

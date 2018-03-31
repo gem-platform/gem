@@ -20,13 +20,13 @@ export default {
         (success) => {
           resolve({
             message: success.message || options.success || 'Success',
-            success: true,
+            success: true
           });
         },
         (error) => {
           reject(new Error(error.message || options.fail || 'Fail'));
-        },
+        }
       );
     });
-  },
+  }
 };

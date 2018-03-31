@@ -5,7 +5,7 @@
       class="field">
       <p class="control is-expanded">
         <a
-          class="button is-large is-fullwidth is-light"
+          class="button is-fullwidth is-light"
           @click="changeMind">
           Accepted. Change mind.
         </a>
@@ -17,17 +17,17 @@
       class="field is-grouped is-grouped-multiline is-grouped-centered">
       <p class="control is-expanded">
         <a
-          class="button is-large is-success is-fullwidth"
+          class="button is-success is-fullwidth"
           @click="vote('yes')">Yes</a>
       </p>
       <p class="control is-expanded">
         <a
-          class="button is-large is-danger is-fullwidth"
+          class="button is-danger is-fullwidth"
           @click="vote('no')">No</a>
       </p>
       <p class="control is-expanded">
         <a
-          class="button is-large is-info is-fullwidth"
+          class="button is-info is-fullwidth"
           @click="vote('abstained')">Abstained</a>
       </p>
     </div>
@@ -41,12 +41,13 @@ export default {
   name: 'BallotStageControls',
   data() {
     return {
-      voteCommited: false,
+      voteCommited: false
     };
   },
   methods: {
     vote(value) {
-      com.send('vote', { value })
+      com
+        .send('vote', { value })
         .then(() => {
           this.notify('Your vote has been accepted');
           this.voteCommited = true;
@@ -58,7 +59,7 @@ export default {
     },
     notify(message, type) {
       this.$bus.emit('notification', { message, type: type || 'is-success' });
-    },
-  },
+    }
+  }
 };
 </script>

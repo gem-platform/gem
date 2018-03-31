@@ -68,49 +68,53 @@ export default {
     columns() {
       return [
         { field: 'name', label: 'Name' },
-        { field: 'id', label: 'Actions', width: '100' },
+        { field: 'id', label: 'Actions', width: '100' }
       ];
     },
     selfInQueue() {
       const { queue } = this.$store.getters.meetingStageState;
       const { user } = this.$store.getters;
       return queue.includes(user.id);
-    },
+    }
   },
   created() {
     com.set(this.$socket);
   },
   methods: {
     requestFloor() {
-      com.send('request_floor')
+      com
+        .send('request_floor')
         .then(() => this.notify('You have been added to the queue'))
         .catch(err => this.notify(err.message, 'is-danger'));
     },
     withdrawFromQueue() {
-      com.send('withdraw_from_queue')
+      com
+        .send('withdraw_from_queue')
         .then(() => this.notify('You have been removed from queue'))
         .catch(err => this.notify(err.message, 'is-danger'));
     },
     removeFromQueue(id) {
-      com.send('remove_from_queue', { id })
+      com
+        .send('remove_from_queue', { id })
         .then(() => this.notify('User have been removed from queue'))
         .catch(err => this.notify(err.message, 'is-danger'));
     },
     giveVoice(to) {
       const { name } = this.$store.getters.users[to];
-      com.send('give_voice', { to })
+      com
+        .send('give_voice', { to })
         .then(() => this.notify(`Voice have been given to ${name}`))
         .catch(err => this.notify(err.message, 'is-danger'));
     },
     notify(message, type) {
       this.$bus.emit('notification', { message, type: type || 'is-success' });
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style scoped>
 .speaker-name {
-  font-size: 350%
+  font-size: 350%;
 }
 </style>

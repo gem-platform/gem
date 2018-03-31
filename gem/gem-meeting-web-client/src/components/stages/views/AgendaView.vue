@@ -10,8 +10,10 @@ export default {
   computed: {
     content() {
       const { meetingStageState } = this.$store.getters;
-      return meetingStageState ? meetingStageState.content : 'No content provided';
-    },
-  },
+      return meetingStageState
+        ? meetingStageState.content
+        : 'No content provided';
+    }
+  }
 };
 </script>

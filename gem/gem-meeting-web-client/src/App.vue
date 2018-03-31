@@ -16,13 +16,13 @@ export default {
   name: 'GemPlatform',
   components: {
     MeetingScreen,
-    ConnectingScreen,
+    ConnectingScreen
   },
   computed: {
     screen() {
       const hs = this.$store.getters.handshake.success === true;
       return hs ? 'MeetingScreen' : 'ConnectingScreen';
-    },
+    }
   },
   created() {
     this.$bus.on('notification', this.snackbar);
@@ -30,8 +30,8 @@ export default {
   methods: {
     snackbar(data) {
       this.$snackbar.open(data);
-    },
-  },
+    }
+  }
 };
 </script>
 

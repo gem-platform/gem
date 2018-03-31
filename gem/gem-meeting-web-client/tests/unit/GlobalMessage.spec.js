@@ -12,7 +12,7 @@ describe('GlobalMessage.vue', () => {
   it('displays specified message', () => {
     wrapper.setProps({
       title: 'Handshake Error',
-      message: 'Wrong auth token',
+      message: 'Wrong auth token'
     });
     expect(wrapper.find('.title').text()).toBe('Handshake Error');
     expect(wrapper.find('.subtitle').text()).toBe('Wrong auth token');

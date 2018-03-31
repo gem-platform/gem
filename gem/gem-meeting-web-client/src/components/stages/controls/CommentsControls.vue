@@ -32,20 +32,21 @@ export default {
   data() {
     return {
       message: '',
-      mark: '+',
+      mark: '+'
     };
   },
   methods: {
     send() {
       const { message, mark } = this;
-      com.send('comment', { message, mark })
+      com
+        .send('comment', { message, mark })
         .then(() => this.notify('Your comment has been accepted'))
         .catch(err => this.notify(err.message || 'err', 'is-danger'));
       this.message = '';
     },
     notify(message, type) {
       this.$bus.emit('notification', { message, type: type || 'is-success' });
-    },
-  },
+    }
+  }
 };
 </script>

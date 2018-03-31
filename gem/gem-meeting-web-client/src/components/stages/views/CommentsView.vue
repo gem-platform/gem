@@ -17,9 +17,9 @@ export default {
       return [
         { field: 'user', label: 'Name' },
         { field: 'content', label: 'Value' },
-        { field: 'mark', label: 'Mark', width: '100' },
+        { field: 'mark', label: 'Mark', width: '100' }
       ];
-    },
-  },
+    }
+  }
 };
 </script>

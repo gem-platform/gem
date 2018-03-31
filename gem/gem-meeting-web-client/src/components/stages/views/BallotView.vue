@@ -13,7 +13,7 @@ export default {
   computed: {
     progress() {
       return this.$store.getters.meetingStageState.progress;
-    },
-  },
+    }
+  }
 };
 </script>

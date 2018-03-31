@@ -11,21 +11,28 @@ import GlobalMessage from '../GlobalMessage.vue';
 export default {
   name: 'ConnectingScreen',
   components: {
-    GlobalMessage,
+    GlobalMessage
   },
   computed: {
     title() {
       const { connection, handshake } = this.$store.getters;
 
-      if (connection.success === false) { return 'Connection failed'; }
-      if (handshake.success === false) { return 'Handshake failed'; }
+      if (connection.success === false) {
+        return 'Connection failed';
+      }
+      if (handshake.success === false) {
+        return 'Handshake failed';
+      }
 
       return 'Connecting';
     },
     message() {
       const { connection, handshake } = this.$store.getters;
-      return connection.message || handshake.message ||
-        'We are connecting you to session';
+      return (
+        connection.message ||
+        handshake.message ||
+        'We are connecting you to session'
+      );
     },
     type() {
       const { connection, handshake } = this.$store.getters;
@@ -35,7 +42,7 @@ export default {
       }
 
       return 'is-primary';
-    },
-  },
+    }
+  }
 };
 </script>

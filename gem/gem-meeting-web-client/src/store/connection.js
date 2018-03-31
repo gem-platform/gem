@@ -2,12 +2,12 @@ export default {
   state: {
     connection: {
       success: undefined,
-      message: undefined,
+      message: undefined
     },
     handshake: {
       success: undefined,
-      message: undefined,
-    },
+      message: undefined
+    }
   },
   mutations: {
     setConnectionState(state, value) {
@@ -21,7 +21,7 @@ export default {
     },
     setHandshakeMessage(state, value) {
       state.handshake.message = value;
-    },
+    }
   },
   actions: {
     setHandshakeState(context, data) {
@@ -31,7 +31,7 @@ export default {
     setConnectionState(context, data) {
       context.commit('setConnectionState', data.connected);
       context.commit('setConnectionMessage', data.message);
-    },
+    }
   },
   getters: {
     connection(state) {
@@ -39,6 +39,6 @@ export default {
     },
     handshake(state) {
       return state.handshake;
-    },
-  },
+    }
+  }
 };

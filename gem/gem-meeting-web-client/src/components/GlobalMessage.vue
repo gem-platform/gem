@@ -19,12 +19,12 @@ export default {
   props: {
     title: {
       type: String,
-      default: 'Error',
+      default: 'Error'
     },
     message: {
       type: String,
-      default: 'Some error occurred',
-    },
-  },
+      default: 'Some error occurred'
+    }
+  }
 };
 </script>

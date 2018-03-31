@@ -6,6 +6,6 @@
 
 <script>
 export default {
-  name: 'ConnectedStageView',
+  name: 'ConnectedStageView'
 };
 </script>

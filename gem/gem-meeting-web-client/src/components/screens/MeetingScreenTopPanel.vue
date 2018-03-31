@@ -16,18 +16,17 @@
 </template>
 
 <script>
-
 export default {
   name: 'MeetingScreenTopPanel',
   props: {
     title: {
       type: String,
-      required: true,
+      required: true
     },
     subtitle: {
       type: String,
-      default: '',
-    },
-  },
+      default: ''
+    }
+  }
 };
 </script>

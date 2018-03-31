@@ -43,15 +43,17 @@ import StageControlsPresenter from '../StageControlsPresenter.vue';
 import MeetingScreenTopPanel from './MeetingScreenTopPanel.vue';
 
 function humanReadableStageType(type) {
-  return {
-    ConnectedStage: 'Connected',
-    AcquaintanceStage: 'Acquaintance',
-    AgendaStage: 'Agenda',
-    BallotStage: 'Ballot',
-    BallotResultsStage: 'Ballot results',
-    DiscussionStage: 'Discussion',
-    CommentsStage: 'Comments',
-  }[type] || type;
+  return (
+    {
+      ConnectedStage: 'Connected',
+      AcquaintanceStage: 'Acquaintance',
+      AgendaStage: 'Agenda',
+      BallotStage: 'Ballot',
+      BallotResultsStage: 'Ballot results',
+      DiscussionStage: 'Discussion',
+      CommentsStage: 'Comments'
+    }[type] || type
+  );
 }
 
 export default {
@@ -60,18 +62,24 @@ export default {
     ControlPanel,
     StageViewPresenter,
     StageControlsPresenter,
-    MeetingScreenTopPanel,
+    MeetingScreenTopPanel
   },
   computed: {
     title() {
       const { meetingStageType, proposal } = this.$store.getters;
 
-      return proposal ? proposal.title : humanReadableStageType(meetingStageType);
+      return proposal
+        ? proposal.title
+        : humanReadableStageType(meetingStageType);
     },
     subtitle() {
       const type = this.$store.getters.meetingStageType;
-      if (type === 'AgendaStage') { return ''; }
-      if (type === 'ConnectedStage') { return ''; }
+      if (type === 'AgendaStage') {
+        return '';
+      }
+      if (type === 'ConnectedStage') {
+        return '';
+      }
       return humanReadableStageType(type);
     },
     hasProposal() {
@@ -82,22 +90,32 @@ export default {
     },
     hasStageControls() {
       const type = this.$store.getters.meetingStageType;
-      return ['AcquaintanceStage', 'BallotStage', 'CommentsStage', 'DiscussionStage'].includes(type);
+      return [
+        'AcquaintanceStage',
+        'BallotStage',
+        'CommentsStage',
+        'DiscussionStage'
+      ].includes(type);
     },
     hasStageView() {
       const type = this.$store.getters.meetingStageType;
-      return ['AgendaStage', 'BallotStage',
-        'BallotResultsStage', 'CommentsStage', 'DiscussionStage'].includes(type);
-    },
-  },
+      return [
+        'AgendaStage',
+        'BallotStage',
+        'BallotResultsStage',
+        'CommentsStage',
+        'DiscussionStage'
+      ].includes(type);
+    }
+  }
 };
 </script>
 
 <style scoped>
 .footer-control {
-   position: absolute;
-   bottom: 0px;
-   width: 100%;
-   background: #d4d4d4;
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  background: #d4d4d4;
 }
 </style>

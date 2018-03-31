@@ -15,7 +15,7 @@ export default {
     if (!token) {
       $store.dispatch('setHandshakeState', {
         success: false,
-        message: 'You are not logged in.',
+        message: 'You are not logged in.'
       });
       return;
     }
@@ -34,17 +34,19 @@ export default {
   },
   disconnect() {
     this.$store.dispatch('setConnectionState', {
-      connected: false, message: 'Connection lost',
+      connected: false,
+      message: 'Connection lost'
     });
   },
   connect_error() {
     this.$store.dispatch('setConnectionState', {
-      connected: false, message: 'Unable to connect',
+      connected: false,
+      message: 'Unable to connect'
     });
   },
   stage(data) {
     // information about the state of the stage has arrived.
     // { index: stageIndex, state: {} }
     this.$store.dispatch('meetingStage', data);
-  },
+  }
 };

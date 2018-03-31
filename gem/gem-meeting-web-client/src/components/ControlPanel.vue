@@ -18,15 +18,13 @@ import { mapGetters } from 'vuex';
 
 export default {
   name: 'ControlPanel',
-  computed: mapGetters([
-    'meetingStageType',
-  ]),
+  computed: mapGetters(['meetingStageType']),
   methods: {
     move(step) {
       const { stageIndex } = this.$store.getters;
       const nextStageIndex = stageIndex + step;
       this.$socket.emit('switch_stage', { index: nextStageIndex });
-    },
-  },
+    }
+  }
 };
 </script>

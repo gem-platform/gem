@@ -14,14 +14,14 @@ export default {
     AcquaintanceControls,
     BallotControls,
     CommentsControls,
-    DiscussionControls,
+    DiscussionControls
   },
   computed: {
     controlType() {
       const stage = this.$store.getters.meetingStageType;
       const shortType = stage.replace('Stage', '');
       return `${shortType}Controls`;
-    },
-  },
+    }
+  }
 };
 </script>
