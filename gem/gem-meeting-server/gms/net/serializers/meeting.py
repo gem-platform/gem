@@ -120,7 +120,7 @@ class BallotResultsMeetingStageSerializer:
     def serialize(self, stage):
         return {
             "type": "BallotResultsStage",
-            "votes": stage.ballot.votes,
+            "votes": {str(k): stage.ballot.votes[k] for k, v in stage.ballot.votes.items()},
             "proposalId": str(stage.group.proposal.id)
         }
 
