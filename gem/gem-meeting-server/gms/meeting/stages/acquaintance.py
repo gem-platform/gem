@@ -3,12 +3,12 @@
 from gms.meeting.stages import MeetingStage
 
 
-class AcquaitanceMeetingStage(MeetingStage):
-    """Acquaitance stage of the meeting."""
+class AcquaintanceMeetingStage(MeetingStage):
+    """Acquaintance stage of the meeting."""
 
     def __init__(self, group=None):
         """
-        Initialize new instance of the AcquaitanceMeetingStage class.
+        Initialize new instance of the AcquaintanceMeetingStage class.
 
         Keyword Arguments:
             group {StageGroup} -- Group of the stage. (default: {None})

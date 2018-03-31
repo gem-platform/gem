@@ -74,7 +74,7 @@ class MeetingStageSerializer:
         """Initialize new instance of the MeetingStageSerializer class."""
         self.__selrializers = {
             "AgendaMeetingStage": AgendaMeetingStageSerializer(),
-            "AcquaitanceMeetingStage": AcquaintanceMeetingStageSerializer(),
+            "AcquaintanceMeetingStage": AcquaintanceMeetingStageSerializer(),
             "BallotMeetingStage": BallotMeetingStageSerializer(),
             "BallotResultsMeetingStage": BallotResultsMeetingStageSerializer(),
             "CommentsMeetingStage": CommentsMeetingStageSerializer(),

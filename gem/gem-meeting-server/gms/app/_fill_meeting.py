@@ -4,7 +4,7 @@ import uuid
 
 from gem.db import Proposal, Ballot, User
 from gms.meeting.stages import (
-    StagesGroup, AgendaMeetingStage, AcquaitanceMeetingStage,
+    StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
     DiscussionMeetingStage
 )
@@ -34,7 +34,7 @@ def add_group(meeting, proposal_title):
     ballot = Ballot()
 
     group = StagesGroup(meeting, proposal=proposal)
-    meeting.stages.append(AcquaitanceMeetingStage(group=group))
+    meeting.stages.append(AcquaintanceMeetingStage(group=group))
     meeting.stages.append(BallotMeetingStage(ballot, group=group))
     meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
     meeting.stages.append(CommentsMeetingStage(group=group))
