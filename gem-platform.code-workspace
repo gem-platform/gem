@@ -31,6 +31,9 @@
         "autoFix": true,
         "language": "vue"
       }
-    ]
+	],
+	"python.linting.pylintArgs": [
+		"--disable=E0401,E0611"
+	]
   }
 }
