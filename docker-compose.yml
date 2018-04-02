@@ -33,9 +33,7 @@ services:
   # Base image for all python-based backend cantainers
   gem-server:
     image: gemplatform/gem-server
-    build:
-      context: ./gem
-      dockerfile: ./gem-server/Dockerfile
+    build: ./gem/gem-server-common
 
   ##
   ## APPS: BACKEND
@@ -50,6 +48,8 @@ services:
       - "8090:8090"
     expose:
       - "8090"
+    environment:
+      - DB_HOST=gem-database
     links:
       - gem-database:gem-database
     volumes:

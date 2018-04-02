@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 8090
 
-CMD [ "python", "-u", "/usr/src/tools/_runner.py" ]
+CMD [ "python", "-u", "/usr/src/gem-server-common/_runner.py" ]
