@@ -91,7 +91,8 @@ class Context:
         Returns:
             User -- User associated with specified id.
         """
-        users = filter(lambda x: x.id == user_id, self.__meeting.allowed_users)
+        users = filter(lambda x: str(x.id) == user_id,
+                       self.__meeting.allowed_users)
         users = list(users)
         return users[0] if len(users) == 1 else None
 

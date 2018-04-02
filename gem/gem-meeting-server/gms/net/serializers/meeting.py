@@ -147,12 +147,12 @@ class DiscussionMeetingStageSerializer:
     def serialize(self, stage):
         # get users id only. client already have all users data
         # sent at handshake stage
-        user_ids = map(lambda x: x.id, stage.queue)
+        user_ids = map(lambda x: str(x.id), stage.queue)
         speaker_id = stage.speaker.id if stage.speaker else None
 
         return {
             "type": "DiscussionStage",
             "queue": list(user_ids),
-            "speaker": speaker_id,
+            "speaker": str(speaker_id),
             "proposalId": str(stage.group.proposal.id)
         }
