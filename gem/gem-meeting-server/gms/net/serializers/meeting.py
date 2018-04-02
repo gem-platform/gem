@@ -1,4 +1,5 @@
 """Provide a bunch of serializers."""
+from itertools import chain
 
 
 class MeetingSerializer:
@@ -38,6 +39,10 @@ class MeetingSerializer:
         # convert array of users to dict keyed by user id
         users = {str(u.id): self.__map_user(u) for u in meeting.allowed_users}
 
+        # convert array of roles to dict keyed by role id:
+        roles = chain.from_iterable([u.roles for u in meeting.allowed_users])
+        roles = {str(r.id): self.__map_role(r) for r in roles}
+
         # return list of all stages with theirs current states
         # list of proposals used in current meeting
         return {
@@ -46,7 +51,8 @@ class MeetingSerializer:
                 "index": meeting.stages.index,
             },
             "proposals": proposals,
-            "users": users
+            "users": users,
+            "roles": roles
             # todo: list of users allowed to present at meeting
             #       including their meta (roles, permissions)
             # todo: list of online users
@@ -63,7 +69,14 @@ class MeetingSerializer:
     def __map_user(self, user):
         return {
             "id": str(user.id),
-            "name": user.name
+            "name": user.name,
+            "roles": [str(r.id) for r in user.roles]
+        }
+
+    def __map_role(self, role):
+        return {
+            "name": role.name,
+            "permissions": role.permissions
         }
 
 
@@ -118,11 +131,23 @@ class BallotMeetingStageSerializer:
 
 class BallotResultsMeetingStageSerializer:
     def serialize(self, stage):
+        votes_doc = stage.ballot.votes
         return {
             "type": "BallotResultsStage",
-            "votes": {str(k): stage.ballot.votes[k] for k, v in stage.ballot.votes.items()},
+            "votes": [{"user_id": str(v.user.id), "value": v.value} for v in votes_doc],
+            "summary": self.calculate_votes(votes_doc),
             "proposalId": str(stage.group.proposal.id)
         }
+
+    @staticmethod
+    def calculate_votes(votes):
+        result = {}
+        for vote in votes:
+            for role in vote.user.roles:
+                if str(role.id) not in result:
+                    result[str(role.id)] = {"yes": 0, "no": 0, "abstained": 0}
+                result[str(role.id)][vote.value] += 1
+        return result
 
 
 class CommentsMeetingStageSerializer:

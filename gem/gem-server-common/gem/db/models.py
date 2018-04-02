@@ -10,15 +10,6 @@ class Proposal(Document):
     content = StringField(required=True)
 
 
-class Ballot(Document):
-    """Stores ballot data."""
-    secret = BooleanField()
-    votes = DictField()
-
-    def set(self, user, value):
-        self.votes[user.id] = value
-
-
 class Role(Document):
     """Role"""
     name = StringField(required=True)
@@ -29,6 +20,24 @@ class User(Document):
     """User"""
     name = StringField(required=True)
     roles = ListField(ReferenceField(Role))
+
+
+class BallotRecord(EmbeddedDocument):
+    user = ReferenceField(User)
+    value = StringField()
+
+
+class Ballot(Document):
+    """Stores ballot data."""
+    secret = BooleanField()
+    votes = ListField(EmbeddedDocumentField(BallotRecord))
+
+    def set(self, user, value):
+        # self.votes[user.id] = value
+        record = BallotRecord()
+        record.user = user
+        record.value = value
+        self.votes.append(record)
 
 
 class Comment(Document):

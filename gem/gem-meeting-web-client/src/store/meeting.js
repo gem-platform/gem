@@ -3,7 +3,8 @@ export default {
     stageIndex: -1, // current stage number
     stages: {}, // stages states keyed by index
     proposals: {}, // proposals keyed by proposalId
-    users: {} // list of users keyed by Id
+    users: {}, // list of users keyed by Id
+    roles: {}
   },
   mutations: {
     setStageIndex(state, index) {
@@ -21,6 +22,9 @@ export default {
     setMeetingUsers(state, users) {
       state.users = users;
     },
+    setMeetingRoles(state, roles) {
+      state.roles = roles;
+    },
     setUserData(state, data) {
       state.user = data;
     }
@@ -36,6 +40,7 @@ export default {
       }
     },
     meetingState(context, data) {
+      context.commit('setMeetingRoles', data.roles);
       context.commit('setMeetingUsers', data.users);
       context.commit('setMeetingStages', data.stages.list);
       context.commit('setStageIndex', data.stages.index);
@@ -88,6 +93,9 @@ export default {
     },
     user(state) {
       return state.user;
+    },
+    roles(state) {
+      return state.roles;
     }
   }
 };
