@@ -1,6 +1,7 @@
 """GEM Meeting Server Entry point"""
 import sys
 sys.path.append("../gem-server-common")
+sys.path.append("./gem/gem-server-common")
 
 from gms.app import MeetingServerApplication
 from gms.net import SocketIoEndpoint
