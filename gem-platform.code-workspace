@@ -19,8 +19,8 @@
   "settings": {
     "python.pythonPath": "/usr/local/bin/python3",
     "python.linting.enabled": true,
-	"prettier.eslintIntegration": true,
-	"prettier.singleQuote": true,
+	  "prettier.eslintIntegration": true,
+    "prettier.singleQuote": true,
     "eslint.autoFixOnSave": true,
     "eslint.validate": [
       {
