@@ -1,3 +1,7 @@
+def have_read(context, sid, data):
+    return {"success": True}
+
+
 def switch_stage(context, sid, data):
     """Switch stage request received."""
     index = data.get("index", None)
