@@ -3,7 +3,7 @@ import logging
 from gms.net.serializers.meeting import MeetingSerializer
 
 
-def connect(context, sid):
+def connect(context, sid, environ):
     """New client connected to server."""
     # new socket connection received
     # with specified session id (sid)
@@ -13,7 +13,7 @@ def connect(context, sid):
     logging.info("Client %s connected", sid)
 
 
-def disconnect(context, sid):
+def disconnect(context, sid, environ):
     """Client disconnected from server."""
     # socket connection with specified
     # session id is closed

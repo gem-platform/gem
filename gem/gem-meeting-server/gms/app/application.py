@@ -1,10 +1,12 @@
+from inspect import getmembers, isfunction
+
 from gem.core import Application
 from gms.app.context import Context
-from gms.commands.handshake import connect, disconnect, handshake
-from gms.commands.stages import *
 from gms.meeting import Meeting
 from gms.net.serializers.meeting import MeetingStageSerializer
 from gms.app._fill_meeting import fill_meeting
+
+import gms.commands as commands
 
 
 class MeetingServerApplication(Application):
@@ -26,11 +28,12 @@ class MeetingServerApplication(Application):
         # todo: MP-11 Fill meeting with real data
         fill_meeting(self.__meeting)
 
-        # configure commands processor
+        # configure commands processor:
+        # get list of all functions in module
+        # and register them as handler: func_name.__name__ -> func_name
         self.processor.context = self.__context
-        self.processor.register_handlers([
-            connect, disconnect, handshake, switch_stage, vote, comment,
-            request_floor, withdraw_from_queue, remove_from_queue, give_voice])
+        methods = [o[1] for o in getmembers(commands, isfunction)]
+        self.processor.register_handlers(methods)
 
     def __on_stage_changed(self, index, stage):
         """Call when stage is changed."""
