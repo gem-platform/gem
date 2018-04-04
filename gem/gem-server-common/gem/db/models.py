@@ -1,3 +1,4 @@
+from itertools import chain
 from mongoengine import (Document, StringField, BooleanField, DictField,
                          ListField, ReferenceField, EmbeddedDocumentField,
                          EmbeddedDocument)
@@ -21,6 +22,11 @@ class User(Document):
     name = StringField(required=True)
     roles = ListField(ReferenceField(Role))
 
+    @property
+    def permissions(self):
+        permissions = chain.from_iterable([r.permissions for r in self.roles])
+        return list(set(permissions))
+
 
 class BallotRecord(EmbeddedDocument):
     user = ReferenceField(User)
@@ -34,10 +40,15 @@ class Ballot(Document):
 
     def set(self, user, value):
         # self.votes[user.id] = value
-        record = BallotRecord()
+        record = self.__get(user) or BallotRecord()
         record.user = user
         record.value = value
-        self.votes.append(record)
+        if record not in self.votes:
+            self.votes.append(record)
+
+    def __get(self, user):
+        votes_of_user = list(filter(lambda x: x.user == user, self.votes))
+        return votes_of_user[0] if votes_of_user else None
 
 
 class Comment(Document):

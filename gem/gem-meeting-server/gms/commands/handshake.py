@@ -13,7 +13,7 @@ def connect(context, sid, environ):
     logging.info("Client %s connected", sid)
 
 
-def disconnect(context, sid, environ):
+def disconnect(context, sid):
     """Client disconnected from server."""
     # socket connection with specified
     # session id is closed
@@ -51,5 +51,6 @@ def handshake(context, sid, data):
         "user": {
             "id": str(user.id),
             "name": user.name,
+            "permissions": user.permissions
         }
     }

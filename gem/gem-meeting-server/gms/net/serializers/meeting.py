@@ -70,7 +70,8 @@ class MeetingSerializer:
         return {
             "id": str(user.id),
             "name": user.name,
-            "roles": [str(r.id) for r in user.roles]
+            "roles": [str(r.id) for r in user.roles],
+            "permissions": user.permissions
         }
 
     def __map_role(self, role):

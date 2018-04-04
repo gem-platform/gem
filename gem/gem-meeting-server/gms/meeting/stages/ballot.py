@@ -43,7 +43,11 @@ class BallotMeetingStage(MeetingStage):
         # gets list of online users using meeting context
         context = self.meeting.context
         users_online = context.sessions.online
-        users_can_vote = users_online  # todo: MP-10 users with vote rights
+        users_can_vote = self.__users_can_vote(users_online)
+
+        # no one user can vote here
+        if len(users_can_vote) <= 0:
+            return 0
 
         # calculate the percentage of completion
         votes_count = len(self.__ballot.votes)
@@ -63,3 +67,8 @@ class BallotMeetingStage(MeetingStage):
         """
         self.__ballot.set(user, value)
         self.changed.notify()
+        # self.__ballot.save()  # todo: performance fix: save on exit from stage
+
+    @staticmethod
+    def __users_can_vote(users):
+        return list(filter(lambda user: "vote" in user.permissions, users))
