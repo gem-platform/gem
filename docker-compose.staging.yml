@@ -1,0 +1,66 @@
+version: '3'
+services:
+  ##
+  ## SERVICES
+  ##
+
+  # Provides MongoDB database to store
+  # all the GEM data
+  gem-database:
+    image: gemplatform/gem-database
+    restart: always
+    image: mongo:latest
+    volumes:
+      - ./.data/db:/data/db
+    ports:
+      - "27017:27017"
+
+  # Provides NGINX web serwer to tight all
+  # the web application all together in one app
+  gem-web:
+    image: gemplatform/gem-web
+    restart: always
+    ports:
+      - "80:80"
+    links:
+      - gem-meeting-server:gem-meeting-server
+
+  ##
+  ## IMAGES
+  ##
+
+  # Base image for all python-based backend cantainers
+  gem-server:
+    image: gemplatform/gem-server
+    
+  ##
+  ## APPS: BACKEND
+  ##
+
+  # Meeting server
+  gem-meeting-server:
+    image: gemplatform/gem-meeting-server
+    restart: always
+    ports:
+      - "8090:8090"
+    expose:
+      - "8090"
+    environment:
+      - DB_HOST=gem-database
+    links:
+      - gem-database:gem-database
+
+  ##
+  ## APPS: FRONTEND
+  ##
+
+  # Web client for meeting
+  gem-meeting-web-client:
+    image: gemplatform/gem-meeting-web-client
+    restart: always
+    ports:
+      - "8080:8080"
+    expose:
+      - "8080"
+    links:
+      - gem-meeting-server:gem-meeting-server

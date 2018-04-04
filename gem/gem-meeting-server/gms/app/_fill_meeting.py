@@ -2,7 +2,8 @@
 import os
 from mongoengine import connect
 
-from gem.db import Proposal, Ballot, User, Meeting, Comment
+from gem.db import (Proposal, Ballot, User, Meeting,
+                    Comment, MeetingPermissionType, Role, MeetingPermissions)
 from gms.meeting.stages import (
     StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
@@ -15,8 +16,8 @@ def fill_meeting(meeting):
     # todo: populate with real data
     db_host = os.environ.get('DB_HOST', "localhost")
 
-    connect("test", host=db_host)
-    db_meeting = Meeting.objects[0]
+    connect("test1", host=db_host)
+    db_meeting = Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
 
     # add agenda stage
     agenda_stage = AgendaMeetingStage(db_meeting.agenda)
@@ -44,3 +45,36 @@ def add_group(meeting, proposal):
     meeting.stages.append(CommentsMeetingStage(comments, group=group))
     meeting.stages.append(DiscussionMeetingStage(group=group))
     meeting.proposals.append(proposal)
+
+
+def init_db():
+    prop1 = Proposal()
+    prop1.title = "First Proposal"
+    prop1.content = "Content of proposal"
+    prop1.index = "P001"
+
+    role1 = Role()
+    role1.name = "Tester"
+    role1.permissions = ["*", "vote", "comment", "discuss"]
+
+    user1 = User()
+    user1.name = "Tester das"
+    user1.roles.append(role1)
+
+    perm1 = MeetingPermissionType()
+    perm1.roles.append(role1)
+
+    meet1 = Meeting()
+    meet1.title = "AGM 2018"
+    meet1.agenda = "Agenda of testing meeting"
+    meet1.proposals.append(prop1)
+    meet1.permissions = MeetingPermissions()
+    meet1.permissions.vote = perm1
+    meet1.permissions.join = perm1
+
+    prop1.save()
+    role1.save()
+    user1.save()
+    meet1.save()
+
+    return meet1
