@@ -6,6 +6,9 @@
       <div class="speaker-name">{{ speaker.name }}</div>
       is speaking now
     </div>
+    <div v-else>
+      No one is speaking now
+    </div>
   </div>
 </template>
 
