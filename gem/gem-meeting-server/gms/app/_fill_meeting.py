@@ -2,7 +2,7 @@
 import os
 from mongoengine import connect
 
-from gem.db import Proposal, Ballot, User, Meeting
+from gem.db import Proposal, Ballot, User, Meeting, Comment
 from gms.meeting.stages import (
     StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
@@ -35,10 +35,12 @@ def add_group(meeting, proposal):
     ballots = Ballot.objects(proposal=proposal)
     ballot = ballots[0] if ballots else Ballot(proposal=proposal)
 
+    comments = list(Comment.objects(proposal=proposal))
+
     group = StagesGroup(meeting, proposal=proposal)
     meeting.stages.append(AcquaintanceMeetingStage(group=group))
     meeting.stages.append(BallotMeetingStage(ballot, group=group))
     meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
-    meeting.stages.append(CommentsMeetingStage(group=group))
+    meeting.stages.append(CommentsMeetingStage(comments, group=group))
     meeting.stages.append(DiscussionMeetingStage(group=group))
     meeting.proposals.append(proposal)
