@@ -67,7 +67,7 @@ class BallotMeetingStage(MeetingStage):
         """
         self.__ballot.set(user, value)
         self.changed.notify()
-        # self.__ballot.save()  # todo: performance fix: save on exit from stage
+        self.__ballot.save()  # todo: performance fix: save on exit from stage
 
     @staticmethod
     def __users_can_vote(users):

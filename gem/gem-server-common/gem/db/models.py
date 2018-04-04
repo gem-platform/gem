@@ -37,6 +37,11 @@ class Ballot(Document):
     """Stores ballot data."""
     secret = BooleanField()
     votes = ListField(EmbeddedDocumentField(BallotRecord))
+    proposal = ReferenceField(Proposal)
+
+    def __init__(self, proposal=None, **data):
+        super().__init__(**data)
+        self.proposal = proposal
 
     def set(self, user, value):
         # self.votes[user.id] = value

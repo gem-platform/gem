@@ -32,7 +32,8 @@ def fill_meeting(meeting):
 
 
 def add_group(meeting, proposal):
-    ballot = Ballot()
+    ballots = Ballot.objects(proposal=proposal)
+    ballot = ballots[0] if ballots else Ballot(proposal=proposal)
 
     group = StagesGroup(meeting, proposal=proposal)
     meeting.stages.append(AcquaintanceMeetingStage(group=group))
