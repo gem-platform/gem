@@ -23,7 +23,7 @@ class Sessions:
             sid {str} -- Session id.
 
         Returns:
-            User -- User assosiated with soecified session.
+            User -- User associated with specified session.
         """
         return self.__sessions.get(sid, None)
 
