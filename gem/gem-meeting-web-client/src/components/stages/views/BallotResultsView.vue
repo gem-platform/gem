@@ -1,12 +1,8 @@
 <template>
   <div>
-
     <b-table
-      :data="summary"
+      :data="summaryData"
       :columns="summaryColumns"/>
-    <b-table
-      :data="votes"
-      :columns="detailColumns"/>
   </div>
 </template>
 
@@ -26,7 +22,7 @@ export default {
 
       return result;
     },
-    summary() {
+    summaryData() {
       const { summary } = this.$store.getters.meetingStageState;
       const { roles } = this.$store.getters;
 
@@ -46,13 +42,6 @@ export default {
         { field: 'yes', label: 'Yes' },
         { field: 'no', label: 'No' },
         { field: 'abstained', label: 'Abstained' }
-      ];
-    },
-    detailColumns() {
-      return [
-        { field: 'name', label: 'Name' },
-        { field: 'roles', label: 'Roles' },
-        { field: 'value', label: 'Value', width: '100' }
       ];
     }
   }
