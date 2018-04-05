@@ -7,6 +7,8 @@ export default class User {
   }
 
   hasPermission(permission) {
-    return this.permissions.includes(permission);
+    const isSuperUser = this.permissions.includes('*');
+    const hasPermission = this.permissions.includes(permission);
+    return isSuperUser || hasPermission;
   }
 }
