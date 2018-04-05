@@ -126,6 +126,7 @@ class BallotMeetingStageSerializer:
         return {
             "type": "BallotStage",
             "progress": stage.progress,
+            "secret": stage.ballot.secret,
             "proposalId": str(stage.group.proposal.id)
         }
 

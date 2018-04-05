@@ -1,3 +1,5 @@
+import User from '@/models/user.js';
+
 export default {
   state: {
     stageIndex: -1, // current stage number
@@ -92,7 +94,7 @@ export default {
       return state.users;
     },
     user(state) {
-      return state.user;
+      return new User(state.user);
     },
     roles(state) {
       return state.roles;

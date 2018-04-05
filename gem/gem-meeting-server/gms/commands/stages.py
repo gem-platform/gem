@@ -17,6 +17,12 @@ def vote(context, sid, data):
     return {"success": True}
 
 
+def ballot_secret(context, sid, data):
+    value = data.get("value", None)
+    context.stage.ballot.secret = value
+    return {"success": True, "value": context.stage.ballot.secret}
+
+
 def comment(context, sid, data):
     """Comment received."""
     user = context.get_user(sid)

@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div
+      v-if="canManage"
+      class="field">
+      <b-switch
+        v-model="isSecret"
+        @input="changeSecret">
+        Secret ballot
+      </b-switch>
+    </div>
+
     <div v-if="canVote">
       <div
         v-if="voteCommited"
@@ -48,14 +58,18 @@ export default {
   name: 'BallotStageControls',
   data() {
     return {
-      voteCommited: false
+      voteCommited: false,
+      isSecret: this.$store.getters.meetingStageState.secret
     };
   },
   computed: {
     canVote() {
       const { user } = this.$store.getters;
-      const permissions = user.permissions || [];
-      return permissions.includes('vote');
+      return user.hasPermission('vote');
+    },
+    canManage() {
+      const { user } = this.$store.getters;
+      return user.hasPermission('vote:manage');
     }
   },
   methods: {
@@ -70,6 +84,13 @@ export default {
     },
     changeMind() {
       this.voteCommited = false;
+    },
+    async changeSecret(value) {
+      this.isSecret = value;
+      const res = await com.send('ballot_secret', { value });
+      if (res.success) {
+        this.notify('Ballot secret state changed');
+      }
     },
     notify(message, type) {
       this.$bus.emit('notification', { message, type: type || 'is-success' });
