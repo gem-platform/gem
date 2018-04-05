@@ -1,7 +1,9 @@
 from itertools import chain
-from mongoengine import (Document, StringField, BooleanField, DictField,
+from mongoengine import (signals, Document, StringField, BooleanField, DictField,
                          ListField, ReferenceField, EmbeddedDocumentField,
                          EmbeddedDocument)
+
+from gem.db.signals import make_ballot_secret
 
 
 class Proposal(Document):
@@ -93,3 +95,7 @@ class Meeting(Document):
     agenda = StringField()
     proposals = ListField(ReferenceField(Proposal))
     permissions = EmbeddedDocumentField(MeetingPermissions)
+
+
+# signals
+signals.pre_save.connect(make_ballot_secret, sender=Ballot)
