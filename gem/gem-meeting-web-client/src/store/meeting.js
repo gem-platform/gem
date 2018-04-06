@@ -76,7 +76,7 @@ export default {
     },
     proposal(state) {
       // no meeting info received yet
-      if (!state.stages || !state.proposals) {
+      if (!state.stages || !state.proposals || state.stageIndex <= -1) {
         return undefined;
       }
 
@@ -94,7 +94,7 @@ export default {
       return state.users;
     },
     user(state) {
-      return new User(state.user);
+      return state.user ? new User(state.user) : undefined;
     },
     roles(state) {
       return state.roles;
