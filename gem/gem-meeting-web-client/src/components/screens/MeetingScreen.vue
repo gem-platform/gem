@@ -13,7 +13,7 @@
             <ControlPanel/>
           </div>
           <div
-            v-if="hasStageControls"
+            v-if="showStageControls"
             class="box">
             <StageControlsPresenter/>
           </div>
@@ -21,20 +21,19 @@
 
         <div class="column">
           <div
-            v-if="hasStageView"
+            v-if="showStageView"
             class="box">
             <StageViewPresenter/>
           </div>
 
           <div
-            v-if="hasProposal"
+            v-if="showProposal"
             class="box">
             {{ proposal.content }}
           </div>
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
@@ -69,45 +68,42 @@ export default {
   computed: {
     title() {
       const { meetingStageType, proposal } = this.$store.getters;
-
       return proposal
         ? proposal.title
         : humanReadableStageType(meetingStageType);
     },
     subtitle() {
       const type = this.$store.getters.meetingStageType;
-      if (type === 'AgendaStage') {
-        return '';
-      }
-      if (type === 'ConnectedStage') {
-        return '';
-      }
-      return humanReadableStageType(type);
-    },
-    hasProposal() {
-      return this.$store.getters.proposal !== undefined;
+      const withoutSubtitle = ['AgendaStage', 'ConnectedStage'];
+      const showSubtitle = !withoutSubtitle.includes(type);
+      return showSubtitle ? humanReadableStageType(type) : '';
     },
     proposal() {
       return this.$store.getters.proposal;
     },
-    hasStageControls() {
+    showProposal() {
+      return this.$store.getters.proposal !== undefined;
+    },
+    showStageControls() {
       const type = this.$store.getters.meetingStageType;
-      return [
+      const withControls = [
         'AcquaintanceStage',
         'BallotStage',
         'CommentsStage',
         'DiscussionStage'
-      ].includes(type);
+      ];
+      return withControls.includes(type);
     },
-    hasStageView() {
+    showStageView() {
       const type = this.$store.getters.meetingStageType;
-      return [
+      const withViews = [
         'AgendaStage',
         'BallotStage',
         'BallotResultsStage',
         'CommentsStage',
         'DiscussionStage'
-      ].includes(type);
+      ];
+      return withViews.includes(type);
     },
     showControlPanel() {
       return this.$store.getters.user.hasPermission('session:manage');
@@ -115,12 +111,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.footer-control {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  background: #d4d4d4;
-}
-</style>
