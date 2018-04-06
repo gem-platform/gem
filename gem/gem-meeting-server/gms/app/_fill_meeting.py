@@ -60,6 +60,7 @@ def init_db():
     user1 = User()
     user1.name = "Tester das"
     user1.roles.append(role1)
+    user1.password = "tester"
 
     perm1 = MeetingPermissionType()
     perm1.roles.append(role1)

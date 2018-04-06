@@ -23,6 +23,7 @@ class User(Document):
     """User"""
     name = StringField(required=True)
     roles = ListField(ReferenceField(Role))
+    password = StringField(required=True)
 
     @property
     def permissions(self):
