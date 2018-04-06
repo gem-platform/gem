@@ -20,7 +20,7 @@ services:
   gem-web:
     image: gemplatform/gem-web
     restart: always
-    build: ./gem/gem-web/
+    build: ./gem/frontend/gem-web/
     ports:
       - "80:80"
     links:
@@ -33,7 +33,7 @@ services:
   # Base image for all python-based backend cantainers
   gem-server:
     image: gemplatform/gem-server
-    build: ./gem/gem-server-common
+    build: ./gem/backend/gem-server-common
 
   ##
   ## APPS: BACKEND
@@ -43,7 +43,7 @@ services:
   gem-meeting-server:
     image: gemplatform/gem-meeting-server
     restart: always
-    build: ./gem/gem-meeting-server
+    build: ./gem/backend/gem-meeting-server
     ports:
       - "8090:8090"
     expose:
@@ -53,22 +53,38 @@ services:
     links:
       - gem-database:gem-database
     volumes:
-      - ./gem/gem-meeting-server:/usr/src/app
+      - ./gem/backend/gem-meeting-server:/usr/src/app
+
+  # Meeting server
+  gem-portal-server:
+    image: gemplatform/gem-portal-server
+    restart: always
+    build: ./gem/backend/gem-portal-server
+    ports:
+      - "5000:5000"
+    expose:
+      - "5000"
+    environment:
+      - DB_HOST=gem-database
+    links:
+      - gem-database:gem-database
+    volumes:
+      - ./gem/backend/gem-portal-server:/usr/src/app
 
   ##
   ## APPS: FRONTEND
   ##
 
   # Web client for meeting
-  gem-meeting-web-client:
-    image: gemplatform/gem-meeting-web-client
+  gem-portal-client:
+    image: gemplatform/gem-portal-client
     restart: always
-    build: ./gem/gem-meeting-web-client
+    build: ./gem/frontend/gem-portal
     ports:
-      - "8080:8080"
+      - "3000:3000"
     expose:
-      - "8080"
+      - "3000"
     links:
       - gem-meeting-server:gem-meeting-server
     volumes:
-      - ./gem/gem-meeting-web-client:/usr/src/app
+      - ./gem/frontend/gem-portal:/usr/src/app
