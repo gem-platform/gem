@@ -7,7 +7,9 @@
     <section class="section">
       <div class="columns">
         <div class="column is-4">
-          <div class="box">
+          <div
+            v-if="showControlPanel"
+            class="box">
             <ControlPanel/>
           </div>
           <div
@@ -106,6 +108,9 @@ export default {
         'CommentsStage',
         'DiscussionStage'
       ].includes(type);
+    },
+    showControlPanel() {
+      return this.$store.getters.user.hasPermission('session:manage');
     }
   }
 };
