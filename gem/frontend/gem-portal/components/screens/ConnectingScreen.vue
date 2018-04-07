@@ -6,47 +6,47 @@
 </template>
 
 <script>
-import GlobalMessage from "../GlobalMessage.vue";
+import GlobalMessage from '../GlobalMessage.vue';
 
 export default {
-  name: "ConnectingScreen",
+  name: 'ConnectingScreen',
   components: {
     GlobalMessage
   },
   computed: {
     title() {
       console.log(this.$options.sockets);
-      const connection = this.$store.getters["connection/connection"];
-      const handshake = this.$store.getters["connection/handshake"];
+      const connection = this.$store.getters['meeting/connection/connection'];
+      const handshake = this.$store.getters['meeting/connection/handshake'];
 
       if (connection.success === false) {
-        return "Connection failed";
+        return 'Connection failed';
       }
       if (handshake.success === false) {
-        return "Handshake failed";
+        return 'Handshake failed';
       }
 
-      return "Connecting";
+      return 'Connecting';
     },
     message() {
-      const connection = this.$store.getters["connection/connection"];
-      const handshake = this.$store.getters["connection/handshake"];
+      const connection = this.$store.getters['meeting/connection/connection'];
+      const handshake = this.$store.getters['meeting/connection/handshake'];
 
       return (
         connection.message ||
         handshake.message ||
-        "We are connecting you to session"
+        'We are connecting you to session'
       );
     },
     type() {
-      const connection = this.$store.getters["connection/connection"];
-      const handshake = this.$store.getters["connection/handshake"];
+      const connection = this.$store.getters['meeting/connection/connection'];
+      const handshake = this.$store.getters['meeting/connection/handshake'];
 
       if (connection.success === false || handshake.success === false) {
-        return "is-danger";
+        return 'is-danger';
       }
 
-      return "is-primary";
+      return 'is-primary';
     }
   }
 };

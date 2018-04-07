@@ -1,61 +1,63 @@
-import com from "@/lib/communication";
+import com from '@/lib/communication';
 
 export default {
   connect() {
-    console.log("connected");
+    console.log('connected');
     com.set(this.$socket);
 
     const { $store } = this;
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     // user is connected
-    this.$store.dispatch("connection/setConnectionState", { connected: true });
+    this.$store.dispatch('meeting/connection/setConnectionState', {
+      connected: true
+    });
 
     // no authentication found
     // seems to be user is not authenticated
     if (!token) {
-      $store.dispatch("connection/setHandshakeState", {
+      $store.dispatch('meeting/connection/setHandshakeState', {
         success: false,
-        message: "You are not logged in."
+        message: 'You are not logged in.'
       });
       return;
     }
 
     // send handshake
-    this.$socket.emit("handshake", { token }, response => {
-      console.log("handshaked");
-      console.log("handshake", response);
-      $store.dispatch("connection/setHandshakeState", response);
+    this.$socket.emit('handshake', { token }, response => {
+      console.log('handshaked');
+      console.log('handshake', response);
+      $store.dispatch('meeting/connection/setHandshakeState', response);
 
       // meta is not sent if handshake failed
       if (response.state) {
-        $store.dispatch("meeting/user", response.user);
-        $store.dispatch("meeting/meetingState", response.state);
-        $store.dispatch("meeting/meetingProposals", response.state.proposals);
+        $store.dispatch('meeting/user', response.user);
+        $store.dispatch('meeting/meetingState', response.state);
+        $store.dispatch('meeting/meetingProposals', response.state.proposals);
       }
     });
   },
   disconnect() {
-    console.log("disconnect");
+    console.log('disconnect');
 
-    this.$store.dispatch("connection/setConnectionState", {
+    this.$store.dispatch('meeting/connection/setConnectionState', {
       connected: false,
-      message: "Connection lost"
+      message: 'Connection lost'
     });
   },
   connect_error() {
-    console.log("error");
+    console.log('error');
 
-    this.$store.dispatch("connection/setConnectionState", {
+    this.$store.dispatch('meeting/connection/setConnectionState', {
       connected: false,
-      message: "Unable to connect"
+      message: 'Unable to connect'
     });
   },
   stage(data) {
-    console.log("stage");
+    console.log('stage');
 
     // information about the state of the stage has arrived.
     // { index: stageIndex, state: {} }
-    this.$store.dispatch("meeting/meetingStage", data);
+    this.$store.dispatch('meeting/meetingStage', data);
   }
 };

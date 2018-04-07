@@ -7,24 +7,23 @@
 </template>
 
 <script>
-import MeetingScreen from "@/components/screens/MeetingScreen.vue";
-import ConnectingScreen from "@/components/screens/ConnectingScreen.vue";
+import MeetingScreen from '@/components/screens/MeetingScreen.vue';
+import ConnectingScreen from '@/components/screens/ConnectingScreen.vue';
 
 export default {
-  name: "GemPlatform",
+  name: 'GemPlatform',
   components: {
     MeetingScreen,
     ConnectingScreen
   },
   computed: {
     screen() {
-      const hs = this.$store.getters["connection/state"] === true;
-      console.log("SCREEN", hs);
-      return hs ? "MeetingScreen" : "ConnectingScreen";
+      const hs = this.$store.getters['meeting/connection/state'] === true;
+      return hs ? 'MeetingScreen' : 'ConnectingScreen';
     }
   },
   created() {
-    this.$bus.on("notification", this.snackbar);
+    this.$bus.on('notification', this.snackbar);
   },
   methods: {
     snackbar(data) {
