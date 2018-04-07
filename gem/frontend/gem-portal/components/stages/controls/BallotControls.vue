@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       voteCommited: false,
-      isSecret: this.$store.getters["meeting/meetingStageState"].secret
+      isSecret: this.$store.getters["meeting/stageState"].secret
     };
   },
   computed: {

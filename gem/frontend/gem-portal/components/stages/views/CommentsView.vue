@@ -6,20 +6,18 @@
 
 <script>
 export default {
-  name: "CommentsStageView",
+  name: 'CommentsStageView',
 
   computed: {
     comments() {
-      const meetingStageState = this.$store.getters[
-        "meeting/meetingStageState"
-      ];
+      const meetingStageState = this.$store.getters['meeting/stageState'];
       return meetingStageState.comments;
     },
     columns() {
       return [
-        { field: "user", label: "Name" },
-        { field: "content", label: "Value" },
-        { field: "mark", label: "Mark", width: "100" }
+        { field: 'user', label: 'Name' },
+        { field: 'content', label: 'Value' },
+        { field: 'mark', label: 'Mark', width: '100' }
       ];
     }
   }

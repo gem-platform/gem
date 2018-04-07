@@ -9,10 +9,10 @@
 
 <script>
 export default {
-  name: "BallotStageView",
+  name: 'BallotStageView',
   computed: {
     progress() {
-      return this.$store.getters["meeting/meetingStageState"].progress;
+      return this.$store.getters['meeting/stageState'].progress;
     }
   }
 };

@@ -58,7 +58,7 @@ export const actions = {
 };
 
 export const getters = {
-  meetingStageType(state) {
+  stageType(state) {
     // meeting state is not received yet,
     // so display ConnectedStage
     if (state.stageIndex < 0) {
@@ -70,7 +70,7 @@ export const getters = {
     const { stageIndex, stages } = state;
     return stages[stageIndex].type;
   },
-  meetingStageState(state) {
+  stageState(state) {
     const idx = state.stageIndex;
     return state.stages[idx];
   },

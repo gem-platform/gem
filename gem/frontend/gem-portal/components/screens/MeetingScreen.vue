@@ -38,27 +38,27 @@
 </template>
 
 <script>
-import ControlPanel from "../ControlPanel.vue";
-import StageViewPresenter from "../StageViewPresenter.vue";
-import StageControlsPresenter from "../StageControlsPresenter.vue";
-import MeetingScreenTopPanel from "./MeetingScreenTopPanel.vue";
+import ControlPanel from '../ControlPanel.vue';
+import StageViewPresenter from '../StageViewPresenter.vue';
+import StageControlsPresenter from '../StageControlsPresenter.vue';
+import MeetingScreenTopPanel from './MeetingScreenTopPanel.vue';
 
 function humanReadableStageType(type) {
   return (
     {
-      ConnectedStage: "Connected",
-      AcquaintanceStage: "Acquaintance",
-      AgendaStage: "Agenda",
-      BallotStage: "Ballot",
-      BallotResultsStage: "Ballot results",
-      DiscussionStage: "Discussion",
-      CommentsStage: "Comments"
+      ConnectedStage: 'Connected',
+      AcquaintanceStage: 'Acquaintance',
+      AgendaStage: 'Agenda',
+      BallotStage: 'Ballot',
+      BallotResultsStage: 'Ballot results',
+      DiscussionStage: 'Discussion',
+      CommentsStage: 'Comments'
     }[type] || type
   );
 }
 
 export default {
-  name: "MeetingScreen",
+  name: 'MeetingScreen',
   components: {
     ControlPanel,
     StageViewPresenter,
@@ -67,49 +67,49 @@ export default {
   },
   computed: {
     title() {
-      const meetingStageType = this.$store.getters["meeting/meetingStageType"];
-      const proposal = this.$store.getters["meeting/proposal"];
+      const meetingStageType = this.$store.getters['meeting/stageType'];
+      const proposal = this.$store.getters['meeting/proposal'];
 
       return proposal
         ? proposal.title
         : humanReadableStageType(meetingStageType);
     },
     subtitle() {
-      const type = this.$store.getters["meeting/meetingStageType"];
-      const withoutSubtitle = ["AgendaStage", "ConnectedStage"];
+      const type = this.$store.getters['meeting/stageType'];
+      const withoutSubtitle = ['AgendaStage', 'ConnectedStage'];
       const showSubtitle = !withoutSubtitle.includes(type);
-      return showSubtitle ? humanReadableStageType(type) : "";
+      return showSubtitle ? humanReadableStageType(type) : '';
     },
     proposal() {
-      return this.$store.getters["meeting/proposal"];
+      return this.$store.getters['meeting/proposal'];
     },
     showProposal() {
-      return this.$store.getters["meeting/proposal"] !== undefined;
+      return this.$store.getters['meeting/proposal'] !== undefined;
     },
     showStageControls() {
-      const type = this.$store.getters["meeting/meetingStageType"];
+      const type = this.$store.getters['meeting/stageType'];
       const withControls = [
-        "AcquaintanceStage",
-        "BallotStage",
-        "CommentsStage",
-        "DiscussionStage"
+        'AcquaintanceStage',
+        'BallotStage',
+        'CommentsStage',
+        'DiscussionStage'
       ];
       return withControls.includes(type);
     },
     showStageView() {
-      const type = this.$store.getters["meeting/meetingStageType"];
+      const type = this.$store.getters['meeting/stageType'];
       const withViews = [
-        "AgendaStage",
-        "BallotStage",
-        "BallotResultsStage",
-        "CommentsStage",
-        "DiscussionStage"
+        'AgendaStage',
+        'BallotStage',
+        'BallotResultsStage',
+        'CommentsStage',
+        'DiscussionStage'
       ];
       return withViews.includes(type);
     },
     showControlPanel() {
-      return this.$store.getters["meeting/user"].hasPermission(
-        "session:manage"
+      return this.$store.getters['meeting/user'].hasPermission(
+        'session:manage'
       );
     }
   }

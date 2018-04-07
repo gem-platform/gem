@@ -50,30 +50,30 @@
 </template>
 
 <script>
-import com from "@/lib/communication";
+import com from '@/lib/communication';
 
 export default {
-  name: "DiscussionStageControls",
+  name: 'DiscussionStageControls',
   computed: {
     queue() {
-      const queue = this.$store.getters["meeting/meetingStageState"].queue;
-      const users = this.$store.getters["meeting/users"];
+      const queue = this.$store.getters['meeting/stageState'].queue;
+      const users = this.$store.getters['meeting/users'];
       return queue.map(x => users[x]);
     },
     speaker() {
-      const queue = this.$store.getters["meeting/meetingStageState"].speaker;
-      const users = this.$store.getters["meeting/users"];
+      const queue = this.$store.getters['meeting/stageState'].speaker;
+      const users = this.$store.getters['meeting/users'];
       return users[speaker];
     },
     columns() {
       return [
-        { field: "name", label: "Name" },
-        { field: "id", label: "Actions", width: "100" }
+        { field: 'name', label: 'Name' },
+        { field: 'id', label: 'Actions', width: '100' }
       ];
     },
     selfInQueue() {
-      const queue = this.$store.getters["meeting/meetingStageState"].queue;
-      const user = this.$store.getters["meeting/user"];
+      const queue = this.$store.getters['meeting/stageState'].queue;
+      const user = this.$store.getters['meeting/user'];
       return queue.includes(user.id);
     }
   },
@@ -83,31 +83,31 @@ export default {
   methods: {
     requestFloor() {
       com
-        .send("request_floor")
-        .then(() => this.notify("You have been added to the queue"))
-        .catch(err => this.notify(err.message, "is-danger"));
+        .send('request_floor')
+        .then(() => this.notify('You have been added to the queue'))
+        .catch(err => this.notify(err.message, 'is-danger'));
     },
     withdrawFromQueue() {
       com
-        .send("withdraw_from_queue")
-        .then(() => this.notify("You have been removed from queue"))
-        .catch(err => this.notify(err.message, "is-danger"));
+        .send('withdraw_from_queue')
+        .then(() => this.notify('You have been removed from queue'))
+        .catch(err => this.notify(err.message, 'is-danger'));
     },
     removeFromQueue(id) {
       com
-        .send("remove_from_queue", { id })
-        .then(() => this.notify("User have been removed from queue"))
-        .catch(err => this.notify(err.message, "is-danger"));
+        .send('remove_from_queue', { id })
+        .then(() => this.notify('User have been removed from queue'))
+        .catch(err => this.notify(err.message, 'is-danger'));
     },
     giveVoice(to) {
-      const { name } = this.$store.getters["meeting/users"][to];
+      const { name } = this.$store.getters['meeting/users'][to];
       com
-        .send("give_voice", { to })
+        .send('give_voice', { to })
         .then(() => this.notify(`Voice have been given to ${name}`))
-        .catch(err => this.notify(err.message, "is-danger"));
+        .catch(err => this.notify(err.message, 'is-danger'));
     },
     notify(message, type) {
-      this.$bus.emit("notification", { message, type: type || "is-success" });
+      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };

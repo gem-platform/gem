@@ -11,7 +11,7 @@ export default {
   name: "BallotResultsStageView",
   computed: {
     votes() {
-      const votes = this.$store.getters["meeting/meetingStageState"];
+      const votes = this.$store.getters["meeting/stageState"];
       const users = this.$store.getters["meeting/users"];
       const roles = this.$store.getters["meeting/roles"];
 
@@ -24,7 +24,7 @@ export default {
       return result;
     },
     summaryData() {
-      const summary = this.$store.getters["meeting/meetingStageState"].summary;
+      const summary = this.$store.getters["meeting/stageState"].summary;
       const roles = this.$store.getters["meeting/roles"];
 
       const roleIds = Object.keys(summary);
