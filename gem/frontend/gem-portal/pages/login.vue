@@ -65,7 +65,11 @@ body {
   font-family: 'Open Sans', serif;
 }
 .hero.is-info {
-  background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
+  background: linear-gradient(
+      135deg,
+      rgba(229, 58, 121, 0.5) 30%,
+      rgba(254, 175, 18, 0.5) 70%
+    ),
     url('/login-bg/bg1.jpg') no-repeat center center fixed;
   -webkit-background-size: cover;
   -moz-background-size: cover;
