@@ -10,7 +10,7 @@ export default {
 
   computed: {
     comments() {
-      const meetingStageState = this.$store.getters['meeting/stageState'];
+      const meetingStageState = this.$store.getters['meeting/stage/state'];
       return meetingStageState.comments;
     },
     columns() {

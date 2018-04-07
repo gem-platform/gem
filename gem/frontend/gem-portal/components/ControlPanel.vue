@@ -14,16 +14,16 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
+import { mapGetters } from 'vuex';
 
 export default {
-  name: "ControlPanel",
-  computed: mapGetters(["meetingStageType"]),
+  name: 'ControlPanel',
+  computed: mapGetters(['meetingStageType']),
   methods: {
     move(step) {
-      const stageIndex = this.$store.getters["meeting/stageIndex"];
+      const stageIndex = this.$store.getters['meeting/stage/index'];
       const nextStageIndex = stageIndex + step;
-      this.$socket.emit("switch_stage", { index: nextStageIndex });
+      this.$socket.emit('switch_stage', { index: nextStageIndex });
       console.log(nextStageIndex);
     }
   }

@@ -1,4 +1,4 @@
-import User from "@/lib/user.js";
+import User from '@/lib/user.js';
 
 export const state = () => ({
   stageIndex: -1, // current stage number
@@ -10,7 +10,7 @@ export const state = () => ({
 
 export const mutations = {
   setStageIndex(state, index) {
-    console.log("setStageIndex", index);
+    console.log('setStageIndex', index);
     state.stageIndex = index || 0;
   },
   setStageState(state, data) {
@@ -35,64 +35,29 @@ export const mutations = {
 
 export const actions = {
   meetingStage(context, data) {
-    context.commit("setStageState", data);
+    context.commit('setStageState', data);
 
     // stage index is not changes, so do not call
     // setStageIndex unnecessary
     if (data.index !== context.state.stageIndex) {
-      context.commit("setStageIndex", data.index);
+      context.commit('setStageIndex', data.index);
     }
   },
   meetingState(context, data) {
-    context.commit("setMeetingRoles", data.roles);
-    context.commit("setMeetingUsers", data.users);
-    context.commit("setMeetingStages", data.stages.list);
-    context.commit("setStageIndex", data.stages.index);
+    context.commit('setMeetingRoles', data.roles);
+    context.commit('setMeetingUsers', data.users);
+    context.commit('setMeetingStages', data.stages.list);
+    context.commit('setStageIndex', data.stages.index);
   },
   meetingProposals(context, data) {
-    context.commit("setProposals", data);
+    context.commit('setProposals', data);
   },
   user(context, user) {
-    context.commit("setUserData", user);
+    context.commit('setUserData', user);
   }
 };
 
 export const getters = {
-  stageType(state) {
-    // meeting state is not received yet,
-    // so display ConnectedStage
-    if (state.stageIndex < 0) {
-      return "ConnectedStage";
-    }
-
-    // we have meeting state, so get type of stages
-    // by meetingStageIndex
-    const { stageIndex, stages } = state;
-    return stages[stageIndex].type;
-  },
-  stageState(state) {
-    const idx = state.stageIndex;
-    return state.stages[idx];
-  },
-  stageIndex(state) {
-    return state.stageIndex;
-  },
-  proposal(state) {
-    // no meeting info received yet
-    if (!state.stages || !state.proposals || state.stageIndex <= -1) {
-      return undefined;
-    }
-
-    const { stageIndex } = state;
-    const stage = state.stages[stageIndex];
-    const { proposalId } = stage;
-
-    if (!proposalId) {
-      return undefined;
-    }
-
-    return state.proposals[proposalId];
-  },
   users(state) {
     return state.users;
   },

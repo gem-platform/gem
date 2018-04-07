@@ -56,12 +56,12 @@ export default {
   name: 'DiscussionStageControls',
   computed: {
     queue() {
-      const queue = this.$store.getters['meeting/stageState'].queue;
+      const queue = this.$store.getters['meeting/stage/state'].queue;
       const users = this.$store.getters['meeting/users'];
       return queue.map(x => users[x]);
     },
     speaker() {
-      const queue = this.$store.getters['meeting/stageState'].speaker;
+      const queue = this.$store.getters['meeting/stage/state'].speaker;
       const users = this.$store.getters['meeting/users'];
       return users[speaker];
     },
@@ -72,7 +72,7 @@ export default {
       ];
     },
     selfInQueue() {
-      const queue = this.$store.getters['meeting/stageState'].queue;
+      const queue = this.$store.getters['meeting/stage/state'].queue;
       const user = this.$store.getters['meeting/user'];
       return queue.includes(user.id);
     }

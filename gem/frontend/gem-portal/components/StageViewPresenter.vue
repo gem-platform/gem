@@ -24,7 +24,7 @@ export default {
   },
   computed: {
     controlType() {
-      const stage = this.$store.getters['meeting/stageType'];
+      const stage = this.$store.getters['meeting/stage/type'];
       const shortType = stage.replace('Stage', '');
       return `${shortType}View`;
     }

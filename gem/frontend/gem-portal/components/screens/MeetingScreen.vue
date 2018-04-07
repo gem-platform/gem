@@ -67,7 +67,7 @@ export default {
   },
   computed: {
     title() {
-      const meetingStageType = this.$store.getters['meeting/stageType'];
+      const meetingStageType = this.$store.getters['meeting/stage/type'];
       const proposal = this.$store.getters['meeting/proposal'];
 
       return proposal
@@ -75,19 +75,19 @@ export default {
         : humanReadableStageType(meetingStageType);
     },
     subtitle() {
-      const type = this.$store.getters['meeting/stageType'];
+      const type = this.$store.getters['meeting/stage/type'];
       const withoutSubtitle = ['AgendaStage', 'ConnectedStage'];
       const showSubtitle = !withoutSubtitle.includes(type);
       return showSubtitle ? humanReadableStageType(type) : '';
     },
     proposal() {
-      return this.$store.getters['meeting/proposal'];
+      return this.$store.getters['meeting/stage/proposal'];
     },
     showProposal() {
-      return this.$store.getters['meeting/proposal'] !== undefined;
+      return this.$store.getters['meeting/stage/proposal'] !== undefined;
     },
     showStageControls() {
-      const type = this.$store.getters['meeting/stageType'];
+      const type = this.$store.getters['meeting/stage/type'];
       const withControls = [
         'AcquaintanceStage',
         'BallotStage',
@@ -97,7 +97,7 @@ export default {
       return withControls.includes(type);
     },
     showStageView() {
-      const type = this.$store.getters['meeting/stageType'];
+      const type = this.$store.getters['meeting/stage/type'];
       const withViews = [
         'AgendaStage',
         'BallotStage',

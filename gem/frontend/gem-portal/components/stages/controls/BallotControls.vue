@@ -52,48 +52,48 @@
 </template>
 
 <script>
-import com from "@/lib/communication";
+import com from '@/lib/communication';
 
 export default {
-  name: "BallotStageControls",
+  name: 'BallotStageControls',
   data() {
     return {
       voteCommited: false,
-      isSecret: this.$store.getters["meeting/stageState"].secret
+      isSecret: this.$store.getters['meeting/stage/state'].secret
     };
   },
   computed: {
     canVote() {
-      const user = this.$store.getters["meeting/user"];
-      return user.hasPermission("vote");
+      const user = this.$store.getters['meeting/user'];
+      return user.hasPermission('vote');
     },
     canManage() {
-      const user = this.$store.getters["meeting/user"];
-      return user.hasPermission("vote:manage");
+      const user = this.$store.getters['meeting/user'];
+      return user.hasPermission('vote:manage');
     }
   },
   methods: {
     vote(value) {
       com
-        .send("vote", { value })
+        .send('vote', { value })
         .then(() => {
-          this.notify("Your vote has been accepted");
+          this.notify('Your vote has been accepted');
           this.voteCommited = true;
         })
-        .catch(err => this.notify(err.message, "is-danger"));
+        .catch(err => this.notify(err.message, 'is-danger'));
     },
     changeMind() {
       this.voteCommited = false;
     },
     async changeSecret(value) {
       this.isSecret = value;
-      const res = await com.send("ballot_secret", { value });
+      const res = await com.send('ballot_secret', { value });
       if (res.success) {
-        this.notify("Ballot secret state changed");
+        this.notify('Ballot secret state changed');
       }
     },
     notify(message, type) {
-      this.$bus.emit("notification", { message, type: type || "is-success" });
+      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };

@@ -8,24 +8,24 @@
 
 <script>
 export default {
-  name: "BallotResultsStageView",
+  name: 'BallotResultsStageView',
   computed: {
     votes() {
-      const votes = this.$store.getters["meeting/stageState"];
-      const users = this.$store.getters["meeting/users"];
-      const roles = this.$store.getters["meeting/roles"];
+      const votes = this.$store.getters['meeting/stage/state'];
+      const users = this.$store.getters['meeting/users'];
+      const roles = this.$store.getters['meeting/roles'];
 
       const result = votes.map(x => ({
         name: users[x.user_id].name,
-        roles: users[x.user_id].roles.map(r => roles[r].name).join(", "),
+        roles: users[x.user_id].roles.map(r => roles[r].name).join(', '),
         value: x.value
       }));
 
       return result;
     },
     summaryData() {
-      const summary = this.$store.getters["meeting/stageState"].summary;
-      const roles = this.$store.getters["meeting/roles"];
+      const summary = this.$store.getters['meeting/stage/state'].summary;
+      const roles = this.$store.getters['meeting/roles'];
 
       const roleIds = Object.keys(summary);
       const result = roleIds.map(x => ({
@@ -39,10 +39,10 @@ export default {
     },
     summaryColumns() {
       return [
-        { field: "role", label: "Role" },
-        { field: "yes", label: "Yes" },
-        { field: "no", label: "No" },
-        { field: "abstained", label: "Abstained" }
+        { field: 'role', label: 'Role' },
+        { field: 'yes', label: 'Yes' },
+        { field: 'no', label: 'No' },
+        { field: 'abstained', label: 'Abstained' }
       ];
     }
   }

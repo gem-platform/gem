@@ -12,7 +12,7 @@ export default {
   name: 'BallotStageView',
   computed: {
     progress() {
-      return this.$store.getters['meeting/stageState'].progress;
+      return this.$store.getters['meeting/stage/state'].progress;
     }
   }
 };
