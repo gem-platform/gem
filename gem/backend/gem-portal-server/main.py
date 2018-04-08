@@ -1,16 +1,28 @@
 """GEM Meeting Server Entry point"""
+import os
 from eve import Eve
 from flask import request, jsonify
 from flask_cors import CORS
+from eve.auth import TokenAuth
 from mongoengine import connect
 import sys
 sys.path.append("../gem-server-common")
 sys.path.append("./gem/gem-server-common")
 
 from gem.db import User
-connect("test1")
 
-app = Eve()
+db_host = os.environ.get('DB_HOST', "localhost")
+connect("test1", host=db_host)
+
+
+class MyTokenAuth(TokenAuth):
+    def check_auth(self, token, allowed_roles, resource, method):
+        # use Eve's own db driver; no additional connections/resources are used
+        print(token)
+        return True
+
+
+app = Eve()  # auth=MyTokenAuth)
 CORS(app)
 
 
@@ -27,4 +39,4 @@ def login():
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(host='0.0.0.0')
