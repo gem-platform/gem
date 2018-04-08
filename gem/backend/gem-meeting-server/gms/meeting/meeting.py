@@ -105,6 +105,6 @@ class MeetingStages:
 
         Arguments:
             index {int} -- Index of the stage.
-            stage {MeetingSatge} -- Stage.
+            stage {MeetingStage} -- Stage.
         """
         self.__changed.notify(index, stage)
