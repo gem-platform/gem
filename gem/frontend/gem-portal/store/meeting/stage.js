@@ -18,7 +18,6 @@ export const getters = {
     return rootState.meeting.stages[idx];
   },
   index(state, getters, rootState) {
-    console.log(rootState);
     return rootState.meeting.stageIndex;
   },
   proposal(state, getters, rootState) {
