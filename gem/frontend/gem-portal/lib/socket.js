@@ -2,7 +2,6 @@ import com from '@/lib/communication';
 
 export default {
   connect() {
-    console.log('connected');
     com.set(this.$socket);
 
     const { $store } = this;
@@ -25,8 +24,6 @@ export default {
 
     // send handshake
     this.$socket.emit('handshake', { token }, response => {
-      console.log('handshaked');
-      console.log('handshake', response);
       $store.dispatch('meeting/connection/setHandshakeState', response);
 
       // meta is not sent if handshake failed
@@ -38,16 +35,12 @@ export default {
     });
   },
   disconnect() {
-    console.log('disconnect');
-
     this.$store.dispatch('meeting/connection/setConnectionState', {
       connected: false,
       message: 'Connection lost'
     });
   },
   connect_error() {
-    console.log('error');
-
     this.$store.dispatch('meeting/connection/setConnectionState', {
       connected: false,
       message: 'Unable to connect'
