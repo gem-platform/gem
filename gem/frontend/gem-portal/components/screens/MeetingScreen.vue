@@ -68,7 +68,7 @@ export default {
   computed: {
     title() {
       const meetingStageType = this.$store.getters['meeting/stage/type'];
-      const proposal = this.$store.getters['meeting/proposal'];
+      const proposal = this.$store.getters['meeting/stage/proposal'];
 
       return proposal
         ? proposal.title
