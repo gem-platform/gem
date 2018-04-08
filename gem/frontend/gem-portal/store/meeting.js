@@ -10,7 +10,6 @@ export const state = () => ({
 
 export const mutations = {
   setStageIndex(state, index) {
-    console.log('setStageIndex', index);
     state.stageIndex = index || 0;
   },
   setStageState(state, data) {

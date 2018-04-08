@@ -15,7 +15,6 @@ export default {
   },
   computed: {
     title() {
-      console.log(this.$options.sockets);
       const connection = this.$store.getters['meeting/connection/connection'];
       const handshake = this.$store.getters['meeting/connection/handshake'];
 

@@ -24,7 +24,6 @@ export default {
       const stageIndex = this.$store.getters['meeting/stage/index'];
       const nextStageIndex = stageIndex + step;
       this.$socket.emit('switch_stage', { index: nextStageIndex });
-      console.log(nextStageIndex);
     }
   }
 };

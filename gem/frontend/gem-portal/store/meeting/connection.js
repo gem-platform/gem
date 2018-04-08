@@ -13,14 +13,12 @@ export const state = () => ({
 export const mutations = {
   setConnectionState(state, value) {
     state.connection.success = value;
-    console.log("setConnectionState", value);
   },
   setConnectionMessage(state, value) {
     state.connection.message = value;
   },
   setHandshakeState(state, value) {
     state.handshake.success = value;
-    console.log("setHandshakeState", value);
     state.state = value;
   },
   setHandshakeMessage(state, value) {
@@ -30,12 +28,12 @@ export const mutations = {
 
 export const actions = {
   setHandshakeState(context, data) {
-    context.commit("setHandshakeState", data.success);
-    context.commit("setHandshakeMessage", data.message);
+    context.commit('setHandshakeState', data.success);
+    context.commit('setHandshakeMessage', data.message);
   },
   setConnectionState(context, data) {
-    context.commit("setConnectionState", data.connected);
-    context.commit("setConnectionMessage", data.message);
+    context.commit('setConnectionState', data.connected);
+    context.commit('setConnectionMessage', data.message);
   }
 };
 
