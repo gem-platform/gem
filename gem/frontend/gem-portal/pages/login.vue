@@ -7,6 +7,11 @@
             GBC Environment For Meetings
           </h1>
           <div class="box">
+            <b-message 
+              v-if="isAccessError"
+              type="is-danger">
+              Wrong login/password
+            </b-message>
             <div class="field">
               <p class="control is-expanded">
                 <input v-model="name" class="input" type="text" placeholder="Name">
@@ -19,7 +24,11 @@
             </div>
             <div class="field">
               <p class="control is-expanded">
-                <a @click="signIn" class="button is-fullwidth is-primary">Login</a>
+                <a @click="signIn"
+                  :class="{'is-loading': isLoading}"
+                  class="button is-fullwidth is-primary">
+                  Login
+                </a>
               </p>
             </div>
           </div>
@@ -35,24 +44,30 @@ export default {
   data() {
     return {
       name: '',
-      password: ''
+      password: '',
+      isAccessError: false,
+      isLoading: false
     };
   },
   methods: {
     async signIn() {
+      this.isLoading = true;
       try {
-        const res = await this.$axios.post('http://localhost:5000/login', {
+        const res = await this.$axios.post('/api/login', {
           name: this.name,
           password: this.password
         });
+
         if (res.data.success) {
           localStorage.token = res.data.token;
           this.$router.push('/meeting');
         } else {
-          alert("It isn't you bro!");
+          this.isAccessError = true;
         }
       } catch (e) {
         alert('Some error!');
+      } finally {
+        this.isLoading = false;
       }
     }
   }
