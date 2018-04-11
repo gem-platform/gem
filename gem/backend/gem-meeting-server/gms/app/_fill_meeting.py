@@ -16,7 +16,7 @@ def fill_meeting(meeting):
     # todo: populate with real data
     db_host = os.environ.get('DB_HOST', "localhost")
 
-    connect("test1", host=db_host)
+    connect("test", host=db_host)
     db_meeting = Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
 
     # add agenda stage

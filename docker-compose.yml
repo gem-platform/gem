@@ -88,3 +88,6 @@ services:
       - gem-meeting-server:gem-meeting-server
     volumes:
       - ./gem/frontend/gem-portal:/usr/src/app
+    environment:
+      - API_HOST=localhost
+      - API_PORT=80

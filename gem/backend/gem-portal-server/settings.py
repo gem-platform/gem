@@ -1,13 +1,12 @@
 import os
 db_host = os.environ.get('DB_HOST', "localhost")
 
-MONGO_URI = "mongodb://"+db_host+":27017/test1"
+MONGO_URI = "mongodb://"+db_host+":27017/test"
 
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 
 proposal = {
-    'item_title': 'person',
     "schema": {
         "title": {
             "type": "string"

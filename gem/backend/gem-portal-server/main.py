@@ -12,7 +12,7 @@ sys.path.append("./gem/gem-server-common")
 from gem.db import User
 
 db_host = os.environ.get('DB_HOST', "localhost")
-connect("test1", host=db_host)
+connect("test", host=db_host)
 
 
 class MyTokenAuth(TokenAuth):
@@ -26,7 +26,7 @@ app = Eve()  # auth=MyTokenAuth)
 CORS(app)
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/api/login", methods=["POST"])
 def login():
     data = request.get_json(force=True)
     name = data.get("name")
