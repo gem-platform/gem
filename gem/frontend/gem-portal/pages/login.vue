@@ -53,19 +53,21 @@ export default {
     async signIn() {
       this.isLoading = true;
       try {
-        const res = await this.$axios.post('/api/login', {
-          name: this.name,
-          password: this.password
+        const response = await this.$auth.loginWith('local', {
+          data: {
+            name: this.name,
+            password: this.password
+          }
         });
 
-        if (res.data.success) {
-          localStorage.token = res.data.token;
+        if (this.$auth.loggedIn) {
           this.$router.push('/meeting');
         } else {
           this.isAccessError = true;
         }
       } catch (e) {
-        alert('Some error!');
+        console.error(e);
+        this.isAccessError = true;
       } finally {
         this.isLoading = false;
       }

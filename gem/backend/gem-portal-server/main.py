@@ -26,7 +26,7 @@ app = Eve()  # auth=MyTokenAuth)
 CORS(app)
 
 
-@app.route("/api/login", methods=["POST"])
+@app.route("/api/auth/login", methods=["POST"])
 def login():
     data = request.get_json(force=True)
     name = data.get("name")
@@ -36,6 +36,29 @@ def login():
     if len(users) == 1:
         return jsonify({"success": True, "token": str(users[0].id)})
     return jsonify({"success": False})
+
+
+@app.route("/api/auth/user", methods=["GET"])
+def user():
+    cookie = request.cookies.get('auth._token.local', None)
+    if not cookie:
+        return jsonify({}), 401
+
+    token = cookie[len("Bearer%20"):]
+    if token == "undefined":
+        return jsonify({}), 401
+
+    print(token)
+    users = User.objects(id=token)
+    if len(users) == 1:
+        return jsonify({
+            "user": {
+                "name": users[0].name,
+                "token": str(users[0].id)
+            }
+        })
+    else:
+        return jsonify({}), 401
 
 
 if __name__ == '__main__':

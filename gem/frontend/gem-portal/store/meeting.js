@@ -5,7 +5,8 @@ export const state = () => ({
   stages: {}, // stages states keyed by index
   proposals: {}, // proposals keyed by proposalId
   users: {}, // list of users keyed by Id
-  roles: {}
+  roles: {},
+  user: {}
 });
 
 export const mutations = {

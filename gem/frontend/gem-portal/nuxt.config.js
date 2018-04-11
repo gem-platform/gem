@@ -35,8 +35,17 @@ module.exports = {
     }
   },
   plugins: ['plugins/vue-bus', 'plugins/vue-socketio'],
-  modules: ['nuxt-buefy', '@nuxtjs/axios'],
+  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth'],
   env: {
+    API_HOST: process.env.API_HOST,
     API_HOST: process.env.API_HOST
+  },
+  router: {
+    middleware: ['auth']
+  },
+  auth: {
+    redirect: {
+      home: false
+    }
   }
 };
