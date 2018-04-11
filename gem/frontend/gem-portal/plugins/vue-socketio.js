@@ -4,7 +4,8 @@ import sockets from '@/lib/socket';
 
 export default context => {
   if (process.browser) {
-    Vue.use(VueSocket, 'http://localhost:8090');
+    const url = process.env.API_HOST || 'localhost';
+    Vue.use(VueSocket, 'http://' + url);
     Vue.options.sockets = sockets;
   }
 };
