@@ -88,6 +88,7 @@ services:
       - gem-meeting-server:gem-meeting-server
     volumes:
       - ./gem/frontend/gem-portal:/usr/src/app
+      - /usr/src/app/node_modules
     environment:
       - API_URL_BROWSER=/
       - API_HOST=gem-portal-server
