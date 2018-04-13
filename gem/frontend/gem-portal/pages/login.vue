@@ -12,25 +12,28 @@
               type="is-danger">
               Wrong login/password
             </b-message>
-            <div class="field">
-              <p class="control is-expanded">
-                <input v-model="name" class="input" type="text" placeholder="Name">
-              </p>
-            </div>
-            <div class="field">
-              <p class="control is-expanded">
-                <input v-model="password" class="input" type="text" placeholder="Password">
-              </p>
-            </div>
-            <div class="field">
-              <p class="control is-expanded">
-                <a @click="signIn"
-                  :class="{'is-loading': isLoading}"
-                  class="button is-fullwidth is-primary">
-                  Login
-                </a>
-              </p>
-            </div>
+            
+            <form v-on:submit.prevent='submit'>
+              <div class="field">
+                <p class="control is-expanded">
+                  <input v-model="name" class="input" type="text" placeholder="Name">
+                </p>
+              </div>
+              <div class="field">
+                <p class="control is-expanded">
+                  <input v-model="password" class="input" type="text" placeholder="Password">
+                </p>
+              </div>
+              <div class="field">
+                <p class="control is-expanded">
+                  <button type="submit" @click="signIn"
+                    :class="{'is-loading': isLoading}"
+                    class="button is-fullwidth is-primary">
+                    Login
+                  </button>
+                </p>
+              </div>
+            </form>
           </div>
         </div>
       </div>
@@ -71,7 +74,8 @@ export default {
       } finally {
         this.isLoading = false;
       }
-    }
+    },
+    submit() {}
   }
 };
 </script>
