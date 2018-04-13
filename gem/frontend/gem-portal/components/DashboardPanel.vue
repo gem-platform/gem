@@ -1,0 +1,32 @@
+<template>
+  <aside class="menu">
+    <p class="menu-label">
+      General
+    </p>
+    <ul class="menu-list">
+        <li><nuxt-link to="/dashboard/proposals" class="is-active">Proposals</nuxt-link></li>
+        <li><a>Meetings</a></li>
+        <li><a>Laws</a></li>
+    </ul>
+    
+    <p class="menu-label">
+    Administration
+    </p>
+    
+    <ul class="menu-list">
+      <li><a>Users</a></li>
+      <li><a>Roles</a></li>
+      <li><a>Tokens</a></li>
+    </ul>
+  </aside>
+</template>
+
+<script>
+export default {
+  name: 'DashboardPanel'
+};
+</script>
+
+<style>
+
+</style>
