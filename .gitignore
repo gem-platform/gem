@@ -3,6 +3,7 @@
 .ropeproject
 .DS_Store
 .vscode
+.docker-sync
 
 *.pyc
 __pycache__

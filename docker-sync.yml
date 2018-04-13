@@ -1,0 +1,5 @@
+version: "2"
+
+syncs:
+  gem-portal-client-sync:
+    src: './gem/frontend/gem-portal'
