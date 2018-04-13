@@ -8,26 +8,27 @@
           </h1>
           <div class="box">
             <b-message 
-              v-if="isAccessError"
+              v-if="error"
               type="is-danger">
-              Wrong login/password
+              {{ error }}
             </b-message>
             
             <form v-on:submit.prevent='submit'>
+              <b-field
+                :type="nameFieldType">
+                <b-input v-model="name" placeholder="Name"/>
+              </b-field>
+
+              <b-field
+                :type="passwordFieldType">
+                <b-input v-model="password" type="password" placeholder="Password" password-reveal/>
+              </b-field>
+
               <div class="field">
                 <p class="control is-expanded">
-                  <input v-model="name" class="input" type="text" placeholder="Name">
-                </p>
-              </div>
-              <div class="field">
-                <p class="control is-expanded">
-                  <input v-model="password" class="input" type="text" placeholder="Password">
-                </p>
-              </div>
-              <div class="field">
-                <p class="control is-expanded">
-                  <button type="submit" @click="signIn"
-                    :class="{'is-loading': isLoading}"
+                  <button
+                    type="submit"
+                    :class="{'is-loading': isBusy}"
                     class="button is-fullwidth is-primary">
                     Login
                   </button>
@@ -48,34 +49,44 @@ export default {
     return {
       name: '',
       password: '',
-      isAccessError: false,
-      isLoading: false
+      error: undefined,
+      nameFieldType: '',
+      passwordFieldType: ''
     };
+  },
+  computed: {
+    isBusy() {
+      return this.$store.state.auth.busy;
+    }
   },
   methods: {
     async signIn() {
-      this.isLoading = true;
       try {
+        const credentials = { name: this.name, password: this.password };
         const response = await this.$auth.loginWith('local', {
-          data: {
-            name: this.name,
-            password: this.password
-          }
+          data: credentials
         });
 
-        if (this.$auth.loggedIn) {
-          this.$router.push('/');
-        } else {
-          this.isAccessError = true;
-        }
+        this.error = undefined;
+        this.$router.push('/');
       } catch (e) {
-        console.error(e);
-        this.isAccessError = true;
-      } finally {
-        this.isLoading = false;
+        this.error = 'Some error occured';
+
+        const code = e.response.status;
+        if (code == 401) this.error = 'Wrong login/password';
       }
     },
-    submit() {}
+    submit() {
+      this.nameFieldType = !this.name ? 'is-danger' : '';
+      this.passwordFieldType = !this.password ? 'is-danger' : '';
+
+      if (!(this.name && this.password)) {
+        this.error = 'Login and password required';
+        return false;
+      }
+
+      this.signIn();
+    }
   }
 };
 </script>
