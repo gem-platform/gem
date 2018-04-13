@@ -64,7 +64,7 @@ export default {
         });
 
         if (this.$auth.loggedIn) {
-          this.$router.push('/meeting');
+          this.$router.push('/');
         } else {
           this.isAccessError = true;
         }
