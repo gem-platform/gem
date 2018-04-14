@@ -35,7 +35,7 @@ def login():
     print(users, name, password)
     if len(users) == 1:
         return jsonify({"success": True, "token": str(users[0].id)})
-    return jsonify({"success": False})
+    return jsonify({"success": False}), 401
 
 
 @app.route("/api/auth/user", methods=["GET"])
