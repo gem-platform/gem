@@ -1,12 +1,21 @@
 from itertools import chain
-from mongoengine import (signals, Document, StringField, BooleanField, DictField,
-                         ListField, ReferenceField, EmbeddedDocumentField,
-                         EmbeddedDocument)
+from mongoengine import (signals, Document, StringField, BooleanField,
+                         DictField, ListField, ReferenceField,
+                         EmbeddedDocumentField, EmbeddedDocument, DateTimeField)
 
 from gem.db.signals import make_ballot_secret
 
 
-class Proposal(Document):
+class GemDocument(Document):
+    meta = {
+        'abstract': True,
+    }
+    created = DateTimeField(db_field="_created")
+    updated = DateTimeField(db_field="_updated")
+    etag = StringField(db_field="_etag")
+
+
+class Proposal(GemDocument):
     """Proposal document"""
     title = StringField(required=True)
     index = StringField(required=True)
