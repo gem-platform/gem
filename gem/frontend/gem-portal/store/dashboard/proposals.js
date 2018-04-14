@@ -24,8 +24,21 @@ export const actions = {
       commit('set', res._items);
     }
   },
-  update({ commit }, data) {
+  async update({ commit }, data) {
+    commit('setBusy', true, { root: true });
+
+    await this.$axios.$put('/api/proposal/' + data._id, data);
     commit('update', data);
+
+    commit('setBusy', false, { root: true });
+  },
+  async create({ commit }, data) {
+    commit('setBusy', true, { root: true });
+
+    await this.$axios.$post('/api/proposal', data);
+
+    commit('setBusy', false, { root: true });
+    // commit('create', data);
   }
 };
 

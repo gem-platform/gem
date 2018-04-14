@@ -11,7 +11,7 @@
       :columns="columns">
       <template slot-scope="props">
         <b-table-column field="id" label="Index">
-          <nuxt-link :to="proposalUrl(props.row.index)">{{ props.row.index }}</nuxt-link>
+          <nuxt-link :to="proposalUrl(props.row.index)">{{ props.row.index || 'Undefined' }}</nuxt-link>
         </b-table-column>
 
         <b-table-column field="title" label="Title">
