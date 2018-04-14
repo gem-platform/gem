@@ -4,9 +4,10 @@
       General
     </p>
     <ul class="menu-list">
-        <li><nuxt-link to="/dashboard/proposals" class="is-active">Proposals</nuxt-link></li>
-        <li><a>Meetings</a></li>
-        <li><a>Laws</a></li>
+      <li><nuxt-link to="/dashboard" active-class='is-active' exact>Home</nuxt-link></li>
+      <li><nuxt-link to="/dashboard/proposals" active-class='is-active' exact>Proposals</nuxt-link></li>
+      <li><a>Meetings</a></li>
+      <li><a>Laws</a></li>
     </ul>
     
     <p class="menu-label">
@@ -26,7 +27,3 @@ export default {
   name: 'DashboardPanel'
 };
 </script>
-
-<style>
-
-</style>
