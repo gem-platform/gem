@@ -55,5 +55,6 @@ module.exports = {
     redirect: {
       home: false
     }
-  }
+  },
+  css: ['~/assets/main.css']
 };
