@@ -21,7 +21,8 @@
         <div class="navbar-start">
           <nuxt-link 
             class="navbar-item" 
-            to="/dashboard">
+            to="/dashboard"
+            active-class='is-active'>
             Dashboard
           </nuxt-link>
           <nuxt-link 
