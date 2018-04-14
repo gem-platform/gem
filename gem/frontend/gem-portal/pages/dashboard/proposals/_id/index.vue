@@ -1,5 +1,14 @@
 <template>
   <div class="content">
+    <div class="field is-grouped is-grouped-multiline">
+      <p class="control">
+        <nuxt-link :to="editUrl" class="button is-light">Edit</nuxt-link>
+      </p>
+      <p class="control">
+        <nuxt-link :to="deleteUrl" class="button is-light">Delete</nuxt-link>
+      </p>
+    </div>
+    
     <h1>{{id}}:{{ title }}</h1>
     {{ content }}
   </div>
@@ -21,6 +30,14 @@ export default {
     proposal() {
       const proposalIndex = this.$route.params.id;
       return this.$store.getters['dashboard/proposals/get'](proposalIndex)[0];
+    },
+    editUrl() {
+      const proposalIndex = this.$route.params.id;
+      return '/dashboard/proposals/' + proposalIndex + '/edit';
+    },
+    deleteUrl() {
+      const proposalIndex = this.$route.params.id;
+      return '/dashboard/proposals/' + proposalIndex + '/delete';
     }
   },
   async fetch({ store, route }) {

@@ -5,6 +5,10 @@ export const state = () => ({
 export const mutations = {
   set(state, value) {
     state.proposals = value;
+  },
+  update(state, value) {
+    const proposal = state.proposals.find(i => i._id == value._id);
+    Object.assign(proposal, value);
   }
 };
 
@@ -19,6 +23,9 @@ export const actions = {
       );
       commit('set', res._items);
     }
+  },
+  update({ commit }, data) {
+    commit('update', data);
   }
 };
 

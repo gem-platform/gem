@@ -1,3 +1,5 @@
+const webpack = require('webpack');
+
 module.exports = {
   /*
   ** Headers of the page
@@ -32,7 +34,13 @@ module.exports = {
           exclude: /(node_modules)/
         });
       }
-    }
+    },
+
+    plugins: [
+      new webpack.ProvidePlugin({
+        _: 'lodash'
+      })
+    ]
   },
   plugins: ['plugins/vue-bus', 'plugins/vue-socketio'],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth'],

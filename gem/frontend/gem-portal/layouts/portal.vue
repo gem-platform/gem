@@ -5,10 +5,10 @@
 
     <div class="container">
       <div class="columns">
-        <div class="column is-3">
+        <div class="column is-2">
           <DashboardPanel/>
         </div>
-        <div class="column is-9">
+        <div class="column is-10">
           <nuxt/>
         </div>
       </div>

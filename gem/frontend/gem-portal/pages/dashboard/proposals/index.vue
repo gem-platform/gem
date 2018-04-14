@@ -1,5 +1,11 @@
 <template>
   <div>
+    <div class="field is-grouped is-grouped-multiline">
+      <p class="control">
+        <nuxt-link :to="newUrl" class="button is-light">Create new</nuxt-link>
+      </p>
+    </div>
+
     <b-table
       :data="proposals"
       :columns="columns">
@@ -34,6 +40,9 @@ export default {
           label: 'Title'
         }
       ];
+    },
+    newUrl() {
+      return '/dashboard/proposals/@new/edit';
     }
   },
   methods: {
