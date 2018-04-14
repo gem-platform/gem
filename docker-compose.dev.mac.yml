@@ -87,9 +87,13 @@ services:
     links:
       - gem-meeting-server:gem-meeting-server
     volumes:
-      - ./gem/frontend/gem-portal:/usr/src/app
+      - gem-portal-client-sync:/usr/src/app:nocopy
       - /usr/src/app/node_modules
     environment:
       - API_URL_BROWSER=/
       - API_HOST=gem-portal-server
       - API_PORT=5000
+
+volumes:
+  gem-portal-client-sync:
+    external: true
