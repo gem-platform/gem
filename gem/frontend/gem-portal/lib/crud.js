@@ -7,6 +7,7 @@ export default class CrudController {
     this.storePrefix = options.storePrefix;
     this.fields = options.fields;
     this.store = options.store;
+    this.redirectUrl = options.redirectUrl;
   }
 
   entity({ id }) {
