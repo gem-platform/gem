@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash'],
     /*
     ** Run ESLint on save
     */
@@ -34,20 +34,10 @@ module.exports = {
           exclude: /(node_modules)/
         });
       }
-    },
-
-    plugins: [
-      new webpack.ProvidePlugin({
-        _: 'lodash'
-      })
-    ]
+    }
   },
   plugins: ['plugins/vue-bus', 'plugins/vue-socketio'],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth'],
-  env: {
-    API_HOST: process.env.API_HOST,
-    API_HOST: process.env.API_HOST
-  },
   router: {
     middleware: ['auth']
   },
