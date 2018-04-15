@@ -39,7 +39,6 @@ export default {
   computed: {
     proposal() {
       return controller.entity({
-        store: this.$store,
         id: this.$route.params.id
       });
     },
@@ -51,9 +50,7 @@ export default {
     async submit() {
       await controller.submit({
         id: this.proposal._id,
-        data: this.proposal,
-        axios: this.$axios,
-        store: this.$store
+        data: this.proposal
       });
 
       this.$router.push(REDIRECT_URL);
@@ -62,6 +59,9 @@ export default {
   },
   async fetch({ store, params, error }) {
     await controller.fetch({ store, id: params.id });
+  },
+  created() {
+    controller.set({ store: this.$store });
   }
 };
 </script>
