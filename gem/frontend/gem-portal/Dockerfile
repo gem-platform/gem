@@ -14,4 +14,6 @@ COPY . /usr/src/app
 ENV HOST 0.0.0.0
 EXPOSE 3000
 
-CMD [ "npm", "run", "dev" ]
+RUN npm run build
+
+CMD [ "npm", "run", "start" ]

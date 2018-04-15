@@ -46,5 +46,8 @@ module.exports = {
       home: false
     }
   },
-  css: ['~/assets/main.css']
+  css: ['~/assets/main.css'],
+  axios: {
+    browserBaseURL: '/'
+  }
 };
