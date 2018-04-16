@@ -1,51 +1,37 @@
 <template>
-  <div class="content">
-    Do you really want to delete?
-    {{ proposal.title }}
-    <a class="button is-danger" @click="submit">Confirm</a>
+  <div class="content center">
+    <div v-if="entity">
+      <h1>Delete</h1>
+      <p>Are you sure you want to delete "{{ entity.title }}"?</p>
+        <a class="button is-danger" @click="remove" :class="{'is-loading': busy}">Confirm</a>
+    </div>
+    <div v-else>
+      Proposal doesn't exist any more.
+    </div>
   </div>
 </template>
 
 <script>
-const FIELDS = ['_id', 'title', 'index', 'content'];
-const STORE_GET_METHOD = 'dashboard/proposals/all';
-const STORE_FETCH_METHOD = 'dashboard/proposals/fetch';
-
-const proposals = store => {
-  return store.getters[STORE_GET_METHOD];
-};
+import CrudComponentMixin from '@/components/CrudComponentMixin';
+import BusyMixin from '@/components/BusyMixin';
 
 export default {
   layout: 'portal',
-  data() {
-    return {
-      isBusy: false
-    };
-  },
-  computed: {
-    proposal() {
-      const id = this.$route.params.id;
-      const proposal = proposals(this.$store).find(i => i.index == id);
-      return _.pick({ ...proposal }, FIELDS);
-    }
-  },
-  methods: {
-    async submit() {
-      try {
-        const id = this.proposal._id;
-        const res = await this.$axios.delete('/api/proposal/' + id);
-        this.$router.push('/dashboard/proposals');
-      } catch (e) {
-        console.error(e);
-      }
-    }
-  },
-  async fetch({ store, params, error }) {
-    await store.dispatch(STORE_FETCH_METHOD, { index: params.id });
-    const proposal = proposals(store).find(i => i.index == params.id);
-    if (!proposal) {
-      error({ message: 'Proposal not found', statusCode: 404 });
-    }
-  }
+  mixins: [
+    CrudComponentMixin({
+      model: 'proposal'
+    }),
+    BusyMixin
+  ]
 };
 </script>
+
+<style>
+.center {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  align-items: center;
+  text-align: center;
+}
+</style>

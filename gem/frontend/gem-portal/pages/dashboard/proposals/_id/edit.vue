@@ -30,11 +30,8 @@ export default {
   layout: 'portal',
   mixins: [
     CrudComponentMixin({
-      apiPrefix: '/api/proposal/',
-      storePrefix: 'dashboard/proposals/',
-      idField: 'index',
-      fields: ['_id', 'title', 'index', 'content'],
-      redirectUrl: '/dashboard/proposals'
+      model: 'proposal',
+      fields: ['_id', 'title', 'index', 'content']
     }),
     BusyMixin
   ]

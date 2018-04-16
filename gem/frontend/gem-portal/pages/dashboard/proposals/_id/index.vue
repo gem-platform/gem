@@ -9,40 +9,21 @@
       </p>
     </div>
     
-    <h1>{{id}}:{{ title }}</h1>
-    {{ content }}
+    <h1>{{ entity.title }} ({{entity.index}})</h1>
+    {{ entity.content }}
   </div>
 </template>
 
 <script>
+import CrudComponentMixin from '@/components/CrudComponentMixin';
+
 export default {
   layout: 'portal',
-  computed: {
-    id() {
-      return this.proposal.index;
-    },
-    title() {
-      return this.proposal.title;
-    },
-    content() {
-      return this.proposal.content;
-    },
-    proposal() {
-      const proposalIndex = this.$route.params.id;
-      return this.$store.getters['dashboard/proposals/get'](proposalIndex)[0];
-    },
-    editUrl() {
-      const proposalIndex = this.$route.params.id;
-      return '/dashboard/proposals/' + proposalIndex + '/edit';
-    },
-    deleteUrl() {
-      const proposalIndex = this.$route.params.id;
-      return '/dashboard/proposals/' + proposalIndex + '/delete';
-    }
-  },
-  async fetch({ store, route }) {
-    const id = route.params.id;
-    await store.dispatch('dashboard/proposals/fetch', { index: id });
-  }
+  mixins: [
+    CrudComponentMixin({
+      model: 'proposal',
+      fields: ['_id', 'title', 'index', 'content']
+    })
+  ]
 };
 </script>

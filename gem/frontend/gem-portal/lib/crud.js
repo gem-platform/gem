@@ -20,13 +20,23 @@ export default class CrudController {
     const getter = this.store.getters[getterName];
     const entity = getter.find(i => i[this.idField] == id);
 
+    if (!entity) {
+      return undefined;
+    }
+
     // Return only fields provided in this.fields
-    return _.pick({ ...entity }, this.fields);
+    const keys = this.fields || Object.keys(entity);
+    const ent = { ...entity };
+    return _.pick(ent, keys);
   }
 
-  async submit({ id, data }) {
+  async save({ id, data }) {
     const method = id ? 'update' : 'create';
     await this.store.dispatch(this.storePrefix + method, data);
+  }
+
+  async remove({ id }) {
+    await this.store.dispatch(this.storePrefix + 'remove', { id });
   }
 
   async fetch({ id, store }) {

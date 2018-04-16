@@ -39,6 +39,14 @@ export const actions = {
 
     commit('setBusy', false, { root: true });
     // commit('create', data);
+  },
+  async remove({ commit }, data) {
+    commit('setBusy', true, { root: true });
+
+    await this.$axios.$delete('/api/proposal/' + data.id);
+
+    commit('setBusy', false, { root: true });
+    // commit('create', data);
   }
 };
 
@@ -49,7 +57,7 @@ export const getters = {
   get(state) {
     return index =>
       state.proposals.filter(item => {
-        return item.index == index;
+        return item._id == index;
       });
   }
 };
