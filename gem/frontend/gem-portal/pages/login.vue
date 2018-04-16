@@ -7,28 +7,34 @@
             GBC Environment For Meetings
           </h1>
           <div class="box">
-            <b-message 
+            <b-message
               v-if="error"
               type="is-danger">
               {{ error }}
             </b-message>
-            
-            <form v-on:submit.prevent='submit'>
+
+            <form @submit.prevent="submit">
               <b-field
                 :type="nameFieldType">
-                <b-input v-model="name" placeholder="Name"/>
+                <b-input
+                  v-model="name"
+                  placeholder="Name"/>
               </b-field>
 
               <b-field
                 :type="passwordFieldType">
-                <b-input v-model="password" type="password" placeholder="Password" password-reveal/>
+                <b-input
+                  v-model="password"
+                  type="password"
+                  placeholder="Password"
+                  password-reveal/>
               </b-field>
 
               <div class="field">
                 <p class="control is-expanded">
                   <button
-                    type="submit"
                     :class="{'is-loading': isBusy}"
+                    type="submit"
                     class="button is-fullwidth is-primary">
                     Login
                   </button>
@@ -63,7 +69,7 @@ export default {
     async signIn() {
       try {
         const credentials = { name: this.name, password: this.password };
-        const response = await this.$auth.loginWith('local', {
+        await this.$auth.loginWith('local', {
           data: credentials
         });
 
@@ -73,7 +79,7 @@ export default {
         this.error = 'Some error occured';
 
         const code = e.response.status;
-        if (code == 401) this.error = 'Wrong login/password';
+        if (code === 401) this.error = 'Wrong login/password';
       }
     },
     submit() {

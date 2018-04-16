@@ -1,4 +1,4 @@
-import User from '@/lib/user.js';
+import User from '@/lib/user';
 
 export const state = () => ({
   stageIndex: -1, // current stage number

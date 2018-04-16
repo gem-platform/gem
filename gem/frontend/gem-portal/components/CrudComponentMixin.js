@@ -1,14 +1,14 @@
 import _ from 'lodash';
 
-export default options => {
+export default (options) => {
   options = options || {};
-  options.storePrefix = 'dashboard/' + options.entities;
+  options.storePrefix = `dashboard/${options.entities}`;
 
   return {
     computed: {
       entities() {
         const entities = this.$route.params.entities || options.entities;
-        return this.$store.getters['dashboard/' + entities + '/all'];
+        return this.$store.getters[`dashboard/${entities}/all`];
       },
       entity() {
         const id = this.$route.params.id;
@@ -47,17 +47,14 @@ export default options => {
       },
       _storeMethod(method) {
         const entities = this.$route.params.entities || options.entities;
-        return 'dashboard/' + entities + '/' + method;
+        return `dashboard/${entities}/${method}`;
       },
       _url(data) {
         data = data || {};
         const entities = this.$route.params.entities || options.entities;
-        return (
-          '/dashboard/' +
-          entities +
-          (data.id ? '/' + data.id : '') +
-          (data.action ? '/' + data.action : '')
-        );
+        return `/dashboard/${entities}${data.id ? `/${data.id}` : ''}${
+          data.action ? `/${data.action}` : ''
+        }`;
       },
       async save() {
         const id = this.entity._id;
@@ -78,11 +75,10 @@ export default options => {
         this.$snackbar.open({ message: 'Proposal has been deleted' });
       }
     },
-    async fetch({ store, params, error }) {
+    async fetch({ store, params }) {
       if (params.id == '@new') return;
 
-      const method =
-        'dashboard/' + (params.entities || options.entities) + '/fetch';
+      const method = `dashboard/${params.entities || options.entities}/fetch`;
       await store.dispatch(method, params.id ? { _id: params.id } : undefined);
     }
   };

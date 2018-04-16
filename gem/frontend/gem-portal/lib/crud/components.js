@@ -1,5 +1,5 @@
-import indexProposals from '@/components/dashboard/proposals/index';
-import editProposals from '@/components/dashboard/proposals/edit';
+import indexProposals from '@/components/dashboard/proposals/index.vue';
+import editProposals from '@/components/dashboard/proposals/edit.vue';
 
 export default {
   index: {

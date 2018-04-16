@@ -2,42 +2,42 @@
   <nav class="navbar is-light">
     <div class="container">
       <div class="navbar-brand">
-        <nuxt-link 
-          class="navbar-item brand-text" 
+        <nuxt-link
+          class="navbar-item brand-text"
           to="/">
-          GEM         
+          GEM
         </nuxt-link>
-        <div 
-          class="navbar-burger burger" 
+        <div
+          class="navbar-burger burger"
           data-target="navMenu">
           <span/>
           <span/>
           <span/>
         </div>
       </div>
-      <div 
-        id="navMenu" 
+      <div
+        id="navMenu"
         class="navbar-menu">
         <div class="navbar-start">
-          <nuxt-link 
-            class="navbar-item" 
+          <nuxt-link
+            class="navbar-item"
             to="/dashboard"
-            active-class='is-active'>
+            active-class="is-active">
             Dashboard
           </nuxt-link>
-          <nuxt-link 
-            class="navbar-item" 
+          <nuxt-link
+            class="navbar-item"
             to="/meeting">
             Meeting
-          </nuxt-link>          
+          </nuxt-link>
         </div>
 
         <div class="navbar-end">
           <b-dropdown
-            v-if="authenticated"  
+            v-if="authenticated"
             hoverable
             position="is-bottom-left">
-            <a 
+            <a
               slot="trigger"
               class="navbar-item">
               <span>{{ user.name }}</span>
@@ -45,7 +45,7 @@
 
             <b-dropdown-item has-link>
               <nuxt-link
-                class="navbar-item" 
+                class="navbar-item"
                 to="/logout">
                 Logout
               </nuxt-link>
@@ -53,8 +53,8 @@
           </b-dropdown>
 
           <nuxt-link
-            v-else 
-            class="navbar-item" 
+            v-else
+            class="navbar-item"
             to="/login">
             Login
           </nuxt-link>

@@ -25,11 +25,6 @@ export default {
   created() {
     this.$bus.on('notification', this.snackbar);
   },
-  methods: {
-    snackbar(data) {
-      this.$snackbar.open(data);
-    }
-  },
   mounted() {
     const token = this.$auth.user.token;
 
@@ -44,7 +39,7 @@ export default {
     }
 
     // send handshake
-    this.$socket.emit('handshake', { token }, response => {
+    this.$socket.emit('handshake', { token }, (response) => {
       // meta is not sent if handshake failed
       if (response.state) {
         this.$store.dispatch('meeting/user', response.user);
@@ -57,6 +52,11 @@ export default {
 
       this.$store.dispatch('meeting/connection/setHandshakeState', response);
     });
+  },
+  methods: {
+    snackbar(data) {
+      this.$snackbar.open(data);
+    }
   }
 };
 </script>

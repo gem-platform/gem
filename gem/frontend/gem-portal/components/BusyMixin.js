@@ -1,7 +1,7 @@
 export default {
   computed: {
     busy() {
-      return this.$store.getters['busy'];
+      return this.$store.getters.busy;
     }
   }
 };

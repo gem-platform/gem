@@ -2,14 +2,20 @@
   <div class="content">
     <div class="field is-grouped is-grouped-multiline">
       <p class="control">
-        <nuxt-link :to="editUrl" class="button is-light">Edit</nuxt-link>
+        <nuxt-link
+          :to="editUrl"
+          class="button is-light">Edit</nuxt-link>
       </p>
       <p class="control">
-        <nuxt-link :to="deleteUrl" class="button is-light">Delete</nuxt-link>
+        <nuxt-link
+          :to="deleteUrl"
+          class="button is-light">Delete</nuxt-link>
       </p>
     </div>
 
-    <div :is="this.$route.params.entities" :entity="entity"/>
+    <div
+      :is="this.$route.params.entities"
+      :entity="entity"/>
   </div>
 </template>
 

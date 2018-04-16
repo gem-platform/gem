@@ -7,7 +7,7 @@ export const mutations = {
     state.proposals = value;
   },
   update(state, value) {
-    const proposal = state.proposals.find(i => i._id == value._id);
+    const proposal = state.proposals.find(i => i._id === value._id);
     Object.assign(proposal, value);
   }
 };
@@ -18,16 +18,14 @@ export const actions = {
       const res = await this.$axios.$get('/api/proposals');
       commit('set', res._items);
     } else {
-      const res = await this.$axios.$get(
-        '/api/proposals?where=' + JSON.stringify(data)
-      );
+      const res = await this.$axios.$get(`/api/proposals?where=${JSON.stringify(data)}`);
       commit('set', res._items);
     }
   },
   async update({ commit }, data) {
     commit('setBusy', true, { root: true });
 
-    await this.$axios.$put('/api/proposals/' + data._id, data);
+    await this.$axios.$put(`/api/proposals/${data._id}`, data);
     commit('update', data);
 
     commit('setBusy', false, { root: true });
@@ -43,7 +41,7 @@ export const actions = {
   async remove({ commit }, data) {
     commit('setBusy', true, { root: true });
 
-    await this.$axios.$delete('/api/proposals/' + data.id);
+    await this.$axios.$delete(`/api/proposals/${data.id}`);
 
     commit('setBusy', false, { root: true });
     // commit('create', data);
@@ -55,9 +53,6 @@ export const getters = {
     return state.proposals;
   },
   get(state) {
-    return index =>
-      state.proposals.filter(item => {
-        return item._id == index;
-      });
+    return index => state.proposals.filter(item => item._id === index);
   }
 };

@@ -17,8 +17,8 @@
 </template>
 
 <script>
-import Navbar from '~/components/Navbar';
-import DashboardPanel from '~/components/DashboardPanel';
+import Navbar from '@/components/Navbar.vue';
+import DashboardPanel from '@/components/DashboardPanel.vue';
 
 export default {
   components: {

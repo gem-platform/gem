@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ entity.title }} ({{entity.index}})</h1>
+    <h1>{{ entity.title }} ({{ entity.index }})</h1>
     {{ entity.content }}
   </div>
 </template>

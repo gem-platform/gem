@@ -1,13 +1,20 @@
 <template>
   <div class="content">
-    <form v-on:submit.prevent='save'>
+    <form @submit.prevent="save">
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">
-          <button type="submit" class="button is-light" :class="{'is-loading':busy}">Save changes</button>
+          <button
+            :class="{'is-loading':busy}"
+            type="submit"
+            class="button is-light">
+            Save changes
+          </button>
         </p>
       </div>
 
-      <div :is="this.$route.params.entities" :entity="entity"/>
+      <div
+        :is="this.$route.params.entities"
+        :entity="entity"/>
     </form>
   </div>
 </template>

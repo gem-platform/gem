@@ -3,10 +3,10 @@
     <div v-if="entity">
       <h1>Delete</h1>
       <p>Are you sure you want to delete?</p>
-      <a 
+      <a
+        :class="{'is-loading': busy}"
         class="button is-danger"
-        @click="remove"
-        :class="{'is-loading': busy}">
+        @click="remove">
         Confirm
       </a>
     </div>
