@@ -2,11 +2,16 @@
   <div class="content center">
     <div v-if="entity">
       <h1>Delete</h1>
-      <p>Are you sure you want to delete "{{ entity.title }}"?</p>
-        <a class="button is-danger" @click="remove" :class="{'is-loading': busy}">Confirm</a>
+      <p>Are you sure you want to delete?</p>
+      <a 
+        class="button is-danger"
+        @click="remove"
+        :class="{'is-loading': busy}">
+        Confirm
+      </a>
     </div>
     <div v-else>
-      Proposal doesn't exist any more.
+      Entity doesn't exist any more.
     </div>
   </div>
 </template>
@@ -17,12 +22,7 @@ import BusyMixin from '@/components/BusyMixin';
 
 export default {
   layout: 'portal',
-  mixins: [
-    CrudComponentMixin({
-      model: 'proposal'
-    }),
-    BusyMixin
-  ]
+  mixins: [CrudComponentMixin(), BusyMixin]
 };
 </script>
 

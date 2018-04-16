@@ -30,7 +30,7 @@ export default {
   layout: 'portal',
   mixins: [
     CrudComponentMixin({
-      model: 'proposal',
+      entities: 'proposals',
       fields: ['_id', 'title', 'index', 'content']
     }),
     BusyMixin

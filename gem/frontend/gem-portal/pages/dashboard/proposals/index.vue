@@ -27,7 +27,7 @@ import CrudComponentMixin from '@/components/CrudComponentMixin';
 
 export default {
   layout: 'portal',
-  mixins: [CrudComponentMixin({ model: 'proposal' })],
+  mixins: [CrudComponentMixin({ entities: 'proposals' })],
   computed: {
     columns() {
       return [
