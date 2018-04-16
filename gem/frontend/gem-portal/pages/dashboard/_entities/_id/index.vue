@@ -21,7 +21,6 @@ export default {
   layout: 'portal',
   mixins: [
     CrudComponentMixin({
-      entities: 'proposals',
       fields: ['_id', 'title', 'index', 'content']
     })
   ]

@@ -7,7 +7,8 @@ export default options => {
   return {
     computed: {
       entities() {
-        return this.$store.getters['dashboard/' + options.entities + '/all'];
+        const entities = this.$route.params.entities || options.entities;
+        return this.$store.getters['dashboard/' + entities + '/all'];
       },
       entity() {
         const id = this.$route.params.id;
@@ -31,27 +32,32 @@ export default options => {
         return _.pick(ent, keys);
       },
       newUrl() {
-        return '/dashboard/' + options.entities + '/@new/edit';
+        return this._url({ id: '@new', action: 'edit' });
       },
       editUrl() {
-        const proposalIndex = this.$route.params.id;
-        return '/dashboard/' + options.entities + '/' + proposalIndex + '/edit';
+        return this._url({ id: this.$route.params.id, action: 'edit' });
       },
       deleteUrl() {
-        const proposalIndex = this.$route.params.id;
-        return (
-          '/dashboard/' + options.entities + '/' + proposalIndex + '/delete'
-        );
+        return this._url({ id: this.$route.params.id, action: 'delete' });
       }
     },
     methods: {
+      viewUrl(id) {
+        return this._url({ id });
+      },
       _storeMethod(method) {
         const entities = this.$route.params.entities || options.entities;
         return 'dashboard/' + entities + '/' + method;
       },
-      _redirectUrl() {
+      _url(data) {
+        data = data || {};
         const entities = this.$route.params.entities || options.entities;
-        return '/dashboard/' + entities;
+        return (
+          '/dashboard/' +
+          entities +
+          (data.id ? '/' + data.id : '') +
+          (data.action ? '/' + data.action : '')
+        );
       },
       async save() {
         const id = this.entity._id;
@@ -60,7 +66,7 @@ export default options => {
         const method = id ? 'update' : 'create';
         await this.$store.dispatch(this._storeMethod(method), data);
 
-        this.$router.push(this._redirectUrl());
+        this.$router.push(this._url());
         this.$snackbar.open({ message: 'Proposal has been updated' });
       },
 
@@ -68,7 +74,7 @@ export default options => {
         const id = this.entity._id;
         await this.$store.dispatch(this._storeMethod('remove'), { id });
 
-        this.$router.push(this._redirectUrl());
+        this.$router.push(this._url());
         this.$snackbar.open({ message: 'Proposal has been deleted' });
       }
     },
@@ -77,7 +83,7 @@ export default options => {
 
       const method =
         'dashboard/' + (params.entities || options.entities) + '/fetch';
-      await store.dispatch(method, { _id: params.id });
+      await store.dispatch(method, params.id ? { _id: params.id } : undefined);
     }
   };
 };

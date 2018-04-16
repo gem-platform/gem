@@ -11,7 +11,7 @@
       :columns="columns">
       <template slot-scope="props">
         <b-table-column field="id" label="Index">
-          <nuxt-link :to="proposalUrl(props.row._id)">{{ props.row.index || 'Undefined' }}</nuxt-link>
+          <nuxt-link :to="viewUrl(props.row._id)">{{ props.row.index || 'Undefined' }}</nuxt-link>
         </b-table-column>
 
         <b-table-column field="title" label="Title">
@@ -27,7 +27,7 @@ import CrudComponentMixin from '@/components/CrudComponentMixin';
 
 export default {
   layout: 'portal',
-  mixins: [CrudComponentMixin({ entities: 'proposals' })],
+  mixins: [CrudComponentMixin()],
   computed: {
     columns() {
       return [
@@ -40,11 +40,6 @@ export default {
           label: 'Title'
         }
       ];
-    }
-  },
-  methods: {
-    proposalUrl(idx) {
-      return '/dashboard/proposals/' + idx;
     }
   }
 };
