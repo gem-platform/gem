@@ -26,5 +26,5 @@ proposal = {
 
 
 DOMAIN = {
-    "proposal": proposal
+    "proposals": proposal
 }

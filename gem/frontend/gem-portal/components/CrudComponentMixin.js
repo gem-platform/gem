@@ -2,7 +2,7 @@ import CrudController from '@/lib/crud';
 
 export default options => {
   const controller = new CrudController({
-    apiPrefix: '/api/' + options.model + '/',
+    apiPrefix: '/api/' + options.model + 's/',
     storePrefix: 'dashboard/' + options.model + 's/',
     idField: options.idField || '_id',
     fields: options.fields, //['_id', 'title', 'index', 'content'],
