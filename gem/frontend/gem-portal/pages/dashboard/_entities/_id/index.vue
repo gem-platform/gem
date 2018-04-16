@@ -8,14 +8,14 @@
         <nuxt-link :to="deleteUrl" class="button is-light">Delete</nuxt-link>
       </p>
     </div>
-    
-    <h1>{{ entity.title }} ({{entity.index}})</h1>
-    {{ entity.content }}
+
+    <div :is="this.$route.params.entities" :entity="entity"/>
   </div>
 </template>
 
 <script>
 import CrudComponentMixin from '@/components/CrudComponentMixin';
+import CrudComponents from '@/lib/crud/components';
 
 export default {
   layout: 'portal',
@@ -23,6 +23,7 @@ export default {
     CrudComponentMixin({
       fields: ['_id', 'title', 'index', 'content']
     })
-  ]
+  ],
+  components: CrudComponents.index
 };
 </script>
