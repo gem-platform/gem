@@ -7,7 +7,7 @@
     </div>
 
     <b-table
-      :data="proposals"
+      :data="entities"
       :columns="columns">
       <template slot-scope="props">
         <b-table-column field="id" label="Index">
@@ -29,9 +29,6 @@ export default {
   layout: 'portal',
   mixins: [CrudComponentMixin({ model: 'proposal' })],
   computed: {
-    proposals() {
-      return this.$store.getters['dashboard/proposals/all'];
-    },
     columns() {
       return [
         {

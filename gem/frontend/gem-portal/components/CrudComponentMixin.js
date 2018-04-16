@@ -13,6 +13,9 @@ export default options => {
 
   return {
     computed: {
+      entities() {
+        return this.$store.getters['dashboard/' + options.model + 's/all'];
+      },
       entity() {
         return controller.entity({
           id: this.$route.params.id
