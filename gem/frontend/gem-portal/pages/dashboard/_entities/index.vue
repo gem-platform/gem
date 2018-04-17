@@ -8,44 +8,24 @@
       </p>
     </div>
 
-    <b-table
-      :data="entities"
-      :columns="columns">
-      <template slot-scope="props">
-        <b-table-column
-          field="id"
-          label="Index">
-          <nuxt-link :to="viewUrl(props.row._id)">{{ props.row.index || 'Undefined' }}</nuxt-link>
-        </b-table-column>
-
-        <b-table-column
-          field="title"
-          label="Title">
-          {{ props.row.title }}
-        </b-table-column>
-      </template>
-    </b-table>
+    <div
+      :is="component"
+      :entities="entities"
+      :view-url="viewUrl"/>
   </div>
 </template>
 
 <script>
 import CrudComponentMixin from '@/components/CrudComponentMixin';
+import CrudComponents from '@/lib/crud/components';
 
 export default {
   layout: 'portal',
-  mixins: [CrudComponentMixin()],
+  components: CrudComponents.index,
+  mixins: [CrudComponentMixin],
   computed: {
-    columns() {
-      return [
-        {
-          field: 'index',
-          label: 'Index'
-        },
-        {
-          field: 'title',
-          label: 'Title'
-        }
-      ];
+    component() {
+      return this.$route.params.entities;
     }
   }
 };

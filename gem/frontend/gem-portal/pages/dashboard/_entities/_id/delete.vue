@@ -22,7 +22,7 @@ import BusyMixin from '@/components/BusyMixin';
 
 export default {
   layout: 'portal',
-  mixins: [CrudComponentMixin(), BusyMixin]
+  mixins: [CrudComponentMixin, BusyMixin]
 };
 </script>
 

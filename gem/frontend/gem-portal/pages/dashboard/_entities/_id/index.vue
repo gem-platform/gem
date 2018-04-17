@@ -14,7 +14,7 @@
     </div>
 
     <div
-      :is="this.$route.params.entities"
+      :is="component"
       :entity="entity"/>
   </div>
 </template>
@@ -25,11 +25,12 @@ import CrudComponents from '@/lib/crud/components';
 
 export default {
   layout: 'portal',
-  components: CrudComponents.index,
-  mixins: [
-    CrudComponentMixin({
-      fields: ['_id', 'title', 'index', 'content']
-    })
-  ]
+  components: CrudComponents.id,
+  mixins: [CrudComponentMixin],
+  computed: {
+    component() {
+      return this.$route.params.entities;
+    }
+  }
 };
 </script>

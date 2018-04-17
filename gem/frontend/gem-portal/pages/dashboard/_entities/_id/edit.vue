@@ -13,7 +13,7 @@
       </div>
 
       <div
-        :is="this.$route.params.entities"
+        :is="component"
         :entity="entity"/>
     </form>
   </div>
@@ -27,12 +27,15 @@ import BusyMixin from '@/components/BusyMixin';
 export default {
   layout: 'portal',
   components: CrudComponents.edit,
-  mixins: [
-    CrudComponentMixin({
-      entities: 'proposals',
-      fields: ['_id', 'title', 'index', 'content']
-    }),
-    BusyMixin
-  ]
+  mixins: [CrudComponentMixin, BusyMixin],
+  computed: {
+    component() {
+      return this.$route.params.entities;
+    },
+    options() {
+      const { entities } = this.$route.params;
+      return CrudComponents.options[entities];
+    }
+  }
 };
 </script>
