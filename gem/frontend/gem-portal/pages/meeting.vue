@@ -26,7 +26,7 @@ export default {
     this.$bus.on('notification', this.snackbar);
   },
   mounted() {
-    const token = this.$auth.user.token;
+    const { token } = this.$auth.user;
 
     // no authentication found
     // seems to be user is not authenticated
@@ -44,10 +44,7 @@ export default {
       if (response.state) {
         this.$store.dispatch('meeting/user', response.user);
         this.$store.dispatch('meeting/meetingState', response.state);
-        this.$store.dispatch(
-          'meeting/meetingProposals',
-          response.state.proposals
-        );
+        this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
       }
 
       this.$store.dispatch('meeting/connection/setHandshakeState', response);

@@ -26,13 +26,13 @@ import BusyMixin from '@/components/BusyMixin';
 
 export default {
   layout: 'portal',
+  components: CrudComponents.edit,
   mixins: [
     CrudComponentMixin({
       entities: 'proposals',
       fields: ['_id', 'title', 'index', 'content']
     }),
     BusyMixin
-  ],
-  components: CrudComponents.edit
+  ]
 };
 </script>

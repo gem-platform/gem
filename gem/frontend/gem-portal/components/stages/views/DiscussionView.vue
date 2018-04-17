@@ -17,7 +17,7 @@ export default {
   name: 'DiscussionStageView',
   computed: {
     speaker() {
-      const speaker = this.$store.getters['meeting/stage/state'].speaker;
+      const { speaker } = this.$store.getters['meeting/stage/state'];
       const users = this.$store.getters['meeting/users'];
       return users[speaker];
     }

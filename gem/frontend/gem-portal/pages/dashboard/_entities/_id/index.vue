@@ -25,11 +25,11 @@ import CrudComponents from '@/lib/crud/components';
 
 export default {
   layout: 'portal',
+  components: CrudComponents.index,
   mixins: [
     CrudComponentMixin({
       fields: ['_id', 'title', 'index', 'content']
     })
-  ],
-  components: CrudComponents.index
+  ]
 };
 </script>

@@ -11,16 +11,16 @@ export default (options) => {
         return this.$store.getters[`dashboard/${entities}/all`];
       },
       entity() {
-        const id = this.$route.params.id;
+        const { id } = this.$route.params;
 
         // Nothing to fetch, return dummy object filled
         // with keys from this.fields
-        if (id == '@new') return _.zipObject(options.fields);
+        if (id === '@new') return _.zipObject(options.fields);
 
         // Find entity using specified getter
         const getterName = this._storeMethod('all');
         const getter = this.$store.getters[getterName];
-        const entity = getter.find(i => i._id == id);
+        const entity = getter.find(i => i._id === id);
 
         if (!entity) {
           return undefined;
@@ -76,7 +76,7 @@ export default (options) => {
       }
     },
     async fetch({ store, params }) {
-      if (params.id == '@new') return;
+      if (params.id === '@new') return;
 
       const method = `dashboard/${params.entities || options.entities}/fetch`;
       await store.dispatch(method, params.id ? { _id: params.id } : undefined);

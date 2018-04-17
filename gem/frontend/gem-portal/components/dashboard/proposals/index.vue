@@ -7,6 +7,11 @@
 
 <script>
 export default {
-  props: ['entity']
+  props: {
+    entity: {
+      type: Object,
+      required: true
+    }
+  }
 };
 </script>

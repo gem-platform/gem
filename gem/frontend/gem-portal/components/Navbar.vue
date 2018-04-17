@@ -70,7 +70,7 @@ export default {
       return this.$auth.user;
     },
     authenticated() {
-      return this.$auth.user != undefined;
+      return this.$auth.user !== undefined;
     }
   }
 };
