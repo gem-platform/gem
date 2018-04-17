@@ -13,10 +13,10 @@
 </template>
 
 <script>
-import com from "@/lib/communication";
+import com from '@/lib/communication';
 
 export default {
-  name: "AcquaintanceStageControls",
+  name: 'AcquaintanceStageControls',
   data() {
     return {
       readState: false
@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     async haveRead() {
-      const r = await com.request({ command: "have_read" });
+      const r = await com.request({ command: 'have_read' });
       this.readState = r.success;
     }
   }

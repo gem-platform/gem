@@ -1,3 +1,5 @@
+// const webpack = require('webpack');
+
 module.exports = {
   /*
   ** Headers of the page
@@ -19,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash'],
     /*
     ** Run ESLint on save
     */
@@ -36,10 +38,6 @@ module.exports = {
   },
   plugins: ['plugins/vue-bus', 'plugins/vue-socketio'],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth'],
-  env: {
-    API_HOST: process.env.API_HOST,
-    API_HOST: process.env.API_HOST
-  },
   router: {
     middleware: ['auth']
   },
@@ -47,5 +45,9 @@ module.exports = {
     redirect: {
       home: false
     }
+  },
+  css: ['~/assets/main.css'],
+  axios: {
+    browserBaseURL: '/'
   }
 };

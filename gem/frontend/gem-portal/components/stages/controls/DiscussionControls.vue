@@ -60,11 +60,6 @@ export default {
       const users = this.$store.getters['meeting/users'];
       return queue.map(x => users[x]);
     },
-    speaker() {
-      const queue = this.$store.getters['meeting/stage/state'].speaker;
-      const users = this.$store.getters['meeting/users'];
-      return users[speaker];
-    },
     columns() {
       return [
         { field: 'name', label: 'Name' },

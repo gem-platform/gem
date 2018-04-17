@@ -1,9 +1,21 @@
 export const state = () => ({
-  test: {}
+  busy: false
 });
 
-export const mutations = {};
+export const mutations = {
+  setBusy(state, value) {
+    state.busy = value;
+  }
+};
 
-export const actions = {};
+export const actions = {
+  busy({ commit }, data) {
+    commit('setBusy', data);
+  }
+};
 
-export const getters = {};
+export const getters = {
+  busy(state) {
+    return state.busy;
+  }
+};

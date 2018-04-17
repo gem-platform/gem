@@ -3,3 +3,6 @@ version: "2"
 syncs:
   gem-portal-client-sync:
     src: './gem/frontend/gem-portal'
+
+  gem-meeting-server-sync:
+    src: './gem/backend/gem-meeting-server'

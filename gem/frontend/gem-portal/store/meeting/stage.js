@@ -1,5 +1,3 @@
-import User from '@/lib/user.js';
-
 export const getters = {
   type(state, getters, rootState) {
     // meeting state is not received yet,

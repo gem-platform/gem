@@ -1,13 +1,24 @@
 from itertools import chain
-from mongoengine import (signals, Document, StringField, BooleanField, DictField,
-                         ListField, ReferenceField, EmbeddedDocumentField,
-                         EmbeddedDocument)
+from mongoengine import (signals, Document, StringField, BooleanField,
+                         DictField, ListField, ReferenceField,
+                         EmbeddedDocumentField, EmbeddedDocument, DateTimeField)
 
 from gem.db.signals import make_ballot_secret
 
 
-class Proposal(Document):
+class GemDocument(Document):
+    meta = {
+        'abstract': True,
+    }
+    created = DateTimeField(db_field="_created")
+    updated = DateTimeField(db_field="_updated")
+    etag = StringField(db_field="_etag")
+
+
+class Proposal(GemDocument):
     """Proposal document"""
+    meta = {'collection': 'proposals'}
+
     title = StringField(required=True)
     index = StringField(required=True)
     content = StringField(required=True)
@@ -15,12 +26,16 @@ class Proposal(Document):
 
 class Role(Document):
     """Role"""
+    meta = {'collection': 'roles'}
+
     name = StringField(required=True)
     permissions = ListField()
 
 
 class User(Document):
     """User"""
+    meta = {'collection': 'users'}
+
     name = StringField(required=True)
     roles = ListField(ReferenceField(Role))
     password = StringField(required=True)
@@ -38,6 +53,8 @@ class BallotRecord(EmbeddedDocument):
 
 class Ballot(Document):
     """Stores ballot data."""
+    meta = {'collection': 'ballots'}
+
     secret = BooleanField()
     votes = ListField(EmbeddedDocumentField(BallotRecord))
     proposal = ReferenceField(Proposal)
@@ -61,6 +78,8 @@ class Ballot(Document):
 
 class Comment(Document):
     """Comment"""
+    meta = {'collection': 'comments'}
+
     user = ReferenceField(User, required=True)
     proposal = ReferenceField(Proposal, required=True)
     content = StringField(required=True)
@@ -92,6 +111,8 @@ class MeetingPermissions(EmbeddedDocument):
 
 class Meeting(Document):
     """Meeting document"""
+    meta = {'collection': 'meetings'}
+
     title = StringField()
     agenda = StringField()
     proposals = ListField(ReferenceField(Proposal))

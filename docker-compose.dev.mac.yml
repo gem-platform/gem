@@ -53,7 +53,7 @@ services:
     links:
       - gem-database:gem-database
     volumes:
-      - ./gem/backend/gem-meeting-server:/usr/src/app
+      - gem-meeting-server-sync:/usr/src/app:nocopy
 
   # Meeting server
   gem-portal-server:
@@ -96,4 +96,7 @@ services:
 
 volumes:
   gem-portal-client-sync:
+    external: true
+
+  gem-meeting-server-sync:
     external: true

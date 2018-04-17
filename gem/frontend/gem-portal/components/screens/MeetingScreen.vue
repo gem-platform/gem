@@ -108,9 +108,7 @@ export default {
       return withViews.includes(type);
     },
     showControlPanel() {
-      return this.$store.getters['meeting/user'].hasPermission(
-        'session:manage'
-      );
+      return this.$store.getters['meeting/user'].hasPermission('session:manage');
     }
   }
 };
