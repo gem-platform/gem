@@ -21,6 +21,8 @@
     "python.linting.enabled": true,
 	  "prettier.eslintIntegration": true,
     "prettier.singleQuote": true,
+    "prettier.arrowParens": "avoid",
+    "prettier.trailingComma": "none",
     "eslint.autoFixOnSave": true,
     "eslint.validate": [
       {
