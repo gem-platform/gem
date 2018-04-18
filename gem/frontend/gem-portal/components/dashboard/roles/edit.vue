@@ -7,13 +7,7 @@
         size="is-large"/>
     </b-field>
 
-    <b-field label="Password">
-      <b-input
-        v-model="entity.password"
-        placeholder="Password"/>
-    </b-field>
-
-    <b-field label="Roles">
+    <b-field label="Permissions">
       <multiselect
         v-model="value"
         :options="options"
@@ -44,23 +38,27 @@ export default {
   },
   computed: {
     options() {
-      return this.$store.getters['dashboard/roles/all'];
+      return [
+        { _id: '*', name: 'Admin' },
+        { _id: 'vote', name: 'Vote' },
+        { _id: 'comment', name: 'Comment' },
+        { _id: 'discuss', name: 'Discuss' },
+        { _id: 'join', name: 'Join Session' },
+        { _id: 'manage', name: 'Manage Session' }
+      ];
     }
   },
-  async beforeCreate() {
-    await this.$store.dispatch('dashboard/roles/fetch');
-
-    if (!this.entity.roles) {
+  async created() {
+    if (!this.entity.permissions) {
       return;
     }
 
-    const roles = this.$store.getters['dashboard/roles/all'].filter(x =>
-      this.entity.roles.includes(x._id));
+    const roles = this.options.filter(x => this.entity.permissions.includes(x._id));
     this.value = roles;
   },
   methods: {
     onInput(value) {
-      this.entity.roles = value.map(x => x._id);
+      this.entity.permissions = value.map(x => x._id);
     }
   }
 };

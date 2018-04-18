@@ -27,8 +27,11 @@
           to="/dashboard/users"
           active-class="is-active">Users</nuxt-link>
       </li>
-      <li><a>Roles</a></li>
-      <li><a>Tokens</a></li>
+      <li>
+        <nuxt-link
+          to="/dashboard/roles"
+          active-class="is-active">Roles</nuxt-link>
+      </li>
     </ul>
   </aside>
 </template>
