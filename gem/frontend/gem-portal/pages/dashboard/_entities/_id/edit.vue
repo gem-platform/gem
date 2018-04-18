@@ -1,5 +1,5 @@
 <template>
-  <div class="content">
+  <div>
     <form @submit.prevent="save">
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">

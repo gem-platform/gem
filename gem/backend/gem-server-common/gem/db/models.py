@@ -24,7 +24,7 @@ class Proposal(GemDocument):
     content = StringField(required=True)
 
 
-class Role(Document):
+class Role(GemDocument):
     """Role"""
     meta = {'collection': 'roles'}
 
@@ -32,7 +32,7 @@ class Role(Document):
     permissions = ListField()
 
 
-class User(Document):
+class User(GemDocument):
     """User"""
     meta = {'collection': 'users'}
 

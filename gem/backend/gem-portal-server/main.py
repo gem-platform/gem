@@ -26,6 +26,21 @@ app = Eve()  # auth=MyTokenAuth)
 CORS(app)
 
 
+def event(response):
+    for item in response.get("_items", []):
+        if "password" in item:
+            del item["password"]
+
+
+def event2(item, original):
+    if not item.get("password", None):
+        item["password"] = original.get("password", None)
+
+
+app.on_fetched_resource_users += event
+app.on_replace_users += event2
+
+
 @app.route("/api/auth/login", methods=["POST"])
 def login():
     data = request.get_json(force=True)

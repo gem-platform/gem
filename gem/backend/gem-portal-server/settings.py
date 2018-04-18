@@ -24,7 +24,32 @@ proposal = {
     }
 }
 
+users = {
+    "schema": {
+        "name": {"type": "string"},
+        "roles": {
+            "type": "list",
+            "schema": {
+                "type": "objectid",
+                "data_relation": {
+                    "resource": "roles"
+                }
+            }
+        },
+        "password": {"type": "string"}
+    }
+}
+
+roles = {
+    "schema": {
+        "name": {"type": "string"},
+        "permissions": {"type": "list"}
+    }
+}
+
 
 DOMAIN = {
-    "proposals": proposal
+    "proposals": proposal,
+    "users": users,
+    "roles": roles
 }
