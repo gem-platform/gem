@@ -1,13 +1,11 @@
 <template>
   <div>
     <div
-      v-if="speaker"
-      class="speaker-block">
-      <div class="speaker-name">{{ speaker.name }}</div>
-      is speaking now
-    </div>
-    <div v-else>
-      No one is speaking now
+      class="speaker-block has-text-centered">
+      <div class="is-uppercase is-size-1">
+        {{ speaker }}
+      </div>
+      <p class="heading">Speaking now</p>
     </div>
   </div>
 </template>
@@ -19,7 +17,7 @@ export default {
     speaker() {
       const { speaker } = this.$store.getters['meeting/stage/state'];
       const users = this.$store.getters['meeting/users'];
-      return users[speaker];
+      return (users[speaker] && users[speaker].name) || '-';
     }
   }
 };
@@ -28,5 +26,19 @@ export default {
 <style scoped>
 .speaker-name {
   font-size: 350%;
+}
+</style>
+
+<style scoped>
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s ease;
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(10px);
+  opacity: 0;
 }
 </style>
