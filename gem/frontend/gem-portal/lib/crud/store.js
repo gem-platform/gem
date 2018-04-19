@@ -1,5 +1,5 @@
 export default (options) => {
-  const apiPath = `/api/${options.name}`;
+  const apiPath = `/api/${options.name}` || options.api;
 
   return {
     state: () => ({

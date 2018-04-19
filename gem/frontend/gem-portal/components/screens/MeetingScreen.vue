@@ -4,36 +4,34 @@
       :title="title"
       :subtitle="subtitle" />
 
-    <section class="section">
-      <div class="columns">
-        <div class="column is-4">
-          <div
-            v-if="showControlPanel"
-            class="box">
-            <ControlPanel/>
-          </div>
-          <div
-            v-if="showStageControls"
-            class="box">
-            <StageControlsPresenter/>
-          </div>
+    <div class="columns">
+      <div class="column is-4">
+        <div
+          v-if="showControlPanel"
+          class="box">
+          <ControlPanel/>
         </div>
-
-        <div class="column">
-          <div
-            v-if="showStageView"
-            class="box">
-            <StageViewPresenter/>
-          </div>
-
-          <div
-            v-if="showProposal"
-            class="box">
-            {{ proposal.content }}
-          </div>
+        <div
+          v-if="showStageControls"
+          class="box">
+          <StageControlsPresenter/>
         </div>
       </div>
-    </section>
+
+      <div class="column">
+        <div
+          v-if="showStageView"
+          class="box">
+          <StageViewPresenter/>
+        </div>
+
+        <div
+          v-if="showProposal"
+          class="box">
+          {{ proposal.content }}
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 

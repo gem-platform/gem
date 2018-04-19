@@ -1,17 +1,11 @@
 <template>
-  <div>
-    <section class="hero is-primary is-small">
-      <div class="hero-body">
-        <div class="container">
-          <h1 class="title">
-            {{ title }}
-          </h1>
-          <h2 class="subtitle">
-            {{ subtitle }}
-          </h2>
-        </div>
-      </div>
-    </section>
+  <div class="box notification is-light">
+    <h1 class="title">
+      {{ title }}
+    </h1>
+    <h2 class="subtitle">
+      {{ subtitle }}
+    </h2>
   </div>
 </template>
 

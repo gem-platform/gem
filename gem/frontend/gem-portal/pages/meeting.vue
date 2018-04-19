@@ -12,6 +12,7 @@ import ConnectingScreen from '@/components/screens/ConnectingScreen.vue';
 
 export default {
   name: 'GemPlatform',
+  layout: 'portal',
   components: {
     MeetingScreen,
     ConnectingScreen

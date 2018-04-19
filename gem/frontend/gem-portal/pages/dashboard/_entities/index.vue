@@ -20,7 +20,7 @@ import CrudComponentMixin from '@/components/CrudComponentMixin';
 import CrudComponents from '@/lib/crud/components';
 
 export default {
-  layout: 'portal',
+  layout: 'dashboard',
   components: CrudComponents.index,
   mixins: [CrudComponentMixin],
   computed: {

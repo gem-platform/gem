@@ -20,7 +20,7 @@
 import CrudComponentMixin from '@/components/CrudComponentMixin';
 
 export default {
-  layout: 'portal',
+  layout: 'dashboard',
   mixins: [CrudComponentMixin]
 };
 </script>
