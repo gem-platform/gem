@@ -27,7 +27,8 @@
           </nuxt-link>
           <nuxt-link
             class="navbar-item"
-            to="/meeting">
+            to="/meeting"
+            active-class="is-active">
             Meeting
           </nuxt-link>
         </div>
