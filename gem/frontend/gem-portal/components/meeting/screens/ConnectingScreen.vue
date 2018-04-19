@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import GlobalMessage from '../GlobalMessage.vue';
+import GlobalMessage from '@/components/GlobalMessage.vue';
 
 export default {
   name: 'ConnectingScreen',
@@ -45,7 +45,7 @@ export default {
         return 'is-danger';
       }
 
-      return 'is-primary';
+      return 'is-white';
     }
   }
 };

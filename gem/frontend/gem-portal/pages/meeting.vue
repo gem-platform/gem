@@ -7,8 +7,8 @@
 </template>
 
 <script>
-import MeetingScreen from '@/components/screens/MeetingScreen.vue';
-import ConnectingScreen from '@/components/screens/ConnectingScreen.vue';
+import MeetingScreen from '@/components/meeting/screens/MeetingScreen.vue';
+import ConnectingScreen from '@/components/meeting/screens/ConnectingScreen.vue';
 
 export default {
   name: 'GemPlatform',
