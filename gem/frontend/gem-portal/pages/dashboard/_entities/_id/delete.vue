@@ -18,11 +18,10 @@
 
 <script>
 import CrudComponentMixin from '@/components/CrudComponentMixin';
-import BusyMixin from '@/components/BusyMixin';
 
 export default {
   layout: 'portal',
-  mixins: [CrudComponentMixin, BusyMixin]
+  mixins: [CrudComponentMixin]
 };
 </script>
 

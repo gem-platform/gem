@@ -22,12 +22,11 @@
 <script>
 import CrudComponentMixin from '@/components/CrudComponentMixin';
 import CrudComponents from '@/lib/crud/components';
-import BusyMixin from '@/components/BusyMixin';
 
 export default {
   layout: 'portal',
   components: CrudComponents.edit,
-  mixins: [CrudComponentMixin, BusyMixin],
+  mixins: [CrudComponentMixin],
   computed: {
     component() {
       return this.$route.params.entities;

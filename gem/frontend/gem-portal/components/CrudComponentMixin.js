@@ -1,6 +1,11 @@
 import _ from 'lodash';
 
 export default {
+  data() {
+    return {
+      busy: false
+    };
+  },
   computed: {
     entities() {
       const { entities } = this.$route.params;
@@ -55,28 +60,43 @@ export default {
       }`;
     },
     async save() {
-      const id = this.entity._id;
-      const data = this.entity;
+      try {
+        this.busy = true;
+        const id = this.entity._id;
+        const data = this.entity;
 
-      const method = id ? 'update' : 'create';
-      await this.$store.dispatch(this._storeMethod(method), data);
+        const method = id ? 'update' : 'create';
+        await this.$store.dispatch(this._storeMethod(method), data);
 
-      this.$router.push(this._url());
-      this.$snackbar.open({ message: 'Proposal has been updated' });
+        this.$router.push(this._url());
+        this.$snackbar.open({ message: 'Proposal has been updated' });
+      } finally {
+        this.busy = false;
+      }
     },
 
     async remove() {
-      const id = this.entity._id;
-      await this.$store.dispatch(this._storeMethod('remove'), { id });
+      try {
+        this.busy = true;
+        const id = this.entity._id;
+        await this.$store.dispatch(this._storeMethod('remove'), { id });
 
-      this.$router.push(this._url());
-      this.$snackbar.open({ message: 'Proposal has been deleted' });
+        this.$router.push(this._url());
+        this.$snackbar.open({ message: 'Proposal has been deleted' });
+      } finally {
+        this.busy = false;
+      }
     }
   },
   async fetch({ store, params }) {
-    if (params.id === '@new') return;
+    try {
+      this.busy = true;
+      if (params.id === '@new') return;
 
-    const method = `dashboard/${params.entities}/fetch`;
-    await store.dispatch(method, params.id ? { _id: params.id } : undefined);
+      const method = `dashboard/${params.entities}/fetch`;
+      await store.dispatch(method, params.id ? { _id: params.id } : undefined);
+    } finally {
+      this.busy = false;
+    }
   }
 };

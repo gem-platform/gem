@@ -23,28 +23,14 @@ export const actions = {
     }
   },
   async update({ commit }, data) {
-    commit('setBusy', true, { root: true });
-
     await this.$axios.$put(`/api/roles/${data._id}`, data);
     commit('update', data);
-
-    commit('setBusy', false, { root: true });
   },
-  async create({ commit }, data) {
-    commit('setBusy', true, { root: true });
-
+  async create(context, data) {
     await this.$axios.$post('/api/roles', data);
-
-    commit('setBusy', false, { root: true });
-    // commit('create', data);
   },
-  async remove({ commit }, data) {
-    commit('setBusy', true, { root: true });
-
+  async remove(context, data) {
     await this.$axios.$delete(`/api/roles/${data.id}`);
-
-    commit('setBusy', false, { root: true });
-    // commit('create', data);
   }
 };
 
