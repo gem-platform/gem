@@ -1,11 +1,33 @@
 <template>
   <div class="box notification is-light">
-    <h1 class="title">
-      {{ title }}
-    </h1>
-    <h2 class="subtitle">
-      {{ subtitle }}
-    </h2>
+    <div class="level">
+
+      <div class="level-left">
+        <div class="level-item">
+          <div>
+            <p class="heading">{{ subtitle }}</p>
+            <p class="title">
+              {{ title }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="level-right">
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Timer</p>
+            <p class="title">00:00</p>
+          </div>
+        </div>
+        <div class="level-item has-text-centered">
+          <div>
+            <p class="heading">Till end</p>
+            <p class="title">00:00</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
