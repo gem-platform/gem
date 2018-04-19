@@ -31,6 +31,16 @@
             <span class="has-text-grey role-description">{{ props.option.desc }}</span>
           </div>
         </template>
+        <template
+          slot="tag"
+          slot-scope="props">
+          <span class="tag is-primary ctag">
+            {{ props.option.name }}
+            <button
+              class="delete is-small"
+              @click.prevent="props.remove(props.option)"/>
+          </span>
+        </template>
       </multiselect>
     </b-field>
   </div>
@@ -101,3 +111,10 @@ export default {
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
+
+<style scoped>
+.ctag {
+  margin-right: 5px;
+  margin-bottom: 5px;
+}
+</style>
