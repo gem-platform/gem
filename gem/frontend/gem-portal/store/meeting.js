@@ -6,7 +6,8 @@ export const state = () => ({
   proposals: {}, // proposals keyed by proposalId
   users: {}, // list of users keyed by Id
   roles: {},
-  user: {}
+  user: {},
+  attentionRequired: false
 });
 
 export const mutations = {
@@ -30,6 +31,9 @@ export const mutations = {
   },
   setUserData(state, data) {
     state.user = data;
+  },
+  setAttentionRequired(state, value) {
+    state.attentionRequired = value;
   }
 };
 
@@ -54,6 +58,9 @@ export const actions = {
   },
   user(context, user) {
     context.commit('setUserData', user);
+  },
+  attentionRequired({ commit }, value) {
+    commit('setAttentionRequired', value);
   }
 };
 
@@ -66,5 +73,8 @@ export const getters = {
   },
   roles(state) {
     return state.roles;
+  },
+  attentionRequired(state) {
+    return state.attentionRequired;
   }
 };

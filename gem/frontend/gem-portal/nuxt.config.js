@@ -37,7 +37,7 @@ module.exports = {
     }
   },
   plugins: ['plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect'],
-  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth'],
+  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],
   router: {
     middleware: ['auth']
   },
@@ -49,5 +49,8 @@ module.exports = {
   css: ['~/assets/main.css'],
   axios: {
     browserBaseURL: '/'
+  },
+  buefy: {
+    defaultIconPack: 'fa'
   }
 };

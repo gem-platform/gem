@@ -32,6 +32,13 @@
             to="/meeting"
             active-class="is-active">
             Meeting
+
+            <span
+              v-if="meetingAttentionRequired"
+              class="icon has-text-danger">
+              <i class="fa fa-exclamation blink_me"/>
+            </span>
+
           </nuxt-link>
         </div>
 
@@ -70,7 +77,12 @@
 import AuthMixin from '@/components/AuthMixin';
 
 export default {
-  mixins: [AuthMixin]
+  mixins: [AuthMixin],
+  computed: {
+    meetingAttentionRequired() {
+      return this.$store.getters['meeting/attentionRequired'];
+    }
+  }
 };
 </script>
 
@@ -78,5 +90,14 @@ export default {
 nav.navbar {
   border-top: 4px solid #276cda;
   margin-bottom: 1rem;
+}
+.blink_me {
+  animation: blinker 1s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 </style>

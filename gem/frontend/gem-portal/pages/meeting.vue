@@ -50,6 +50,8 @@ export default {
 
       this.$store.dispatch('meeting/connection/setHandshakeState', response);
     });
+
+    this.$store.dispatch('meeting/attentionRequired', false);
   },
   methods: {
     snackbar(data) {
