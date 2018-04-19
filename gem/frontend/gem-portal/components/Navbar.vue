@@ -26,19 +26,18 @@
             active-class="is-active">
             Dashboard
           </nuxt-link>
+
           <nuxt-link
             v-if="haveAccess('meeting')"
             class="navbar-item"
             to="/meeting"
             active-class="is-active">
             Meeting
-
             <span
               v-if="meetingAttentionRequired"
               class="icon has-text-danger">
               <i class="fa fa-exclamation blink_me"/>
             </span>
-
           </nuxt-link>
         </div>
 
