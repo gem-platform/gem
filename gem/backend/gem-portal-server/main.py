@@ -69,11 +69,11 @@ def user():
         return jsonify({
             "user": {
                 "name": users[0].name,
-                "token": str(users[0].id)
+                "token": str(users[0].id),
+                "scopes": users[0].permissions
             }
         })
-    else:
-        return jsonify({}), 401
+    return jsonify({}), 401
 
 
 if __name__ == '__main__':

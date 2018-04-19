@@ -20,12 +20,14 @@
         class="navbar-menu">
         <div class="navbar-start">
           <nuxt-link
+            v-if="haveAccess('dashboard')"
             class="navbar-item"
             to="/dashboard"
             active-class="is-active">
             Dashboard
           </nuxt-link>
           <nuxt-link
+            v-if="haveAccess('meeting')"
             class="navbar-item"
             to="/meeting"
             active-class="is-active">
@@ -65,15 +67,10 @@
 </template>
 
 <script>
+import AuthMixin from '@/components/AuthMixin';
+
 export default {
-  computed: {
-    user() {
-      return this.$auth.user;
-    },
-    authenticated() {
-      return this.$auth.user !== undefined;
-    }
-  }
+  mixins: [AuthMixin]
 };
 </script>
 

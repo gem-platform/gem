@@ -15,10 +15,23 @@
         :close-on-select="false"
         :clear-on-select="true"
         :hide-selected="true"
+        :group-select="true"
+        select-label=""
+        group-values="scopes"
+        group-label="group"
         placeholder="Roles"
         label="name"
         track-by="_id"
-        @input="onInput"/>
+        @input="onInput">
+        <template
+          slot="option"
+          slot-scope="props">
+          <div class="level">
+            <span>{{ props.option.name || props.option.$groupLabel }}</span>
+            <span class="has-text-grey role-description">{{ props.option.desc }}</span>
+          </div>
+        </template>
+      </multiselect>
     </b-field>
   </div>
 </template>
@@ -39,12 +52,34 @@ export default {
   computed: {
     options() {
       return [
-        { _id: '*', name: 'Admin' },
-        { _id: 'vote', name: 'Vote' },
-        { _id: 'comment', name: 'Comment' },
-        { _id: 'discuss', name: 'Discuss' },
-        { _id: 'join', name: 'Join Session' },
-        { _id: 'manage', name: 'Manage Session' }
+        {
+          group: 'Admin',
+          scopes: [
+            { _id: '*', name: 'Superuser', desc: 'Have full rights' }
+          ]
+        },
+        {
+          group: 'Dashboard',
+          scopes: [
+            { _id: 'dashboard', name: 'Access Dashboard', desc: 'Access Dashboard page' },
+            { _id: 'dashboard.roles', name: 'Access Roles', desc: 'Access Roles page at dashboard' },
+            { _id: 'dashboard.proposals', name: 'Access Proposals', desc: 'Access Proposals page at dashboard' },
+            { _id: 'dashboard.users', name: 'Access Users', desc: 'Access Users page at dashboard' },
+            { _id: 'dashboard.meetings', name: 'Access Meetings', desc: 'Access Meetings page at dashboard' },
+            { _id: 'dashboard.laws', name: 'Access Laws', desc: 'Access Laws page at dashboard' }
+          ]
+        },
+        {
+          group: 'Meeting',
+          scopes: [
+            { _id: 'meeting', name: 'Access Meetings', desc: 'Access Meeting page' },
+            { _id: 'meeting.vote', name: 'Vote' },
+            { _id: 'meeting.comment', name: 'Comment' },
+            { _id: 'meeting.discuss', name: 'Discuss' },
+            { _id: 'meeting.join', name: 'Join Meeting' },
+            { _id: 'meeting.manage', name: 'Manage Meeting' }
+          ]
+        }
       ];
     }
   },
@@ -53,7 +88,8 @@ export default {
       return;
     }
 
-    const roles = this.options.filter(x => this.entity.permissions.includes(x._id));
+    const flatroles = Array.prototype.concat.apply([], this.options.map(x => x.scopes));
+    const roles = flatroles.filter(x => this.entity.permissions.includes(x._id));
     this.value = roles;
   },
   methods: {
