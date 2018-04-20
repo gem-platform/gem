@@ -16,7 +16,9 @@
           active-class="is-active">Proposals</nuxt-link>
       </li>
       <li v-if="haveAccess('dashboard.meetings')">
-        <a>Meetings</a>
+        <nuxt-link
+          to="/dashboard/meetings"
+          active-class="is-active">Meetings</nuxt-link>
       </li>
       <li v-if="haveAccess('dashboard.laws')">
         <a>Laws</a>

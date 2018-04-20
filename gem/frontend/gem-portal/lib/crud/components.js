@@ -10,21 +10,28 @@ import idRoles from '@/components/dashboard/roles/id.vue';
 import indexRoles from '@/components/dashboard/roles/index.vue';
 import editRoles from '@/components/dashboard/roles/edit.vue';
 
+import idMeetings from '@/components/dashboard/meetings/id.vue';
+import indexMeetings from '@/components/dashboard/meetings/index.vue';
+import editMeetings from '@/components/dashboard/meetings/edit.vue';
+
 export default {
   id: {
     proposals: idProposals,
     users: idUsers,
-    roles: idRoles
+    roles: idRoles,
+    meetings: idMeetings
   },
   index: {
     proposals: indexProposals,
     users: indexUsers,
-    roles: indexRoles
+    roles: indexRoles,
+    meetings: indexMeetings
   },
   edit: {
     proposals: editProposals,
     users: editUsers,
-    roles: editRoles
+    roles: editRoles,
+    meetings: editMeetings
   },
   options: {
     proposals: {
@@ -35,6 +42,9 @@ export default {
     },
     roles: {
       fields: ['_id', 'name', 'permissions']
+    },
+    meetings: {
+      fields: ['_id', 'title', 'agenda', 'start', 'end', 'proposals', 'permissions']
     }
   }
 };

@@ -95,6 +95,10 @@ export default {
 
       const method = `dashboard/${params.entities}/fetch`;
       await store.dispatch(method, params.id ? { _id: params.id } : undefined);
+
+      if (this.components[params.entities].fetch) {
+        await this.components[params.entities].fetch({ store, params });
+      }
     } finally {
       this.busy = false;
     }

@@ -47,9 +47,37 @@ roles = {
     }
 }
 
+meetings = {
+    "schema": {
+        "title": {"type": "string"},
+        "agenda": {"type": "string"},
+        "proposals": {
+            "type": "list",
+            "schema": {
+                "type": "objectid",
+                "data_relation": {
+                    "resource": "proposals"
+                }
+            }
+        },
+        "permissions": {
+            "type": "list",
+            "schema": {
+                "type": "dict",
+                "schema": {
+                    "scope": {"type": "string"},
+                    "user": {"type": "objectid", "data_relation": {"resource": "users"}},
+                    "role": {"type": "objectid", "data_relation": {"resource": "roles"}}
+                }
+            }
+        }
+    }
+}
+
 
 DOMAIN = {
     "proposals": proposal,
     "users": users,
-    "roles": roles
+    "roles": roles,
+    "meetings": meetings
 }
