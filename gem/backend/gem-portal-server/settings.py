@@ -10,6 +10,8 @@ CACHE_EXPIRES = 1
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 
+DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
+
 proposal = {
     "schema": {
         "title": {
@@ -51,6 +53,8 @@ meetings = {
     "schema": {
         "title": {"type": "string"},
         "agenda": {"type": "string"},
+        "start": {"type": "datetime"},
+        "end": {"type": "datetime"},
         "proposals": {
             "type": "list",
             "schema": {

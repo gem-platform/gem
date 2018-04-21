@@ -1,12 +1,13 @@
 <template>
   <div>
-    <form @submit.prevent="save">
+    <div>
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">
           <button
             :class="{'is-loading':busy}"
             type="submit"
-            class="button is-light">
+            class="button is-light"
+            @click="save">
             Save changes
           </button>
         </p>
@@ -15,7 +16,7 @@
       <div
         :is="component"
         :entity="entity"/>
-    </form>
+    </div>
   </div>
 </template>
 
