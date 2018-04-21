@@ -109,7 +109,7 @@ class Meeting(GemDocument):
         result = set()
         permissions = filter(lambda x: x.scope == permission, self.permissions)
 
-        for permission in permissions:
+        for permission in list(permissions):
             if permission.role:
                 users_with_role = User.objects(roles__in=[permission.role])
                 for user in users_with_role:
