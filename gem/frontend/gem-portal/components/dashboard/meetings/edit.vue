@@ -75,10 +75,12 @@ export default {
     }
   },
   data() {
+    const currentTime = new Date().toISOString();
+
     return {
-      date: time.stripTime(time.parseIsoDatetime(this.entity.start)),
-      startTime: time.parseIsoDatetime(this.entity.start),
-      endTime: time.parseIsoDatetime(this.entity.end),
+      date: time.stripTime(time.parseIsoDatetime(this.entity.start || currentTime)),
+      startTime: time.parseIsoDatetime(this.entity.start || currentTime),
+      endTime: time.parseIsoDatetime(this.entity.end || currentTime),
       joinPermissions: this.getPermissions('meeting.join'),
       votePermissions: this.getPermissions('meeting.vote')
     };
@@ -102,7 +104,7 @@ export default {
       const allRoles = this.$store.getters['dashboard/roles/all'];
       const allUsers = this.$store.getters['dashboard/users/all'];
 
-      return this.entity.permissions
+      return (this.entity.permissions || [])
         .filter(x => x.scope === perm)
         .map(p => ({
           _id: p.role || p.user,
