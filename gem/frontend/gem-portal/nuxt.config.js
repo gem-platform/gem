@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect', 'vuelidate'],
     /*
     ** Run ESLint on save
     */
@@ -36,7 +36,7 @@ module.exports = {
       }
     }
   },
-  plugins: ['plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect'],
+  plugins: ['plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect', 'plugins/vue-validate'],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],
   router: {
     middleware: ['auth']

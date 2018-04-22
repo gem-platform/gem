@@ -4,18 +4,23 @@
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">
           <button
+            :disabled="!isFormValid"
             :class="{'is-loading':busy}"
             type="submit"
-            class="button is-light"
+            class="button"
             @click="save">
-            Save changes
+            <span class="icon">
+              <i class="fa fa-save"/>
+            </span>
+            <span>Save</span>
           </button>
         </p>
       </div>
 
       <div
         :is="component"
-        :entity="entity"/>
+        :entity="entity"
+        @invalid="onInvalid"/>
     </div>
   </div>
 </template>
@@ -28,6 +33,11 @@ export default {
   layout: 'dashboard',
   components: CrudComponents.edit,
   mixins: [CrudComponentMixin],
+  data() {
+    return {
+      isFormValid: true
+    };
+  },
   computed: {
     component() {
       return this.$route.params.entities;
@@ -35,6 +45,11 @@ export default {
     options() {
       const { entities } = this.$route.params;
       return CrudComponents.options[entities];
+    }
+  },
+  methods: {
+    onInvalid(value) {
+      this.isFormValid = !value;
     }
   }
 };
