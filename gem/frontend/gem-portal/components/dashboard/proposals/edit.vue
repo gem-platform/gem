@@ -2,38 +2,38 @@
   <div>
     <!-- Index of proposal -->
     <b-field
-      :type="validationHasError($v.index)"
-      :message="validationMessages($v.index)"
+      :type="validationHasError($v.model.index)"
+      :message="validationMessages($v.model.index)"
       label="Index">
       <b-input
-        v-model.trim="index"
+        v-model.trim="model.index"
         placeholder="Index"
         size="is-large"
-        @input="validationTouch($v.index)"/>
+        @input="validationTouch($v.model.index)"/>
     </b-field>
 
     <!-- Title of proposal -->
     <b-field
-      :type="validationHasError($v.title)"
-      :message="validationMessages($v.title)"
+      :type="validationHasError($v.model.title)"
+      :message="validationMessages($v.model.title)"
       label="Title">
       <b-input
-        v-model="title"
+        v-model.trim="model.title"
         placeholder="Title"
         size="is-large"
-        @input="validationTouch($v.title)"/>
+        @input="validationTouch($v.model.title)"/>
     </b-field>
 
     <!-- Content of proposal -->
     <b-field
-      :type="validationHasError($v.content)"
-      :message="validationMessages($v.content)"
+      :type="validationHasError($v.model.content)"
+      :message="validationMessages($v.model.content)"
       label="Content">
       <b-input
-        v-model="content"
+        v-model.trim="model.content"
         type="textarea"
         placeholder="Content"
-        @input="validationTouch($v.content)"/>
+        @input="validationTouch($v.model.content)"/>
     </b-field>
   </div>
 </template>
@@ -52,21 +52,26 @@ export default {
   },
   data() {
     return {
-      index: this.entity.index,
-      title: this.entity.title,
-      content: this.entity.content || ''
+      model: {
+        index: this.entity.index,
+        title: this.entity.title,
+        content: this.entity.content || ''
+      }
     };
   },
   validations: {
-    index: { required, alphaNum },
-    title: { required },
-    content: { required }
+    model: {
+      index: { required, alphaNum },
+      title: { required },
+      content: { required }
+    }
   },
-  methods: {
-    updateModel() {
-      this.entity.index = this.index;
-      this.entity.title = this.title;
-      this.entity.content = this.content;
+  watch: {
+    model: {
+      handler() {
+        Object.assign(this.entity, this.model);
+      },
+      deep: true
     }
   }
 };

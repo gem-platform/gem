@@ -14,7 +14,6 @@ export default {
     validationTouch(value) {
       value.$touch();
       this.$emit('invalid', this.$v.$invalid);
-      if (this.updateModel) this.updateModel();
     }
   }
 };
