@@ -6,6 +6,7 @@ MONGO_URI = "mongodb://"+db_host+":27017/test"
 DEBUG = True
 IF_MATCH = False
 CACHE_EXPIRES = 1
+PAGINATION = False
 
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
