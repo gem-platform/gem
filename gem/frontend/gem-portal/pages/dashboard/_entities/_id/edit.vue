@@ -1,38 +1,56 @@
 <template>
-  <div class="content">
-    <form @submit.prevent="save">
+  <div>
+    <div>
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">
           <button
+            :disabled="!isFormValid"
             :class="{'is-loading':busy}"
             type="submit"
-            class="button is-light">
-            Save changes
+            class="button"
+            @click="save">
+            <span class="icon">
+              <i class="fa fa-save"/>
+            </span>
+            <span>Save</span>
           </button>
         </p>
       </div>
 
       <div
-        :is="this.$route.params.entities"
-        :entity="entity"/>
-    </form>
+        :is="component"
+        :entity="entity"
+        @invalid="onInvalid"/>
+    </div>
   </div>
 </template>
 
 <script>
 import CrudComponentMixin from '@/components/CrudComponentMixin';
 import CrudComponents from '@/lib/crud/components';
-import BusyMixin from '@/components/BusyMixin';
 
 export default {
-  layout: 'portal',
-  mixins: [
-    CrudComponentMixin({
-      entities: 'proposals',
-      fields: ['_id', 'title', 'index', 'content']
-    }),
-    BusyMixin
-  ],
-  components: CrudComponents.edit
+  layout: 'dashboard',
+  components: CrudComponents.edit,
+  mixins: [CrudComponentMixin],
+  data() {
+    return {
+      isFormValid: true
+    };
+  },
+  computed: {
+    component() {
+      return this.$route.params.entities;
+    },
+    options() {
+      const { entities } = this.$route.params;
+      return CrudComponents.options[entities];
+    }
+  },
+  methods: {
+    onInvalid(value) {
+      this.isFormValid = !value;
+    }
+  }
 };
 </script>

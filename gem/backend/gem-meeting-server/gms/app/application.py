@@ -1,12 +1,5 @@
-from inspect import getmembers, isfunction
-
 from gem.core import Application
-from gms.app.context import Context
-from gms.meeting import Meeting
-from gms.net.serializers.meeting import MeetingStageSerializer
-from gms.app._fill_meeting import fill_meeting
-
-import gms.commands as commands
+from gms.app.meetings import ActiveMeetings
 
 
 class MeetingServerApplication(Application):
@@ -15,33 +8,29 @@ class MeetingServerApplication(Application):
     def __init__(self):
         """Initialize new instance of the MeetingServerApplication class."""
         super().__init__()
+        self.__active_meetings = ActiveMeetings()
+        self.__active_meetings.emit.subscribe(self.__on_emit)
+        self.__active_meetings.join.subscribe(self.__on_join)
+        self.__active_meetings.leave.subscribe(self.__on_leave)
+        self.endpoints.event.subscribe(self.__on_endpoint_event)
 
-        # create execution context
-        self.__context = Context()
+    def __on_endpoint_event(self, event, *data):
+        """
+        On endpoint event.
+        :param event: Event name.
+        :param data: Event data.
+        :return: Execution result.
+        """
+        return self.__active_meetings.command(event, *data)
 
-        # configure meeting
-        self.__meeting = Meeting(self.__context)
-        self.__meeting.stages.switch.subscribe(self.__on_stage_changed)
-        self.__meeting.stages.changed.subscribe(self.__on_stage_changed)
-        self.__context.meeting = self.__meeting
-
-        # todo: MP-11 Fill meeting with real data
-        fill_meeting(self.__meeting)
-
-        # configure commands processor:
-        # get list of all functions in module
-        # and register them as handler: func_name.__name__ -> func_name
-        self.processor.context = self.__context
-        methods = [o[1] for o in getmembers(commands, isfunction)]
-        self.processor.register_handlers(methods)
-
-    def __on_stage_changed(self, index, stage):
-        """Call when stage is changed."""
-        # stage changed, so serialize it
-        serializer = MeetingStageSerializer()
-        stage_state = serializer.serialize(stage)
-
-        # send serialized data to all connected
-        # clients using all endpoints
+    def __on_emit(self, meeting_id, data):
         for endpoint in self.endpoints.all:
-            endpoint.emit("stage", {"index": index, "state": stage_state})
+            endpoint.emit("stage", data, to=meeting_id)
+
+    def __on_join(self, sid, room):
+        for endpoint in self.endpoints.all:
+            endpoint.join(sid, room)
+
+    def __on_leave(self, sid, room):
+        for endpoint in self.endpoints.all:
+            endpoint.leave(sid, room)

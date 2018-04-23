@@ -1,7 +1,9 @@
 from itertools import chain
 from mongoengine import (signals, Document, StringField, BooleanField,
                          DictField, ListField, ReferenceField,
-                         EmbeddedDocumentField, EmbeddedDocument, DateTimeField)
+                         EmbeddedDocumentField, EmbeddedDocument,
+                         DateTimeField, GenericReferenceField,
+                         EmbeddedDocumentListField)
 
 from gem.db.signals import make_ballot_secret
 
@@ -24,7 +26,7 @@ class Proposal(GemDocument):
     content = StringField(required=True)
 
 
-class Role(Document):
+class Role(GemDocument):
     """Role"""
     meta = {'collection': 'roles'}
 
@@ -32,7 +34,7 @@ class Role(Document):
     permissions = ListField()
 
 
-class User(Document):
+class User(GemDocument):
     """User"""
     meta = {'collection': 'users'}
 
@@ -86,37 +88,36 @@ class Comment(Document):
     mark = StringField(required=True)
 
 
-class MeetingPermissionType(EmbeddedDocument):
-    roles = ListField(ReferenceField(Role))
-    users = ListField(ReferenceField(User))
-
-    def all(self):
-        result = set()
-
-        for role in self.roles:
-            users_with_role = User.objects(roles__in=[role])
-            for user in users_with_role:
-                result.add(user)
-
-        for user in self.users:
-            result.add(user)
-
-        return list(result)
+class MeetingPermission(EmbeddedDocument):
+    scope = StringField()
+    user = ReferenceField(User, required=False)
+    role = ReferenceField(Role, required=False)
 
 
-class MeetingPermissions(EmbeddedDocument):
-    join = EmbeddedDocumentField(MeetingPermissionType)
-    vote = EmbeddedDocumentField(MeetingPermissionType)
-
-
-class Meeting(Document):
+class Meeting(GemDocument):
     """Meeting document"""
     meta = {'collection': 'meetings'}
 
     title = StringField()
     agenda = StringField()
     proposals = ListField(ReferenceField(Proposal))
-    permissions = EmbeddedDocumentField(MeetingPermissions)
+    permissions = EmbeddedDocumentListField(MeetingPermission)
+    start = DateTimeField()
+    end = DateTimeField()
+
+    def resolve(self, permission):
+        result = set()
+        permissions = filter(lambda x: x.scope == permission, self.permissions)
+
+        for permission in list(permissions):
+            if permission.role:
+                users_with_role = User.objects(roles__in=[permission.role])
+                for user in users_with_role:
+                    result.add(user)
+            elif permission.user:
+                result.add(permission.user)
+
+        return list(result)
 
 
 # signals

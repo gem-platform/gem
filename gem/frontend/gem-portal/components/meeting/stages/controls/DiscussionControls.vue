@@ -56,7 +56,7 @@ export default {
   name: 'DiscussionStageControls',
   computed: {
     queue() {
-      const queue = this.$store.getters['meeting/stage/state'].queue;
+      const { queue } = this.$store.getters['meeting/stage/state'];
       const users = this.$store.getters['meeting/users'];
       return queue.map(x => users[x]);
     },
@@ -67,7 +67,7 @@ export default {
       ];
     },
     selfInQueue() {
-      const queue = this.$store.getters['meeting/stage/state'].queue;
+      const { queue } = this.$store.getters['meeting/stage/state'];
       const user = this.$store.getters['meeting/user'];
       return queue.includes(user.id);
     }

@@ -7,11 +7,12 @@
 </template>
 
 <script>
-import MeetingScreen from '@/components/screens/MeetingScreen.vue';
-import ConnectingScreen from '@/components/screens/ConnectingScreen.vue';
+import MeetingScreen from '@/components/meeting/screens/MeetingScreen.vue';
+import ConnectingScreen from '@/components/meeting/screens/ConnectingScreen.vue';
 
 export default {
   name: 'GemPlatform',
+  layout: 'portal',
   components: {
     MeetingScreen,
     ConnectingScreen
@@ -26,7 +27,8 @@ export default {
     this.$bus.on('notification', this.snackbar);
   },
   mounted() {
-    const token = this.$auth.user.token;
+    const { token } = this.$auth.user;
+    const meetingId = this.$route.params.id;
 
     // no authentication found
     // seems to be user is not authenticated
@@ -39,19 +41,23 @@ export default {
     }
 
     // send handshake
-    this.$socket.emit('handshake', { token }, (response) => {
+    this.$socket.emit('handshake', { token, meeting: meetingId }, (response) => {
+      if (!response.success) {
+        this.$store.dispatch('meeting/connection/setHandshakeState', response);
+        return;
+      }
+
       // meta is not sent if handshake failed
       if (response.state) {
         this.$store.dispatch('meeting/user', response.user);
         this.$store.dispatch('meeting/meetingState', response.state);
-        this.$store.dispatch(
-          'meeting/meetingProposals',
-          response.state.proposals
-        );
+        this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
       }
 
       this.$store.dispatch('meeting/connection/setHandshakeState', response);
     });
+
+    this.$store.dispatch('meeting/attentionRequired', false);
   },
   methods: {
     snackbar(data) {
@@ -60,12 +66,3 @@ export default {
   }
 };
 </script>
-
-<style>
-html {
-  height: 100%;
-}
-body {
-  min-height: 100%;
-}
-</style>

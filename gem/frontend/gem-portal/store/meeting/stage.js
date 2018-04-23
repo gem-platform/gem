@@ -1,3 +1,5 @@
+export const actions = {};
+
 export const getters = {
   type(state, getters, rootState) {
     // meeting state is not received yet,

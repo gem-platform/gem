@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  layout: 'portal'
+  layout: 'dashboard'
 };
 </script>
 

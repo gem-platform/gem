@@ -45,7 +45,13 @@ class SocketIoEndpoint(Endpoint):
 
     def emit(self, event, data, to=None):
         loop = asyncio.get_event_loop()
-        loop.create_task(self.__sio.emit(event, data))
+        loop.create_task(self.__sio.emit(event, data, room=to))
+
+    def join(self, sid, room):
+        self.__sio.enter_room(sid, room)
+
+    def leave(self, sid, room):
+        self.__sio.leave_room(sid, room)
 
     def __on_event(self, event, sid, *data):
         return self.event.notify(event, sid, *data)

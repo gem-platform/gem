@@ -16,12 +16,12 @@ module.exports = {
   /*
   ** Customize the progress bar color
   */
-  loading: { color: '#3B8070' },
+  loading: { color: '#276cda', height: '4px' },
   /*
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect', 'vuelidate'],
     /*
     ** Run ESLint on save
     */
@@ -36,8 +36,8 @@ module.exports = {
       }
     }
   },
-  plugins: ['plugins/vue-bus', 'plugins/vue-socketio'],
-  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth'],
+  plugins: ['plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect', 'plugins/vue-validate'],
+  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],
   router: {
     middleware: ['auth']
   },
@@ -49,5 +49,8 @@ module.exports = {
   css: ['~/assets/main.css'],
   axios: {
     browserBaseURL: '/'
+  },
+  buefy: {
+    defaultIconPack: 'fa'
   }
 };

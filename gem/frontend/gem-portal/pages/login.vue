@@ -88,7 +88,7 @@ export default {
 
       if (!(this.name && this.password)) {
         this.error = 'Login and password required';
-        return false;
+        return;
       }
 
       this.signIn();

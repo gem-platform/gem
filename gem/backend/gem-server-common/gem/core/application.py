@@ -1,7 +1,6 @@
 from abc import ABCMeta
 
 from gem.core.endpoints import Endpoints
-from gem.core.processor import Processor
 
 
 class Application(metaclass=ABCMeta):
@@ -13,18 +12,7 @@ class Application(metaclass=ABCMeta):
         """
         Initializes new instance of the Application class.
         """
-        self.__processor = Processor()
         self.__endpoints = Endpoints()
-        self.__endpoints.event.subscribe(self.__on_endpoint_event)
-
-    @property
-    def processor(self):
-        """
-        Returns commands processor.
-        :rtype: Processor
-        :return: Processor.
-        """
-        return self.__processor
 
     @property
     def endpoints(self):
@@ -42,12 +30,3 @@ class Application(metaclass=ABCMeta):
         for endpoint in self.__endpoints.all:
             # todo: run in thread
             endpoint.open()
-
-    def __on_endpoint_event(self, event, *data):
-        """
-        On endpoint event.
-        :param event: Event name.
-        :param data: Event data.
-        :return: Execution result.
-        """
-        return self.__processor.exec(event, *data)

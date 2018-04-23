@@ -80,6 +80,7 @@ services:
     image: gemplatform/gem-portal-client
     restart: always
     build: ./gem/frontend/gem-portal
+    command: npm run dev
     ports:
       - "3000:3000"
     expose:

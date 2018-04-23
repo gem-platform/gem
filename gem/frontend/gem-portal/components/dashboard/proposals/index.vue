@@ -1,12 +1,50 @@
 <template>
   <div>
-    <h1>{{ entity.title }} ({{ entity.index }})</h1>
-    {{ entity.content }}
+    <b-table
+      :data="entities"
+      :columns="columns">
+      <template slot-scope="props">
+        <b-table-column
+          field="id"
+          label="Index">
+          <nuxt-link :to="viewUrl(props.row._id)">{{ props.row.index || 'Undefined' }}</nuxt-link>
+        </b-table-column>
+
+        <b-table-column
+          field="title"
+          label="Title">
+          {{ props.row.title }}
+        </b-table-column>
+      </template>
+    </b-table>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['entity']
+  props: {
+    entities: {
+      type: Array,
+      required: true
+    },
+    viewUrl: {
+      type: Function,
+      default: () => {}
+    }
+  },
+  computed: {
+    columns() {
+      return [
+        {
+          field: 'index',
+          label: 'Index'
+        },
+        {
+          field: 'title',
+          label: 'Title'
+        }
+      ];
+    }
+  }
 };
 </script>

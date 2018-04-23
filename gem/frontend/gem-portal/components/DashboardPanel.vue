@@ -4,31 +4,60 @@
       General
     </p>
     <ul class="menu-list">
-      <li><nuxt-link
-        to="/dashboard"
-        active-class="is-active"
-        exact>Home</nuxt-link></li>
-      <li><nuxt-link
-        to="/dashboard/proposals"
-        active-class="is-active">Proposals</nuxt-link></li>
-      <li><a>Meetings</a></li>
-      <li><a>Laws</a></li>
+      <li>
+        <nuxt-link
+          to="/dashboard"
+          active-class="is-active"
+          exact>Home</nuxt-link>
+      </li>
+      <li v-if="haveAccess('dashboard.proposals')">
+        <nuxt-link
+          to="/dashboard/proposals"
+          active-class="is-active">Proposals</nuxt-link>
+      </li>
+      <li v-if="haveAccess('dashboard.meetings')">
+        <nuxt-link
+          to="/dashboard/meetings"
+          active-class="is-active">Meetings</nuxt-link>
+      </li>
+      <li v-if="haveAccess('dashboard.laws')">
+        <a>Laws</a>
+      </li>
     </ul>
 
-    <p class="menu-label">
+    <p
+      v-if="showAdministrationSection"
+      class="menu-label">
       Administration
     </p>
 
-    <ul class="menu-list">
-      <li><a>Users</a></li>
-      <li><a>Roles</a></li>
-      <li><a>Tokens</a></li>
+    <ul
+      v-if="showAdministrationSection"
+      class="menu-list">
+      <li v-if="haveAccess('dashboard.users')">
+        <nuxt-link
+          to="/dashboard/users"
+          active-class="is-active">Users</nuxt-link>
+      </li>
+      <li v-if="haveAccess('dashboard.roles')">
+        <nuxt-link
+          to="/dashboard/roles"
+          active-class="is-active">Roles</nuxt-link>
+      </li>
     </ul>
   </aside>
 </template>
 
 <script>
+import AuthMixin from '@/components/AuthMixin';
+
 export default {
-  name: 'DashboardPanel'
+  name: 'DashboardPanel',
+  mixins: [AuthMixin],
+  computed: {
+    showAdministrationSection() {
+      return this.haveAccess('dashboard.users') || this.haveAccess('dashboard.roles');
+    }
+  }
 };
 </script>

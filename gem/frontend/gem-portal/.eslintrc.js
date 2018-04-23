@@ -24,15 +24,7 @@ module.exports = {
     'no-debugger': 0,
     'comma-dangle': ['error', 'never'],
     'no-shadow': 0,
-    'import/extensions': 0,
-    'prefer-destructuring': 0,
-    'no-underscore-dangle': 0,
-    'consistent-return': 0,
-    'vue/order-in-components': 0,
-    'vue/order-in-components': 0,
-    'import/prefer-default-export': 0,
-    'vue/require-prop-types': 0,
-    eqeqeq: 0
+    'no-underscore-dangle': 0
   },
   settings: {
     'import/resolver': {

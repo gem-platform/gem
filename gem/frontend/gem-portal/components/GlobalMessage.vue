@@ -1,14 +1,12 @@
 <template>
-  <section class="hero is-fullheight">
-    <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-          {{ title }}
-        </h1>
-        <h2 class="subtitle">
-          {{ message }}
-        </h2>
-      </div>
+  <section class="box notification">
+    <div class="has-text-centered">
+      <h1 class="title">
+        {{ title }}
+      </h1>
+      <h2 class="subtitle">
+        {{ message }}
+      </h2>
     </div>
   </section>
 </template>

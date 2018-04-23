@@ -10,6 +10,7 @@ class Meeting:
         self.__proposals = []
         self.__allowed_users = []
         self.__context = context
+        self.__context.meeting = self
 
     @property
     def context(self):

@@ -3,7 +3,7 @@ import os
 from mongoengine import connect
 
 from gem.db import (Proposal, Ballot, User, Meeting,
-                    Comment, MeetingPermissionType, Role, MeetingPermissions)
+                    Comment, Role, MeetingPermission)
 from gms.meeting.stages import (
     StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
@@ -28,7 +28,7 @@ def fill_meeting(meeting):
         add_group(meeting, proposal)
 
     # create users
-    for user in db_meeting.permissions.join.all():
+    for user in db_meeting.resolve("meeting.join"):
         meeting.allowed_users.append(user)
 
 
@@ -62,16 +62,16 @@ def init_db():
     user1.roles.append(role1)
     user1.password = "tester"
 
-    perm1 = MeetingPermissionType()
-    perm1.roles.append(role1)
+    perm1 = MeetingPermission()
+    perm1.name = "meeting.join"
+    perm1.role = role1
+    perm1.user = user1
 
     meet1 = Meeting()
     meet1.title = "AGM 2018"
     meet1.agenda = "Agenda of testing meeting"
     meet1.proposals.append(prop1)
-    meet1.permissions = MeetingPermissions()
-    meet1.permissions.vote = perm1
-    meet1.permissions.join = perm1
+    meet1.permissions.append(perm1)
 
     prop1.save()
     role1.save()

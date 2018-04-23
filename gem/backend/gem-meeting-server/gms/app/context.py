@@ -1,4 +1,4 @@
-from gem.db import User
+from gem.db import User, Meeting
 from gms.app.sessions import Sessions
 
 
@@ -50,6 +50,13 @@ class Context:
         """
         return self.__sessions
 
+    # Meeting
+
+    def get_meeting(self, meeting_id):
+        if not meeting_id:
+            return None
+        return Meeting.objects(id=meeting_id)
+
     # User section
 
     def get_user(self, sid):
@@ -75,9 +82,6 @@ class Context:
             User -- User associated with specified token.
         """
         # todo: token != user_id
-        if token == "@DEV":
-            return User.objects[0]
-
         allowed_users = self.__meeting.allowed_users
         users = filter(lambda x: str(x.id) == token, allowed_users)
         users = list(users)

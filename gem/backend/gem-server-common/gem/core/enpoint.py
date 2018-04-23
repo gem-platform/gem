@@ -22,3 +22,11 @@ class Endpoint(metaclass=ABCMeta):
     @abstractmethod
     def emit(self, event, data, to=None):
         pass
+
+    @abstractmethod
+    def join(self, sid, room):
+        pass
+
+    @abstractmethod
+    def leave(self, sid, room):
+        pass
