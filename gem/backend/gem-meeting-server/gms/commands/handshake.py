@@ -28,12 +28,18 @@ def handshake(context, sid, data):
 
     # find user by specified credentials
     token = data.get("token", None)
+    meeting = data.get("meeting", None)
     user = context.get_user_by_token(token)
+    meeting = context.get_meeting(meeting)
 
     # no user found using specified credentails
     # send response with meaningful info
     if not user:
         return {"success": False, "message": "Wrong access token"}
+
+    if not meeting:
+        return {"success": False,
+                "message": "Meeting '{}' not found".format(meeting)}
 
     # user found by specified credentials, so login
     # him by associating sessionId (sid) with model (user)

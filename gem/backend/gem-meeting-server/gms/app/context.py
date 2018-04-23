@@ -1,4 +1,4 @@
-from gem.db import User
+from gem.db import User, Meeting
 from gms.app.sessions import Sessions
 
 
@@ -49,6 +49,13 @@ class Context:
             Sessions -- Sessions.
         """
         return self.__sessions
+
+    # Meeting
+
+    def get_meeting(self, meeting_id):
+        if not meeting_id:
+            return None
+        return Meeting.objects(id=meeting_id)
 
     # User section
 

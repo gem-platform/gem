@@ -28,6 +28,7 @@ export default {
   },
   mounted() {
     const { token } = this.$auth.user;
+    const meetingId = this.$route.params.id;
 
     // no authentication found
     // seems to be user is not authenticated
@@ -40,7 +41,12 @@ export default {
     }
 
     // send handshake
-    this.$socket.emit('handshake', { token }, (response) => {
+    this.$socket.emit('handshake', { token, meeting: meetingId }, (response) => {
+      if (!response.success) {
+        this.$store.dispatch('meeting/connection/setHandshakeState', response);
+        return;
+      }
+
       // meta is not sent if handshake failed
       if (response.state) {
         this.$store.dispatch('meeting/user', response.user);
