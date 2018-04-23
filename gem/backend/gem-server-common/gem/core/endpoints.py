@@ -8,7 +8,7 @@ class Endpoints:
 
     def __init__(self):
         """
-        Initializes new instance if the enpoint class.
+        Initializes new instance if the endpoint class.
         """
         self.__endpoints = []
         self.__event = Event()
