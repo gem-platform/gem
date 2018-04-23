@@ -49,10 +49,6 @@ class ActiveMeetings:
             self.__connection[sid] = self.__open_meeting(meeting_id)
             self.__join.notify(sid, meeting_id)
         if event == "disconnect":
-            from collections import Counter
-            c = Counter(self.__connection)
-            print(dict(c.items()))
-
             # remove user connection
             if sid in self.__connection:
                 del self.__connection[sid]
