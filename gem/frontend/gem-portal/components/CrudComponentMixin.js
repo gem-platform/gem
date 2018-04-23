@@ -1,4 +1,5 @@
-import _ from 'lodash';
+import zipObject from 'lodash/zipObject';
+import pick from 'lodash/pick';
 
 export default {
   data() {
@@ -17,7 +18,7 @@ export default {
 
       // Nothing to fetch, return dummy object filled
       // with keys from this.fields
-      if (id === '@new') return _.zipObject(fields);
+      if (id === '@new') return zipObject(fields);
 
       // Find entity using specified getter
       const getterName = this._storeMethod('all');
@@ -32,7 +33,7 @@ export default {
       const keys = fields || Object.keys(entity);
       const ent = { ...entity };
 
-      return _.pick(ent, keys);
+      return pick(ent, keys);
     },
     newUrl() {
       return this._url({ id: '@new', action: 'edit' });
