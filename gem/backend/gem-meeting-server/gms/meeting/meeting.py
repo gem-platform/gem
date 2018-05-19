@@ -11,6 +11,8 @@ class Meeting:
         self.__allowed_users = []
         self.__context = context
         self.__context.meeting = self
+        self.start = None
+        self.end = None
 
     @property
     def context(self):
