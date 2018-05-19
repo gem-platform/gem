@@ -18,6 +18,7 @@
     "@nuxtjs/axios": "^5.1.1",
     "@nuxtjs/font-awesome": "^1.0.3",
     "lodash": "^4.17.5",
+    "moment": "^2.22.1",
     "nuxt": "^1.0.0",
     "nuxt-buefy": "0.0.4",
     "vue": "^2.5.16",
