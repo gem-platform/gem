@@ -10,7 +10,9 @@ import gms.commands as commands
 
 
 class ActiveMeetings:
-    """Active meetings."""
+    """
+    Active meetings manager.
+    """
 
     def __init__(self):
         """Initialize new instance of the ActiveMeetings class."""
@@ -128,7 +130,6 @@ class ActiveMeeting:
         Arguments:
             meeting_id {str} -- Meeting id.
         """
-
         # create execution context
         self.__meeting_id = meeting_id
         self.__context = Context()
@@ -140,11 +141,14 @@ class ActiveMeeting:
 
         # configure processor:
         # get list of all functions in module
+        inspect_entity_index = 1  # index of entity in array returned by
+        processor_handlers = [member[inspect_entity_index]
+                              for member in getmembers(commands, isfunction)]
+
         # and register them as handler: func_name.__name__ -> func_name
         self.__processor = Processor()
         self.__processor.context = self.__context
-        self.__processor.register_handlers(
-            [o[1] for o in getmembers(commands, isfunction)])
+        self.__processor.register_handlers(processor_handlers)
 
         # events
         self.__state_changed = Event()
@@ -153,25 +157,55 @@ class ActiveMeeting:
         fill_meeting(self.__meeting)
 
     @property
-    def context(self):
-        return self.__context
-
-    @property
     def meeting_id(self):
+        """
+        Return meeting ID.
+
+        Returns:
+            str -- Meeting ID
+        """
         return self.__meeting_id
 
     @property
+    def context(self):
+        """
+        Retrun execution context.
+
+        Returns:
+            Context -- Execution context.
+        """
+        return self.__context
+
+    @property
     def state_changed(self):
-        """State changed event."""
+        """
+        Retrun state changed event.
+
+        Returns:
+            Event -- State changed.
+        """
         return self.__state_changed
 
     def command(self, event, *data):
-        """Command to execute."""
+        """Command to execute
+
+        Arguments:
+            event {str} -- Command.
+
+        Returns:
+            obj -- Result of execution.
+        """
         return self.__processor.exec(event, *data)
 
     def __on_stage_changed(self, index, stage):
-        """Call when stage is changed."""
-        # stage changed, so serialize it
+        """
+        State of the a stage has been changed.
+
+        Arguments:
+            index {int} -- Index of the changed stage.
+            stage {MeetingStage} -- Meeting stage.
+        """
+        # stage changed, serialize it
         serializer = MeetingStageSerializer()
         stage_state = serializer.serialize(stage)
 

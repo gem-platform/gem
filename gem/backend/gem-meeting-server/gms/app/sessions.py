@@ -1,5 +1,5 @@
 class Sessions:
-    """Stores associations session id token and user."""
+    """Stores associations between session ID and user."""
 
     def __init__(self):
         """Initializes new instance of the Sessions class."""

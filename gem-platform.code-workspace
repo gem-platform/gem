@@ -13,7 +13,8 @@
       "mikestead.dotenv",
       "PeterJausovec.vscode-docker",
       "aaron-bond.better-comments",
-      "esbenp.prettier-vscode"
+      "esbenp.prettier-vscode",
+      "njpwerner.autodocstring"
     ]
   },
   "settings": {
