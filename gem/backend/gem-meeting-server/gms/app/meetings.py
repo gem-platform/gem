@@ -18,22 +18,37 @@ class ActiveMeetings:
         self.__join = Event()
         self.__leave = Event()
         self.__active = {}  # active meetings keyed by meeting_id
-        self.__connection = {}  # user_id -> active meeting
+        self.__connection = {}  # session_id -> active meeting
+        self.__status_changed = Event()
+
+    @property
+    def status_changed(self):
+        return self.__status_changed
 
     @property
     def emit(self):
+        """Return emit event."""
         return self.__emit
 
     @property
     def join(self):
+        """Return join event."""
         return self.__join
 
     @property
     def leave(self):
+        """Return leave event."""
         return self.__leave
+
+    def status(self):
+        return list(self.__active.keys())
+
+    def online(self):
+        return {k: len(v.context.sessions.online) for k, v in self.__active.items()}
 
     def command(self, event, *data):
         sid = data[0]
+        result = None
 
         # handshake command received, so open meeting (if not)
         # and join user to specified room
@@ -42,18 +57,25 @@ class ActiveMeetings:
             meeting_id = command_data.get("meeting")
 
             # user already connected to some meeting
+            # disconnect him from previous one first
             if sid in self.__connection:
                 prev_meeting = self.__connection[sid]
                 self.__leave.notify(sid, prev_meeting.meeting_id)
 
-            self.__connection[sid] = self.__open_meeting(meeting_id)
+            # get meeting be specified id:
+            # open new one of not exist
+            meeting = self.__open_meeting(meeting_id)
+            self.__connection[sid] = meeting
             self.__join.notify(sid, meeting_id)
+
         if event == "disconnect":
             # remove user connection
             if sid in self.__connection:
                 del self.__connection[sid]
 
             # stop active meetings if no connections
+            # meetings_to_close = [m.meeting_id for m in self.__active.values()
+            #                     if not m.context.sessions.online]
             meetings_to_close = []
             for meeting_id, active_meeting in self.__active.items():
                 count = 0
@@ -70,7 +92,12 @@ class ActiveMeetings:
         # pass command to it
         meeting = self.__connection.get(sid, None)
         if meeting:
-            return meeting.command(event, *data)
+            result = meeting.command(event, *data)
+
+        if event in ["handshake", "disconnect"]:
+            self.status_changed.notify()
+
+        return result
 
     def __open_meeting(self, meeting_id):
         # lookup for open meetings
@@ -87,7 +114,7 @@ class ActiveMeetings:
 
     def __state_changed(self, meeting_id):
         def handler(data):
-            self.emit.notify(meeting_id, data)
+            self.emit.notify("stage", data, meeting_id)
         return handler
 
 
@@ -124,6 +151,10 @@ class ActiveMeeting:
 
         # todo: MP-11 Fill meeting with real data
         fill_meeting(self.__meeting)
+
+    @property
+    def context(self):
+        return self.__context
 
     @property
     def meeting_id(self):

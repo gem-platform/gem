@@ -29,5 +29,8 @@ export default store => ({
     const now = new Date();
     const ahead = new Date(now.getTime() + (1000 * 60 * 2));
     this.$bus.emit('setStageTimer', ahead);
+  },
+  status(data) {
+    store.dispatch('meeting/status/set', data);
   }
 });

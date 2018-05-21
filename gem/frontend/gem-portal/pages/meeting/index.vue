@@ -3,11 +3,12 @@
     <div
       v-for="meeting in meetings"
       :key="meeting._id"
-      class="box notification is-light">
+      :class="{'is-active': isActive(meeting._id)}"
+      class="box notification meeting-box">
 
       <div class="level">
         <div class="level-left">
-          <div class="level-item">
+          <div class="level-item ">
             <div>
               <p class="heading">Title</p>
               <p class="title">
@@ -17,7 +18,23 @@
           </div>
         </div>
 
-        <div class="level-right">
+        <div
+          v-if="isActive(meeting._id)"
+          class="level-right">
+          <div
+            class="level-item has-text-centered">
+            <div>
+              <p class="heading">Online</p>
+              <p class="title">
+                {{ online(meeting._id) }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div
+          v-else
+          class="level-right">
           <div class="level-item has-text-centered">
             <div>
               <p class="heading">Date</p>
@@ -45,15 +62,25 @@
       <div
         v-for="proposal in meeting.proposals"
         :key="proposal">
+
+        <span class="icon">
+          <i class="fa fa-file"/>
+        </span>
+
         <nuxt-link
-          :to="'/dashboard/proposals/'+proposal">{{ title(proposal) }}</nuxt-link>
+          :to="'/dashboard/proposals/'+proposal">{{ title(proposal) }}
+        </nuxt-link>
       </div>
 
       <br>
-      <div class="buttons is-centered">
+      <div
+        v-if="isActive(meeting._id)"
+        class="buttons is-centered">
         <nuxt-link
           :to="'/meeting/'+meeting._id"
-          class="button is-primary is-fullwidth">Join</nuxt-link>
+          class="button is-primary is-fullwidth">
+          Join
+        </nuxt-link>
       </div>
 
     </div>
@@ -88,10 +115,21 @@ export default {
       return this.$store.getters['dashboard/meetings/all'];
     }
   },
+  mounted() {
+    this.$socket.emit('status');
+  },
   methods: {
     title(proposalId) {
       const proposal = this.$store.getters['dashboard/proposals/get'](proposalId)[0];
       return proposal ? proposal.title : 'No proposal found';
+    },
+    isActive(meetingId) {
+      const active = this.$store.getters['meeting/status/active'];
+      return active.includes(meetingId);
+    },
+    online(meetingId) {
+      const online = this.$store.getters['meeting/status/online'];
+      return online[meetingId] || 0;
     }
   },
   async fetch({ store }) {
@@ -100,3 +138,13 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.is-active {
+  background-color: hsl(48, 100%, 67%);
+}
+
+.meeting-box {
+  transition: background-color 1.5s ease;
+}
+</style>
