@@ -9,6 +9,11 @@
           label="Title">
           <nuxt-link :to="viewUrl(props.row._id)">{{ props.row.title || 'No title' }}</nuxt-link>
         </b-table-column>
+        <b-table-column
+          field="id"
+          label="Run">
+          <nuxt-link :to="/meeting/+props.row._id">Run</nuxt-link>
+        </b-table-column>
       </template>
     </b-table>
   </div>
@@ -32,6 +37,10 @@ export default {
         {
           field: 'title',
           label: 'Title'
+        },
+        {
+          field: 'id',
+          label: 'Run'
         }
       ];
     }
