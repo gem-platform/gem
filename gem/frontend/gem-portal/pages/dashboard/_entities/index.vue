@@ -4,14 +4,19 @@
       <p class="control">
         <nuxt-link
           :to="newUrl"
-          class="button is-light">Create new</nuxt-link>
+          class="button">
+          <span class="icon">
+            <i class="fa fa-plus"/>
+          </span>
+          <span>Create new</span>
+        </nuxt-link>
       </p>
     </div>
 
     <div
       :is="component"
       :entities="entities"
-      :view-url="viewUrl"/>
+      :view-url="editUrl"/>
   </div>
 </template>
 
