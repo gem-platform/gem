@@ -27,8 +27,8 @@
 
         <div
           v-if="showProposal"
-          class="box">
-          {{ proposal.content }}
+          class="box content">
+          <div v-html="proposal.content"/>
         </div>
       </div>
     </div>
