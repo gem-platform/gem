@@ -4,7 +4,7 @@
       <p class="control">
         <nuxt-link
           :to="newUrl"
-          class="button">
+          class="button is-light">
           <span class="icon">
             <i class="fa fa-plus"/>
           </span>

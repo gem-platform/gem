@@ -7,7 +7,7 @@
             :disabled="!isFormValid"
             :class="{'is-loading':busy}"
             type="submit"
-            class="button"
+            class="button is-light"
             @click="save">
             <span class="icon">
               <i class="fa fa-save"/>
