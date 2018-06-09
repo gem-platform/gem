@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{ entity.title }} ({{ entity.index }})</h1>
-    {{ entity.content }}
+    <div v-html="entity.content"/>
   </div>
 </template>
 

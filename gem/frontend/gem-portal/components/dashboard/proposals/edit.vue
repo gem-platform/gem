@@ -88,7 +88,7 @@ export default {
     }
   },
   methods: {
-    onEditorChange({ editor, html, text }) {
+    onEditorChange({ html }) {
       this.model.content = html;
     }
   }
