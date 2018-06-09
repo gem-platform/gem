@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect', 'vuelidate', 'vue-timers', 'moment'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
     /*
     ** Run ESLint on save
     */
@@ -38,7 +38,8 @@ module.exports = {
   },
   plugins: [
     'plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect', 'plugins/vue-validate',
-    { src: 'plugins/vue-timers.js', ssr: false }],
+    { src: 'plugins/vue-timers.js', ssr: false },
+    { src: '~plugins/vue-quill.js', ssr: false }],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],
   router: {
     middleware: ['auth']
@@ -48,7 +49,12 @@ module.exports = {
       home: false
     }
   },
-  css: ['~/assets/main.css'],
+  css: [
+    '~/assets/main.css',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
+  ],
   axios: {
     browserBaseURL: '/'
   },
