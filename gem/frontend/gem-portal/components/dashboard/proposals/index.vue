@@ -3,7 +3,7 @@
     <b-table
       :data="entities"
       :columns="columns"
-      hoverable="true">
+      hoverable>
       <template slot-scope="props">
         <b-table-column
           field="id"
