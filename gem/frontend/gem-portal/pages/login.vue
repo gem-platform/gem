@@ -3,10 +3,11 @@
     <div class="hero-body">
       <div class="container has-text-centered">
         <div class="column is-4 is-offset-4">
-          <h1 class="title">
-            GBC Environment For Meetings
-          </h1>
           <div class="box">
+            <div class="logo">
+              <img src="gem-logo-gray.svg">
+            </div>
+
             <b-message
               v-if="error"
               type="is-danger">
@@ -16,14 +17,18 @@
             <form @submit.prevent="submit">
               <b-field
                 :type="nameFieldType">
-                <b-input
+                <b-autocomplete
                   v-model="name"
-                  placeholder="Name"/>
+                  :data="logins"
+                  placeholder="Name">
+                  <template slot="empty">No user found</template>
+                </b-autocomplete>
               </b-field>
 
               <b-field
                 :type="passwordFieldType">
                 <b-input
+                  ref="password"
                   v-model="password"
                   type="password"
                   placeholder="Password"
@@ -63,6 +68,17 @@ export default {
   computed: {
     isBusy() {
       return this.$store.state.auth.busy;
+    },
+    logins() {
+      // get names only form users
+      const names = this.$store.getters['dashboard/users/all']
+        .map(x => x.name);
+
+      // filter names using value specified in login field
+      return names.filter(option => option
+        .toString()
+        .toLowerCase()
+        .indexOf(this.name.toLowerCase()) >= 0);
     }
   },
   methods: {
@@ -93,6 +109,11 @@ export default {
 
       this.signIn();
     }
+  },
+  async fetch({ store }) {
+    // fetch all of the users to make autocomplete
+    // at login field possible
+    await store.dispatch('dashboard/users/fetch');
   }
 };
 </script>
@@ -122,5 +143,9 @@ body {
 .hero .subtitle {
   padding: 3rem 0;
   line-height: 1.5;
+}
+.logo {
+  padding: 20px;
+  padding-top: 5px;
 }
 </style>
