@@ -14,7 +14,7 @@
         field="name"
         autocomplete
         icon="fas fa-key"
-        placeholder="Add a tag"
+        placeholder="Add a permission"
         @typing="onPermissionsTyping"
         @input="onPermissionsInput">
         <template slot-scope="props">
