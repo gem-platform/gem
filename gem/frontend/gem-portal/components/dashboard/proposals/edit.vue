@@ -100,5 +100,6 @@ export default {
   min-height: 200px;
   max-height: 400px;
   overflow-y: auto;
+  font-size: 1rem;
 }
 </style>
