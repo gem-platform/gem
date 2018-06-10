@@ -62,6 +62,8 @@ export default {
   },
   methods: {
     onRolesTyping(text) {
+      // get roles what contains specified text in names
+      // and filter out roles what already been added
       this.filteredRoles = this.roles
         .filter(option => str.contains(option.name, text))
         .filter(option => !this.userRoles.map(x => x._id).includes(option._id));

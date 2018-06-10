@@ -64,6 +64,8 @@ export default {
   },
   methods: {
     onPermissionsTyping(text) {
+      // get permissions what contains specified text in names
+      // and filter out permissions what already been added
       this.filteredPermissions = this.permissions
         .filter(option => str.contains(option.name, text))
         .filter(option => !this.value.map(x => x._id).includes(option._id));
