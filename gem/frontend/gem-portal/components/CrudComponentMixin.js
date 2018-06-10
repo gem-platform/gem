@@ -76,6 +76,10 @@ export default {
       }
     },
 
+    cancel() {
+      this.$router.go(-1);
+    },
+
     async remove() {
       try {
         this.busy = true;
