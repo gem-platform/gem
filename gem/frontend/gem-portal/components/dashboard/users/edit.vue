@@ -32,6 +32,8 @@
 </template>
 
 <script>
+import str from '@/lib/string';
+
 export default {
   props: {
     entity: {
@@ -61,10 +63,7 @@ export default {
   methods: {
     onRolesTyping(text) {
       this.filteredRoles = this.roles
-        .filter(option => option.name
-          .toString()
-          .toLowerCase()
-          .indexOf(text.toLowerCase()) >= 0)
+        .filter(option => str.contains(option.name, text))
         .filter(option => !this.userRoles.map(x => x._id).includes(option._id));
     },
     onRolesInput(value) {

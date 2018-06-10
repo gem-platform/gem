@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import str from '@/lib/string';
+
 export default {
   props: {
     entity: {
@@ -63,10 +65,7 @@ export default {
   methods: {
     onPermissionsTyping(text) {
       this.filteredPermissions = this.permissions
-        .filter(option => option.name
-          .toString()
-          .toLowerCase()
-          .indexOf(text.toLowerCase()) >= 0)
+        .filter(option => str.contains(option.name, text))
         .filter(option => !this.value.map(x => x._id).includes(option._id));
     },
     onPermissionsInput(value) {
