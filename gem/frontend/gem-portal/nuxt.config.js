@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
     /*
     ** Run ESLint on save
     */
@@ -37,7 +37,7 @@ module.exports = {
     }
   },
   plugins: [
-    'plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect', 'plugins/vue-validate',
+    'plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-validate',
     { src: 'plugins/vue-timers.js', ssr: false },
     { src: '~plugins/vue-quill.js', ssr: false }],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],

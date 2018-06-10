@@ -23,7 +23,6 @@
     "nuxt-buefy": "0.0.4",
     "vue": "^2.5.16",
     "vue-bus": "^1.1.0",
-    "vue-multiselect": "^2.1.0",
     "vue-quill-editor": "^3.0.6",
     "vue-socket.io": "^2.1.1",
     "vue-timers": "^1.7.1",
