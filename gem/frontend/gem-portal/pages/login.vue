@@ -3,7 +3,9 @@
     <div class="hero-body">
       <div class="column is-4 is-offset-4">
         <!-- GEM Logo -->
-        <div class="box">
+        <div
+          :class="{'shake':isPasswordWrong}"
+          class="box">
           <div class="logo">
             <img src="gem-logo-gray.svg">
           </div>
@@ -65,7 +67,8 @@ export default {
       password: '',
       error: undefined,
       nameFieldType: '',
-      passwordFieldType: ''
+      passwordFieldType: '',
+      isPasswordWrong: false
     };
   },
   computed: {
@@ -102,10 +105,14 @@ export default {
         this.error = 'Some error occured';
 
         const code = e.response.status;
-        if (code === 401) this.error = 'Wrong login/password';
+        if (code === 401) {
+          this.isPasswordWrong = true;
+          this.error = 'Wrong login/password';
+        }
       }
     },
     submit() {
+      this.isPasswordWrong = false;
       this.nameFieldType = !this.name ? 'is-danger' : '';
       this.passwordFieldType = !this.password ? 'is-danger' : '';
 
@@ -154,5 +161,30 @@ body {
 .logo {
   padding: 20px;
   padding-top: 5px;
+}
+
+.shake {
+  animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+@keyframes shake {
+  10%, 90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%, 80% {
+    transform: translate3d(2px, 0, 0);
+  }
+
+  30%, 50%, 70% {
+    transform: translate3d(-4px, 0, 0);
+  }
+
+  40%, 60% {
+    transform: translate3d(4px, 0, 0);
+  }
 }
 </style>
