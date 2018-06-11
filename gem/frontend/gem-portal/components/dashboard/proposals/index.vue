@@ -2,7 +2,8 @@
   <div>
     <b-table
       :data="entities"
-      :columns="columns">
+      :columns="columns"
+      hoverable>
       <template slot-scope="props">
         <b-table-column
           field="id"

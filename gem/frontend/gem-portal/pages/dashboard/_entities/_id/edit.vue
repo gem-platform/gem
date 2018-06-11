@@ -1,13 +1,20 @@
 <template>
   <div>
-    <div>
+    <div class="dashboard-form">
+      <div
+        :is="component"
+        :entity="entity"
+        @invalid="onInvalid"/>
+    </div>
+
+    <div class="dashboard-controls">
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">
           <button
             :disabled="!isFormValid"
             :class="{'is-loading':busy}"
             type="submit"
-            class="button"
+            class="button is-light"
             @click="save">
             <span class="icon">
               <i class="fa fa-save"/>
@@ -15,12 +22,17 @@
             <span>Save</span>
           </button>
         </p>
+        <p class="control">
+          <button
+            class="button is-light"
+            @click="cancel">
+            <span class="icon">
+              <i class="fa fa-ban"/>
+            </span>
+            <span>Cancel</span>
+          </button>
+        </p>
       </div>
-
-      <div
-        :is="component"
-        :entity="entity"
-        @invalid="onInvalid"/>
     </div>
   </div>
 </template>

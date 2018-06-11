@@ -12,6 +12,9 @@ class MeetingServerApplication(Application):
         self.__active_meetings.emit.subscribe(self.__on_emit)
         self.__active_meetings.join.subscribe(self.__on_join)
         self.__active_meetings.leave.subscribe(self.__on_leave)
+        self.__active_meetings.status_changed.subscribe(
+            self.__on_status_changed)
+
         self.endpoints.event.subscribe(self.__on_endpoint_event)
 
     def __on_endpoint_event(self, event, *data):
@@ -23,9 +26,9 @@ class MeetingServerApplication(Application):
         """
         return self.__active_meetings.command(event, *data)
 
-    def __on_emit(self, meeting_id, data):
+    def __on_emit(self, event, data, to):
         for endpoint in self.endpoints.all:
-            endpoint.emit("stage", data, to=meeting_id)
+            endpoint.emit(event, data, to=to)
 
     def __on_join(self, sid, room):
         for endpoint in self.endpoints.all:
@@ -34,3 +37,9 @@ class MeetingServerApplication(Application):
     def __on_leave(self, sid, room):
         for endpoint in self.endpoints.all:
             endpoint.leave(sid, room)
+
+    def __on_status_changed(self):
+        active = self.__active_meetings.status()
+        online = self.__active_meetings.online()
+        for endpoint in self.endpoints.all:
+            endpoint.emit("meetings_status", {"active": active, "online": online})

@@ -52,7 +52,9 @@ class MeetingSerializer:
             },
             "proposals": proposals,
             "users": users,
-            "roles": roles
+            "roles": roles,
+            "start": meeting.start.isoformat(),
+            "end": meeting.end.isoformat()
             # todo: list of users allowed to present at meeting
             #       including their meta (roles, permissions)
             # todo: list of online users
@@ -109,6 +111,7 @@ class AcquaintanceMeetingStageSerializer:
     def serialize(self, stage):
         return {
             "type": "AcquaintanceStage",
+            "progress": stage.progress,
             "proposalId": str(stage.group.proposal.id)
         }
 

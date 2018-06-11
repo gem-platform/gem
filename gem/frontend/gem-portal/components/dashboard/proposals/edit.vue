@@ -29,12 +29,13 @@
       :type="validationHasError($v.model.content)"
       :message="validationMessages($v.model.content)"
       label="Content">
-      <b-input
-        v-model.trim="model.content"
-        type="textarea"
-        placeholder="Content"
-        @input="validationTouch($v.model.content)"/>
+      <div
+        v-quill:myQuillEditor="editorOption"
+        :content="model.content"
+        class="quill-editor"
+        @change="onEditorChange($event)"/>
     </b-field>
+
   </div>
 </template>
 
@@ -56,6 +57,18 @@ export default {
         index: this.entity.index,
         title: this.entity.title,
         content: this.entity.content || ''
+      },
+      editorOption: {
+        modules: {
+          toolbar: [
+            [{ list: 'ordered' }, { list: 'bullet' }],
+            ['bold', 'italic', 'underline', 'strike'],
+            ['blockquote'],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ align: [] }],
+            ['clean']
+          ]
+        }
       }
     };
   },
@@ -73,6 +86,20 @@ export default {
       },
       deep: true
     }
+  },
+  methods: {
+    onEditorChange({ html }) {
+      this.model.content = html;
+    }
   }
 };
 </script>
+
+<style scoped>
+.quill-editor {
+  min-height: 200px;
+  max-height: 400px;
+  overflow-y: auto;
+  font-size: 1rem;
+}
+</style>

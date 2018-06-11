@@ -31,6 +31,10 @@ def fill_meeting(meeting):
     for user in db_meeting.resolve("meeting.join"):
         meeting.allowed_users.append(user)
 
+    #
+    meeting.start = db_meeting.start
+    meeting.end = db_meeting.end
+
 
 def add_group(meeting, proposal):
     ballots = Ballot.objects(proposal=proposal)

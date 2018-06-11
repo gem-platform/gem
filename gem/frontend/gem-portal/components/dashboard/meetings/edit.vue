@@ -59,15 +59,23 @@
         v-model="votePermissions"
         @input="test"/>
     </b-field>
+
+    <b-field label="Proposals">
+      <Proposals
+        :proposals="proposals"
+        :selected="entity.proposals"
+        @change="onProposalsListChanged" />
+    </b-field>
   </div>
 </template>
 
 <script>
 import RolesAndUsers from '@/components/RolesAndUsers.vue';
+import Proposals from '@/components/Proposals.vue';
 import time from '@/lib/time';
 
 export default {
-  components: { RolesAndUsers },
+  components: { RolesAndUsers, Proposals },
   props: {
     entity: {
       type: Object,
@@ -78,6 +86,7 @@ export default {
     const currentTime = new Date().toISOString();
 
     return {
+      proposals: this.$store.getters['dashboard/proposals/all'],
       date: time.stripTime(time.parseIsoDatetime(this.entity.start || currentTime)),
       startTime: time.parseIsoDatetime(this.entity.start || currentTime),
       endTime: time.parseIsoDatetime(this.entity.end || currentTime),
@@ -129,11 +138,15 @@ export default {
         this.entity.end = time.toIso(new Date(startDate + (1000 * 60 * 60 * endHours)
           + (1000 * 60 * endMinutes)));
       }
+    },
+    onProposalsListChanged(value) {
+      this.entity.proposals = value;
     }
   },
   async fetch({ store }) {
     await store.dispatch('dashboard/roles/fetch');
     await store.dispatch('dashboard/users/fetch');
+    await store.dispatch('dashboard/proposals/fetch');
   }
 };
 </script>

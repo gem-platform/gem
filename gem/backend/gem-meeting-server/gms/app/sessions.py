@@ -1,5 +1,5 @@
 class Sessions:
-    """Stores associations session id token and user."""
+    """Stores associations between session ID and user."""
 
     def __init__(self):
         """Initializes new instance of the Sessions class."""
@@ -13,7 +13,7 @@ class Sessions:
         Returns:
             list[User] -- List of users online.
         """
-        return self.__sessions.values()
+        return list(set(self.__sessions.values()))
 
     def get(self, sid):
         """

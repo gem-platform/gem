@@ -5,7 +5,7 @@ module.exports = {
   ** Headers of the page
   */
   head: {
-    title: 'gem',
+    title: 'GEM',
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vue-multiselect', 'vuelidate'],
+    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
     /*
     ** Run ESLint on save
     */
@@ -36,7 +36,10 @@ module.exports = {
       }
     }
   },
-  plugins: ['plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-multiselect', 'plugins/vue-validate'],
+  plugins: [
+    'plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-validate',
+    { src: 'plugins/vue-timers.js', ssr: false },
+    { src: '~plugins/vue-quill.js', ssr: false }],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],
   router: {
     middleware: ['auth']
@@ -46,7 +49,11 @@ module.exports = {
       home: false
     }
   },
-  css: ['~/assets/main.css'],
+  css: [
+    '~/assets/main.css',
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.core.css'
+  ],
   axios: {
     browserBaseURL: '/'
   },

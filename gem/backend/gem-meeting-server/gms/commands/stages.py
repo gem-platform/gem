@@ -1,4 +1,9 @@
 def have_read(context, sid, data):
+    quantity = data.get("quantity", 0)
+    user = context.get_user(sid)
+    users_online = context.sessions.online
+    context.stage.set_online(users_online)
+    context.stage.set_progress(user, quantity)
     return {"success": True}
 
 
@@ -48,7 +53,7 @@ def withdraw_from_queue(context, sid, data):
 
 def remove_from_queue(context, sid, data):
     """Remove from queue."""
-    # todo: sid have enought rights
+    # todo: sid have enough rights
     user_id_to_remove = data.get("id", None)
     user = context.get_user_by_id(user_id_to_remove)
     context.stage.withdraw_from_queue(user)
@@ -57,7 +62,7 @@ def remove_from_queue(context, sid, data):
 
 def give_voice(context, sid, data):
     """Give voice to specified user at discussion stage."""
-    # todo; sid have enought rights
+    # todo; sid have enough rights
     give_voice_to = data.get("to", None)
     user = context.get_user_by_id(give_voice_to)
     context.stage.give_voice(user)

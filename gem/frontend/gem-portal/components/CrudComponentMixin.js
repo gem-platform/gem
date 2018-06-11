@@ -38,9 +38,6 @@ export default {
     newUrl() {
       return this._url({ id: '@new', action: 'edit' });
     },
-    editUrl() {
-      return this._url({ id: this.$route.params.id, action: 'edit' });
-    },
     deleteUrl() {
       return this._url({ id: this.$route.params.id, action: 'delete' });
     }
@@ -48,6 +45,9 @@ export default {
   methods: {
     viewUrl(id) {
       return this._url({ id });
+    },
+    editUrl(id) {
+      return this._url({ id, action: 'edit' });
     },
     _storeMethod(method) {
       const { entities } = this.$route.params;
@@ -74,6 +74,10 @@ export default {
       } finally {
         this.busy = false;
       }
+    },
+
+    cancel() {
+      this.$router.go(-1);
     },
 
     async remove() {

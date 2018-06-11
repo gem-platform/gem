@@ -5,7 +5,7 @@
         <nuxt-link
           class="navbar-item brand-text"
           to="/">
-          GEM
+          <img src="/gem-logo-small.svg">&nbsp;GEM
         </nuxt-link>
         <div
           class="navbar-burger burger"
@@ -53,6 +53,11 @@
             </a>
 
             <b-dropdown-item has-link>
+              <nuxt-link
+                class="navbar-item"
+                to="/login">
+                Login
+              </nuxt-link>
               <nuxt-link
                 class="navbar-item"
                 to="/logout">

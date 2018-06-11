@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column is-8">
         <div
           v-if="showStageView"
           class="box">
@@ -27,8 +27,8 @@
 
         <div
           v-if="showProposal"
-          class="box">
-          {{ proposal.content }}
+          class="box content">
+          <div v-html="proposal.content"/>
         </div>
       </div>
     </div>
@@ -98,6 +98,7 @@ export default {
       const type = this.$store.getters['meeting/stage/type'];
       const withViews = [
         'AgendaStage',
+        'AcquaintanceStage',
         'BallotStage',
         'BallotResultsStage',
         'CommentsStage',

@@ -14,33 +14,26 @@
     </b-field>
 
     <b-field label="Roles">
-      <multiselect
-        v-model="value"
-        :options="options"
-        :multiple="true"
-        :close-on-select="false"
-        :clear-on-select="true"
-        :hide-selected="true"
-        placeholder="Roles"
-        label="name"
-        track-by="_id"
-        @input="onInput">
-        <template
-          slot="tag"
-          slot-scope="props">
-          <span class="tag is-primary ctag">
-            {{ props.option.name }}
-            <button
-              class="delete is-small"
-              @click.prevent="props.remove(props.option)"/>
-          </span>
+      <b-taginput
+        v-model="userRoles"
+        :data="filteredRoles"
+        field="name"
+        autocomplete
+        icon="fas fa-user"
+        placeholder="Add a role"
+        @typing="onRolesTyping"
+        @input="onRolesInput">
+        <template slot="empty">
+          There are no items
         </template>
-      </multiselect>
+      </b-taginput>
     </b-field>
   </div>
 </template>
 
 <script>
+import str from '@/lib/string';
+
 export default {
   props: {
     entity: {
@@ -50,38 +43,37 @@ export default {
   },
   data() {
     return {
-      value: []
+      userRoles: [],
+      filteredRoles: []
     };
   },
   computed: {
-    options() {
+    roles() {
       return this.$store.getters['dashboard/roles/all'];
     }
   },
-  async beforeCreate() {
-    await this.$store.dispatch('dashboard/roles/fetch');
+  created() {
+    // user have no roles, no additional initialization required
+    if (!this.entity.roles) { return; }
 
-    if (!this.entity.roles) {
-      return;
-    }
-
-    const roles = this.$store.getters['dashboard/roles/all'].filter(x =>
-      this.entity.roles.includes(x._id));
-    this.value = roles;
+    // get all roles
+    const roles = this.$store.getters['dashboard/roles/all'];
+    this.userRoles = roles.filter(x => this.entity.roles.includes(x._id));
   },
   methods: {
-    onInput(value) {
+    onRolesTyping(text) {
+      // get roles what contains specified text in names
+      // and filter out roles what already been added
+      this.filteredRoles = this.roles
+        .filter(option => str.contains(option.name, text))
+        .filter(option => !this.userRoles.map(x => x._id).includes(option._id));
+    },
+    onRolesInput(value) {
       this.entity.roles = value.map(x => x._id);
     }
+  },
+  async fetch({ store }) {
+    await store.dispatch('dashboard/roles/fetch');
   }
 };
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-
-<style scoped>
-.ctag {
-  margin-right: 5px;
-  margin-bottom: 5px;
-}
-</style>

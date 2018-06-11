@@ -15,16 +15,14 @@
 
       <div class="level-right">
         <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">Timer</p>
-            <p class="title">00:00</p>
-          </div>
+          <CountdownTimer
+            :to="tillStageEnd"
+            header="Stage"/>
         </div>
         <div class="level-item has-text-centered">
-          <div>
-            <p class="heading">Till end</p>
-            <p class="title">00:00</p>
-          </div>
+          <CountdownTimer
+            :to="tillMeetingEnd"
+            header="Meeting" />
         </div>
       </div>
     </div>
@@ -32,8 +30,13 @@
 </template>
 
 <script>
+import CountdownTimer from '@/components/meeting/CountdownTimer.vue';
+
 export default {
   name: 'MeetingScreenTopPanel',
+  components: {
+    CountdownTimer
+  },
   props: {
     title: {
       type: String,
@@ -42,6 +45,27 @@ export default {
     subtitle: {
       type: String,
       default: ''
+    }
+  },
+  data() {
+    return {
+      stageTime: new Date()
+    };
+  },
+  computed: {
+    tillStageEnd() {
+      return this.stageTime;
+    },
+    tillMeetingEnd() {
+      return new Date(this.$store.state.meeting.end);
+    }
+  },
+  mounted() {
+    this.$bus.on('setStageTimer', time => this.onUpdateStageTimer(time));
+  },
+  methods: {
+    onUpdateStageTimer(value) {
+      this.stageTime = value;
     }
   }
 };

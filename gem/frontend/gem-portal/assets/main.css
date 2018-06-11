@@ -6,3 +6,12 @@
 .page-leave-active {
   opacity: 0;
 }
+
+.dashboard-form {
+  padding-bottom: 15px;
+}
+
+.dashboard-controls {
+  border-top: 1px solid lightgray; /* Линия сверху текста */
+  padding-top: 10px;
+}

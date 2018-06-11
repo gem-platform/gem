@@ -7,6 +7,8 @@ export const state = () => ({
   users: {}, // list of users keyed by Id
   roles: {},
   user: {},
+  start: undefined,
+  end: undefined,
   attentionRequired: false
 });
 
@@ -34,6 +36,12 @@ export const mutations = {
   },
   setAttentionRequired(state, value) {
     state.attentionRequired = value;
+  },
+  setMeetingStart(state, value) {
+    state.start = value;
+  },
+  setMeetingEnd(state, value) {
+    state.end = value;
   }
 };
 
@@ -52,6 +60,8 @@ export const actions = {
     context.commit('setMeetingUsers', data.users);
     context.commit('setMeetingStages', data.stages.list);
     context.commit('setStageIndex', data.stages.index);
+    context.commit('setMeetingStart', data.start);
+    context.commit('setMeetingEnd', data.end);
   },
   meetingProposals(context, data) {
     context.commit('setProposals', data);
