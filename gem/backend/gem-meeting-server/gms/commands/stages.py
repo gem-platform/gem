@@ -1,6 +1,8 @@
 def have_read(context, sid, data):
     quantity = data.get("quantity", 0)
     user = context.get_user(sid)
+    users_online = context.sessions.online
+    context.stage.set_online(users_online)
     context.stage.set_progress(user, quantity)
     return {"success": True}
 

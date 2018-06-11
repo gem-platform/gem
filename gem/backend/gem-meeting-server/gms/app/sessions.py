@@ -13,7 +13,7 @@ class Sessions:
         Returns:
             list[User] -- List of users online.
         """
-        return self.__sessions.values()
+        return list(set(self.__sessions.values()))
 
     def get(self, sid):
         """
