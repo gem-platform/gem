@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <no-ssr>
-      <component :is="screen"/>
-    </no-ssr>
-  </div>
+  <no-ssr>
+    <component :is="screen"/>
+  </no-ssr>
 </template>
 
 <script>

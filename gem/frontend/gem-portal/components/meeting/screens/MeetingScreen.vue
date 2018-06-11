@@ -18,7 +18,7 @@
         </div>
       </div>
 
-      <div class="column">
+      <div class="column is-8">
         <div
           v-if="showStageView"
           class="box">
