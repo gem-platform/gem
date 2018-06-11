@@ -88,7 +88,7 @@ export default {
     }
   },
   mounted() {
-    this.name = localStorage.login;
+    this.name = localStorage.login || '';
   },
   methods: {
     async signIn() {
