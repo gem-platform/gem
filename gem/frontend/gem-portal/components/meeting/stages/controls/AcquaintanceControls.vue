@@ -4,8 +4,7 @@
     <p class="control is-expanded">
       <a
         :class="{ 'is-success' : readState, 'is-white': !!readState }"
-        class="button is-fullwidth"
-        @click="haveRead">
+        class="button is-fullwidth">
         I read
       </a>
     </p>
@@ -19,13 +18,35 @@ export default {
   name: 'AcquaintanceStageControls',
   data() {
     return {
-      readState: false
+      readState: false,
+      readProgress: 0,
+      readProgressNext: 0
     };
   },
+  created() {
+    window.addEventListener('scroll', this.onScroll);
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.onScroll);
+  },
   methods: {
-    async haveRead() {
-      const r = await com.request({ command: 'have_read' });
-      this.readState = r.success;
+    async haveRead(quantity) {
+      await com.send('have_read', { quantity });
+    },
+    onScroll() {
+      const limit = Math.max(
+        document.body.scrollHeight, document.body.offsetHeight,
+        document.documentElement.clientHeight, document.documentElement.scrollHeight,
+        document.documentElement.offsetHeight
+      ) - window.innerHeight;
+      const percentRead = window.scrollY / limit;
+
+      if (percentRead > this.readProgressNext || percentRead >= 1) {
+        this.readProgress = percentRead;
+        this.readProgressNext = percentRead + 0.05;
+        this.haveRead(this.readProgress);
+        this.readState = percentRead >= 1;
+      }
     }
   }
 };

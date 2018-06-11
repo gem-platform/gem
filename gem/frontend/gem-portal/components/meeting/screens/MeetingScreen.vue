@@ -98,6 +98,7 @@ export default {
       const type = this.$store.getters['meeting/stage/type'];
       const withViews = [
         'AgendaStage',
+        'AcquaintanceStage',
         'BallotStage',
         'BallotResultsStage',
         'CommentsStage',

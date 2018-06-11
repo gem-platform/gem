@@ -111,6 +111,7 @@ class AcquaintanceMeetingStageSerializer:
     def serialize(self, stage):
         return {
             "type": "AcquaintanceStage",
+            "progress": stage.progress,
             "proposalId": str(stage.group.proposal.id)
         }
 
