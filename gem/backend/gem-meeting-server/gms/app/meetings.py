@@ -52,6 +52,9 @@ class ActiveMeetings:
         sid = data[0]
         result = None
 
+        if event == "meetings_status":
+            return {"active": self.status(), "online": self.online()}
+
         # handshake command received, so open meeting (if not)
         # and join user to specified room
         if event == "handshake":

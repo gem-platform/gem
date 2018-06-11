@@ -116,7 +116,9 @@ export default {
     }
   },
   mounted() {
-    this.$socket.emit('status');
+    this.$socket.emit('meetings_status', (res) => {
+      this.$store.dispatch('meeting/status/set', res);
+    });
   },
   methods: {
     title(proposalId) {

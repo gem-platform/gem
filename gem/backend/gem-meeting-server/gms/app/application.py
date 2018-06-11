@@ -42,4 +42,4 @@ class MeetingServerApplication(Application):
         active = self.__active_meetings.status()
         online = self.__active_meetings.online()
         for endpoint in self.endpoints.all:
-            endpoint.emit("status", {"active": active, "online": online})
+            endpoint.emit("meetings_status", {"active": active, "online": online})
