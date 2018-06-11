@@ -15,37 +15,16 @@ export default {
   },
   computed: {
     title() {
-      const connection = this.$store.getters['meeting/connection/connection'];
-      const handshake = this.$store.getters['meeting/connection/handshake'];
-
-      if (connection.success === false) {
-        return 'Connection failed';
-      }
-      if (handshake.success === false) {
-        return 'Handshake failed';
-      }
-
-      return 'Connecting';
+      const connection = this.$store.getters['meeting/connection/state'];
+      return connection.state;
     },
     message() {
-      const connection = this.$store.getters['meeting/connection/connection'];
-      const handshake = this.$store.getters['meeting/connection/handshake'];
-
-      return (
-        connection.message ||
-        handshake.message ||
-        'We are connecting you to session'
-      );
+      const connection = this.$store.getters['meeting/connection/state'];
+      return connection.message || 'We are connecting you to session';
     },
     type() {
-      const connection = this.$store.getters['meeting/connection/connection'];
-      const handshake = this.$store.getters['meeting/connection/handshake'];
-
-      if (connection.success === false || handshake.success === false) {
-        return 'is-danger';
-      }
-
-      return 'is-white';
+      const connection = this.$store.getters['meeting/connection/state'];
+      return connection.state === 'disconnected' ? 'is-danger' : 'is-white';
     }
   }
 };

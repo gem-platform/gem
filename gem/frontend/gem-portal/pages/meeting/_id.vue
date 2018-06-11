@@ -19,7 +19,7 @@ export default {
   },
   computed: {
     screen() {
-      const hs = this.$store.getters['meeting/connection/state'] === true;
+      const hs = this.$store.getters['meeting/connection/state'].state === 'connected';
       return hs ? 'MeetingScreen' : 'ConnectingScreen';
     }
   },
@@ -33,8 +33,8 @@ export default {
     // no authentication found
     // seems to be user is not authenticated
     if (!token) {
-      this.$store.dispatch('meeting/connection/setHandshakeState', {
-        success: false,
+      this.$store.dispatch('meeting/connection/setConnectionState', {
+        state: 'disconnected',
         message: 'You are not logged in.'
       });
       return;
@@ -42,11 +42,6 @@ export default {
 
     // send handshake
     this.$socket.emit('handshake', { token, meeting: meetingId }, (response) => {
-      if (!response.success) {
-        this.$store.dispatch('meeting/connection/setHandshakeState', response);
-        return;
-      }
-
       // meta is not sent if handshake failed
       if (response.state) {
         this.$store.dispatch('meeting/user', response.user);
@@ -54,7 +49,11 @@ export default {
         this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
       }
 
-      this.$store.dispatch('meeting/connection/setHandshakeState', response);
+      // set connection state
+      this.$store.dispatch('meeting/connection/setConnectionState', {
+        state: response.success ? 'connected' : 'disconnected',
+        message: response.message
+      });
     });
 
     this.$store.dispatch('meeting/attentionRequired', false);

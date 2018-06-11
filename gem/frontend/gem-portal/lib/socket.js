@@ -6,13 +6,13 @@ export default store => ({
   },
   disconnect() {
     this.$store.dispatch('meeting/connection/setConnectionState', {
-      connected: false,
+      state: 'disconnected',
       message: 'Connection lost'
     });
   },
   connect_error() {
     this.$store.dispatch('meeting/connection/setConnectionState', {
-      connected: false,
+      state: 'disconnected',
       message: 'Unable to connect'
     });
   },
