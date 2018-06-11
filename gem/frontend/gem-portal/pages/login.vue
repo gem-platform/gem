@@ -1,52 +1,55 @@
 <template>
   <section class="hero is-info is-fullheight">
     <div class="hero-body">
-      <div class="container has-text-centered">
-        <div class="column is-4 is-offset-4">
-          <div class="box">
-            <div class="logo">
-              <img src="gem-logo-gray.svg">
-            </div>
-
-            <b-message
-              v-if="error"
-              type="is-danger">
-              {{ error }}
-            </b-message>
-
-            <form @submit.prevent="submit">
-              <b-field
-                :type="nameFieldType">
-                <b-autocomplete
-                  v-model="name"
-                  :data="logins"
-                  placeholder="Name">
-                  <template slot="empty">No user found</template>
-                </b-autocomplete>
-              </b-field>
-
-              <b-field
-                :type="passwordFieldType">
-                <b-input
-                  ref="password"
-                  v-model="password"
-                  type="password"
-                  placeholder="Password"
-                  password-reveal/>
-              </b-field>
-
-              <div class="field">
-                <p class="control is-expanded">
-                  <button
-                    :class="{'is-loading': isBusy}"
-                    type="submit"
-                    class="button is-fullwidth is-primary">
-                    Login
-                  </button>
-                </p>
-              </div>
-            </form>
+      <div class="column is-4 is-offset-4">
+        <!-- GEM Logo -->
+        <div class="box">
+          <div class="logo">
+            <img src="gem-logo-gray.svg">
           </div>
+
+          <!-- Error message -->
+          <b-message
+            v-if="error"
+            type="is-danger">
+            {{ error }}
+          </b-message>
+
+          <!-- Control buttons -->
+          <form @submit.prevent="submit">
+            <!-- Login field -->
+            <b-field
+              :type="nameFieldType">
+              <b-autocomplete
+                v-model="name"
+                :data="logins"
+                placeholder="Name"
+                size="is-large">
+                <template slot="empty">No user found</template>
+              </b-autocomplete>
+            </b-field>
+
+            <!-- Password field -->
+            <b-field
+              :type="passwordFieldType">
+              <b-input
+                ref="password"
+                v-model="password"
+                type="password"
+                placeholder="Password"
+                password-reveal/>
+            </b-field>
+
+            <!-- Login button -->
+            <div class="field">
+              <button
+                :class="{'is-loading': isBusy}"
+                type="submit"
+                class="button is-fullwidth is-primary">
+                Login
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
@@ -81,6 +84,9 @@ export default {
         .indexOf(this.name.toLowerCase()) >= 0);
     }
   },
+  mounted() {
+    this.name = localStorage.login;
+  },
   methods: {
     async signIn() {
       try {
@@ -91,6 +97,7 @@ export default {
 
         this.error = undefined;
         this.$router.push('/');
+        localStorage.login = this.name;
       } catch (e) {
         this.error = 'Some error occured';
 

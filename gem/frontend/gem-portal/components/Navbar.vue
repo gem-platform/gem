@@ -55,6 +55,11 @@
             <b-dropdown-item has-link>
               <nuxt-link
                 class="navbar-item"
+                to="/login">
+                Login
+              </nuxt-link>
+              <nuxt-link
+                class="navbar-item"
                 to="/logout">
                 Logout
               </nuxt-link>
