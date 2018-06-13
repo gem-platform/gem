@@ -27,6 +27,20 @@ proposal = {
     }
 }
 
+laws = {
+    "schema": {
+        "title": {
+            "type": "string"
+        },
+        "index": {
+            "type": "string"
+        },
+        "content": {
+            "type": "string"
+        }
+    }
+}
+
 users = {
     "schema": {
         "name": {"type": "string"},
@@ -84,5 +98,6 @@ DOMAIN = {
     "proposals": proposal,
     "users": users,
     "roles": roles,
-    "meetings": meetings
+    "meetings": meetings,
+    "laws": laws
 }

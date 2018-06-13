@@ -6,6 +6,9 @@ from flask_cors import CORS
 from eve.auth import TokenAuth
 from mongoengine import connect
 import sys
+
+from api_search import api_search
+
 sys.path.append("../gem-server-common")
 sys.path.append("./gem/gem-server-common")
 
@@ -21,8 +24,8 @@ class MyTokenAuth(TokenAuth):
         print(token)
         return True
 
-
 app = Eve()  # auth=MyTokenAuth)
+app.register_blueprint(api_search)
 CORS(app)
 
 

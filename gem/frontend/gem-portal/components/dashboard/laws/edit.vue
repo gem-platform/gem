@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Index of proposal -->
+    <!-- Index of law -->
     <b-field
       :type="validationHasError($v.model.index)"
       :message="validationMessages($v.model.index)"
@@ -12,7 +12,7 @@
         @input="validationTouch($v.model.index)"/>
     </b-field>
 
-    <!-- Title of proposal -->
+    <!-- Title of law -->
     <b-field
       :type="validationHasError($v.model.title)"
       :message="validationMessages($v.model.title)"
@@ -24,7 +24,7 @@
         @input="validationTouch($v.model.title)"/>
     </b-field>
 
-    <!-- Content of proposal -->
+    <!-- Content of law -->
     <b-field
       :type="validationHasError($v.model.content)"
       :message="validationMessages($v.model.content)"
@@ -33,7 +33,7 @@
         v-quill:myQuillEditor="editorOption"
         :content="model.content"
         class="quill-editor"
-        @change="onEditorChange($event)"/>
+        @change="onEditorChange($event);"/>
     </b-field>
 
   </div>
