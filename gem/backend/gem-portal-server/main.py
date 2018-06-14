@@ -47,10 +47,10 @@ app.on_replace_users += event2
 @app.route("/api/auth/login", methods=["POST"])
 def login():
     data = request.get_json(force=True)
-    name = data.get("name")
+    login = data.get("login")
     password = data.get("password")
-    users = User.objects(name=name, password=password)
-    print(users, name, password)
+    users = User.objects(name=login, password=password)
+    print(users, login, password)
     if len(users) == 1:
         return jsonify({"success": True, "token": str(users[0].id)})
     return jsonify({"success": False}), 401

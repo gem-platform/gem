@@ -15,3 +15,18 @@
   border-top: 1px solid lightgray;
   padding-top: 10px;
 }
+
+.popup-enter-active, .popup-leave-active {
+  transition: opacity 2s ease, transform 2s ease;
+}
+.popup-enter, .popup-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
