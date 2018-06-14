@@ -1,66 +1,78 @@
 <template>
-  <section class="hero is-info is-fullheight">
+  <section
+    :class="backgroundClass"
+    class="hero is-fullheight">
     <div class="hero-body">
       <div class="column is-4 is-offset-4">
-        <!-- GEM Logo -->
-        <div
-          :class="{'shake':isPasswordWrong}"
-          class="box">
-          <div class="logo">
-            <img src="gem-logo-gray.svg">
-          </div>
+        <Spinner v-show="!show"/>
 
-          <!-- Error message -->
-          <b-message
-            v-if="error"
-            type="is-danger">
-            {{ error }}
-          </b-message>
-
-          <!-- Control buttons -->
-          <form @submit.prevent="submit">
-            <!-- Login field -->
-            <b-field
-              :type="nameFieldType">
-              <b-autocomplete
-                v-model="name"
-                :data="logins"
-                placeholder="Name"
-                size="is-large">
-                <template slot="empty">No user found</template>
-              </b-autocomplete>
-            </b-field>
-
-            <!-- Password field -->
-            <b-field
-              :type="passwordFieldType">
-              <b-input
-                ref="password"
-                v-model="password"
-                type="password"
-                placeholder="Password"
-                password-reveal/>
-            </b-field>
-
-            <!-- Login button -->
-            <div class="field">
-              <button
-                :class="{'is-loading': isBusy}"
-                type="submit"
-                class="button is-fullwidth is-primary">
-                Login
-              </button>
+        <transition name="pop">
+          <!-- GEM Logo -->
+          <div
+            v-show="show"
+            :class="{'shake':isPasswordWrong}"
+            class="box">
+            <div class="logo">
+              <img src="gem-logo-gray.svg">
             </div>
-          </form>
-        </div>
+
+            <!-- Error message -->
+            <transition name="fade">
+              <b-message
+                v-show="error"
+                type="is-danger">
+                {{ error }}
+              </b-message>
+            </transition>
+
+            <!-- Control buttons -->
+            <form @submit.prevent="submit">
+              <!-- Login field -->
+              <b-field
+                :type="nameFieldType">
+                <b-autocomplete
+                  v-model="name"
+                  :data="logins"
+                  placeholder="Name"
+                  size="is-large">
+                  <template slot="empty">No user found</template>
+                </b-autocomplete>
+              </b-field>
+
+              <!-- Password field -->
+              <b-field
+                :type="passwordFieldType">
+                <b-input
+                  ref="password"
+                  v-model="password"
+                  type="password"
+                  placeholder="Password"
+                  password-reveal/>
+              </b-field>
+
+              <!-- Login button -->
+              <div class="field">
+                <button
+                  :class="{'is-loading': isBusy}"
+                  type="submit"
+                  class="button is-fullwidth is-primary">
+                  Login
+                </button>
+              </div>
+            </form>
+          </div>
+        </transition>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import Spinner from '@/components/Spinner.vue';
+
 export default {
   name: 'Login',
+  components: { Spinner },
   data() {
     return {
       name: '',
@@ -68,7 +80,8 @@ export default {
       error: undefined,
       nameFieldType: '',
       passwordFieldType: '',
-      isPasswordWrong: false
+      isPasswordWrong: false,
+      show: false
     };
   },
   computed: {
@@ -85,10 +98,15 @@ export default {
         .toString()
         .toLowerCase()
         .indexOf(this.name.toLowerCase()) >= 0);
+    },
+    backgroundClass() {
+      const { backgroundId } = this.$store.state.config;
+      return `bg-${backgroundId}`;
     }
   },
   mounted() {
     this.name = localStorage.login || '';
+    this.show = true;
   },
   methods: {
     async signIn() {
@@ -144,9 +162,6 @@ body {
       rgba(254, 175, 18, 0.5) 70%
     ),
     url('/login-bg/bg1.jpg') no-repeat center center fixed;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
   background-size: cover;
 }
 .hero .nav,
@@ -186,5 +201,67 @@ body {
   40%, 60% {
     transform: translate3d(4px, 0, 0);
   }
+}
+
+.hero.bg-0 {
+  background: linear-gradient(
+      135deg,
+      rgba(229, 58, 121, 0.5) 30%,
+      rgba(254, 175, 18, 0.5) 70%
+    );
+  background-size: cover;
+}
+
+.hero.bg-1 {
+  background: linear-gradient(
+      135deg,
+      rgba(229, 58, 121, 0.5) 30%,
+      rgba(254, 175, 18, 0.5) 70%
+    ),
+    url('/login-bg/bg1.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+.hero.bg-2 {
+  background: linear-gradient(
+      135deg,
+      rgba(229, 58, 121, 0.5) 30%,
+      rgba(254, 175, 18, 0.5) 70%
+    ),
+    url('/login-bg/bg2.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+.hero.bg-3 {
+  background: linear-gradient(
+      135deg,
+      rgba(229, 58, 121, 0.5) 30%,
+      rgba(254, 175, 18, 0.5) 70%
+    ),
+    url('/login-bg/bg3.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+.hero.bg-4 {
+  background: linear-gradient(
+      135deg,
+      rgba(229, 58, 121, 0.5) 30%,
+      rgba(254, 175, 18, 0.5) 70%
+    ),
+    url('/login-bg/bg4.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s ease;
+}
+.fade-enter, .fade-leave-to {
+  opacity: 0;
+}
+
+.pop-enter-active, .pop-leave-active {
+  transition: opacity .5s ease;
+  transition: transform .5s ease;
+}
+.pop-enter, .pop-leave-to {
+  opacity: 0;
+  transform: translateY(30px);
 }
 </style>
