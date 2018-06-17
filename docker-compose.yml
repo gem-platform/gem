@@ -17,7 +17,7 @@ services:
 
   gem-elastic-search:
     image: gemplatform/gem-elastic-search
-    restart: always
+    restart: no
     build: ./gem/backend/gem-elastic-search
     environment:
       - ELASTIC_PASSWORD=elastic
