@@ -95,6 +95,8 @@ export default {
   layout: 'portal',
   filters: {
     date(value) {
+      if (!value) return '-';
+
       const date = time.parseIsoDatetime(value);
       return moment(date).calendar(null, {
         sameDay: '[Today]',
@@ -106,6 +108,8 @@ export default {
       });
     },
     time(value) {
+      if (!value) return '-';
+
       const date = time.parseIsoDatetime(value);
       return moment(date).format('HH:mm');
     }
