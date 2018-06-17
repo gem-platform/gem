@@ -1,7 +1,11 @@
 server {
     listen 80;
+    listen 443 ssl;
     server_name gem.local;
     charset utf-8;
+
+    ssl_certificate /etc/nginx/ssl/gem.crt;
+    ssl_certificate_key /etc/nginx/ssl/gem.key;
 
     location /static {
         alias /usr/src/app/static;
@@ -31,5 +35,9 @@ server {
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
+    }
+
+    if ($scheme = http) {
+        return 301 https://$host$request_uri;
     }
 }
