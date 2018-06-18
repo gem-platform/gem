@@ -1,9 +1,8 @@
 <template>
   <div>
     <Navbar/>
-    <br>
 
-    <div class="container">
+    <div class="main-section">
       <div class="columns">
         <div class="column is-2">
           <DashboardPanel/>

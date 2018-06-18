@@ -1,9 +1,8 @@
 <template>
   <div>
     <Navbar/>
-    <br>
 
-    <div class="container">
+    <div class="main-section">
       <nuxt/>
     </div>
   </div>

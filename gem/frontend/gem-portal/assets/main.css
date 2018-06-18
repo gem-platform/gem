@@ -30,3 +30,7 @@
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
+
+.main-section {
+  padding: 1rem 1.5rem;
+}
