@@ -53,9 +53,11 @@
 
 <script>
 import com from '@/lib/communication';
+import AuthMixin from '@/components/AuthMixin';
 
 export default {
   name: 'DiscussionStageControls',
+  mixins: [AuthMixin],
   computed: {
     queue() {
       const { queue } = this.$store.getters['meeting/stage/state'];
@@ -79,8 +81,7 @@ export default {
       return queue.includes(user.id);
     },
     canManage() {
-      const user = this.$store.getters['meeting/user'];
-      return user.hasPermission('meeting.manage');
+      return this.haveAccess('meeting.manage');
     }
   },
   created() {
