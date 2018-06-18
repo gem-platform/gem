@@ -5,13 +5,14 @@
 </template>
 
 <script>
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+
 export default {
   name: 'CommentsStageView',
-
+  mixins: [StageStateMixin],
   computed: {
     comments() {
-      const meetingStageState = this.$store.getters['meeting/stage/state'];
-      return meetingStageState.comments;
+      return this.$stage.comments;
     },
     columns() {
       return [

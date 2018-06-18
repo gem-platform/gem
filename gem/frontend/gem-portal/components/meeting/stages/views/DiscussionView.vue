@@ -11,11 +11,14 @@
 </template>
 
 <script>
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+
 export default {
   name: 'DiscussionStageView',
+  mixins: [StageStateMixin],
   computed: {
     speaker() {
-      const { speaker } = this.$store.getters['meeting/stage/state'];
+      const { speaker } = this.$stage;
       const users = this.$store.getters['meeting/users'];
       return (users[speaker] && users[speaker].name) || '-';
     }

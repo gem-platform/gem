@@ -52,10 +52,11 @@
 import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'BallotStageControls',
-  mixins: [AuthMixin, StageStateMixin],
+  mixins: [AuthMixin, StageStateMixin, NotificationMixin],
   data() {
     return {
       voteCommited: false,
@@ -63,35 +64,52 @@ export default {
     };
   },
   computed: {
+    /**
+     * Can user vote?
+     */
     canVote() {
       return this.haveAccess('meeting.vote');
     },
+
+    /**
+     * Can user manage ballot stage?
+     */
     canManage() {
       return this.haveAccess('meeting.manage');
     }
   },
   methods: {
-    vote(value) {
-      com
-        .send('vote', { value })
-        .then(() => {
-          this.notify('Your vote has been accepted');
-          this.voteCommited = true;
-        })
-        .catch(err => this.notify(err.message, 'is-danger'));
+    /**
+     * Commit a vote
+     */
+    async vote(value) {
+      const res = await com.send('vote', { value });
+      if (res.success) {
+        this.notify('Your vote has been accepted');
+        this.voteCommited = true;
+      } else {
+        this.notify(res.message, 'is-danger');
+      }
     },
+
+    /**
+     * Change mind
+     */
     changeMind() {
       this.voteCommited = false;
     },
+
+    /**
+     * Set ballot secret value
+     */
     async changeSecret(value) {
       this.isSecret = value;
       const res = await com.send('ballot_secret', { value });
       if (res.success) {
         this.notify('Ballot secret state changed');
+      } else {
+        this.notify(res.message, 'is-danger');
       }
-    },
-    notify(message, type) {
-      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };

@@ -39,10 +39,11 @@
 <script>
 import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
+import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'CommentsStageControls',
-  mixins: [AuthMixin],
+  mixins: [AuthMixin, NotificationMixin],
   data() {
     return {
       message: '',
@@ -60,11 +61,8 @@ export default {
       com
         .send('comment', { message, mark })
         .then(() => this.notify('Your comment has been accepted'))
-        .catch(err => this.notify(err.message || 'err', 'is-danger'));
+        .catch(err => this.notify(err.message || 'Error', 'is-danger'));
       this.message = '';
-    },
-    notify(message, type) {
-      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };

@@ -30,9 +30,16 @@ export default {
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
-    async haveRead(quantity) {
+    /**
+     * Set reading progress
+     */
+    async setProgress(quantity) {
       await com.send('have_read', { quantity });
     },
+
+    /**
+     * On scroll event
+     */
     onScroll() {
       const limit = Math.max(
         document.body.scrollHeight, document.body.offsetHeight,
@@ -44,7 +51,7 @@ export default {
       if (percentRead > this.readProgressNext || percentRead >= 1) {
         this.readProgress = percentRead;
         this.readProgressNext = percentRead + 0.05;
-        this.haveRead(this.readProgress);
+        this.setProgress(this.readProgress);
         this.readState = percentRead >= 1;
       }
     }
