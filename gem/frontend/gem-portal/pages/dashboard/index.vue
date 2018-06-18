@@ -40,7 +40,7 @@
             v-for="event in day.events"
             :key="event._id"
             :class="{'changed': isChanged(event._id)}"
-            class="field is-grouped is-grouped-multiline">
+            class="field is-grouped">
 
             <!-- Start time -->
             <b-input
