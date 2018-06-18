@@ -57,6 +57,7 @@
 <script>
 import { required, alphaNum } from 'vuelidate/lib/validators';
 import ValidationMixin from '@/components/ValidationMixin';
+import { stages } from '@/lib/flow';
 
 export default {
   mixins: [ValidationMixin],
@@ -67,14 +68,6 @@ export default {
     }
   },
   data() {
-    const stages = [
-      { title: 'Initial', value: 'init' },
-      { title: 'GBC Deputies review', value: 'deputies:review' },
-      { title: 'GBC Straw vote', value: 'gbc:straw-vote' },
-      { title: 'GBC Deputies straw vote review', value: 'deputies:straw-vote-reveiw' },
-      { title: 'Final vote', value: 'final-vote' },
-      { title: 'Done', value: 'done' }
-    ];
     const stage = stages.find(x => x.value === this.entity.stage);
 
     return {
