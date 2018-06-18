@@ -50,7 +50,6 @@ export default {
   },
   methods: {
     onLogin({ success }) {
-      console.log(success);
       this.shake = !success;
       setTimeout(() => { this.shake = false; }, 1000);
 

@@ -57,7 +57,7 @@
 <script>
 import { required, alphaNum } from 'vuelidate/lib/validators';
 import ValidationMixin from '@/components/ValidationMixin';
-import { stages } from '@/lib/flow';
+import flow from '@/lib/flow';
 
 export default {
   mixins: [ValidationMixin],
@@ -68,7 +68,7 @@ export default {
     }
   },
   data() {
-    const stage = stages.find(x => x.value === this.entity.stage);
+    const stage = flow.stages.find(x => x.value === this.entity.stage);
 
     return {
       model: {
@@ -78,7 +78,7 @@ export default {
         content: this.entity.content || ''
       },
       stageInput: stage ? stage.title : '',
-      stages,
+      stages: flow.stages,
       editorOption: {
         modules: {
           toolbar: [
