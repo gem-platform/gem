@@ -1,3 +1,5 @@
+import sys
+
 from inspect import getmembers, isfunction
 
 from gem.core import Processor, Event
@@ -69,7 +71,11 @@ class ActiveMeetings:
 
             # get meeting be specified id:
             # open new one of not exist
-            meeting = self.__open_meeting(meeting_id)
+            try:
+                meeting = self.__open_meeting(meeting_id)
+            except:
+                msg = str(sys.exc_info()[1])
+                return {"success": False, "message": msg}
             self.__connection[sid] = meeting
             self.__join.notify(sid, meeting_id)
 
@@ -157,7 +163,7 @@ class ActiveMeeting:
         self.__state_changed = Event()
 
         # todo: MP-11 Fill meeting with real data
-        fill_meeting(self.__meeting)
+        fill_meeting(self.__meeting, meeting_id)
 
     @property
     def meeting_id(self):

@@ -27,7 +27,9 @@
           {{ props.row.name }}
         </b-table-column>
 
-        <b-table-column label="Actions">
+        <b-table-column
+          v-if="canManage"
+          label="Actions">
           <b-tooltip
             label="Give a voice"
             position="is-left">
@@ -61,15 +63,24 @@ export default {
       return queue.map(x => users[x]);
     },
     columns() {
+      if (this.canManage) {
+        return [
+          { field: 'name', label: 'Name' },
+          { field: 'id', label: 'Actions', width: '100' }
+        ];
+      }
       return [
-        { field: 'name', label: 'Name' },
-        { field: 'id', label: 'Actions', width: '100' }
+        { field: 'name', label: 'Name' }
       ];
     },
     selfInQueue() {
       const { queue } = this.$store.getters['meeting/stage/state'];
       const user = this.$store.getters['meeting/user'];
       return queue.includes(user.id);
+    },
+    canManage() {
+      const user = this.$store.getters['meeting/user'];
+      return user.hasPermission('meeting.manage');
     }
   },
   created() {
@@ -110,6 +121,6 @@ export default {
 
 <style scoped>
 .speaker-name {
-  font-size: 350%;
+  font-size: 5em;
 }
 </style>

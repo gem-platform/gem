@@ -8,11 +8,12 @@
 export default {
   name: 'AgendaStageView',
   computed: {
+    /**
+     * Returns agenda for current meeting
+     */
     content() {
-      const { meetingStageState } = this.$store.getters;
-      return meetingStageState
-        ? meetingStageState.content
-        : 'No content provided';
+      const { content } = this.$store.getters['meeting/stage/state'];
+      return content || 'No agenda provided';
     }
   }
 };

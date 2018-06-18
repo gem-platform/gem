@@ -65,11 +65,11 @@ export default {
   computed: {
     canVote() {
       const user = this.$store.getters['meeting/user'];
-      return user.hasPermission('vote');
+      return user.hasPermission('meeting.vote');
     },
     canManage() {
       const user = this.$store.getters['meeting/user'];
-      return user.hasPermission('vote:manage');
+      return user.hasPermission('meeting.manage');
     }
   },
   methods: {

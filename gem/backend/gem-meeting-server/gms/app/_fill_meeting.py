@@ -1,5 +1,6 @@
 """Provides function to fill meeting with testing data."""
 import os
+from bson import ObjectId
 from mongoengine import connect
 
 from gem.db import (Proposal, Ballot, User, Meeting,
@@ -11,13 +12,13 @@ from gms.meeting.stages import (
 )
 
 
-def fill_meeting(meeting):
+def fill_meeting(meeting, meeting_id):
     """Fill specified meeting with test data"""
-    # todo: populate with real data
     db_host = os.environ.get('DB_HOST', "localhost")
 
     connect("test", host=db_host)
-    db_meeting = Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
+    db_meeting = Meeting.objects.get(id=ObjectId(meeting_id))
+    # Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
 
     # add agenda stage
     agenda_stage = AgendaMeetingStage(db_meeting.agenda)
