@@ -21,6 +21,9 @@ proposal = {
         "index": {
             "type": "string"
         },
+        "stage": {
+            "type": "string"
+        },
         "content": {
             "type": "string"
         }

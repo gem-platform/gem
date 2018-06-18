@@ -24,6 +24,21 @@
         @input="validationTouch($v.model.title)"/>
     </b-field>
 
+    <!-- Stage of proposal -->
+    <b-field
+      :type="validationHasError($v.model.stage)"
+      :message="validationMessages($v.model.stage)"
+      label="Stage">
+      <b-autocomplete
+        v-model="stageInput"
+        :data="filteredStages"
+        :keep-first="true"
+        :open-on-focus="true"
+        placeholder="Stage"
+        field="title"
+        @select="onStageChanged"/>
+    </b-field>
+
     <!-- Content of proposal -->
     <b-field
       :type="validationHasError($v.model.content)"
@@ -52,12 +67,25 @@ export default {
     }
   },
   data() {
+    const stages = [
+      { title: 'Initial', value: 'init' },
+      { title: 'GBC Deputies review', value: 'deputies:review' },
+      { title: 'GBC Straw vote', value: 'gbc:straw-vote' },
+      { title: 'GBC Deputies straw vote review', value: 'deputies:straw-vote-reveiw' },
+      { title: 'Final vote', value: 'final-vote' },
+      { title: 'Done', value: 'done' }
+    ];
+    const stage = stages.find(x => x.value === this.entity.stage);
+
     return {
       model: {
         index: this.entity.index,
         title: this.entity.title,
+        stage: this.entity.stage,
         content: this.entity.content || ''
       },
+      stageInput: stage ? stage.title : '',
+      stages,
       editorOption: {
         modules: {
           toolbar: [
@@ -76,7 +104,13 @@ export default {
     model: {
       index: { required, alphaNum },
       title: { required },
-      content: { required }
+      content: { required },
+      stage: { required }
+    }
+  },
+  computed: {
+    filteredStages() {
+      return this.stages;
     }
   },
   watch: {
@@ -91,6 +125,10 @@ export default {
     onEditorChange({ html }) {
       this.model.content = html;
       this.validationTouch(this.$v.model.content);
+    },
+    onStageChanged(stage) {
+      this.model.stage = stage ? stage.value : undefined;
+      this.validationTouch(this.$v.model.stage);
     }
   }
 };
