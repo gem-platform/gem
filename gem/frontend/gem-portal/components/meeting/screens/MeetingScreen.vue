@@ -50,7 +50,8 @@ function humanReadableStageType(type) {
       BallotStage: 'Ballot',
       BallotResultsStage: 'Ballot results',
       DiscussionStage: 'Discussion',
-      CommentsStage: 'Comments'
+      CommentsStage: 'Comments',
+      FinalStage: 'Final'
     }[type] || type
   );
 }
@@ -74,7 +75,7 @@ export default {
     },
     subtitle() {
       const type = this.$store.getters['meeting/stage/type'];
-      const withoutSubtitle = ['AgendaStage', 'ConnectedStage'];
+      const withoutSubtitle = ['AgendaStage', 'ConnectedStage', 'FinalStage'];
       const showSubtitle = !withoutSubtitle.includes(type);
       return showSubtitle ? humanReadableStageType(type) : '';
     },
@@ -90,7 +91,8 @@ export default {
         'AcquaintanceStage',
         'BallotStage',
         'CommentsStage',
-        'DiscussionStage'
+        'DiscussionStage',
+        'FinalStage'
       ];
       return withControls.includes(type);
     },
@@ -102,7 +104,8 @@ export default {
         'BallotStage',
         'BallotResultsStage',
         'CommentsStage',
-        'DiscussionStage'
+        'DiscussionStage',
+        'FinalStage'
       ];
       return withViews.includes(type);
     },

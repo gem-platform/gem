@@ -8,7 +8,7 @@ from gem.db import (Proposal, Ballot, User, Meeting,
 from gms.meeting.stages import (
     StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
-    DiscussionMeetingStage
+    DiscussionMeetingStage, FinalMeetingStage
 )
 
 
@@ -27,6 +27,8 @@ def fill_meeting(meeting, meeting_id):
     # create stages for each proposal
     for proposal in db_meeting.proposals:
         add_group(meeting, proposal)
+
+    meeting.stages.append(FinalMeetingStage())
 
     # create users
     for user in db_meeting.resolve("meeting.join"):
