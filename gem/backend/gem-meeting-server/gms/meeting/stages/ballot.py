@@ -27,36 +27,6 @@ class BallotMeetingStage(MeetingStage):
         """
         return self.__ballot
 
-    @property
-    def progress(self):
-        """
-        Return progress of the ballot stage.
-
-        Returns:
-            float -- Progress in percents.
-        """
-        # it's impossible to calculate percentage without context
-        # (we need: users online) so raise an exception
-        if not self.meeting.context:
-            raise Exception("No context provided")
-
-        # gets list of online users using meeting context
-        context = self.meeting.context
-        users_online = context.sessions.online
-        users_can_vote = self.__users_can_vote(users_online)
-
-        # no one user can vote here
-        if len(users_can_vote) <= 0:
-            return 0
-
-        # calculate the percentage of completion
-        votes_count = len(self.__ballot.votes)
-        users_count = len(users_can_vote)
-        percent = votes_count / users_count * 100
-
-        # return calculated percent
-        return percent
-
     def vote(self, user, value):
         """
         Commit specified vote of specified user.
@@ -69,6 +39,3 @@ class BallotMeetingStage(MeetingStage):
         self.changed.notify()
         self.__ballot.save()  # todo: performance fix: save on exit from stage
 
-    @staticmethod
-    def __users_can_vote(users):
-        return list(filter(lambda user: "vote" in user.permissions, users))
