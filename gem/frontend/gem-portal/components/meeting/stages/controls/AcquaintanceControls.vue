@@ -2,11 +2,11 @@
   <div
     class="field">
     <p class="control is-expanded">
-      <a
+      <span
         :class="{ 'is-success' : readState, 'is-white': !!readState }"
         class="button is-fullwidth">
-        I read
-      </a>
+        I read {{ myProgress | percent }}%
+      </span>
     </p>
   </div>
 </template>
@@ -16,11 +16,17 @@ import com from '@/lib/communication';
 
 export default {
   name: 'AcquaintanceStageControls',
+  filters: {
+    percent(value) {
+      return Math.ceil(value * 100);
+    }
+  },
   data() {
     return {
       readState: false,
       readProgress: 0,
-      readProgressNext: 0
+      readProgressNext: 0,
+      myProgress: 0
     };
   },
   created() {
@@ -30,9 +36,17 @@ export default {
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
-    async haveRead(quantity) {
+    /**
+     * Set reading progress
+     */
+    async setProgress(quantity) {
       await com.send('have_read', { quantity });
+      this.myProgress = quantity;
     },
+
+    /**
+     * On scroll event
+     */
     onScroll() {
       const limit = Math.max(
         document.body.scrollHeight, document.body.offsetHeight,
@@ -44,7 +58,7 @@ export default {
       if (percentRead > this.readProgressNext || percentRead >= 1) {
         this.readProgress = percentRead;
         this.readProgressNext = percentRead + 0.05;
-        this.haveRead(this.readProgress);
+        this.setProgress(this.readProgress);
         this.readState = percentRead >= 1;
       }
     }

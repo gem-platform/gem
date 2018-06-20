@@ -10,6 +10,7 @@ import BallotView from './stages/views/BallotView.vue';
 import BallotResultsView from './stages/views/BallotResultsView.vue';
 import CommentsView from './stages/views/CommentsView.vue';
 import DiscussionView from './stages/views/DiscussionView.vue';
+import FinalView from './stages/views/FinalView.vue';
 
 export default {
   name: 'StageViewPresenter',
@@ -20,7 +21,8 @@ export default {
     BallotView,
     BallotResultsView,
     CommentsView,
-    DiscussionView
+    DiscussionView,
+    FinalView
   },
   computed: {
     controlType() {

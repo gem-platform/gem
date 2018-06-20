@@ -95,7 +95,8 @@ class MeetingStageSerializer:
             "BallotMeetingStage": BallotMeetingStageSerializer(),
             "BallotResultsMeetingStage": BallotResultsMeetingStageSerializer(),
             "CommentsMeetingStage": CommentsMeetingStageSerializer(),
-            "DiscussionMeetingStage": DiscussionMeetingStageSerializer()
+            "DiscussionMeetingStage": DiscussionMeetingStageSerializer(),
+            "FinalMeetingStage": FinalMeetingStageSerializer()
         }
 
     def serialize(self, stage):
@@ -169,4 +170,11 @@ class DiscussionMeetingStageSerializer:
             "queue": list(user_ids),
             "speaker": str(speaker_id),
             "proposalId": str(stage.group.proposal.id)
+        }
+
+
+class FinalMeetingStageSerializer:
+    def serialize(self, stage):
+        return {
+            "type": "FinalStage",
         }

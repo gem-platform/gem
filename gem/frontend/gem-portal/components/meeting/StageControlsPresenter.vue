@@ -7,6 +7,7 @@ import AcquaintanceControls from './stages/controls/AcquaintanceControls.vue';
 import BallotControls from './stages/controls/BallotControls.vue';
 import CommentsControls from './stages/controls/CommentsControls.vue';
 import DiscussionControls from './stages/controls/DiscussionControls.vue';
+import FinalControls from './stages/controls/FinalControls.vue';
 
 export default {
   name: 'StageControlsPresenter',
@@ -14,7 +15,8 @@ export default {
     AcquaintanceControls,
     BallotControls,
     CommentsControls,
-    DiscussionControls
+    DiscussionControls,
+    FinalControls
   },
   computed: {
     controlType() {

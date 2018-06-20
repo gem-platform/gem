@@ -1,8 +1,11 @@
 <template>
   <div>
+    <!-- Managing block -->
     <div
       v-if="canManage"
       class="field">
+
+      <!-- Secret ballot switch -->
       <b-switch
         v-model="isSecret"
         @input="changeSecret">
@@ -10,39 +13,39 @@
       </b-switch>
     </div>
 
+    <!-- Voting controls -->
     <div v-if="canVote">
-      <div
-        v-if="voteCommited"
-        class="field">
-        <p class="control is-expanded">
+      <transition
+        name="fade"
+        mode="out-in">
+        <!-- Vote buttons -->
+        <div
+          v-if="!voteCommited"
+          key="vote-buttons"
+          class="field is-grouped is-grouped-centered">
           <a
-            class="button is-fullwidth is-light"
-            @click="changeMind">
-            Accepted. Change mind.
-          </a>
-        </p>
-      </div>
-
-      <div
-        v-else
-        class="field is-grouped is-grouped-multiline is-grouped-centered">
-        <p class="control is-expanded">
-          <a
-            class="button is-success is-fullwidth"
+            class="button control is-success is-expanded is-large"
             @click="vote('yes')">Yes</a>
-        </p>
-        <p class="control is-expanded">
           <a
-            class="button is-danger is-fullwidth"
+            class="button control is-danger is-expanded is-large"
             @click="vote('no')">No</a>
-        </p>
-        <p class="control is-expanded">
           <a
-            class="button is-info is-fullwidth"
+            class="button control is-info is-expanded is-large"
             @click="vote('abstained')">Abstained</a>
-        </p>
-      </div>
+        </div>
+
+        <!-- Vote accepted -->
+        <a
+          v-else
+          key="change-mind"
+          class="button control is-expanded is-large is-fullwidth is-success"
+          @click="changeMind">
+          Accepted. Change mind.
+        </a>
+      </transition>
     </div>
+
+    <!-- No rights to vote -->
     <div
       v-else
       class="has-text-danger has-text-centered">
@@ -53,9 +56,13 @@
 
 <script>
 import com from '@/lib/communication';
+import AuthMixin from '@/components/AuthMixin';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'BallotStageControls',
+  mixins: [AuthMixin, StageStateMixin, NotificationMixin],
   data() {
     return {
       voteCommited: false,
@@ -63,37 +70,52 @@ export default {
     };
   },
   computed: {
+    /**
+     * Can user vote?
+     */
     canVote() {
-      const user = this.$store.getters['meeting/user'];
-      return user.hasPermission('meeting.vote');
+      return this.haveAccess('meeting.vote');
     },
+
+    /**
+     * Can user manage ballot stage?
+     */
     canManage() {
-      const user = this.$store.getters['meeting/user'];
-      return user.hasPermission('meeting.manage');
+      return this.haveAccess('meeting.manage');
     }
   },
   methods: {
-    vote(value) {
-      com
-        .send('vote', { value })
-        .then(() => {
-          this.notify('Your vote has been accepted');
-          this.voteCommited = true;
-        })
-        .catch(err => this.notify(err.message, 'is-danger'));
+    /**
+     * Commit a vote
+     */
+    async vote(value) {
+      const res = await com.send('vote', { value });
+      if (res.success) {
+        this.notify('Your vote has been accepted');
+        this.voteCommited = true;
+      } else {
+        this.notify(res.message, 'is-danger');
+      }
     },
+
+    /**
+     * Change mind
+     */
     changeMind() {
       this.voteCommited = false;
     },
+
+    /**
+     * Set ballot secret value
+     */
     async changeSecret(value) {
       this.isSecret = value;
       const res = await com.send('ballot_secret', { value });
       if (res.success) {
         this.notify('Ballot secret state changed');
+      } else {
+        this.notify(res.message, 'is-danger');
       }
-    },
-    notify(message, type) {
-      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };

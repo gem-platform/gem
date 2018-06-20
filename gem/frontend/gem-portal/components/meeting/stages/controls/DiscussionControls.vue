@@ -53,9 +53,12 @@
 
 <script>
 import com from '@/lib/communication';
+import AuthMixin from '@/components/AuthMixin';
+import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'DiscussionStageControls',
+  mixins: [AuthMixin, NotificationMixin],
   computed: {
     queue() {
       const { queue } = this.$store.getters['meeting/stage/state'];
@@ -79,8 +82,7 @@ export default {
       return queue.includes(user.id);
     },
     canManage() {
-      const user = this.$store.getters['meeting/user'];
-      return user.hasPermission('meeting.manage');
+      return this.haveAccess('meeting.manage');
     }
   },
   created() {
@@ -111,9 +113,6 @@ export default {
         .send('give_voice', { to })
         .then(() => this.notify(`Voice have been given to ${name}`))
         .catch(err => this.notify(err.message, 'is-danger'));
-    },
-    notify(message, type) {
-      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };
