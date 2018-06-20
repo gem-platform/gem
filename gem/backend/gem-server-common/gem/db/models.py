@@ -24,6 +24,16 @@ class Proposal(GemDocument):
     title = StringField(required=True)
     index = StringField(required=True)
     content = StringField(required=True)
+    stage = StringField()
+
+
+class Law(GemDocument):
+    """Law"""
+    meta = {'collection': 'laws'}
+
+    title = StringField(required=True)
+    index = StringField(required=True)
+    content = StringField(required=True)
 
 
 class Role(GemDocument):

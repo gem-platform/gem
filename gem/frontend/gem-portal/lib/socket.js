@@ -20,6 +20,7 @@ export default store => ({
     // information about the state of the stage has arrived.
     // { index: stageIndex, state: {} }
     store.dispatch('meeting/meetingStage', data);
+    console.log(data);
 
     if (this.$route && !this.$route.path.startsWith('/meeting')) {
       store.dispatch('meeting/attentionRequired', true);

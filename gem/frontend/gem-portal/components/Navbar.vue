@@ -9,14 +9,14 @@
         </nuxt-link>
         <div
           class="navbar-burger burger"
-          data-target="navMenu">
+          @click="toggleMenu">
           <span/>
           <span/>
           <span/>
         </div>
       </div>
       <div
-        id="navMenu"
+        :class="{'is-active': menuOpen}"
         class="navbar-menu">
         <div class="navbar-start">
           <nuxt-link
@@ -38,6 +38,14 @@
               class="icon has-text-danger">
               <i class="fa fa-exclamation blink_me"/>
             </span>
+          </nuxt-link>
+
+          <nuxt-link
+            v-if="haveAccess('laws')"
+            class="navbar-item"
+            to="/laws"
+            active-class="is-active">
+            Laws
           </nuxt-link>
         </div>
 
@@ -82,9 +90,19 @@ import AuthMixin from '@/components/AuthMixin';
 
 export default {
   mixins: [AuthMixin],
+  data() {
+    return {
+      menuOpen: false
+    };
+  },
   computed: {
     meetingAttentionRequired() {
       return this.$store.getters['meeting/attentionRequired'];
+    }
+  },
+  methods: {
+    toggleMenu() {
+      this.menuOpen = !this.menuOpen;
     }
   }
 };

@@ -27,7 +27,9 @@
           {{ props.row.name }}
         </b-table-column>
 
-        <b-table-column label="Actions">
+        <b-table-column
+          v-if="canManage"
+          label="Actions">
           <b-tooltip
             label="Give a voice"
             position="is-left">
@@ -51,9 +53,12 @@
 
 <script>
 import com from '@/lib/communication';
+import AuthMixin from '@/components/AuthMixin';
+import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'DiscussionStageControls',
+  mixins: [AuthMixin, NotificationMixin],
   computed: {
     queue() {
       const { queue } = this.$store.getters['meeting/stage/state'];
@@ -61,15 +66,23 @@ export default {
       return queue.map(x => users[x]);
     },
     columns() {
+      if (this.canManage) {
+        return [
+          { field: 'name', label: 'Name' },
+          { field: 'id', label: 'Actions', width: '100' }
+        ];
+      }
       return [
-        { field: 'name', label: 'Name' },
-        { field: 'id', label: 'Actions', width: '100' }
+        { field: 'name', label: 'Name' }
       ];
     },
     selfInQueue() {
       const { queue } = this.$store.getters['meeting/stage/state'];
       const user = this.$store.getters['meeting/user'];
       return queue.includes(user.id);
+    },
+    canManage() {
+      return this.haveAccess('meeting.manage');
     }
   },
   created() {
@@ -100,9 +113,6 @@ export default {
         .send('give_voice', { to })
         .then(() => this.notify(`Voice have been given to ${name}`))
         .catch(err => this.notify(err.message, 'is-danger'));
-    },
-    notify(message, type) {
-      this.$bus.emit('notification', { message, type: type || 'is-success' });
     }
   }
 };
@@ -110,6 +120,6 @@ export default {
 
 <style scoped>
 .speaker-name {
-  font-size: 350%;
+  font-size: 5em;
 }
 </style>

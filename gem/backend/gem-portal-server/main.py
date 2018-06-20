@@ -6,6 +6,9 @@ from flask_cors import CORS
 from eve.auth import TokenAuth
 from mongoengine import connect
 import sys
+
+from api_search import api_search
+
 sys.path.append("../gem-server-common")
 sys.path.append("./gem/gem-server-common")
 
@@ -21,8 +24,8 @@ class MyTokenAuth(TokenAuth):
         print(token)
         return True
 
-
 app = Eve()  # auth=MyTokenAuth)
+app.register_blueprint(api_search)
 CORS(app)
 
 
@@ -44,10 +47,10 @@ app.on_replace_users += event2
 @app.route("/api/auth/login", methods=["POST"])
 def login():
     data = request.get_json(force=True)
-    name = data.get("name")
+    login = data.get("login")
     password = data.get("password")
-    users = User.objects(name=name, password=password)
-    print(users, name, password)
+    users = User.objects(name=login, password=password)
+    print(users, login, password)
     if len(users) == 1:
         return jsonify({"success": True, "token": str(users[0].id)})
     return jsonify({"success": False}), 401

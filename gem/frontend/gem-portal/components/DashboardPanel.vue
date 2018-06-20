@@ -8,7 +8,7 @@
         <nuxt-link
           to="/dashboard"
           active-class="is-active"
-          exact>Home</nuxt-link>
+          exact>Schedule</nuxt-link>
       </li>
       <li v-if="haveAccess('dashboard.proposals')">
         <nuxt-link
@@ -21,7 +21,9 @@
           active-class="is-active">Meetings</nuxt-link>
       </li>
       <li v-if="haveAccess('dashboard.laws')">
-        <a>Laws</a>
+        <nuxt-link
+          to="/dashboard/laws"
+          active-class="is-active">Laws</nuxt-link>
       </li>
     </ul>
 

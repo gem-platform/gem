@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- Index of proposal -->
+    <!-- Index of law -->
     <b-field
       :type="validationHasError($v.model.index)"
       :message="validationMessages($v.model.index)"
@@ -12,7 +12,7 @@
         @input="validationTouch($v.model.index)"/>
     </b-field>
 
-    <!-- Title of proposal -->
+    <!-- Title of law -->
     <b-field
       :type="validationHasError($v.model.title)"
       :message="validationMessages($v.model.title)"
@@ -24,22 +24,7 @@
         @input="validationTouch($v.model.title)"/>
     </b-field>
 
-    <!-- Stage of proposal -->
-    <b-field
-      :type="validationHasError($v.model.stage)"
-      :message="validationMessages($v.model.stage)"
-      label="Stage">
-      <b-autocomplete
-        v-model="stageInput"
-        :data="filteredStages"
-        :keep-first="true"
-        :open-on-focus="true"
-        placeholder="Stage"
-        field="title"
-        @select="onStageChanged"/>
-    </b-field>
-
-    <!-- Content of proposal -->
+    <!-- Content of law -->
     <b-field
       :type="validationHasError($v.model.content)"
       :message="validationMessages($v.model.content)"
@@ -48,7 +33,7 @@
         v-quill:myQuillEditor="editorOption"
         :content="model.content"
         class="quill-editor"
-        @change="onEditorChange($event)"/>
+        @change="onEditorChange($event);"/>
     </b-field>
 
   </div>
@@ -57,7 +42,6 @@
 <script>
 import { required, alphaNum } from 'vuelidate/lib/validators';
 import ValidationMixin from '@/components/ValidationMixin';
-import flow from '@/lib/flow';
 
 export default {
   mixins: [ValidationMixin],
@@ -68,17 +52,12 @@ export default {
     }
   },
   data() {
-    const stage = flow.stages.find(x => x.value === this.entity.stage);
-
     return {
       model: {
         index: this.entity.index,
         title: this.entity.title,
-        stage: this.entity.stage,
         content: this.entity.content || ''
       },
-      stageInput: stage ? stage.title : '',
-      stages: flow.stages,
       editorOption: {
         modules: {
           toolbar: [
@@ -97,13 +76,7 @@ export default {
     model: {
       index: { required, alphaNum },
       title: { required },
-      content: { required },
-      stage: { required }
-    }
-  },
-  computed: {
-    filteredStages() {
-      return this.stages;
+      content: { required }
     }
   },
   watch: {
@@ -118,10 +91,6 @@ export default {
     onEditorChange({ html }) {
       this.model.content = html;
       this.validationTouch(this.$v.model.content);
-    },
-    onStageChanged(stage) {
-      this.model.stage = stage ? stage.value : undefined;
-      this.validationTouch(this.$v.model.stage);
     }
   }
 };

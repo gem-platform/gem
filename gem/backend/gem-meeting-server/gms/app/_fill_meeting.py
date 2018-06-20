@@ -1,5 +1,6 @@
 """Provides function to fill meeting with testing data."""
 import os
+from bson import ObjectId
 from mongoengine import connect
 
 from gem.db import (Proposal, Ballot, User, Meeting,
@@ -7,17 +8,17 @@ from gem.db import (Proposal, Ballot, User, Meeting,
 from gms.meeting.stages import (
     StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
-    DiscussionMeetingStage
+    DiscussionMeetingStage, FinalMeetingStage
 )
 
 
-def fill_meeting(meeting):
+def fill_meeting(meeting, meeting_id):
     """Fill specified meeting with test data"""
-    # todo: populate with real data
     db_host = os.environ.get('DB_HOST', "localhost")
 
     connect("test", host=db_host)
-    db_meeting = Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
+    db_meeting = Meeting.objects.get(id=ObjectId(meeting_id))
+    # Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
 
     # add agenda stage
     agenda_stage = AgendaMeetingStage(db_meeting.agenda)
@@ -26,6 +27,8 @@ def fill_meeting(meeting):
     # create stages for each proposal
     for proposal in db_meeting.proposals:
         add_group(meeting, proposal)
+
+    meeting.stages.append(FinalMeetingStage())
 
     # create users
     for user in db_meeting.resolve("meeting.join"):
@@ -43,7 +46,7 @@ def add_group(meeting, proposal):
     comments = list(Comment.objects(proposal=proposal))
 
     group = StagesGroup(meeting, proposal=proposal)
-    meeting.stages.append(AcquaintanceMeetingStage(group=group))
+    meeting.stages.append(AcquaintanceMeetingStage(ballot, comments, group=group))
     meeting.stages.append(BallotMeetingStage(ballot, group=group))
     meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
     meeting.stages.append(CommentsMeetingStage(comments, group=group))

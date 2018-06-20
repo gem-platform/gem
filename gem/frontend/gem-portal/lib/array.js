@@ -4,6 +4,11 @@ export default {
   },
   removeIndex(array, index) {
     array.splice(index, 1);
+  },
+  unkey(array, idx) {
+    return Object
+      .entries(array)
+      .map(r => Object.assign({ [idx]: r[0] }, r[1]));
   }
 };
 

@@ -15,6 +15,17 @@ services:
     ports:
       - "27017:27017"
 
+  gem-elastic-search:
+    image: gemplatform/gem-elastic-search
+    restart: "no"
+    build: ./gem/backend/gem-elastic-search
+    environment:
+      - ELASTIC_PASSWORD=elastic
+    volumes:
+      - ./.data/es:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
   gem-web:
@@ -66,6 +77,7 @@ services:
       - "5000"
     environment:
       - DB_HOST=gem-database
+      - ES_HOST=gem-elastic-search
     links:
       - gem-database:gem-database
     volumes:

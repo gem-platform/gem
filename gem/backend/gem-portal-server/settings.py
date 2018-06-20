@@ -21,6 +21,23 @@ proposal = {
         "index": {
             "type": "string"
         },
+        "stage": {
+            "type": "string"
+        },
+        "content": {
+            "type": "string"
+        }
+    }
+}
+
+laws = {
+    "schema": {
+        "title": {
+            "type": "string"
+        },
+        "index": {
+            "type": "string"
+        },
         "content": {
             "type": "string"
         }
@@ -84,5 +101,6 @@ DOMAIN = {
     "proposals": proposal,
     "users": users,
     "roles": roles,
-    "meetings": meetings
+    "meetings": meetings,
+    "laws": laws
 }

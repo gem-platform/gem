@@ -3,7 +3,7 @@
     <div class="field is-grouped is-grouped-multiline">
       <p class="control">
         <nuxt-link
-          :to="editUrl"
+          :to="editUrl(entity._id)"
           class="button is-light">Edit</nuxt-link>
       </p>
       <p class="control">
