@@ -15,28 +15,34 @@
 
     <!-- Voting controls -->
     <div v-if="canVote">
-      <!-- Vote buttons -->
-      <div
-        v-if="!voteCommited"
-        class="field is-grouped is-grouped-centered">
-        <a
-          class="button  control is-success is-expanded"
-          @click="vote('yes')">Yes</a>
-        <a
-          class="button control is-danger is-expanded"
-          @click="vote('no')">No</a>
-        <a
-          class="button control is-info is-expanded"
-          @click="vote('abstained')">Abstained</a>
-      </div>
+      <transition
+        name="fade"
+        mode="out-in">
+        <!-- Vote buttons -->
+        <div
+          v-if="!voteCommited"
+          key="vote-buttons"
+          class="field is-grouped is-grouped-centered">
+          <a
+            class="button control is-success is-expanded is-large"
+            @click="vote('yes')">Yes</a>
+          <a
+            class="button control is-danger is-expanded is-large"
+            @click="vote('no')">No</a>
+          <a
+            class="button control is-info is-expanded is-large"
+            @click="vote('abstained')">Abstained</a>
+        </div>
 
-      <!-- Vote accepted -->
-      <a
-        v-else
-        class="button control is-expanded is-fullwidth is-success"
-        @click="changeMind">
-        Accepted. Change mind.
-      </a>
+        <!-- Vote accepted -->
+        <a
+          v-else
+          key="change-mind"
+          class="button control is-expanded is-large is-fullwidth is-success"
+          @click="changeMind">
+          Accepted. Change mind.
+        </a>
+      </transition>
     </div>
 
     <!-- No rights to vote -->
