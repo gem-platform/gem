@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- Filter -->
     <div class="notification">
       <b-field label="Roles">
         <Roles
@@ -13,28 +14,36 @@
     </div>
 
     <transition-group
-      name="proposals-list"
+      name="comments-list"
       tag="article">
       <article
         v-for="comment in comments"
         :key="comment._id"
         class="media">
+
         <div class="media-content">
+          <!-- Content of the comment -->
           <div class="content">
             <p>
+              <!-- User's name -->
               <strong>{{ comment.user }}</strong>&nbsp;
+
+              <!-- User's roles -->
               <span class="tags">
                 <b-tag
                   v-for="(role, idx) in comment.roles"
                   :key="idx">{{ role }}
                 </b-tag>
-
               </span>
+
+              <!-- Content -->
               <br>
               {{ comment.content }}
             </p>
           </div>
         </div>
+
+        <!-- Mark -->
         <div class="media-right">
           <b-tag :type="comment.type">{{ comment.mark | mark }}</b-tag>
         </div>
@@ -48,6 +57,15 @@ import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import Roles from '@/components/Roles.vue';
 import Marks from '@/components/Marks.vue';
 import _ from 'lodash';
+import arr from '@/lib/array';
+
+function anyRolePresent(roles1, roles2) {
+  return _.intersection(roles1, roles2).length > 0;
+}
+
+function anyMarkPresent(filter, value) {
+  return _.includes(filter, value);
+}
 
 export default {
   name: 'CommentsStageView',
@@ -62,7 +80,11 @@ export default {
   },
   mixins: [StageStateMixin],
   data() {
-    return { filterRoles: [], filterMarks: ['+', '-', 'i'] };
+    const roles = arr.unkey(this.$store.state.meeting.roles, 'id');
+    return {
+      filterRoles: roles.map(x => x.id),
+      filterMarks: ['+', '-', 'i']
+    };
   },
   computed: {
     comments() {
@@ -79,15 +101,11 @@ export default {
           content: c.content,
           type: cssType[c.mark]
         }))
-        .filter(c =>
-          _.intersection(this.filterRoles, c.role_ids).length > 0
-          || this.filterRoles.length === 0)
-        .filter(m => _.includes(this.filterMarks, m.mark) || this.filterMarks.length === 0);
+        // Filter out comments of users whose roles were not in the filter
+        .filter(c => anyRolePresent(this.filterRoles, c.role_ids))
+        // Filter out comments with mark not in the filter
+        .filter(m => anyMarkPresent(this.filterMarks, m.mark));
     }
-  },
-  created() {
-    const roles = this.comments.map(x => x.role_ids);
-    this.filterRoles = _.chain(roles).flatten().uniq().value();
   },
   methods: {
     onRolesFilterChanged(value) {
@@ -98,19 +116,20 @@ export default {
     }
   }
 };
+
 </script>
 
 <style scoped>
 .tags {
   display: inline;
 }
-.proposals-list-move {
+.comments-list-move {
   transition: transform .5s;
 }
-.proposals-list-enter-active, .proposals-list-leave-active {
-  transition: all 1s;
+.comments-list-enter-active, .comments-list-leave-active {
+  transition: all .5s;
 }
-.proposals-list-enter, .proposals-list-leave-to {
+.comments-list-enter, .comments-list-leave-to {
   opacity: 0;
 }
 </style>
