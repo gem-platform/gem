@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-taginput
-      v-model="roles"
+      v-model="selectedRoles"
       :data="suggestions"
       autocomplete
       field="name"
@@ -14,10 +14,11 @@
 
 <script>
 import str from '@/lib/string';
+import arr from '@/lib/array';
 
 export default {
   props: {
-    // List of selected roles:
+    // List of selected role IDs:
     // ['id0', 'id2']
     selected: {
       type: Array,
@@ -25,14 +26,18 @@ export default {
     }
   },
   data() {
+    const roles = arr.unkey(this.$store.state.meeting.roles, 'id');
+
     return {
-      roles: [], // list of selected roles
-      suggestions: [] // list of suggestions
+      // all roles: { id: ..., name: ... }
+      roles,
+
+      // list of selected roles
+      selectedRoles: roles.filter(x => this.selected.includes(x.id)),
+
+      // list of suggestions
+      suggestions: []
     };
-  },
-  async beforeCreate() {
-    await this.$store.dispatch('dashboard/roles/fetch');
-    this.roles = this.$store.state.dashboard.roles.roles.filter(r => this.selected.includes(r._id));
   },
   methods: {
     /**
@@ -40,15 +45,16 @@ export default {
      */
     onInput(value) {
       // return IDs only
-      this.$emit('change', value.map(r => r._id));
+      this.$emit('change', value.map(r => r.id));
     },
 
     /**
      * Return list of suggestions based on user input
      */
     getFilteredRoles(text) {
-      const { roles } = this.$store.state.dashboard.roles;
-      this.suggestions = roles.filter(role => str.contains(role.name, text));
+      // return list of roles which contains specified text
+      this.suggestions = this.roles
+        .filter(role => str.contains(role.name, text));
     }
   }
 };
