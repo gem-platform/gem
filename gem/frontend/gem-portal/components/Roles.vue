@@ -7,7 +7,8 @@
       field="name"
       icon="fas fa-angle-right"
       placeholder="Roles"
-      @typing="getFilteredRoles" />
+      @typing="getFilteredRoles"
+      @input="onInput" />
   </div>
 </template>
 
@@ -16,6 +17,8 @@ import str from '@/lib/string';
 
 export default {
   props: {
+    // List of selected roles:
+    // ['id0', 'id2']
     selected: {
       type: Array,
       required: true
@@ -23,8 +26,8 @@ export default {
   },
   data() {
     return {
-      roles: [],
-      suggestions: []
+      roles: [], // list of selected roles
+      suggestions: [] // list of suggestions
     };
   },
   async beforeCreate() {
@@ -32,6 +35,14 @@ export default {
     this.roles = this.$store.state.dashboard.roles.roles.filter(r => this.selected.includes(r._id));
   },
   methods: {
+    /**
+     * On input changed
+     */
+    onInput(value) {
+      // return IDs only
+      this.$emit('change', value.map(r => r._id));
+    },
+
     /**
      * Return list of suggestions based on user input
      */
@@ -42,7 +53,3 @@ export default {
   }
 };
 </script>
-
-<style>
-
-</style>
