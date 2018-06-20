@@ -44,7 +44,7 @@ def add_group(meeting, proposal):
     comments = list(Comment.objects(proposal=proposal))
 
     group = StagesGroup(meeting, proposal=proposal)
-    meeting.stages.append(AcquaintanceMeetingStage(group=group))
+    meeting.stages.append(AcquaintanceMeetingStage(ballot, comments, group=group))
     meeting.stages.append(BallotMeetingStage(ballot, group=group))
     meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
     meeting.stages.append(CommentsMeetingStage(comments, group=group))
