@@ -2,11 +2,10 @@
   <nav class="navbar is-light">
     <div class="container">
       <div class="navbar-brand">
-        <nuxt-link
-          class="navbar-item brand-text"
-          to="/">
+        <span
+          class="navbar-item brand-text">
           <img src="/gem-logo-small.svg">&nbsp;GEM
-        </nuxt-link>
+        </span>
         <div
           class="navbar-burger burger"
           @click="toggleMenu">
@@ -20,6 +19,14 @@
         class="navbar-menu">
         <div class="navbar-start">
           <nuxt-link
+            class="navbar-item"
+            to="/"
+            active-class="is-active"
+            exact>
+            Schedule
+          </nuxt-link>
+
+          <nuxt-link
             v-if="haveAccess('dashboard')"
             class="navbar-item"
             to="/dashboard"
@@ -28,24 +35,25 @@
           </nuxt-link>
 
           <nuxt-link
-            v-if="haveAccess('meeting')"
+            v-if="haveAccess('laws')"
             class="navbar-item"
-            to="/meeting"
+            to="/laws"
             active-class="is-active">
+            Laws
+          </nuxt-link>
+
+          <nuxt-link
+            v-if="haveAccess('meeting') && meetingJoined"
+            :to="meetingLink"
+            class="navbar-item"
+            active-class="is-active"
+            disabled>
             Meeting
             <span
               v-if="meetingAttentionRequired"
               class="icon has-text-danger">
               <i class="fa fa-exclamation blink_me"/>
             </span>
-          </nuxt-link>
-
-          <nuxt-link
-            v-if="haveAccess('laws')"
-            class="navbar-item"
-            to="/laws"
-            active-class="is-active">
-            Laws
           </nuxt-link>
         </div>
 
@@ -98,6 +106,13 @@ export default {
   computed: {
     meetingAttentionRequired() {
       return this.$store.getters['meeting/attentionRequired'];
+    },
+    meetingJoined() {
+      return this.$store.state.meeting.id;
+    },
+    meetingLink() {
+      const mid = this.$store.state.meeting.id;
+      return !mid ? '/meeting' : `/meeting/${mid}`;
     }
   },
   methods: {
