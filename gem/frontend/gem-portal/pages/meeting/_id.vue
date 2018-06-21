@@ -24,6 +24,9 @@ export default {
   created() {
     this.$bus.on('notification', this.snackbar);
   },
+  beforeDestroy() {
+    this.$bus.off('notification', this.snackbar);
+  },
   mounted() {
     const { token } = this.$auth.user;
     const meetingId = this.$route.params.id;
@@ -42,6 +45,7 @@ export default {
     this.$socket.emit('handshake', { token, meeting: meetingId }, (response) => {
       // meta is not sent if handshake failed
       if (response.state) {
+        this.$store.dispatch('meeting/meetingId', meetingId);
         this.$store.dispatch('meeting/user', response.user);
         this.$store.dispatch('meeting/meetingState', response.state);
         this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
