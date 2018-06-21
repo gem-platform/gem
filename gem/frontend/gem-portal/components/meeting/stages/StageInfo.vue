@@ -1,11 +1,12 @@
 <template>
   <div class="box notification is-light">
-    <div class="level">
 
+    <!-- Title and type -->
+    <div class="level">
       <div class="level-left">
         <div class="level-item">
           <div>
-            <p class="heading">{{ subtitle }}</p>
+            <p class="heading">{{ type }}</p>
             <p class="title">
               {{ title }}
             </p>
@@ -13,15 +14,20 @@
         </div>
       </div>
 
+      <!-- Timers -->
       <div class="level-right">
+
+        <!-- Stage timer -->
         <div class="level-item has-text-centered">
           <CountdownTimer
-            :to="tillStageEnd"
+            :to="stageEndTime"
             header="Stage"/>
         </div>
+
+        <!-- Meeting timer -->
         <div class="level-item has-text-centered">
           <CountdownTimer
-            :to="tillMeetingEnd"
+            :to="meetingEndTime"
             header="Meeting" />
         </div>
       </div>
@@ -31,18 +37,20 @@
 
 <script>
 import CountdownTimer from '@/components/meeting/CountdownTimer.vue';
+import StageMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'StageInfo',
   components: {
     CountdownTimer
   },
+  mixins: [StageMixin],
   props: {
     title: {
       type: String,
       required: true
     },
-    subtitle: {
+    type: {
       type: String,
       default: ''
     }
@@ -53,15 +61,25 @@ export default {
     };
   },
   computed: {
-    tillStageEnd() {
+    /**
+     * Return end time of the stage
+     */
+    stageEndTime() {
       return this.stageTime;
     },
-    tillMeetingEnd() {
-      return new Date(this.$store.state.meeting.end);
+
+    /**
+     * Return end time of the meeting
+     */
+    meetingEndTime() {
+      return new Date(this.meetingTime.end);
     }
   },
   mounted() {
     this.$bus.on('setStageTimer', time => this.onUpdateStageTimer(time));
+  },
+  beforeDestroy() {
+    this.$bus.off('setStageTimer');
   },
   methods: {
     onUpdateStageTimer(value) {

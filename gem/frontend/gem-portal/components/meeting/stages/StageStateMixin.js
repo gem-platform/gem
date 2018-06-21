@@ -8,6 +8,9 @@ export default {
     },
     stageType() {
       return this.$store.getters['meeting/stage/type'];
+    },
+    meetingTime() {
+      return { start: this.$store.state.meeting.start, end: this.$store.state.meeting.end };
     }
   }
 };

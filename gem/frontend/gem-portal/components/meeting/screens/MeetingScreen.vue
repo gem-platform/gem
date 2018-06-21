@@ -3,7 +3,7 @@
     <!-- Top panel -->
     <StageInfo
       :title="title"
-      :subtitle="subtitle" />
+      :type="type" />
 
     <!-- Stage controls and view -->
     <div class="columns">
@@ -61,15 +61,15 @@ export default {
      * Title for top panel
      */
     title() {
-      return this.stageProposal
-        ? this.stageProposal.title
+      return this.proposal
+        ? this.proposal.title
         : this.stageConfig.title;
     },
 
     /**
      * Subtitle for top panel
      */
-    subtitle() {
+    type() {
       return this.stageConfig.type === true ? this.stageConfig.title : '';
     },
 
