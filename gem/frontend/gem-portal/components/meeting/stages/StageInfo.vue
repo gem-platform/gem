@@ -33,7 +33,7 @@
 import CountdownTimer from '@/components/meeting/CountdownTimer.vue';
 
 export default {
-  name: 'MeetingScreenTopPanel',
+  name: 'StageInfo',
   components: {
     CountdownTimer
   },

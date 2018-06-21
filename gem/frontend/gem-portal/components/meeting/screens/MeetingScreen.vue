@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- Top panel -->
-    <MeetingScreenTopPanel
+    <StageInfo
       :title="title"
       :subtitle="subtitle" />
 
@@ -44,7 +44,7 @@
 import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
-import MeetingScreenTopPanel from '@/components/meeting/MeetingScreenTopPanel.vue';
+import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import StageMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
@@ -53,7 +53,7 @@ export default {
     ControlPanel,
     StageViewPresenter,
     StageControlsPresenter,
-    MeetingScreenTopPanel
+    StageInfo
   },
   mixins: [StageMixin],
   computed: {
