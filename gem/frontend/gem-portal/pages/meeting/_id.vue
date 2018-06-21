@@ -24,6 +24,9 @@ export default {
   created() {
     this.$bus.on('notification', this.snackbar);
   },
+  beforeDestroy() {
+    this.$bus.off('notification', this.snackbar);
+  },
   mounted() {
     const { token } = this.$auth.user;
     const meetingId = this.$route.params.id;
