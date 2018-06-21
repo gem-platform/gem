@@ -14,17 +14,32 @@ export default {
     GlobalMessage
   },
   computed: {
+    /**
+     * Returns connection state
+     */
+    connection() {
+      return this.$store.state.meeting.connection;
+    },
+
+    /**
+     * Title for connection screen
+     */
     title() {
-      const connection = this.$store.getters['meeting/connection/state'];
-      return connection.state;
+      return this.connection.state;
     },
+
+    /**
+     * Message for connection screen
+     */
     message() {
-      const connection = this.$store.getters['meeting/connection/state'];
-      return connection.message || 'We are connecting you to session';
+      return this.connection.message || 'We are connecting you to session';
     },
+
+    /**
+     * Type of message
+     */
     type() {
-      const connection = this.$store.getters['meeting/connection/state'];
-      return connection.state === 'disconnected' ? 'is-danger' : 'is-white';
+      return this.connection.state === 'disconnected' ? 'is-danger' : 'is-white';
     }
   }
 };
