@@ -117,7 +117,7 @@ export default {
         ConnectedStage: { title: 'Connected' },
         AgendaStage: { title: 'Agenda', view: true },
         AcquaintanceStage: {
-          title: 'Acquaintance', controls: true, type: true
+          title: 'Acquaintance', controls: true, view: true, type: true
         },
         BallotStage: {
           title: 'Ballot', controls: true, view: true, type: true
