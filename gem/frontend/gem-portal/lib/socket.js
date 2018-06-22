@@ -27,5 +27,10 @@ export default store => ({
   },
   meetings_status(data) {
     store.dispatch('meeting/status/set', data);
+  },
+  stage_timer(data) {
+    const now = new Date();
+    const ahead = new Date(now.getTime() + (1000 * (data.value || 0)));
+    this.$bus.emit('setStageTimer', ahead);
   }
 });

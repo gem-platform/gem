@@ -1,34 +1,56 @@
 <template>
-  <div class="field is-grouped is-grouped-multiline">
-    <!-- "Previous stage" button -->
-    <p class="control">
-      <button
-        :disabled="prevDisabled"
-        class="button"
-        @click="move(-1)">Prev</button>
-    </p>
+  <div>
+    <div class="field is-grouped is-grouped-multiline">
+      <!-- "Previous stage" button -->
+      <p class="control">
+        <a
+          :disabled="prevDisabled"
+          class="button"
+          @click="move(-1)">Prev</a>
+      </p>
 
-    <!-- "Next stage" button -->
-    <p class="control is-expanded">
-      <a
-        :disabled="nextDisabled"
-        class="button is-fullwidth"
-        @click="move(1)">
-        <span>Next</span>
-        <span class="icon">
-          <i class="fa fa-angle-right"/>
-        </span>
-      </a>
-    </p>
+      <!-- "Next stage" button -->
+      <p class="control is-expanded">
+        <a
+          :disabled="nextDisabled"
+          class="button is-fullwidth"
+          @click="move(1)">
+          <span>Next</span>
+          <span class="icon">
+            <i class="fa fa-angle-right"/>
+          </span>
+        </a>
+      </p>
+    </div>
+
+    <div class="field is-grouped is-grouped-multiline">
+      <p class="control is-expanded">
+        <a
+          class="button is-fullwidth"
+          @click="setStageTime(60)">1 min</a>
+      </p>
+      <p class="control">
+        <a
+          class="button"
+          @click="setStageTime(120)">2 min</a>
+      </p>
+      <p class="control">
+        <a
+          class="button"
+          @click="setStageTime(300)">5 min</a>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
+import com from '@/lib/communication';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'ControlPanel',
-  mixins: [StageStateMixin],
+  mixins: [StageStateMixin, NotificationMixin],
   computed: {
     /**
      * Disable "Next" button or not?
@@ -51,6 +73,17 @@ export default {
     move(step) {
       const nextStageIndex = this.stageIndex + step;
       this.$socket.emit('switch_stage', { index: nextStageIndex });
+    },
+
+    /**
+     * Add stage time using specified seconds
+     */
+    async setStageTime(seconds) {
+      const res = await com.send('stage_timer', { value: seconds });
+      this.notify(
+        res.success ? 'Time has been successfully updated' : res.message,
+        res.success ? 'is-success' : 'is-danger'
+      );
     }
   }
 };
