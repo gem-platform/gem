@@ -8,7 +8,12 @@
     <p class="control is-expanded">
       <a
         class="button is-fullwidth"
-        @click="move(1)">Next</a>
+        @click="move(1)">
+        <span>Next</span>
+        <span class="icon">
+          <i class="fa fa-angle-right"/>
+        </span>
+      </a>
     </p>
   </div>
 </template>

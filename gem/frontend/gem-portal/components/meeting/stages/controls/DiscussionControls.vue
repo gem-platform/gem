@@ -44,7 +44,11 @@
             position="is-left">
             <a
               class="button is-white is-small"
-              @click="giveVoice(props.row.id)">V</a>
+              @click="giveVoice(props.row.id)">
+              <span class="icon">
+                <i class="fa fa-microphone"/>
+              </span>
+            </a>
           </b-tooltip>
 
           <!-- Remove from queue -->
@@ -53,7 +57,11 @@
             position="is-left">
             <a
               class="button is-white is-small"
-              @click="removeFromQueue(props.row.id)">R</a>
+              @click="removeFromQueue(props.row.id)">
+              <span class="icon">
+                <i class="fa fa-trash"/>
+              </span>
+            </a>
           </b-tooltip>
         </b-table-column>
       </template>

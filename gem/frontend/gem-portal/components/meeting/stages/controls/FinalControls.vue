@@ -5,7 +5,10 @@
       v-if="showCloseButton"
       class="button control is-fullwidth is-danger"
       @click="close">
-      Close meeting
+      <span class="icon is-small">
+        <i class="fa fa-times"/>
+      </span>
+      <span>Close meeting</span>
     </a>
   </div>
 </template>
