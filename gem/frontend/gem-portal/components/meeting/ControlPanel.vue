@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="heading has-text-centered">Change meeting stage</p>
     <div class="field is-grouped is-grouped-multiline">
       <!-- "Previous stage" button -->
       <p class="control">
@@ -23,16 +24,22 @@
       </p>
     </div>
 
+    <p class="heading has-text-centered">Set stage timer</p>
     <div class="field is-grouped is-grouped-multiline">
+      <p class="control">
+        <a
+          class="button"
+          @click="setStageTime(60)">1 min</a>
+      </p>
       <p class="control is-expanded">
         <a
           class="button is-fullwidth"
-          @click="setStageTime(60)">1 min</a>
+          @click="setStageTime(120)">2 min</a>
       </p>
       <p class="control">
         <a
           class="button"
-          @click="setStageTime(120)">2 min</a>
+          @click="setStageTime(180)">3 min</a>
       </p>
       <p class="control">
         <a
