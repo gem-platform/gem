@@ -1,18 +1,37 @@
 <template>
   <div>
+    <transition name="fade">
+      <div
+        v-if="next"
+        class="field">
+        <p class="heading has-text-centered">Next stage</p>
+        <div
+          :class="{'is-success': next.differentProposal, 'is-danger': next.final}"
+          class="notification has-text-centered next">
+          <p>
+            {{ next.type | stageType }}
+          </p>
+
+          <p v-if="next.differentProposal">
+            <strong>{{ next.nextProposal }}</strong>
+          </p>
+        </div>
+      </div>
+    </transition>
+
     <p class="heading has-text-centered">Change meeting stage</p>
     <div class="field is-grouped is-grouped-multiline">
       <!-- "Previous stage" button -->
       <p class="control">
-        <a
+        <button
           :disabled="prevDisabled"
           class="button"
-          @click="move(-1)">Prev</a>
+          @click="move(-1)">Prev</button>
       </p>
 
       <!-- "Next stage" button -->
       <p class="control is-expanded">
-        <a
+        <button
           :disabled="nextDisabled"
           class="button is-fullwidth"
           @click="move(1)">
@@ -20,7 +39,7 @@
           <span class="icon">
             <i class="fa fa-angle-right"/>
           </span>
-        </a>
+        </button>
       </p>
     </div>
 
@@ -57,6 +76,13 @@ import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'ControlPanel',
+  filters: {
+    stageType(value) {
+      const words = value.split(/(?=[A-Z])/);
+      words.pop();
+      return words.join(' ');
+    }
+  },
   mixins: [StageStateMixin, NotificationMixin],
   computed: {
     /**
@@ -71,6 +97,29 @@ export default {
      */
     prevDisabled() {
       return this.stageIndex <= 0;
+    },
+
+    /**
+     * Returns next stage data
+     */
+    next() {
+      const { stages, proposals } = this.$store.state.meeting;
+
+      // get next stage of the meeting
+      const stage = stages[this.stageIndex + 1];
+      if (!stage) { return undefined; }
+
+      // get proposal data
+      const proposal = proposals[stage.proposalId];
+      const nextProposal = proposal ? proposal.title : '';
+      const currentProposal = this.stageProposal ? this.stageProposal.title : '';
+      return {
+        type: stage.type,
+        nextProposal,
+        currentProposal,
+        differentProposal: nextProposal !== currentProposal,
+        final: stage.type === 'FinalStage'
+      };
     }
   },
   methods: {
@@ -95,3 +144,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.next {
+  transition: background-color 0.5s ease;
+}
+</style>
