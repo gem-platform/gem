@@ -34,13 +34,18 @@ module.exports = {
           exclude: /(node_modules)/
         });
       }
+
+      config.resolve.alias['@fortawesome/fontawesome-free-solid$'] = '@fortawesome/fontawesome-free-solid/shakable.es.js';
     }
   },
   plugins: [
     'plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-validate',
     { src: 'plugins/vue-timers.js', ssr: false },
-    { src: '~plugins/vue-quill.js', ssr: false }],
-  modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],
+    { src: '~plugins/vue-quill.js', ssr: false }
+  ],
+  modules: [
+    'nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', 'nuxt-fontawesome'
+  ],
   router: {
     middleware: ['auth']
   },
@@ -59,5 +64,11 @@ module.exports = {
   },
   buefy: {
     defaultIconPack: 'fa'
+  },
+  fontawesome: {
+    component: 'fa',
+    imports: [
+      { set: '@fortawesome/fontawesome-free-solid' }
+    ]
   }
 };

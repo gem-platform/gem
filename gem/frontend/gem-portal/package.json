@@ -14,13 +14,17 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
+    "@fortawesome/fontawesome": "^1.1.8",
+    "@fortawesome/fontawesome-free-solid": "^5.0.13",
+    "@fortawesome/fontawesome-svg-core": "^1.2.0",
+    "@fortawesome/vue-fontawesome": "^0.1.0",
     "@nuxtjs/auth": "^4.1.0",
     "@nuxtjs/axios": "^5.1.1",
-    "@nuxtjs/font-awesome": "^1.0.3",
     "lodash": "^4.17.5",
     "moment": "^2.22.1",
     "nuxt": "^1.0.0",
     "nuxt-buefy": "0.0.4",
+    "nuxt-fontawesome": "^0.2.0",
     "vue": "^2.5.16",
     "vue-bus": "^1.1.0",
     "vue-quill-editor": "^3.0.6",
