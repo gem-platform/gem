@@ -24,11 +24,6 @@ export default store => ({
     if (this.$route && !this.$route.path.startsWith('/meeting')) {
       store.dispatch('meeting/attentionRequired', true);
     }
-
-    // set stage timer
-    const now = new Date();
-    const ahead = new Date(now.getTime() + (1000 * 60 * 2));
-    this.$bus.emit('setStageTimer', ahead);
   },
   meetings_status(data) {
     store.dispatch('meeting/status/set', data);

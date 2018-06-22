@@ -18,6 +18,13 @@ export default {
     meetingTime() {
       return { start: this.$store.state.meeting.start, end: this.$store.state.meeting.end };
     }
+  },
+  methods: {
+    setStageTimer(seconds) {
+      const now = new Date();
+      const ahead = new Date(now.getTime() + (1000 * seconds));
+      this.$bus.emit('setStageTimer', ahead);
+    }
   }
 };
 
