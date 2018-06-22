@@ -142,9 +142,11 @@ export default {
     }
   },
   async fetch({ store }) {
-    await store.dispatch('dashboard/roles/fetch');
-    await store.dispatch('dashboard/users/fetch');
-    await store.dispatch('dashboard/proposals/fetch');
+    await Promise.all([
+      store.dispatch('dashboard/roles/fetch'),
+      store.dispatch('dashboard/users/fetch'),
+      store.dispatch('dashboard/proposals/fetch')
+    ]);
   }
 };
 </script>
