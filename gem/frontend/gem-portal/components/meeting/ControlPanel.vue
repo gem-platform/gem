@@ -8,12 +8,11 @@
         <div
           :class="{'is-success': next.differentProposal, 'is-danger': next.final}"
           class="notification has-text-centered next">
-          <p>
-            {{ next.type | stageType }}
-          </p>
-
-          <p v-if="next.differentProposal">
+          <p v-if="next.differentProposal && !next.final">
             <strong>{{ next.nextProposal }}</strong>
+          </p>
+          <p v-else>
+            {{ next.type | stageType }}
           </p>
         </div>
       </div>
