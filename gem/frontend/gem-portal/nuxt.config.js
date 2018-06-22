@@ -58,6 +58,7 @@ module.exports = {
     browserBaseURL: '/'
   },
   buefy: {
-    defaultIconPack: 'fa'
+    defaultIconPack: 'fa',
+    materialDesignIcons: false
   }
 };

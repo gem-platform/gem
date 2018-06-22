@@ -51,17 +51,24 @@ export default {
     };
   },
   computed: {
+    /**
+     * Can user comment or not?
+     */
     canComment() {
       return this.haveAccess('meeting.comment');
     }
   },
   methods: {
-    send() {
+    /**
+     * Send a comment
+     */
+    async send() {
       const { message, mark } = this;
-      com
-        .send('comment', { message, mark })
-        .then(() => this.notify('Your comment has been accepted'))
-        .catch(err => this.notify(err.message || 'Error', 'is-danger'));
+      const res = await com.send('comment', { message, mark });
+      this.notify(
+        res.success ? 'Your comment has been accepted' : res.message,
+        res.success ? 'is-success' : 'is-danger'
+      );
       this.message = '';
     }
   }

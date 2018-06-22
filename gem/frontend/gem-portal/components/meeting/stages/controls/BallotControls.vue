@@ -57,12 +57,11 @@
 <script>
 import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
-import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   name: 'BallotStageControls',
-  mixins: [AuthMixin, StageStateMixin, NotificationMixin],
+  mixins: [AuthMixin, NotificationMixin],
   data() {
     return {
       voteCommited: false,

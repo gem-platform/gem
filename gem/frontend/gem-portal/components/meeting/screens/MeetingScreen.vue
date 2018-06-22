@@ -45,7 +45,7 @@ import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
-import StageMixin from '@/components/meeting/stages/StageStateMixin';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'MeetingScreen',
@@ -55,7 +55,7 @@ export default {
     StageControlsPresenter,
     StageInfo
   },
-  mixins: [StageMixin],
+  mixins: [StageStateMixin],
   computed: {
     /**
      * Title for top panel
@@ -137,6 +137,15 @@ export default {
       };
       return stages[type];
     }
+  },
+  watch: {
+    stageIndex() {
+      // set stage timer on stage change
+      this.setStageTimer(120);
+    }
+  },
+  mounted() {
+    this.setStageTimer(120);
   }
 };
 </script>

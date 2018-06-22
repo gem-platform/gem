@@ -120,12 +120,18 @@ class ActiveMeetings:
         # open new one
         new_meeting = ActiveMeeting(meeting_id)
         new_meeting.state_changed.subscribe(self.__state_changed(meeting_id))
+        new_meeting.broadcast.subscribe(self.__broadcast(meeting_id))
         self.__active[meeting_id] = new_meeting
         return new_meeting
 
     def __state_changed(self, meeting_id):
         def handler(data):
             self.emit.notify("stage", data, meeting_id)
+        return handler
+
+    def __broadcast(self, meeting_id):
+        def handler(message, data):
+            self.emit.notify(message, data, meeting_id)
         return handler
 
 
@@ -142,6 +148,7 @@ class ActiveMeeting:
         # create execution context
         self.__meeting_id = meeting_id
         self.__context = Context()
+        self.__context.broadcast.subscribe(self.__on_broadcast)
 
         # configure meeting
         self.__meeting = Meeting(self.__context)
@@ -161,8 +168,8 @@ class ActiveMeeting:
 
         # events
         self.__state_changed = Event()
+        self.broadcast = Event()
 
-        # todo: MP-11 Fill meeting with real data
         fill_meeting(self.__meeting, meeting_id)
 
     @property
@@ -221,3 +228,6 @@ class ActiveMeeting:
         # send serialized data to all connected
         # clients using all endpoints
         self.state_changed.notify({"index": index, "state": stage_state})
+
+    def __on_broadcast(self, message, data):
+        self.broadcast.notify(message, data)

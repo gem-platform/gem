@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- "Request a floor" / "Withdaw from queue" buttons -->
     <div class="buttons is-centered">
       <a
         v-if="!selfInQueue"
@@ -11,9 +12,12 @@
         @click="withdrawFromQueue()">Withdraw from queue</a>
     </div>
 
+    <!-- Queue -->
     <b-table
       :data="queue"
       :columns="columns">
+
+      <!-- If queue is empty -->
       <template slot="empty">
         <section class="section">
           <div class="content has-text-grey has-text-centered">
@@ -22,28 +26,42 @@
         </section>
       </template>
 
+      <!-- Columns -->
       <template slot-scope="props">
+        <!-- Name column -->
         <b-table-column label="Name">
           {{ props.row.name }}
         </b-table-column>
 
+        <!-- Actions column -->
         <b-table-column
           v-if="canManage"
           label="Actions">
+
+          <!-- Give a voice -->
           <b-tooltip
             label="Give a voice"
             position="is-left">
             <a
               class="button is-white is-small"
-              @click="giveVoice(props.row.id)">V</a>
+              @click="giveVoice(props.row.id)">
+              <span class="icon">
+                <i class="fa fa-microphone"/>
+              </span>
+            </a>
           </b-tooltip>
 
+          <!-- Remove from queue -->
           <b-tooltip
             label="Remove from queue"
             position="is-left">
             <a
               class="button is-white is-small"
-              @click="removeFromQueue(props.row.id)">R</a>
+              @click="removeFromQueue(props.row.id)">
+              <span class="icon">
+                <i class="fa fa-trash"/>
+              </span>
+            </a>
           </b-tooltip>
         </b-table-column>
       </template>
@@ -55,64 +73,89 @@
 import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
 import NotificationMixin from '@/components/NotificationMixin';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'DiscussionStageControls',
-  mixins: [AuthMixin, NotificationMixin],
+  mixins: [AuthMixin, NotificationMixin, StageStateMixin],
   computed: {
-    queue() {
-      const { queue } = this.$store.getters['meeting/stage/state'];
-      const users = this.$store.getters['meeting/users'];
-      return queue.map(x => users[x]);
-    },
     columns() {
+      const columns = [{ field: 'name', label: 'Name' }];
+
+      // append "Actions" column for user with apropriate rights
       if (this.canManage) {
-        return [
-          { field: 'name', label: 'Name' },
-          { field: 'id', label: 'Actions', width: '100' }
-        ];
+        columns.push({ field: 'id', label: 'Actions', width: '100' });
       }
-      return [
-        { field: 'name', label: 'Name' }
-      ];
+      return columns;
     },
+
+    /**
+     * Discussion queue
+     */
+    queue() {
+      const users = this.$store.getters['meeting/users'];
+      return this.$stage.queue.map(x => users[x]);
+    },
+
+    /**
+     * Is the current user in the queue?
+     */
     selfInQueue() {
-      const { queue } = this.$store.getters['meeting/stage/state'];
       const user = this.$store.getters['meeting/user'];
-      return queue.includes(user.id);
+      return this.$stage.queue.includes(user.id);
     },
+
+    /**
+     * Can user manage current stage or not?
+     */
     canManage() {
       return this.haveAccess('meeting.manage');
     }
   },
-  created() {
-    com.set(this.$socket);
-  },
   methods: {
-    requestFloor() {
-      com
-        .send('request_floor')
-        .then(() => this.notify('You have been added to the queue'))
-        .catch(err => this.notify(err.message, 'is-danger'));
+    /**
+     * Request a floor
+     */
+    async requestFloor() {
+      const res = await com.send('request_floor');
+      this.notify(
+        res.success ? 'You have been added to the queue' : res.message,
+        res.success ? 'is-success' : 'is-danger'
+      );
     },
-    withdrawFromQueue() {
-      com
-        .send('withdraw_from_queue')
-        .then(() => this.notify('You have been removed from queue'))
-        .catch(err => this.notify(err.message, 'is-danger'));
+
+    /**
+     * Withraw from queue
+     */
+    async withdrawFromQueue() {
+      const res = await com.send('withdraw_from_queue');
+      this.notify(
+        res.success ? 'You have been removed from queue' : res.message,
+        res.success ? 'is-success' : 'is-danger'
+      );
     },
-    removeFromQueue(id) {
-      com
-        .send('remove_from_queue', { id })
-        .then(() => this.notify('User have been removed from queue'))
-        .catch(err => this.notify(err.message, 'is-danger'));
+
+    /**
+     * Remove user from queue using specified user's ID
+     */
+    async removeFromQueue(id) {
+      const res = await com.send('remove_from_queue', { id });
+      this.notify(
+        res.success ? 'User have been removed from queue' : res.message,
+        res.success ? 'is-success' : 'is-danger'
+      );
     },
-    giveVoice(to) {
+
+    /**
+     * Give a voice to specified user
+     */
+    async giveVoice(to) {
       const { name } = this.$store.getters['meeting/users'][to];
-      com
-        .send('give_voice', { to })
-        .then(() => this.notify(`Voice have been given to ${name}`))
-        .catch(err => this.notify(err.message, 'is-danger'));
+      const res = await com.send('give_voice', { to });
+      this.notify(
+        res.success ? `Voice have been given to ${name}` : res.message,
+        res.success ? 'is-success' : 'is-danger'
+      );
     }
   }
 };

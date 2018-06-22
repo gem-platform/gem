@@ -1,5 +1,6 @@
 from gem.db import User, Meeting
 from gms.app.sessions import Sessions
+from gem.core import Event
 
 
 class Context:
@@ -9,6 +10,7 @@ class Context:
         """Initialize new instance of the Context class."""
         self.__meeting = None
         self.__sessions = Sessions()
+        self.broadcast = Event()
 
     @property
     def meeting(self):
@@ -122,3 +124,8 @@ class Context:
             sid {str} -- Session id.
         """
         self.__sessions.delete(sid)
+
+    # actions
+
+    def send_broadcast(self, message, data):
+        self.broadcast.notify(message, data)

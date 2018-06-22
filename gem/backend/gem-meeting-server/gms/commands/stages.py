@@ -74,3 +74,9 @@ def close(context, sid, data):
     """Close meeting"""
     # todo: sid have enough rights
     return {"success": True}
+
+
+def stage_timer(context, sid, data):
+    """Add time for stage"""
+    context.send_broadcast("stage_timer", data)
+    return {"success": True}
