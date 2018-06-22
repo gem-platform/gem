@@ -3,9 +3,9 @@
     class="field">
     <p class="control is-expanded">
       <span
-        :class="{ 'is-success' : readState, 'is-white': !!readState }"
+        :class="{ 'is-success' : haveRead, 'is-white': !!haveRead }"
         class="button is-fullwidth">
-        I read {{ myProgress | percent }}%
+        I read {{ readProgress | percent }}%
       </span>
     </p>
   </div>
@@ -23,11 +23,17 @@ export default {
   },
   data() {
     return {
-      readState: false,
       readProgress: 0,
-      readProgressNext: 0,
-      myProgress: 0
+      readProgressNext: 0
     };
+  },
+  computed: {
+    /**
+     * Did the user read the document or not?
+     */
+    haveRead() {
+      return this.readProgress >= 1;
+    }
   },
   created() {
     window.addEventListener('scroll', this.onScroll);
@@ -39,9 +45,8 @@ export default {
     /**
      * Set reading progress
      */
-    async setProgress(quantity) {
-      await com.send('have_read', { quantity });
-      this.myProgress = quantity;
+    setProgress(quantity) {
+      com.send('have_read', { quantity });
     },
 
     /**
@@ -59,7 +64,6 @@ export default {
         this.readProgress = percentRead;
         this.readProgressNext = percentRead + 0.05;
         this.setProgress(this.readProgress);
-        this.readState = percentRead >= 1;
       }
     }
   }
