@@ -1,12 +1,17 @@
 <template>
   <div class="field is-grouped is-grouped-multiline">
+    <!-- "Previous stage" button -->
     <p class="control">
-      <a
+      <button
+        :disabled="prevDisabled"
         class="button"
-        @click="move(-1)">Prev</a>
+        @click="move(-1)">Prev</button>
     </p>
+
+    <!-- "Next stage" button -->
     <p class="control is-expanded">
       <a
+        :disabled="nextDisabled"
         class="button is-fullwidth"
         @click="move(1)">
         <span>Next</span>
@@ -19,15 +24,32 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'ControlPanel',
-  computed: mapGetters(['meetingStageType']),
+  mixins: [StageStateMixin],
+  computed: {
+    /**
+     * Disable "Next" button or not?
+     */
+    nextDisabled() {
+      return this.stageIndex >= this.stagesCount - 1;
+    },
+
+    /**
+     * Disable "Prev" button or not?
+     */
+    prevDisabled() {
+      return this.stageIndex <= 0;
+    }
+  },
   methods: {
+    /**
+     * Move to next stage
+     */
     move(step) {
-      const stageIndex = this.$store.getters['meeting/stage/index'];
-      const nextStageIndex = stageIndex + step;
+      const nextStageIndex = this.stageIndex + step;
       this.$socket.emit('switch_stage', { index: nextStageIndex });
     }
   }
