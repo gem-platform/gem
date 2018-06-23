@@ -16,7 +16,7 @@
 
         <!-- Event box -->
         <div
-          :class="{'is-active': isActive(event._id)}"
+          :class="{'is-active': event.active}"
           class="schedule-time notification meeting-box">
           <div class="columns">
             <div class="column">
@@ -54,7 +54,7 @@
           <!-- Join Button -->
           <transition name="fade">
             <div
-              v-if="isActive(event._id)"
+              v-if="event.active"
               class="buttons is-centered">
               <nuxt-link
                 :to="'/meeting/'+event._id"
@@ -82,37 +82,50 @@ export default {
     }
   },
   computed: {
+    /**
+     * Get list of events to display
+     */
     schedule() {
-      const today = moment.utc();
+      const today = moment.utc().subtract(1, 'h'); // Subtract one hour in case meeting is little late
+      const allEvents = this.$store.getters['dashboard/meetings/all'];
 
-      const meetings = this.$store.getters['dashboard/meetings/all'].map(m => ({
-        _id: m._id,
-        title: m.title,
-        date: moment.utc(m.start).format('YYYY/MM/DD'),
-        start: m.start,
-        end: m.end,
-        agenda: m.agenda,
+      const schedule = allEvents.map(m => _.assign({}, m, {
+        active: this.activeMeetings.includes(m._id),
+        date: moment.utc(m.start).format('dddd, D MMMM'),
         type: (m.agenda || m.proposals) ? 'meeting' : 'break',
         proposals: (m.proposals || []).map(id => ({
           _id: id,
-          title: this.$store.getters['dashboard/proposals/get'](id)[0].title,
+          title: this.proposals(id)[0].title,
           url: `/dashboard/proposals/${id}`
         }))
-      })).filter(m => (moment.utc(m.start) >= today));
+      }));
 
-      return _.chain(meetings).sortBy(['start']).groupBy('date').value();
+      return _
+        .chain(schedule)
+        .filter(m => (moment.utc(m.start) >= today))
+        .sortBy('start')
+        .groupBy('date')
+        .value();
+    },
+
+    /**
+     * Return all proposals
+     */
+    proposals() {
+      return this.$store.getters['dashboard/proposals/get'];
+    },
+
+    /**
+     * Return list of active meetings
+     */
+    activeMeetings() {
+      return this.$store.getters['meeting/status/active'];
     }
   },
   mounted() {
     this.$socket.emit('meetings_status', (res) => {
       this.$store.dispatch('meeting/status/set', res);
     });
-  },
-  methods: {
-    isActive(meetingId) {
-      const active = this.$store.getters['meeting/status/active'];
-      return active.includes(meetingId);
-    }
   }
 };
 </script>
@@ -131,6 +144,6 @@ export default {
 }
 
 .meeting-box {
-  transition: background-color 1.5s ease;
+  transition: background-color .5s ease;
 }
 </style>
