@@ -10,7 +10,8 @@ export const state = () => ({
   user: {},
   start: undefined,
   end: undefined,
-  attentionRequired: false
+  attentionRequired: false,
+  closed: false
 });
 
 export const mutations = {
@@ -46,6 +47,9 @@ export const mutations = {
   },
   setMeetingEnd(state, value) {
     state.end = value;
+  },
+  setClose(state, value) {
+    state.closed = value;
   }
 };
 
@@ -78,6 +82,9 @@ export const actions = {
   },
   attentionRequired({ commit }, value) {
     commit('setAttentionRequired', value);
+  },
+  close({ commit }, value) {
+    commit('setClose', value);
   }
 };
 

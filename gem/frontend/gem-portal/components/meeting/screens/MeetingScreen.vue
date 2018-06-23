@@ -109,6 +109,13 @@ export default {
     },
 
     /**
+     * Is meeting closed or not?
+     */
+    closed() {
+      return this.$store.state.meeting.closed;
+    },
+
+    /**
      * Return configuration of stage
      */
     stageConfig() {
@@ -142,6 +149,22 @@ export default {
     stageIndex() {
       // set stage timer on stage change
       this.setStageTimer(120);
+    },
+    closed() {
+      const router = this.$router;
+
+      this.$dialog.alert({
+        title: 'Meeting is closed',
+        canCancel: false,
+        message: 'You will be redirected to Schedule page',
+        type: 'is-success',
+        hasIcon: true,
+        icon: 'check-circle',
+        iconPack: 'fa',
+        onConfirm() {
+          router.push('/');
+        }
+      });
     }
   },
   mounted() {
