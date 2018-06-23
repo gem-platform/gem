@@ -5,13 +5,16 @@ export default store => ({
     com.set(this.$socket);
   },
   disconnect() {
-    this.$store.dispatch('meeting/connection/setConnectionState', {
+    store.dispatch('meeting/connection/setConnectionState', {
       state: 'disconnected',
       message: 'Connection lost'
     });
   },
+  reconnect() {
+    this.$bus.emit('reconnect');
+  },
   connect_error() {
-    this.$store.dispatch('meeting/connection/setConnectionState', {
+    store.dispatch('meeting/connection/setConnectionState', {
       state: 'disconnected',
       message: 'Unable to connect'
     });
