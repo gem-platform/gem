@@ -36,7 +36,7 @@ class BallotSerializeMixin:
 
     @staticmethod
     def __users_can_vote(users):
-        return list(filter(lambda user: "vote" in user.permissions, users))
+        return list(filter(lambda user: "meeting.vote" in user.permissions, users))
 
     @staticmethod
     def calculate_votes(votes):
@@ -47,4 +47,3 @@ class BallotSerializeMixin:
                     result[str(role.id)] = {"yes": 0, "no": 0, "abstained": 0}
                 result[str(role.id)][vote.value] += 1
         return result
-
