@@ -73,6 +73,7 @@ def give_voice(context, sid, data):
 def close(context, sid, data):
     """Close meeting"""
     # todo: sid have enough rights
+    context.send_broadcast("close", {})
     return {"success": True}
 
 

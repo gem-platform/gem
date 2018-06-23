@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
+    vendor: ['vue-bus', 'vue-socket.io-extended', 'lodash', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
     /*
     ** Run ESLint on save
     */
