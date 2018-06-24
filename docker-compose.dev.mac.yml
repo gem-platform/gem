@@ -20,11 +20,16 @@ services:
   gem-web:
     image: gemplatform/gem-web
     restart: always
-    build: ./gem/frontend/gem-web/
+    build: 
+      context: ./gem/frontend/gem-web
+      args:
+        env: dev
     ports:
       - "80:80"
+      - "443:443"
     links:
       - gem-meeting-server:gem-meeting-server
+      - gem-portal-client:gem-portal-client
 
   ##
   ## IMAGES
