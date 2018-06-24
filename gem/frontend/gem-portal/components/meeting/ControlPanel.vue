@@ -42,7 +42,7 @@
       </p>
     </div>
 
-    <p class="heading has-text-centered">Set stage timer</p>
+    <p class="heading has-text-centered">Stage timer</p>
     <div class="field is-grouped is-grouped-multiline">
       <p class="control">
         <a
