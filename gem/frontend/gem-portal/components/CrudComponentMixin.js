@@ -96,14 +96,16 @@ export default {
   async fetch({ store, params }) {
     try {
       this.busy = true;
+
+      // call fetch method for component
+      if (this.components[params.entities] && this.components[params.entities].fetch) {
+        await this.components[params.entities].fetch({ store, params });
+      }
+
       if (params.id === '@new') return;
 
       const method = `dashboard/${params.entities}/fetch`;
       await store.dispatch(method, params.id ? { _id: params.id } : undefined);
-
-      if (this.components[params.entities] && this.components[params.entities].fetch) {
-        await this.components[params.entities].fetch({ store, params });
-      }
     } finally {
       this.busy = false;
     }
