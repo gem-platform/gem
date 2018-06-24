@@ -76,8 +76,6 @@ export default {
           message: response.message
         });
       });
-
-      this.$store.dispatch('meeting/attentionRequired', false);
     }
   }
 };

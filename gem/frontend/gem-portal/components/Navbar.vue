@@ -46,11 +46,10 @@
             v-if="haveAccess('meeting') && meetingJoined"
             :to="meetingLink"
             class="navbar-item"
-            active-class="is-active"
-            disabled>
+            active-class="is-active">
             Meeting
             <span
-              v-if="meetingAttentionRequired"
+              v-if="attention"
               class="icon has-text-danger">
               <i class="fa fa-exclamation blink_me"/>
             </span>
@@ -95,19 +94,37 @@ export default {
   mixins: [AuthMixin],
   data() {
     return {
-      menuOpen: false
+      menuOpen: false,
+      attention: false,
+      attentionToast: undefined
     };
   },
   computed: {
-    meetingAttentionRequired() {
-      return this.$store.getters['meeting/attentionRequired'];
-    },
     meetingJoined() {
       return this.$store.state.meeting.id;
     },
     meetingLink() {
       const mid = this.$store.state.meeting.id;
       return !mid ? '/meeting' : `/meeting/${mid}`;
+    },
+    onMeetingPage() {
+      return this.url.startsWith('/meeting');
+    },
+    url() {
+      return this.$route.path;
+    }
+  },
+  watch: {
+    /**
+     * On url changes
+     */
+    url() {
+      // user returned back on meeting page after
+      // attention requested
+      if (this.attention && this.onMeetingPage) {
+        this.attention = false;
+        if (this.attentionToast) { this.attentionToast.close(); }
+      }
     }
   },
   mounted() {
@@ -117,13 +134,35 @@ export default {
     this.$socket.off('stage', this.onStageData);
   },
   methods: {
+    /**
+     * Show
+     */
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
     },
+
+    /**
+     * On meeting stage data
+     */
     onStageData() {
-      if (this.$route && !this.$route.path.startsWith('/meeting')) {
-        this.$store.dispatch('meeting/attentionRequired', true);
+      const router = this.$router;
+      const { meetingLink } = this;
+
+      // user not at meeting page but something
+      // happened at meeting, so request user to
+      // return back to meeting
+      if (!this.attention && !this.onMeetingPage) {
+        this.attentionToast = this.$snackbar.open({
+          message: 'Meeting attention required',
+          type: 'is-danger',
+          indefinite: true,
+          actionText: 'Go',
+          onAction() { router.push(meetingLink); }
+        });
       }
+
+      // set attention flag if user not at meeting page
+      this.attention = !this.onMeetingPage;
     }
   }
 };
