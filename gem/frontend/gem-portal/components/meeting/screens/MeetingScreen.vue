@@ -53,6 +53,7 @@ import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
 
 export default {
   name: 'MeetingScreen',
@@ -63,7 +64,7 @@ export default {
     StageInfo,
     UsersOnline
   },
-  mixins: [StageStateMixin],
+  mixins: [StageStateMixin, UserInactiveMixin],
   computed: {
     /**
      * Title for top panel

@@ -11,6 +11,7 @@ class Context:
         self.__meeting = None
         self.__sessions = Sessions()
         self.broadcast = Event()
+        self.users_afk = []
 
     @property
     def meeting(self):

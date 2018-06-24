@@ -81,3 +81,17 @@ def stage_timer(context, sid, data):
     """Add time for stage"""
     context.send_broadcast("stage_timer", data)
     return {"success": True}
+
+
+def user_afk(context, sid, data):
+    """User away from keyboard"""
+    user = context.get_user(sid)
+    value = data.get("value", False)
+    if value and str(user.id) not in context.users_afk:
+        context.users_afk.append(str(user.id))
+
+    if not value and str(user.id) in context.users_afk:
+        context.users_afk.remove(str(user.id))
+
+    context.send_broadcast("users_afk", context.users_afk)
+    return {"success": True}
