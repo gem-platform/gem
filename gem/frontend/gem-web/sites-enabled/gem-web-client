@@ -4,8 +4,9 @@ server {
     server_name gem.local;
     charset utf-8;
 
-    ssl_certificate /etc/nginx/ssl/gem.crt;
-    ssl_certificate_key /etc/nginx/ssl/gem.key;
+    ssl_certificate /etc/nginx/ssl/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+    ssl_trusted_certificate /etc/nginx/ssl/chain.pem;
 
     location /static {
         alias /usr/src/app/static;
