@@ -16,11 +16,11 @@
 <script>
 import AuthMixin from '@/components/AuthMixin';
 import NotificationMixin from '@/components/NotificationMixin';
-import com from '@/lib/communication';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'FinalStageControls',
-  mixins: [AuthMixin, NotificationMixin],
+  mixins: [AuthMixin, NotificationMixin, CommunicationMixin],
   computed: {
     showCloseButton() {
       return this.haveAccess('meeting.manage');
@@ -31,7 +31,7 @@ export default {
      * Close meeting
      */
     async close() {
-      const res = await com.send('close', { });
+      const res = await this.send('close', { });
       if (res.success) {
         this.notify('Meeting is closed');
       }

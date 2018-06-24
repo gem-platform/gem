@@ -69,9 +69,9 @@
 </template>
 
 <script>
-import com from '@/lib/communication';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import NotificationMixin from '@/components/NotificationMixin';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'ControlPanel',
@@ -82,7 +82,7 @@ export default {
       return words.join(' ');
     }
   },
-  mixins: [StageStateMixin, NotificationMixin],
+  mixins: [StageStateMixin, NotificationMixin, CommunicationMixin],
   computed: {
     /**
      * Disable "Next" button or not?
@@ -134,7 +134,7 @@ export default {
      * Add stage time using specified seconds
      */
     async setStageTime(seconds) {
-      const res = await com.send('stage_timer', { value: seconds });
+      const res = await this.send('stage_timer', { value: seconds });
       this.notify(
         res.success ? 'Time has been successfully updated' : res.message,
         res.success ? 'is-success' : 'is-danger'

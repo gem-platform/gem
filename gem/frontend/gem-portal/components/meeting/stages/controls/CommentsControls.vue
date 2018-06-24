@@ -23,7 +23,7 @@
         <!-- Send comment -->
         <button
           class="button control is-expanded"
-          @click="send">Send</button>
+          @click="sendComment">Send</button>
       </div>
     </div>
 
@@ -37,13 +37,13 @@
 </template>
 
 <script>
-import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
 import NotificationMixin from '@/components/NotificationMixin';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'CommentsStageControls',
-  mixins: [AuthMixin, NotificationMixin],
+  mixins: [AuthMixin, NotificationMixin, CommunicationMixin],
   data() {
     return {
       message: '',
@@ -62,9 +62,9 @@ export default {
     /**
      * Send a comment
      */
-    async send() {
+    async sendComment() {
       const { message, mark } = this;
-      const res = await com.send('comment', { message, mark });
+      const res = await this.send('comment', { message, mark });
       this.notify(
         res.success ? 'Your comment has been accepted' : res.message,
         res.success ? 'is-success' : 'is-danger'

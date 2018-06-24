@@ -70,14 +70,14 @@
 </template>
 
 <script>
-import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
 import NotificationMixin from '@/components/NotificationMixin';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'DiscussionStageControls',
-  mixins: [AuthMixin, NotificationMixin, StageStateMixin],
+  mixins: [AuthMixin, NotificationMixin, StageStateMixin, CommunicationMixin],
   computed: {
     columns() {
       const columns = [{ field: 'name', label: 'Name' }];
@@ -117,7 +117,7 @@ export default {
      * Request a floor
      */
     async requestFloor() {
-      const res = await com.send('request_floor');
+      const res = await this.send('request_floor');
       this.notify(
         res.success ? 'You have been added to the queue' : res.message,
         res.success ? 'is-success' : 'is-danger'
@@ -128,7 +128,7 @@ export default {
      * Withraw from queue
      */
     async withdrawFromQueue() {
-      const res = await com.send('withdraw_from_queue');
+      const res = await this.send('withdraw_from_queue');
       this.notify(
         res.success ? 'You have been removed from queue' : res.message,
         res.success ? 'is-success' : 'is-danger'
@@ -139,7 +139,7 @@ export default {
      * Remove user from queue using specified user's ID
      */
     async removeFromQueue(id) {
-      const res = await com.send('remove_from_queue', { id });
+      const res = await this.send('remove_from_queue', { id });
       this.notify(
         res.success ? 'User have been removed from queue' : res.message,
         res.success ? 'is-success' : 'is-danger'
@@ -151,7 +151,7 @@ export default {
      */
     async giveVoice(to) {
       const { name } = this.$store.getters['meeting/users'][to];
-      const res = await com.send('give_voice', { to });
+      const res = await this.send('give_voice', { to });
       this.notify(
         res.success ? `Voice have been given to ${name}` : res.message,
         res.success ? 'is-success' : 'is-danger'

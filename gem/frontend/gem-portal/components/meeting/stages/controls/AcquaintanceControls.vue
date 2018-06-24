@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import com from '@/lib/communication';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'AcquaintanceStageControls',
@@ -21,6 +21,7 @@ export default {
       return Math.ceil(value * 100);
     }
   },
+  mixins: [CommunicationMixin],
   data() {
     return {
       readProgress: 0,
@@ -46,7 +47,7 @@ export default {
      * Set reading progress
      */
     setProgress(quantity) {
-      com.send('have_read', { quantity });
+      this.send('have_read', { quantity });
     },
 
     /**

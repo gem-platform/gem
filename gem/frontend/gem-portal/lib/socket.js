@@ -1,9 +1,5 @@
-import com from '@/lib/communication';
 
 export default store => ({
-  connect() {
-    com.set(this.$socket);
-  },
   disconnect() {
     store.dispatch('meeting/connection/setConnectionState', {
       state: 'disconnected',
