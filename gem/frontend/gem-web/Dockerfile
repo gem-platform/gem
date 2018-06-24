@@ -1,5 +1,6 @@
 FROM tutum/nginx
 RUN rm /etc/nginx/sites-enabled/default
 ADD sites-enabled/ /etc/nginx/sites-enabled
-COPY ./gem.crt /etc/nginx/ssl/gem.crt
-COPY ./gem.key /etc/nginx/ssl/gem.key
+COPY ./fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY ./privkey.pem /etc/nginx/ssl/privkey.pem
+COPY ./chain.pem /etc/nginx/ssl/chain.pem
