@@ -110,9 +110,20 @@ export default {
       return !mid ? '/meeting' : `/meeting/${mid}`;
     }
   },
+  mounted() {
+    this.$socket.on('stage', this.onStageData);
+  },
+  beforeDestroy() {
+    this.$socket.off('stage', this.onStageData);
+  },
   methods: {
     toggleMenu() {
       this.menuOpen = !this.menuOpen;
+    },
+    onStageData() {
+      if (this.$route && !this.$route.path.startsWith('/meeting')) {
+        this.$store.dispatch('meeting/attentionRequired', true);
+      }
     }
   }
 };

@@ -1,7 +1,7 @@
 export default {
   mounted() {
-    this.$socket.on('disconnect', this.connectionStageChanged('disconnected', 'Connection lost'));
-    this.$socket.on('connect_error', this.connectionStageChanged('disconnected', 'Unable to connect'));
+    this.$socket.on('disconnect', this.disconnect);
+    this.$socket.on('connect_error', this.disconnect);
     this.$socket.on('reconnect', this.reconnect);
     this.$socket.on('stage', this.stage);
     this.$socket.on('meeting_status', this.meeting_status);
@@ -11,21 +11,19 @@ export default {
     this.sendHandshake();
   },
   beforeDestroy() {
-    this.$socket.off('disconnect');
-    this.$socket.off('connect_error');
-    this.$socket.off('reconnect');
-    this.$socket.off('stage');
-    this.$socket.off('meeting_status');
-    this.$socket.off('stage_timer');
-    this.$socket.off('close');
+    this.$socket.off('disconnect', this.disconnect);
+    this.$socket.off('connect_error', this.disconnect);
+    this.$socket.off('reconnect', this.reconnect);
+    this.$socket.off('stage', this.stage);
+    this.$socket.off('meeting_status', this.meeting_status);
+    this.$socket.off('stage_timer', this.stage_timer);
+    this.$socket.off('close', this.close);
   },
   methods: {
-    connectionStageChanged(state, message) {
-      return () => {
-        this.$store.dispatch('meeting/connection/setConnectionState', {
-          state, message
-        });
-      };
+    disconnect(reason) {
+      this.$store.dispatch('meeting/connection/setConnectionState', {
+        state: 'disconnected', message: `Connection failed. ${reason}`
+      });
     },
     reconnect() {
       this.sendHandshake();
@@ -34,11 +32,6 @@ export default {
       // information about the state of the stage has arrived.
       // { index: stageIndex, state: {} }
       this.$store.dispatch('meeting/meetingStage', data);
-
-      if (this.$route && !this.$route.path.startsWith('/meeting')) {
-        this.$store.dispatch('meeting/attentionRequired', true);
-        // todo: looks like is broken now
-      }
     },
     stage_timer(data) {
       if (data.mode === '=') {
