@@ -21,7 +21,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vue-bus', 'vue-socket.io', 'lodash', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
+    vendor: ['vue-bus', 'lodash', 'vuelidate', 'vue-timers', 'moment', 'vue-quill-editor'],
     /*
     ** Run ESLint on save
     */
@@ -58,6 +58,7 @@ module.exports = {
     browserBaseURL: '/'
   },
   buefy: {
-    defaultIconPack: 'fa'
+    defaultIconPack: 'fa',
+    materialDesignIcons: false
   }
 };

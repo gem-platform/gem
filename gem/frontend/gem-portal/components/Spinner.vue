@@ -1,13 +1,6 @@
 <template>
-  <div
-    class="signal"/>
+  <div class="signal"/>
 </template>
-
-<script>
-export default {
-
-};
-</script>
 
 <style scoped>
 .signal {

@@ -1,7 +1,7 @@
 <template>
-  <section class="box notification">
+  <section class="notification">
     <div class="has-text-centered">
-      <h1 class="title">
+      <h1 class="title capitalize">
         {{ title }}
       </h1>
       <h2 class="subtitle">
@@ -26,3 +26,9 @@ export default {
   }
 };
 </script>
+
+<style scoped>
+.capitalize {
+  text-transform:capitalize;
+}
+</style>

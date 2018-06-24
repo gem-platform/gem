@@ -1,6 +1,7 @@
 """Provide a bunch of serializers."""
 from itertools import chain
-
+from gms.meeting.widgets.ballot_results import BallotSerializeMixin
+from gms.meeting.widgets.comments import CommentsSerializeMixin
 
 class MeetingSerializer:
     """Meeting model serializer."""
@@ -94,7 +95,8 @@ class MeetingStageSerializer:
             "BallotMeetingStage": BallotMeetingStageSerializer(),
             "BallotResultsMeetingStage": BallotResultsMeetingStageSerializer(),
             "CommentsMeetingStage": CommentsMeetingStageSerializer(),
-            "DiscussionMeetingStage": DiscussionMeetingStageSerializer()
+            "DiscussionMeetingStage": DiscussionMeetingStageSerializer(),
+            "FinalMeetingStage": FinalMeetingStageSerializer()
         }
 
     def serialize(self, stage):
@@ -105,13 +107,15 @@ class MeetingStageSerializer:
         return None
 
 
-class AcquaintanceMeetingStageSerializer:
+class AcquaintanceMeetingStageSerializer(BallotSerializeMixin, CommentsSerializeMixin):
     """Acquaintance stage serializer."""
 
     def serialize(self, stage):
         return {
             "type": "AcquaintanceStage",
             "progress": stage.progress,
+            "comments": self.comments_serialize(stage),
+            "summary": self.summary_serialize(stage),
             "proposalId": str(stage.group.proposal.id)
         }
 
@@ -124,52 +128,33 @@ class AgendaMeetingStageSerializer:
         }
 
 
-class BallotMeetingStageSerializer:
+class BallotMeetingStageSerializer(BallotSerializeMixin):
     def serialize(self, stage):
         return {
             "type": "BallotStage",
-            "progress": stage.progress,
+            "progress": self.progress(stage),
             "secret": stage.ballot.secret,
             "proposalId": str(stage.group.proposal.id)
         }
 
 
-class BallotResultsMeetingStageSerializer:
+class BallotResultsMeetingStageSerializer(BallotSerializeMixin):
     def serialize(self, stage):
-        votes_doc = stage.ballot.votes
         return {
             "type": "BallotResultsStage",
-            "votes": [{"user_id": str(v.user.id), "value": v.value} for v in votes_doc],
-            "summary": self.calculate_votes(votes_doc),
+            "votes": self.votes_serialize(stage),
+            "summary": self.summary_serialize(stage),
             "proposalId": str(stage.group.proposal.id)
         }
 
-    @staticmethod
-    def calculate_votes(votes):
-        result = {}
-        for vote in votes:
-            for role in vote.user.roles:
-                if str(role.id) not in result:
-                    result[str(role.id)] = {"yes": 0, "no": 0, "abstained": 0}
-                result[str(role.id)][vote.value] += 1
-        return result
 
 
-class CommentsMeetingStageSerializer:
+class CommentsMeetingStageSerializer(CommentsSerializeMixin):
     def serialize(self, stage):
-        comments = map(self.__map_comment, stage.comments)
         return {
             "type": "CommentsStage",
-            "comments": list(comments),
+            "comments": self.comments_serialize(stage),
             "proposalId": str(stage.group.proposal.id)
-        }
-
-    @staticmethod
-    def __map_comment(comment):
-        return {
-            "user": comment.user.name,
-            "content": comment.content,
-            "mark": comment.mark
         }
 
 
@@ -185,4 +170,11 @@ class DiscussionMeetingStageSerializer:
             "queue": list(user_ids),
             "speaker": str(speaker_id),
             "proposalId": str(stage.group.proposal.id)
+        }
+
+
+class FinalMeetingStageSerializer:
+    def serialize(self, stage):
+        return {
+            "type": "FinalStage",
         }

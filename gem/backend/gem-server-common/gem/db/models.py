@@ -24,6 +24,7 @@ class Proposal(GemDocument):
     title = StringField(required=True)
     index = StringField(required=True)
     content = StringField(required=True)
+    stage = StringField()
 
 
 class Law(GemDocument):

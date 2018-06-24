@@ -37,7 +37,7 @@ export default {
   },
   options: {
     proposals: {
-      fields: ['_id', 'index', 'title', 'content']
+      fields: ['_id', 'index', 'title', 'content', 'stage']
     },
     laws: {
       fields: ['_id', 'index', 'title', 'content']

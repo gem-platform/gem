@@ -32,37 +32,34 @@
 
           <!-- Control buttons: up, down, delete -->
           <div class="level-right">
+            <!-- Stage of proposal -->
+            <span class="stage">
+              {{ proposal.stage | stage }}
+            </span>
 
             <!-- Move proposal up button -->
-            <transition name="sort-button">
-              <span
-                v-if="index > 0"
-                class="icon">
-                <i
-                  class="fa fa-angle-up"
-                  @click="moveUp(index)"/>
-              </span>
-            </transition>
+            <span
+              class="icon">
+              <i
+                class="fa fa-angle-up"
+                @click="moveUp(index)"/>
+            </span>
 
             <!-- Move proposal down button -->
-            <transition name="sort-button">
-              <span
-                v-if="index+1 < list.length"
-                class="icon">
-                <i
-                  class="fa fa-angle-down"
-                  @click="moveDown(index)"/>
-              </span>
-            </transition>
+            <span
+              class="icon disabled">
+              <i
+                class="fa fa-angle-down"
+                @click="moveDown(index)"/>
+            </span>
 
             <!-- Remove proposal from list button -->
-            <transition name="sort-button">
-              <span class="icon">
-                <i
-                  class="fa fa-trash"
-                  @click="remove(index)"/>
-              </span>
-            </transition>
+            <span class="icon">
+              <i
+                class="fa fa-trash"
+                @click="remove(index)"/>
+            </span>
+
           </div>
         </div>
       </transition-group>
@@ -73,8 +70,15 @@
 <script>
 import str from '@/lib/string';
 import arr from '@/lib/array';
+import flow from '@/lib/flow';
 
 export default {
+  filters: {
+    stage(value) {
+      const stage = flow.stages.find(s => s.value === value);
+      return stage ? stage.title : '';
+    }
+  },
   props: {
     // Array of proposals to search in
     proposals: {
@@ -151,10 +155,8 @@ export default {
   transform: translateX(30px);
 }
 
-.sort-button-enter-active, .sort-button-leave-active {
-  transition: opacity .5s;
-}
-.sort-button-enter, .sort-button-leave-to {
-  opacity: 0;
+.stage {
+  margin-left: 1em;
+  color: gray;
 }
 </style>

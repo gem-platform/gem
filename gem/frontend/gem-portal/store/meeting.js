@@ -1,6 +1,7 @@
 import User from '@/lib/user';
 
 export const state = () => ({
+  id: 0,
   stageIndex: -1, // current stage number
   stages: {}, // stages states keyed by index
   proposals: {}, // proposals keyed by proposalId
@@ -9,10 +10,14 @@ export const state = () => ({
   user: {},
   start: undefined,
   end: undefined,
-  attentionRequired: false
+  attentionRequired: false,
+  closed: false
 });
 
 export const mutations = {
+  setId(state, data) {
+    state.id = data;
+  },
   setStageIndex(state, index) {
     state.stageIndex = index || 0;
   },
@@ -42,10 +47,16 @@ export const mutations = {
   },
   setMeetingEnd(state, value) {
     state.end = value;
+  },
+  setClose(state, value) {
+    state.closed = value;
   }
 };
 
 export const actions = {
+  meetingId(context, data) {
+    context.commit('setId', data);
+  },
   meetingStage(context, data) {
     context.commit('setStageState', data);
 
@@ -71,6 +82,9 @@ export const actions = {
   },
   attentionRequired({ commit }, value) {
     commit('setAttentionRequired', value);
+  },
+  close({ commit }, value) {
+    commit('setClose', value);
   }
 };
 

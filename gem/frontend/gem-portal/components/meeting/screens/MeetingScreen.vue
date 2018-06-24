@@ -1,10 +1,13 @@
 <template>
   <div>
-    <MeetingScreenTopPanel
+    <!-- Top panel -->
+    <StageInfo
       :title="title"
-      :subtitle="subtitle" />
+      :type="type" />
 
+    <!-- Stage controls and view -->
     <div class="columns">
+      <!-- Stage controls -->
       <div class="column is-4">
         <div
           v-if="showControlPanel"
@@ -19,12 +22,14 @@
       </div>
 
       <div class="column is-8">
+        <!-- Stage view -->
         <div
           v-if="showStageView"
           class="box">
           <StageViewPresenter/>
         </div>
 
+        <!-- Stage proposal -->
         <div
           v-if="showProposal"
           class="box content">
@@ -36,24 +41,11 @@
 </template>
 
 <script>
-import ControlPanel from '../ControlPanel.vue';
-import StageViewPresenter from '../StageViewPresenter.vue';
-import StageControlsPresenter from '../StageControlsPresenter.vue';
-import MeetingScreenTopPanel from './MeetingScreenTopPanel.vue';
-
-function humanReadableStageType(type) {
-  return (
-    {
-      ConnectedStage: 'Connected',
-      AcquaintanceStage: 'Acquaintance',
-      AgendaStage: 'Agenda',
-      BallotStage: 'Ballot',
-      BallotResultsStage: 'Ballot results',
-      DiscussionStage: 'Discussion',
-      CommentsStage: 'Comments'
-    }[type] || type
-  );
-}
+import ControlPanel from '@/components/meeting/ControlPanel.vue';
+import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
+import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
+import StageInfo from '@/components/meeting/stages/StageInfo.vue';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'MeetingScreen',
@@ -61,54 +53,122 @@ export default {
     ControlPanel,
     StageViewPresenter,
     StageControlsPresenter,
-    MeetingScreenTopPanel
+    StageInfo
   },
+  mixins: [StageStateMixin],
   computed: {
+    /**
+     * Title for top panel
+     */
     title() {
-      const meetingStageType = this.$store.getters['meeting/stage/type'];
-      const proposal = this.$store.getters['meeting/stage/proposal'];
+      return this.proposal
+        ? this.proposal.title
+        : this.stageConfig.title;
+    },
 
-      return proposal
-        ? proposal.title
-        : humanReadableStageType(meetingStageType);
+    /**
+     * Subtitle for top panel
+     */
+    type() {
+      return this.stageConfig.type === true ? this.stageConfig.title : '';
     },
-    subtitle() {
-      const type = this.$store.getters['meeting/stage/type'];
-      const withoutSubtitle = ['AgendaStage', 'ConnectedStage'];
-      const showSubtitle = !withoutSubtitle.includes(type);
-      return showSubtitle ? humanReadableStageType(type) : '';
-    },
+
+    /**
+     * Proposal for current stage
+     */
     proposal() {
-      return this.$store.getters['meeting/stage/proposal'];
+      return this.stageProposal;
     },
+
+    /**
+     * Show proposal or not?
+     */
     showProposal() {
-      return this.$store.getters['meeting/stage/proposal'] !== undefined;
+      return this.stageProposal !== undefined;
     },
+
+    /**
+     * Show stage controls or not?
+     */
     showStageControls() {
-      const type = this.$store.getters['meeting/stage/type'];
-      const withControls = [
-        'AcquaintanceStage',
-        'BallotStage',
-        'CommentsStage',
-        'DiscussionStage'
-      ];
-      return withControls.includes(type);
+      return this.stageConfig.controls === true;
     },
+
+    /**
+     * Show stage view or not?
+     */
     showStageView() {
-      const type = this.$store.getters['meeting/stage/type'];
-      const withViews = [
-        'AgendaStage',
-        'AcquaintanceStage',
-        'BallotStage',
-        'BallotResultsStage',
-        'CommentsStage',
-        'DiscussionStage'
-      ];
-      return withViews.includes(type);
+      return this.stageConfig.view === true;
     },
+
+    /**
+     * Show global contol panel or not?
+     */
     showControlPanel() {
       return this.$store.getters['meeting/user'].hasPermission('session:manage');
+    },
+
+    /**
+     * Is meeting closed or not?
+     */
+    closed() {
+      return this.$store.state.meeting.closed;
+    },
+
+    /**
+     * Return configuration of stage
+     */
+    stageConfig() {
+      const type = this.stageType;
+      const stages = {
+        ConnectedStage: { title: 'Connected' },
+        AgendaStage: { title: 'Agenda', view: true },
+        AcquaintanceStage: {
+          title: 'Acquaintance', controls: true, view: true, type: true
+        },
+        BallotStage: {
+          title: 'Ballot', controls: true, view: true, type: true
+        },
+        BallotResultsStage: {
+          title: 'Ballot results', view: true, type: true
+        },
+        DiscussionStage: {
+          title: 'Discussion', controls: true, view: true, type: true
+        },
+        CommentsStage: {
+          title: 'Comments', controls: true, view: true, type: true
+        },
+        FinalStage: {
+          title: 'Final', controls: true, view: true
+        }
+      };
+      return stages[type];
     }
+  },
+  watch: {
+    stageIndex() {
+      // set stage timer on stage change
+      this.setStageTimer(120);
+    },
+    closed() {
+      const router = this.$router;
+
+      this.$dialog.alert({
+        title: 'Meeting is closed',
+        canCancel: false,
+        message: 'You will be redirected to Schedule page',
+        type: 'is-success',
+        hasIcon: true,
+        icon: 'check-circle',
+        iconPack: 'fa',
+        onConfirm() {
+          router.push('/');
+        }
+      });
+    }
+  },
+  mounted() {
+    this.setStageTimer(120);
   }
 };
 </script>

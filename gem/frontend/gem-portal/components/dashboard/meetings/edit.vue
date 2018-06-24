@@ -11,7 +11,7 @@
       <b-datepicker
         v-model="date"
         placeholder="Click to select..."
-        icon="fa fa-anchor"
+        icon="calendar"
         @input="timeChanged"/>
     </b-field>
 
@@ -23,7 +23,6 @@
             :readonly="false"
             v-model="startTime"
             placeholder="Type or select a time..."
-            icon="fa fa-clock"
             @input="timeChanged"/>
         </b-field>
       </div>
@@ -35,7 +34,6 @@
             :readonly="false"
             v-model="endTime"
             placeholder="Type or select a time..."
-            icon="fa fa-clock"
             @input="timeChanged"/>
         </b-field>
       </div>
@@ -144,9 +142,11 @@ export default {
     }
   },
   async fetch({ store }) {
-    await store.dispatch('dashboard/roles/fetch');
-    await store.dispatch('dashboard/users/fetch');
-    await store.dispatch('dashboard/proposals/fetch');
+    await Promise.all([
+      store.dispatch('dashboard/roles/fetch'),
+      store.dispatch('dashboard/users/fetch'),
+      store.dispatch('dashboard/proposals/fetch')
+    ]);
   }
 };
 </script>

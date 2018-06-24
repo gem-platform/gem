@@ -43,6 +43,10 @@ def event2(item, original):
 app.on_fetched_resource_users += event
 app.on_replace_users += event2
 
+@app.route("/api/auth/logout", methods=["POST"])
+def logout():
+    return jsonify({"success": True})
+
 
 @app.route("/api/auth/login", methods=["POST"])
 def login():

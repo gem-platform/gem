@@ -62,9 +62,22 @@ def remove_from_queue(context, sid, data):
 
 def give_voice(context, sid, data):
     """Give voice to specified user at discussion stage."""
-    # todo; sid have enough rights
+    # todo: sid have enough rights
     give_voice_to = data.get("to", None)
     user = context.get_user_by_id(give_voice_to)
     context.stage.give_voice(user)
     return {"success": True}
     # return {"success": False, "message": "Discussion is closed"}
+
+
+def close(context, sid, data):
+    """Close meeting"""
+    # todo: sid have enough rights
+    context.send_broadcast("close", {})
+    return {"success": True}
+
+
+def stage_timer(context, sid, data):
+    """Add time for stage"""
+    context.send_broadcast("stage_timer", data)
+    return {"success": True}

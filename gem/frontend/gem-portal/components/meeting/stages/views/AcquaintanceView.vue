@@ -7,10 +7,10 @@
       max="100"/>
 
     <!-- List of users still reading the proposal -->
-    <div v-if="notReadYet.length > 0">
+    <div v-if="showReaders">
       Still reading:
       <div
-        v-for="user in notReadYet"
+        v-for="user in reading"
         :key="user.name">
         {{ user.name }}: {{ user.progress }}%
       </div>
@@ -19,8 +19,12 @@
 </template>
 
 <script>
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import AuthMixin from '@/components/AuthMixin';
+
 export default {
   name: 'AcquaintanceStageView',
+  mixins: [StageStateMixin, AuthMixin],
   data() {
     return {
       users: this.$store.getters['meeting/users']
@@ -31,12 +35,12 @@ export default {
      * Returns the average percentage of reading the proposal
      */
     progress() {
-      const { progress } = this.$store.getters['meeting/stage/state'];
-      const percentages = Object.values(progress);
+      const percentages = Object.values(this.$stage.progress);
+      const count = percentages.length;
 
-      if (percentages.length > 0) {
+      if (count > 0) {
         const sum = percentages.reduce((a, b) => a + b, 0);
-        return (sum / percentages.length) * 100;
+        return (sum / count) * 100;
       }
 
       return 0;
@@ -45,15 +49,22 @@ export default {
     /**
      * Returns a list of users who have not finished reading
      */
-    notReadYet() {
-      const { progress } = this.$store.getters['meeting/stage/state'];
-
-      return Object.entries(progress)
+    reading() {
+      return Object.entries(this.$stage.progress)
         .map(x => ({
           name: this.users[x[0]].name,
           progress: Math.floor(x[1] * 100)
         }))
         .filter(x => x.progress < 100);
+    },
+
+    /**
+     * Show readers block or not?
+     */
+    showReaders() {
+      return (
+        this.reading.length > 0 && // there are some users still reading
+        this.haveAccess('meeting.manage')); // it is a secretary
     }
   }
 };

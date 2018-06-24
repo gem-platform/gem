@@ -13,10 +13,17 @@ import time from '@/lib/time';
 
 export default {
   props: {
+    /**
+     * Header of the timer
+     */
     header: {
       type: String,
       required: true
     },
+
+    /**
+     * Countdown to
+     */
     to: {
       type: Date,
       required: true
@@ -31,17 +38,32 @@ export default {
     countdown: { time: 1000, autostart: true, repeat: true }
   },
   computed: {
+    /**
+     * Is overdue
+     */
     isOverdue() {
       return this.diff ? this.diff.negative : false;
     },
+
+    /**
+     * Is running out
+     */
     isRunningOut() {
       const secondsToWarn = 45;
       return !!(this.diff && !this.diff.negative && this.diff.distance < secondsToWarn * 1000);
     },
+
+    /**
+     * Timer header
+     */
     timerHeader() {
       const overdue = 'overdue';
       return this.diff && this.diff.negative ? `${this.header} ${overdue}` : this.header;
     },
+
+    /**
+     * Timer value
+     */
     value() {
       if (this.diff) {
         const s = String(this.diff.seconds).padStart(2, '0');

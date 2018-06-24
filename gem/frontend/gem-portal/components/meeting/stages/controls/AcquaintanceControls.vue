@@ -2,26 +2,39 @@
   <div
     class="field">
     <p class="control is-expanded">
-      <a
-        :class="{ 'is-success' : readState, 'is-white': !!readState }"
+      <span
+        :class="{ 'is-success' : haveRead, 'is-white': !!haveRead }"
         class="button is-fullwidth">
-        I read
-      </a>
+        I read {{ readProgress | percent }}%
+      </span>
     </p>
   </div>
 </template>
 
 <script>
-import com from '@/lib/communication';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'AcquaintanceStageControls',
+  filters: {
+    percent(value) {
+      return Math.ceil(value * 100);
+    }
+  },
+  mixins: [CommunicationMixin],
   data() {
     return {
-      readState: false,
       readProgress: 0,
       readProgressNext: 0
     };
+  },
+  computed: {
+    /**
+     * Did the user read the document or not?
+     */
+    haveRead() {
+      return this.readProgress >= 1;
+    }
   },
   created() {
     window.addEventListener('scroll', this.onScroll);
@@ -30,9 +43,16 @@ export default {
     window.removeEventListener('scroll', this.onScroll);
   },
   methods: {
-    async haveRead(quantity) {
-      await com.send('have_read', { quantity });
+    /**
+     * Set reading progress
+     */
+    setProgress(quantity) {
+      this.send('have_read', { quantity });
     },
+
+    /**
+     * On scroll event
+     */
     onScroll() {
       const limit = Math.max(
         document.body.scrollHeight, document.body.offsetHeight,
@@ -44,8 +64,7 @@ export default {
       if (percentRead > this.readProgressNext || percentRead >= 1) {
         this.readProgress = percentRead;
         this.readProgressNext = percentRead + 0.05;
-        this.haveRead(this.readProgress);
-        this.readState = percentRead >= 1;
+        this.setProgress(this.readProgress);
       }
     }
   }

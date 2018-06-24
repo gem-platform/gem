@@ -5,4 +5,5 @@ from .ballot import BallotMeetingStage
 from .ballot_results import BallotResultsMeetingStage
 from .comments import CommentsMeetingStage
 from .discussion import DiscussionMeetingStage
+from .final import FinalMeetingStage
 from .group import StagesGroup
