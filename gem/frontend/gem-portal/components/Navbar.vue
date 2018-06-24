@@ -153,7 +153,7 @@ export default {
       // return back to meeting
       if (!this.attention && !this.onMeetingPage) {
         this.attentionToast = this.$snackbar.open({
-          message: 'Meeting attention required',
+          message: 'Meeting requires your attention',
           type: 'is-danger',
           indefinite: true,
           actionText: 'Go',
