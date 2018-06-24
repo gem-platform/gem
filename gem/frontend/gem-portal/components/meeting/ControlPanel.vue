@@ -47,22 +47,27 @@
       <p class="control">
         <a
           class="button"
-          @click="setStageTime(60)">1 min</a>
+          @click="switchTimerMode">{{ timerMode }}</a>
+      </p>
+      <p class="control">
+        <a
+          class="button"
+          @click="setStageTime(60, timerMode)">1 min</a>
       </p>
       <p class="control is-expanded">
         <a
           class="button is-fullwidth"
-          @click="setStageTime(120)">2 min</a>
+          @click="setStageTime(120, timerMode)">2 min</a>
       </p>
       <p class="control">
         <a
           class="button"
-          @click="setStageTime(180)">3 min</a>
+          @click="setStageTime(180, timerMode)">3 min</a>
       </p>
       <p class="control">
         <a
           class="button"
-          @click="setStageTime(300)">5 min</a>
+          @click="setStageTime(300, timerMode)">5 min</a>
       </p>
     </div>
   </div>
@@ -83,6 +88,11 @@ export default {
     }
   },
   mixins: [StageStateMixin, NotificationMixin, CommunicationMixin],
+  data() {
+    return {
+      timerMode: '+'
+    };
+  },
   computed: {
     /**
      * Disable "Next" button or not?
@@ -131,10 +141,17 @@ export default {
     },
 
     /**
+     * Switch timer mode
+     */
+    switchTimerMode() {
+      this.timerMode = this.timerMode === '+' ? '=' : '+';
+    },
+
+    /**
      * Add stage time using specified seconds
      */
-    async setStageTime(seconds) {
-      const res = await this.send('stage_timer', { value: seconds });
+    async setStageTime(seconds, mode) {
+      const res = await this.send('stage_timer', { value: seconds, mode });
       this.notify(
         res.success ? 'Time has been successfully updated' : res.message,
         res.success ? 'is-success' : 'is-danger'

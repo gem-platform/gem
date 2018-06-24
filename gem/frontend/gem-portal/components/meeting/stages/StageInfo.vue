@@ -76,14 +76,18 @@ export default {
     }
   },
   mounted() {
-    this.$bus.on('setStageTimer', time => this.onUpdateStageTimer(time));
+    this.$bus.on('setStageTimer', time => this.onSetStageTimer(time));
+    this.$bus.on('addStageTimer', time => this.onAddStageTimer(time));
   },
   beforeDestroy() {
     this.$bus.off('setStageTimer');
   },
   methods: {
-    onUpdateStageTimer(value) {
+    onSetStageTimer(value) {
       this.stageTime = value;
+    },
+    onAddStageTimer(value) {
+      this.stageTime = new Date(this.stageTime.getTime() + (1000 * (value || 0)));
     }
   }
 };

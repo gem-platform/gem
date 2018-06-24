@@ -41,9 +41,13 @@ export default {
       }
     },
     stage_timer(data) {
-      const now = new Date();
-      const ahead = new Date(now.getTime() + (1000 * (data.value || 0)));
-      this.$bus.emit('setStageTimer', ahead);
+      if (data.mode === '=') {
+        const now = new Date();
+        const ahead = new Date(now.getTime() + (1000 * (data.value || 0)));
+        this.$bus.emit('setStageTimer', ahead);
+      } else if (data.mode === '+') {
+        this.$bus.emit('addStageTimer', data.value);
+      }
     },
 
     close() {
