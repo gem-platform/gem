@@ -9,6 +9,12 @@
     <div class="columns">
       <!-- Stage controls -->
       <div class="column is-4">
+        <!-- Users online -->
+        <div class="box users-online-box">
+          <UsersOnline/>
+        </div>
+
+        <!-- -->
         <div
           v-if="showControlPanel"
           class="box">
@@ -45,6 +51,7 @@ import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
+import UsersOnline from '@/components/meeting/UsersOnline.vue';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
@@ -53,7 +60,8 @@ export default {
     ControlPanel,
     StageViewPresenter,
     StageControlsPresenter,
-    StageInfo
+    StageInfo,
+    UsersOnline
   },
   mixins: [StageStateMixin],
   computed: {
@@ -172,3 +180,10 @@ export default {
   }
 };
 </script>
+
+<style>
+.users-online-box {
+  max-height: 450px;
+  overflow-y: scroll;
+}
+</style>

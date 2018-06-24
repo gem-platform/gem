@@ -172,6 +172,9 @@ class ActiveMeeting:
 
         fill_meeting(self.__meeting, meeting_id)
 
+        #
+        self.__context.sessions.changed.subscribe(self.__on_sessions_changed)
+
     @property
     def meeting_id(self):
         """
@@ -228,6 +231,10 @@ class ActiveMeeting:
         # send serialized data to all connected
         # clients using all endpoints
         self.state_changed.notify({"index": index, "state": stage_state})
+
+    def __on_sessions_changed(self):
+        online = map(lambda u: str(u.id), self.__context.sessions.online)
+        self.broadcast.notify("meeting_users_online", list(online))
 
     def __on_broadcast(self, message, data):
         self.broadcast.notify(message, data)

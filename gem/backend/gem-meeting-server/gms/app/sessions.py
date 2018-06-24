@@ -1,9 +1,17 @@
+from gem.core import Event
+
+
 class Sessions:
     """Stores associations between session ID and user."""
 
     def __init__(self):
         """Initializes new instance of the Sessions class."""
         self.__sessions = {}
+        self.__changed = Event()
+
+    @property
+    def changed(self):
+        return self.__changed
 
     @property
     def online(self):
@@ -36,6 +44,7 @@ class Sessions:
             user {User} -- User.
         """
         self.__sessions[session_id] = user
+        self.__changed.notify()
 
     def delete(self, session_id):
         """
@@ -46,3 +55,4 @@ class Sessions:
         """
         if session_id in self.__sessions:
             del self.__sessions[session_id]
+            self.__changed.notify()
