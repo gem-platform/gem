@@ -25,7 +25,6 @@
     "vue": "^2.5.16",
     "vue-bus": "^1.1.0",
     "vue-quill-editor": "^3.0.6",
-    "vue-socket.io-extended": "^3.0.0",
     "vue-timers": "^1.7.1",
     "vuelidate": "^0.6.2",
     "vuex": "^3.0.1"
