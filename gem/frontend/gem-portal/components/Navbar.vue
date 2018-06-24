@@ -64,6 +64,9 @@
             <a
               slot="trigger"
               class="navbar-item">
+              <span class="icon">
+                <i class="fa fa-user"/>
+              </span>
               <span>{{ user.name }}</span>
             </a>
 
@@ -71,7 +74,10 @@
               <nuxt-link
                 class="navbar-item"
                 to="/logout">
-                Logout
+                <span class="icon">
+                  <i class="fa fa-sign-out"/>
+                </span>
+                <span>Logout</span>
               </nuxt-link>
             </b-dropdown-item>
           </b-dropdown>
