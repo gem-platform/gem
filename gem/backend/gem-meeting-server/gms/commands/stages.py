@@ -1,3 +1,19 @@
+# General
+
+
+def switch_stage(context, sid, data):
+    """Switch stage request received."""
+    index = data.get("index", None)
+    user = context.get_user(sid)
+    
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # change stage
+    context.meeting.stages.switch_to(index)
+    return {"success": True}
+
 # Acquaintance Stage
 
 
@@ -38,12 +54,6 @@ def ballot_secret(context, sid, data):
     context.stage.ballot.secret = value
     return {"success": True, "value": context.stage.ballot.secret}
 
-
-def switch_stage(context, sid, data):
-    """Switch stage request received."""
-    index = data.get("index", None)
-    context.meeting.stages.switch_to(index)
-    return {"success": True}
 
 def comment(context, sid, data):
     """Comment received."""

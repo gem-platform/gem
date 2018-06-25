@@ -135,9 +135,13 @@ export default {
     /**
      * Move to next stage
      */
-    move(step) {
+    async move(step) {
       const nextStageIndex = this.stageIndex + step;
-      this.$socket.emit('switch_stage', { index: nextStageIndex });
+      try {
+        await this.send('switch_stage', { index: nextStageIndex });
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
     },
 
     /**
