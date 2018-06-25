@@ -66,6 +66,7 @@ export default {
       const { message, mark } = this;
       try {
         await this.send('comment', { message, mark });
+        this.notify('Your comment has been accepted');
         this.message = '';
       } catch (err) {
         this.notify(err.message, 'is-danger');

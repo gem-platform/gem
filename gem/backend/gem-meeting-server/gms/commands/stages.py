@@ -1,19 +1,3 @@
-# General
-
-
-def switch_stage(context, sid, data):
-    """Switch stage request received."""
-    index = data.get("index", None)
-    user = context.get_user(sid)
-    
-    # check user rights
-    if not user.have_permission("meeting.manage"):
-        return {"success": False, "message": "Insufficient rights"}
-
-    # change stage
-    context.meeting.stages.switch_to(index)
-    return {"success": True}
-
 # Acquaintance Stage
 
 
@@ -71,10 +55,18 @@ def comment(context, sid, data):
     context.stage.comment(user, message, mark)
     return {"success": True}
 
+# Discussion Stage
+
 
 def request_floor(context, sid, data):
     """Request floor."""
     user = context.get_user(sid)
+
+    # check user rights
+    if not user.have_permission("meeting.discuss"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # request floor
     context.stage.request_floor(user)
     return {"success": True}
 
@@ -82,32 +74,71 @@ def request_floor(context, sid, data):
 def withdraw_from_queue(context, sid, data):
     """Withdraw from queue."""
     user = context.get_user(sid)
+
+    # check user rights
+    if not user.have_permission("meeting.discuss"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # withdraw from queue
     context.stage.withdraw_from_queue(user)
     return {"success": True}
 
 
 def remove_from_queue(context, sid, data):
     """Remove from queue."""
-    # todo: sid have enough rights
+    user = context.get_user(sid)
     user_id_to_remove = data.get("id", None)
-    user = context.get_user_by_id(user_id_to_remove)
-    context.stage.withdraw_from_queue(user)
+    user_to_remove = context.get_user_by_id(user_id_to_remove)
+
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # withdraw from queue
+    context.stage.withdraw_from_queue(user_to_remove)
     return {"success": True}
 
 
 def give_voice(context, sid, data):
     """Give voice to specified user at discussion stage."""
-    # todo: sid have enough rights
+    user = context.get_user(sid)
     give_voice_to = data.get("to", None)
-    user = context.get_user_by_id(give_voice_to)
-    context.stage.give_voice(user)
+    user_to_give_voice = context.get_user_by_id(give_voice_to)
+
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # give voice
+    context.stage.give_voice(user_to_give_voice)
     return {"success": True}
-    # return {"success": False, "message": "Discussion is closed"}
+
+# General
+
+
+def switch_stage(context, sid, data):
+    """Switch stage request received."""
+    index = data.get("index", None)
+    user = context.get_user(sid)
+    
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # change stage
+    context.meeting.stages.switch_to(index)
+    return {"success": True}
 
 
 def close(context, sid, data):
     """Close meeting"""
-    # todo: sid have enough rights
+    user = context.get_user(sid)
+
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # close meeting
     context.send_broadcast("close", {})
     return {"success": True}
 
