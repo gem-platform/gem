@@ -63,6 +63,8 @@ export default {
   mounted() {
     this.$socket.on('meeting_users_online', this.onOnlineUsersData);
     this.$socket.on('inactive_users', this.onInactiveUsersData);
+
+    this.$socket.emit('meeting_users_online', {}, res => this.onOnlineUsersData(res.online));
   },
   beforeDestroy() {
     this.$socket.off('meeting_users_online', this.onOnlineUsersData);

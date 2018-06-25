@@ -90,3 +90,8 @@ def user_inactive(context, sid, data):
     context.set_user_inactivity_status(user, value)
     context.send_broadcast("inactive_users", context.inactive_users)
     return {"success": True}
+
+
+def meeting_users_online(context, sid, data):
+    ids = list(map(lambda u: str(u.id), context.sessions.online))
+    return {"success": True, "online": ids}
