@@ -88,12 +88,12 @@ export default {
      * Commit a vote
      */
     async vote(value) {
-      const res = await this.send('vote', { value });
-      if (res.success) {
+      try {
+        await this.send('vote', { value });
         this.notify('Your vote has been accepted');
         this.voteCommited = true;
-      } else {
-        this.notify(res.message, 'is-danger');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
       }
     },
 

@@ -15,6 +15,12 @@ def vote(context, sid, data):
     """User vote message received."""
     user = context.get_user(sid)
     value = data.get("value", None)
+
+    # check user rights
+    if not user.have_permission("meeting.vote"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # commit a vote
     context.stage.vote(user, value)
     return {"success": True}
 
