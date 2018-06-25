@@ -47,3 +47,9 @@ class MeetingStage(metaclass=ABCMeta):
             Event -- Stage changed event.
         """
         return self.__changed
+
+    def _switch_to(self):
+        pass
+
+    def _switch_from(self):
+        pass

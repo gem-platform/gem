@@ -1,3 +1,5 @@
-def make_ballot_secret(sender, document, **kwargs):
-    print("make ballot secret: {}".format(document.secret))
-    # todo #1
+def finalize_ballot(sender, document, **kwargs):
+    if document.secret:
+        for v in document.votes:
+            v.user = None
+    document.finished = True

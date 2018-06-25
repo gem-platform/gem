@@ -27,6 +27,9 @@ class BallotMeetingStage(MeetingStage):
         """
         return self.__ballot
 
+    def _switch_from(self):
+        self.__ballot.save()
+
     def vote(self, user, value):
         """
         Commit specified vote of specified user.
@@ -37,5 +40,4 @@ class BallotMeetingStage(MeetingStage):
         """
         self.__ballot.set(user, value)
         self.changed.notify()
-        self.__ballot.save()  # todo: performance fix: save on exit from stage
 
