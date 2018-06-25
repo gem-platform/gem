@@ -2,7 +2,7 @@
   <div
     class="field">
     <a
-      v-if="showCloseButton || true"
+      v-if="showCloseButton"
       class="button control is-fullwidth is-danger"
       @click="close">
       <span class="icon is-small">
