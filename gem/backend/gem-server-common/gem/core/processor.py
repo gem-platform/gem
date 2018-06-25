@@ -39,14 +39,14 @@ class Processor:
     def register_handlers(self, handlers):
         """
         Registers a bunch of handlers. Expands to:
-        register(handler.__name__, handler) for each handler.
+        register(handler[0], handler[1]) for each handler.
 
         Arguments:
-            handlers {list[callable]} -- List of callable
+            handlers {list[(name, handler)]} -- List of tuple (name, handler)
         """
 
         for handler in handlers:
-            self.register(handler.__name__, handler)
+            self.register(handler[0], handler[1])
 
     def exec(self, command, *data):
         """
