@@ -8,12 +8,7 @@ def reading_progress(context, sid, data):
     context.stage.set_progress(user, quantity)
     return {"success": True}
 
-
-def switch_stage(context, sid, data):
-    """Switch stage request received."""
-    index = data.get("index", None)
-    context.meeting.stages.switch_to(index)
-    return {"success": True}
+# Ballot stage
 
 
 def vote(context, sid, data):
@@ -25,10 +20,24 @@ def vote(context, sid, data):
 
 
 def ballot_secret(context, sid, data):
+    """Change ballot secret."""
+    user = context.get_user(sid)
     value = data.get("value", None)
+
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # update ballot secret state
     context.stage.ballot.secret = value
     return {"success": True, "value": context.stage.ballot.secret}
 
+
+def switch_stage(context, sid, data):
+    """Switch stage request received."""
+    index = data.get("index", None)
+    context.meeting.stages.switch_to(index)
+    return {"success": True}
 
 def comment(context, sid, data):
     """Comment received."""
