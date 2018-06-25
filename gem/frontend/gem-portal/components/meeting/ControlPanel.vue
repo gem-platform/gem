@@ -135,9 +135,13 @@ export default {
     /**
      * Move to next stage
      */
-    move(step) {
+    async move(step) {
       const nextStageIndex = this.stageIndex + step;
-      this.$socket.emit('switch_stage', { index: nextStageIndex });
+      try {
+        await this.send('switch_stage', { index: nextStageIndex });
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
     },
 
     /**
@@ -151,11 +155,12 @@ export default {
      * Add stage time using specified seconds
      */
     async setStageTime(seconds, mode) {
-      const res = await this.send('stage_timer', { value: seconds, mode });
-      this.notify(
-        res.success ? 'Time has been successfully updated' : res.message,
-        res.success ? 'is-success' : 'is-danger'
-      );
+      try {
+        await this.send('stage_timer', { value: seconds, mode });
+        this.notify('Time has been successfully updated');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
     }
   }
 };

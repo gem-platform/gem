@@ -31,9 +31,10 @@ export default {
      * Close meeting
      */
     async close() {
-      const res = await this.send('close', { });
-      if (res.success) {
-        this.notify('Meeting is closed');
+      try {
+        await this.send('close', { });
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
       }
     }
   }

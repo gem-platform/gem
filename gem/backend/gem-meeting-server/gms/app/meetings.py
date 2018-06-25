@@ -157,11 +157,9 @@ class ActiveMeeting:
 
         # configure processor:
         # get list of all functions in module
-        inspect_entity_index = 1  # index of entity in array returned by
-        processor_handlers = [member[inspect_entity_index]
-                              for member in getmembers(commands, isfunction)]
+        processor_handlers = getmembers(commands, isfunction)
 
-        # and register them as handler: func_name.__name__ -> func_name
+        # and register them as handler: func_name -> func
         self.__processor = Processor()
         self.__processor.context = self.__context
         self.__processor.register_handlers(processor_handlers)

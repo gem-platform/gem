@@ -88,12 +88,12 @@ export default {
      * Commit a vote
      */
     async vote(value) {
-      const res = await this.send('vote', { value });
-      if (res.success) {
+      try {
+        await this.send('vote', { value });
         this.notify('Your vote has been accepted');
         this.voteCommited = true;
-      } else {
-        this.notify(res.message, 'is-danger');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
       }
     },
 
@@ -108,12 +108,11 @@ export default {
      * Set ballot secret value
      */
     async changeSecret(value) {
-      this.isSecret = value;
-      const res = await this.send('ballot_secret', { value });
-      if (res.success) {
+      try {
+        await this.send('ballot_secret', { value });
         this.notify('Ballot secret state changed');
-      } else {
-        this.notify(res.message, 'is-danger');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
       }
     }
   }

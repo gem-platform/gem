@@ -57,6 +57,9 @@ class User(GemDocument):
         permissions = chain.from_iterable([r.permissions for r in self.roles])
         return list(set(permissions))
 
+    def have_permission(self, permission):
+        return (permission in self.permissions) or ("*" in self.permissions)
+
 
 class BallotRecord(EmbeddedDocument):
     user = ReferenceField(User)

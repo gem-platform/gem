@@ -9,7 +9,7 @@ class MeetingStage(metaclass=ABCMeta):
         """
         Initialize new instance of the MeetingStage class.
 
-        Atguments:
+        Arguments:
             meeting {Meeting} -- Meeting.
 
         Keyword Arguments:

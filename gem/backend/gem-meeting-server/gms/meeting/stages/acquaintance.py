@@ -10,6 +10,10 @@ class AcquaintanceMeetingStage(MeetingStage):
         """
         Initialize new instance of the AcquaintanceMeetingStage class.
 
+        Arguments:
+            ballot {Ballot} -- Ballot from previous stage of proposal
+            comments {Comments} -- Comments from previous stage of proposal
+
         Keyword Arguments:
             group {StageGroup} -- Group of the stage. (default: {None})
         """
@@ -20,7 +24,17 @@ class AcquaintanceMeetingStage(MeetingStage):
 
     @property
     def progress(self):
-        return self.__progress
+        """
+        Return progress of reading proposal.
+
+        Returns:
+            dict -- Progress { count: NUM, values: { USER_ID: 0-1 } }
+        """
+        readers_count = len(self.meeting.context.sessions.online)
+        return {
+            "count": readers_count,
+            "values": self.__progress
+        }
 
     @property
     def ballot(self):
@@ -38,15 +52,18 @@ class AcquaintanceMeetingStage(MeetingStage):
         Return comments.
 
         Returns:
-            [Comment] -- List of comments.
+            Comment -- List of comments.
         """
         return self.__comments
 
     def set_progress(self, user, quantity):
-        self.__progress[str(user.id)] = quantity
-        self.changed.notify()
+        """
+        Set reading progress for specified user
 
-    def set_online(self, users):
-        not_added_users = filter(lambda x: str(x.id) not in self.__progress, users)
-        for user in not_added_users:
-            self.__progress[str(user.id)] = 0
+        Arguments:
+            user {User} -- User to set progress of
+            quantity {float} -- Progress (0-1)
+        """
+        user_id = str(user.id)
+        self.__progress[user_id] = quantity
+        self.changed.notify()

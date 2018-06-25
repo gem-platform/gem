@@ -64,12 +64,13 @@ export default {
      */
     async sendComment() {
       const { message, mark } = this;
-      const res = await this.send('comment', { message, mark });
-      this.notify(
-        res.success ? 'Your comment has been accepted' : res.message,
-        res.success ? 'is-success' : 'is-danger'
-      );
-      this.message = '';
+      try {
+        await this.send('comment', { message, mark });
+        this.notify('Your comment has been accepted');
+        this.message = '';
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
     }
   }
 };
