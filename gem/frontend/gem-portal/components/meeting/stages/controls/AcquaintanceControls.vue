@@ -47,7 +47,7 @@ export default {
      * Set reading progress
      */
     setProgress(quantity) {
-      this.send('have_read', { quantity });
+      this.send('reading_progress', { quantity });
     },
 
     /**

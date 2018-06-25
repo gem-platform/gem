@@ -1,8 +1,10 @@
-def have_read(context, sid, data):
-    quantity = data.get("quantity", 0)
+# Acquaintance Stage
+
+
+def reading_progress(context, sid, data):
+    """Update reading progress of proposal."""
+    quantity = data.get("quantity", 0)  # progress (from 0 to 1)
     user = context.get_user(sid)
-    users_online = context.sessions.online
-    context.stage.set_online(users_online)
     context.stage.set_progress(user, quantity)
     return {"success": True}
 

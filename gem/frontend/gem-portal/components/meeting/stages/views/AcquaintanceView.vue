@@ -10,7 +10,7 @@
     <div v-if="showReaders">
       Still reading:
       <div
-        v-for="user in reading"
+        v-for="user in readers"
         :key="user.name">
         {{ user.name }}: {{ user.progress }}%
       </div>
@@ -35,8 +35,8 @@ export default {
      * Returns the average percentage of reading the proposal
      */
     progress() {
-      const percentages = Object.values(this.$stage.progress);
-      const count = percentages.length;
+      const { count, values } = this.$stage.progress;
+      const percentages = Object.values(values);
 
       if (count > 0) {
         const sum = percentages.reduce((a, b) => a + b, 0);
@@ -49,8 +49,8 @@ export default {
     /**
      * Returns a list of users who have not finished reading
      */
-    reading() {
-      return Object.entries(this.$stage.progress)
+    readers() {
+      return Object.entries(this.$stage.progress.values)
         .map(x => ({
           name: this.users[x[0]].name,
           progress: Math.floor(x[1] * 100)
@@ -63,7 +63,7 @@ export default {
      */
     showReaders() {
       return (
-        this.reading.length > 0 && // there are some users still reading
+        this.readers.length > 0 && // there are some users still reading
         this.haveAccess('meeting.manage')); // it is a secretary
     }
   }
