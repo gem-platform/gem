@@ -27,7 +27,7 @@
         <div class="level-right">
           <div class="level-item">
             <i
-              v-if="isAfk(user.id)"
+              v-if="userInactive(user.id)"
               class="fa fa-bed has-text-grey-light"/>
           </div>
         </div>
@@ -46,26 +46,40 @@ export default {
     };
   },
   computed: {
+    /**
+     * Returns list of useers able to be at meeting
+     */
     allUsers() {
       return this.$store.getters['meeting/users'];
     },
+
+    /**
+     * Return all roles able to be at meeting
+     */
     allRoles() {
       return this.$store.getters['meeting/roles'];
     }
   },
   mounted() {
-    this.$socket.on('meeting_users_online', this.onData);
-    this.$socket.on('users_afk', this.onAfkData);
+    this.$socket.on('meeting_users_online', this.onOnlineUsersData);
+    this.$socket.on('inactive_users', this.onInactiveUsersData);
   },
   beforeDestroy() {
-    this.$socket.off('meeting_users_online', this.onData);
-    this.$socket.off('users_afk', this.onAfkData);
+    this.$socket.off('meeting_users_online', this.onOnlineUsersData);
+    this.$socket.off('inactive_users', this.onInactiveUsersData);
   },
   methods: {
-    isAfk(id) {
+    /**
+     * Is the user inactive or not?
+     */
+    userInactive(id) {
       return this.afk.includes(id);
     },
-    onData(data) {
+
+    /**
+     * List of online users have arrived
+     */
+    onOnlineUsersData(data) {
       this.users = data
         .map(uid => this.allUsers[uid])
         .map(user => ({
@@ -76,7 +90,11 @@ export default {
 
       this.users = _.groupBy(this.users, u => u.role);
     },
-    onAfkData(data) {
+
+    /**
+     * List of inactive users have arrived
+     */
+    onInactiveUsersData(data) {
       this.afk = data;
     }
   }

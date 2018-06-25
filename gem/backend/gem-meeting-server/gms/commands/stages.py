@@ -83,15 +83,10 @@ def stage_timer(context, sid, data):
     return {"success": True}
 
 
-def user_afk(context, sid, data):
+def user_inactive(context, sid, data):
     """User away from keyboard"""
     user = context.get_user(sid)
     value = data.get("value", False)
-    if value and str(user.id) not in context.users_afk:
-        context.users_afk.append(str(user.id))
-
-    if not value and str(user.id) in context.users_afk:
-        context.users_afk.remove(str(user.id))
-
-    context.send_broadcast("users_afk", context.users_afk)
+    context.set_user_inactivity_status(user, value)
+    context.send_broadcast("inactive_users", context.inactive_users)
     return {"success": True}

@@ -11,7 +11,7 @@ class Context:
         self.__meeting = None
         self.__sessions = Sessions()
         self.broadcast = Event()
-        self.users_afk = []
+        self.__inactive_users = []
 
     @property
     def meeting(self):
@@ -61,6 +61,10 @@ class Context:
         return Meeting.objects(id=meeting_id)
 
     # User section
+
+    @property
+    def inactive_users(self):
+        return self.__inactive_users
 
     def get_user(self, sid):
         """
@@ -125,6 +129,18 @@ class Context:
             sid {str} -- Session id.
         """
         self.__sessions.delete(sid)
+
+    def set_user_inactivity_status(self, user, inactive):
+        user_id = str(user.id)
+        user_was_inactive = user_id in self.__inactive_users
+
+        # inactive user
+        if inactive and not user_was_inactive:
+            self.__inactive_users.append(user_id)
+
+        # user is active now
+        if not inactive and user_was_inactive:
+            self.__inactive_users.remove(user_id)
 
     # actions
 

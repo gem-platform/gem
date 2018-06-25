@@ -21,12 +21,7 @@ export default {
   methods: {
     handleVisibilityChange() {
       const { hidden } = this._visibilityApi;
-
-      if (document[hidden]) {
-        this.$socket.emit('user_afk', { value: true });
-      } else {
-        this.$socket.emit('user_afk', { value: false });
-      }
+      this.$socket.emit('user_inactive', { value: document[hidden] });
     }
   },
   mounted() {
@@ -37,7 +32,7 @@ export default {
       document.addEventListener(visibilityChange, this.handleVisibilityChange, false);
     }
 
-    this.$socket.emit('user_afk', { value: false });
+    this.$socket.emit('user_inactive', { value: false });
   },
   beforeDestroy() {
     const { visibilityChange } = this._visibilityApi;
