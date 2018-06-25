@@ -155,11 +155,12 @@ export default {
      * Add stage time using specified seconds
      */
     async setStageTime(seconds, mode) {
-      const res = await this.send('stage_timer', { value: seconds, mode });
-      this.notify(
-        res.success ? 'Time has been successfully updated' : res.message,
-        res.success ? 'is-success' : 'is-danger'
-      );
+      try {
+        await this.send('stage_timer', { value: seconds, mode });
+        this.notify('Time has been successfully updated');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
     }
   }
 };

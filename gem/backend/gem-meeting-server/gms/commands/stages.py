@@ -120,7 +120,7 @@ def switch_stage(context, sid, data):
     """Switch stage request received."""
     index = data.get("index", None)
     user = context.get_user(sid)
-    
+
     # check user rights
     if not user.have_permission("meeting.manage"):
         return {"success": False, "message": "Insufficient rights"}
@@ -145,9 +145,17 @@ def close(context, sid, data):
 
 def stage_timer(context, sid, data):
     """Add time for stage"""
+    user = context.get_user(sid)
+
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
     context.send_broadcast("stage_timer", data)
     return {"success": True}
 
+
+# Info
 
 def user_inactive(context, sid, data):
     """User away from keyboard"""
