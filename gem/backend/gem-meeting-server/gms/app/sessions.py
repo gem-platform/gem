@@ -11,6 +11,12 @@ class Sessions:
 
     @property
     def changed(self):
+        """
+        Get changed event
+
+        Returns:
+            Event -- Sessions changed
+        """
         return self.__changed
 
     @property
