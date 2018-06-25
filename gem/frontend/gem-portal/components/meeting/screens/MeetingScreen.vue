@@ -9,11 +9,6 @@
     <div class="columns">
       <!-- Stage controls -->
       <div class="column is-4">
-        <!-- Users online -->
-        <div class="box users-online-box">
-          <UsersOnline/>
-        </div>
-
         <!-- -->
         <div
           v-if="showControlPanel"
@@ -24,6 +19,11 @@
           v-if="showStageControls"
           class="box">
           <StageControlsPresenter/>
+        </div>
+
+        <!-- Users online -->
+        <div class="box">
+          <UsersOnline/>
         </div>
       </div>
 
@@ -181,10 +181,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.users-online-box {
-  max-height: 450px;
-  overflow-y: scroll;
-}
-</style>
