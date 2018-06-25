@@ -5,8 +5,11 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DateTimeField, GenericReferenceField,
                          EmbeddedDocumentListField)
 
-from gem.db.signals import make_ballot_secret
+from gem.db.signals import finalize_ballot
 
+
+class OpForbidden(Exception):
+    pass
 
 class GemDocument(Document):
     meta = {
@@ -64,6 +67,7 @@ class User(GemDocument):
 class BallotRecord(EmbeddedDocument):
     user = ReferenceField(User)
     value = StringField()
+    roles = ListField(ReferenceField(Role))
 
 
 class Ballot(Document):
@@ -73,16 +77,19 @@ class Ballot(Document):
     secret = BooleanField()
     votes = ListField(EmbeddedDocumentField(BallotRecord))
     proposal = ReferenceField(Proposal)
+    finished = BooleanField()
 
     def __init__(self, proposal=None, **data):
         super().__init__(**data)
         self.proposal = proposal
 
     def set(self, user, value):
-        # self.votes[user.id] = value
+        if self.finished:
+            raise OpForbidden("Ballot is finished already.")
         record = self.__get(user) or BallotRecord()
         record.user = user
         record.value = value
+        record.roles = user.roles.copy()
         if record not in self.votes:
             self.votes.append(record)
 
@@ -134,4 +141,4 @@ class Meeting(GemDocument):
 
 
 # signals
-signals.pre_save.connect(make_ballot_secret, sender=Ballot)
+signals.pre_save.connect(finalize_ballot, sender=Ballot)

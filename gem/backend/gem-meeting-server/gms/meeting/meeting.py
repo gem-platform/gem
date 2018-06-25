@@ -74,7 +74,9 @@ class MeetingStages:
 
     def switch_to(self, index):
         """Switches stage to specified"""
+        self.current._switch_from()
         self.__index = index
+        self.current._switch_to()
         self.__switch.notify(index, self.current)
 
     def append(self, stage):

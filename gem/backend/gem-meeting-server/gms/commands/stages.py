@@ -18,8 +18,8 @@ def vote(context, sid, data):
     """User vote message received."""
     user = context.get_user(sid)
     value = data.get("value", None)
-    context.stage.vote(user, value)
-    return {"success": True}
+    result = context.stage.vote(user, value)
+    return {"success": result[0], "message": result[1]}
 
 
 @permissions_required(["meeting.manage"])
