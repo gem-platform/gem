@@ -8,6 +8,9 @@ from mongoengine import (signals, Document, StringField, BooleanField,
 from gem.db.signals import finalize_ballot
 
 
+class OpForbidden(Exception):
+    pass
+
 class GemDocument(Document):
     meta = {
         'abstract': True,
@@ -79,7 +82,7 @@ class Ballot(Document):
 
     def set(self, user, value):
         if self.finished:
-            raise Exception("Ballot is finished already.")
+            raise OpForbidden("Ballot is finished already.")
         record = self.__get(user) or BallotRecord()
         record.user = user
         record.value = value

@@ -47,6 +47,6 @@ def test_unapprove_vote_in_finished_meeting():
     ballot.finished = True
 
     user = User()
-    with pytest.raises(Exception):
+    with pytest.raises(OpForbidden, match="Ballot is finished already."):
         ballot.set(user, False)
     

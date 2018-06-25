@@ -1,5 +1,5 @@
 from gms.meeting.stages import MeetingStage
-
+from gem.db import OpForbidden
 
 class BallotMeetingStage(MeetingStage):
     """Ballot stage of the meeting."""
@@ -38,6 +38,9 @@ class BallotMeetingStage(MeetingStage):
             user {User} -- User
             value {str} -- Value
         """
-        self.__ballot.set(user, value)
+        try:
+            self.__ballot.set(user, value)
+        except OpForbidden as exc:
+            return {"error": exc}
         self.changed.notify()
 
