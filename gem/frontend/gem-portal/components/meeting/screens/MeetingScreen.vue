@@ -9,6 +9,7 @@
     <div class="columns">
       <!-- Stage controls -->
       <div class="column is-4">
+        <!-- -->
         <div
           v-if="showControlPanel"
           class="box">
@@ -18,6 +19,11 @@
           v-if="showStageControls"
           class="box">
           <StageControlsPresenter/>
+        </div>
+
+        <!-- Users online -->
+        <div class="box">
+          <UsersOnline/>
         </div>
       </div>
 
@@ -45,7 +51,9 @@ import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
+import UsersOnline from '@/components/meeting/UsersOnline.vue';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
 
 export default {
   name: 'MeetingScreen',
@@ -53,9 +61,10 @@ export default {
     ControlPanel,
     StageViewPresenter,
     StageControlsPresenter,
-    StageInfo
+    StageInfo,
+    UsersOnline
   },
-  mixins: [StageStateMixin],
+  mixins: [StageStateMixin, UserInactiveMixin],
   computed: {
     /**
      * Title for top panel
