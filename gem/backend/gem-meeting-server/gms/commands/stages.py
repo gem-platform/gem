@@ -24,7 +24,7 @@ def reading_progress(context, sid, data):
     context.stage.set_progress(user, quantity)
     return {"success": True}
 
-# Ballot stage
+# Ballot Stage
 
 
 def vote(context, sid, data):
@@ -54,12 +54,20 @@ def ballot_secret(context, sid, data):
     context.stage.ballot.secret = value
     return {"success": True, "value": context.stage.ballot.secret}
 
+# Comments Stage
+
 
 def comment(context, sid, data):
     """Comment received."""
     user = context.get_user(sid)
     message = data.get("message", None)
     mark = data.get("mark", None)
+
+    # check user rights
+    if not user.have_permission("meeting.manage"):
+        return {"success": False, "message": "Insufficient rights"}
+
+    # commit comment
     context.stage.comment(user, message, mark)
     return {"success": True}
 
