@@ -99,6 +99,7 @@ class ActiveMeetings:
         # disconnect him from previous one first
         if sid in self.__connection:
             prev_meeting = self.__connection[sid]
+            prev_meeting.context.sessions.delete(sid)
             self.__leave.notify(sid, prev_meeting.meeting_id)
 
         # get meeting by specified id
