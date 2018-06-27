@@ -114,7 +114,7 @@ export default {
      * Show global contol panel or not?
      */
     showControlPanel() {
-      return this.$store.getters['meeting/user'].hasPermission('session:manage');
+      return this.$store.getters['meeting/user'].hasPermission('meeting.manage');
     },
 
     /**
