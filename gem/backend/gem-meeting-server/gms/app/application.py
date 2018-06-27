@@ -1,5 +1,5 @@
 from gem.core import Application
-from gms.app.meetings import ActiveMeetings
+from gms.app.active_meetings import ActiveMeetings
 
 
 class MeetingServerApplication(Application):
@@ -39,7 +39,5 @@ class MeetingServerApplication(Application):
             endpoint.leave(sid, room)
 
     def __on_status_changed(self):
-        active = self.__active_meetings.status()
-        online = self.__active_meetings.online()
         for endpoint in self.endpoints.all:
-            endpoint.emit("meetings_status", {"active": active, "online": online})
+            endpoint.emit("meetings_status", self.__active_meetings.status())
