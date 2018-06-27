@@ -12,8 +12,17 @@
         </b-table-column>
         <b-table-column
           field="id"
-          label="Run">
-          <nuxt-link :to="/meeting/+props.row._id">Run</nuxt-link>
+          label="Actions"
+          class="has-text-centered">
+          <nuxt-link
+            v-if="props.row.proposals"
+            :to="/meeting/+props.row._id"
+            class="button is-primary is-small">
+            <span class="icon is-small">
+              <i class="fa fa-play"/>
+            </span>
+            <span>Start</span>
+          </nuxt-link>
         </b-table-column>
       </template>
     </b-table>
@@ -41,7 +50,7 @@ export default {
         },
         {
           field: 'id',
-          label: 'Run'
+          label: 'Actions'
         }
       ];
     }

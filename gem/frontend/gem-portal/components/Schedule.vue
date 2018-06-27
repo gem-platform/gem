@@ -92,7 +92,7 @@ export default {
       const schedule = allEvents.map(m => _.assign({}, m, {
         active: this.activeMeetings.includes(m._id),
         date: moment.utc(m.start).format('dddd, D MMMM'),
-        type: (m.agenda || m.proposals) ? 'meeting' : 'break',
+        type: (m.proposals) ? 'meeting' : 'break',
         proposals: (m.proposals || []).map(id => ({
           _id: id,
           title: this.proposals(id)[0].title,
