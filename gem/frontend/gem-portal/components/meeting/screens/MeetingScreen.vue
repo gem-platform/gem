@@ -155,12 +155,19 @@ export default {
     }
   },
   watch: {
+    /**
+     * Stage changed
+     */
     stageIndex() {
       // set stage timer on stage change
       this.setStageTimer(120);
     },
+
+    /**
+     * Meeting is closed
+     */
     closed() {
-      const router = this.$router;
+      const { $router, $store } = this;
 
       this.$dialog.alert({
         title: 'Meeting is closed',
@@ -171,7 +178,12 @@ export default {
         icon: 'check-circle',
         iconPack: 'fa',
         onConfirm() {
-          router.push('/');
+          // redirect user to home page
+          $router.push('/');
+
+          // user is no more connected to meeting, so
+          // hide "meeting" tab from NavBar
+          $store.dispatch('meeting/meetingId', 0);
         }
       });
     }
