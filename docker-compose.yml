@@ -43,6 +43,7 @@ services:
     links:
       - gem-meeting-server:gem-meeting-server
       - gem-portal-client:gem-portal-client
+      - gem-portal-server:gem-portal-server
     
 
   ##
