@@ -36,12 +36,13 @@ services:
     build: 
       context: ./gem/frontend/gem-web
       args:
-        env: dev
+        env: ${GEM_ENV-dev}
     ports:
       - "80:80"
       - "443:443"
     links:
       - gem-meeting-server:gem-meeting-server
+      - gem-portal-client:gem-portal-client
     
 
   ##
