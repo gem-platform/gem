@@ -1,3 +1,9 @@
+# Start for specified environment:
+# sudo GEM_ENV=staging docker-compose up -d
+#
+# dev is default, so for development just run:
+# sudo docker-compose up
+
 version: '3'
 services:
   ##
