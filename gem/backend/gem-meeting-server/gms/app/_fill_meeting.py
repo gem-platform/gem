@@ -15,8 +15,16 @@ from gms.meeting.stages import (
 def fill_meeting(meeting, meeting_id):
     """Fill specified meeting with test data"""
     db_host = os.environ.get('DB_HOST', "localhost")
+    db_username = os.environ.get('MONGO_USERNAME')
+    db_password = os.environ.get('MONGO_PASSWORD')
+    db_auth_source = os.environ.get('MONGO_AUTH_SOURCE')
+    db_auth_mechanism = os.environ.get('MONGO_AUTH_MECHANISM')
 
-    connect("test", host=db_host)
+    connect("gem",
+            host=db_host, username=db_username, password=db_password,
+            authentication_source=db_auth_source,
+            authentication_mechanism=db_auth_mechanism)
+
     db_meeting = Meeting.objects.get(id=ObjectId(meeting_id))
     # Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
 

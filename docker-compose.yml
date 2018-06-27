@@ -1,3 +1,9 @@
+# Start for specified environment:
+# sudo GEM_ENV=staging docker-compose up -d
+#
+# dev is default, so for development just run:
+# sudo docker-compose up
+
 version: '3'
 services:
   ##
@@ -9,18 +15,20 @@ services:
   gem-database:
     image: gemplatform/gem-database
     restart: always
-    image: mongo:latest
+    build: ./gem/backend/gem-database
     volumes:
       - ./.data/db:/data/db
     ports:
       - "27017:27017"
+    env_file:
+      - environment.${GEM_ENV-dev}.env
 
   gem-elastic-search:
     image: gemplatform/gem-elastic-search
     restart: "no"
     build: ./gem/backend/gem-elastic-search
-    environment:
-      - ELASTIC_PASSWORD=elastic
+    env_file:
+      - environment.${GEM_ENV-dev}.env
     volumes:
       - ./.data/es:/usr/share/elasticsearch/data
     ports:
@@ -34,12 +42,14 @@ services:
     build: 
       context: ./gem/frontend/gem-web
       args:
-        env: dev
+        env: ${GEM_ENV-dev}
     ports:
       - "80:80"
       - "443:443"
     links:
       - gem-meeting-server:gem-meeting-server
+      - gem-portal-client:gem-portal-client
+      - gem-portal-server:gem-portal-server
     
 
   ##
@@ -64,8 +74,8 @@ services:
       - "8090:8090"
     expose:
       - "8090"
-    environment:
-      - DB_HOST=gem-database
+    env_file:
+      - environment.${GEM_ENV-dev}.env
     links:
       - gem-database:gem-database
     volumes:
@@ -80,9 +90,8 @@ services:
       - "5000:5000"
     expose:
       - "5000"
-    environment:
-      - DB_HOST=gem-database
-      - ES_HOST=gem-elastic-search
+    env_file:
+      - environment.${GEM_ENV-dev}.env
     links:
       - gem-database:gem-database
     volumes:
@@ -107,7 +116,5 @@ services:
     volumes:
       - ./gem/frontend/gem-portal:/usr/src/app
       - /usr/src/app/node_modules
-    environment:
-      - API_URL_BROWSER=/
-      - API_HOST=gem-portal-server
-      - API_PORT=5000
+    env_file:
+      - environment.${GEM_ENV-dev}.env
