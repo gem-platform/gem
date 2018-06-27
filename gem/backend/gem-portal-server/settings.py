@@ -2,11 +2,16 @@ import os
 db_host = os.environ.get('DB_HOST', "localhost")
 
 URL_PREFIX = "api"
-MONGO_URI = "mongodb://"+db_host+":27017/test"
+MONGO_URI = "mongodb://"+db_host+":27017/gem"
 DEBUG = True
 IF_MATCH = False
 CACHE_EXPIRES = 1
 PAGINATION = False
+
+MONGO_USERNAME = os.environ.get('MONGO_USERNAME')
+MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
+MONGO_AUTH_SOURCE = os.environ.get('MONGO_AUTH_SOURCE')
+MONGO_AUTH_MECHANISM = os.environ.get('MONGO_AUTH_MECHANISM')
 
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
