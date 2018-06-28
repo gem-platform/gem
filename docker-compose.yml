@@ -23,16 +23,17 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
 
-  gem-elastic-search:
-    image: gemplatform/gem-elastic-search
+  gem-search:
+    image: gemplatform/gem-search
     restart: "no"
-    build: ./gem/backend/gem-elastic-search
+    build: ./gem/backend/gem-search
     env_file:
       - environment.${GEM_ENV-dev}.env
-    volumes:
-      - ./.data/es:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
+      - 9306:9306
+      - 9312:9312
+    links:
+      - gem-database:gem-database
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app

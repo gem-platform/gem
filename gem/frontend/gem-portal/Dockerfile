@@ -1,11 +1,11 @@
-FROM node:9
+FROM node:slim
 
 # install all the dependences
 WORKDIR /usr/src/lib
 COPY package.json .
 RUN npm install nuxt -g
 RUN npm install
-RUN mkdir -p /usr/src/app && cp -a /usr/src/lib/node_modules /usr/src/app/
+RUN mkdir -p /usr/src/app && mv /usr/src/lib/node_modules /usr/src/app/
 
 # copy sources
 WORKDIR /usr/src/app
