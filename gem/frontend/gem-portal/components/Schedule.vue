@@ -102,7 +102,7 @@ export default {
 
       return _
         .chain(schedule)
-        .filter(m => (moment.utc(m.start) >= today))
+        .filter(m => (moment.utc(m.start) >= today)) // todo: use da end instead?
         .sortBy('start')
         .groupBy('date')
         .value();
@@ -123,9 +123,22 @@ export default {
     }
   },
   mounted() {
+    this.$socket.on('meetings_status', this.onMeetingStatus);
+
     this.$socket.emit('meetings_status', (res) => {
-      this.$store.dispatch('meeting/status/set', res);
+      this.onMeetingStatus(res);
     });
+  },
+  beforeDestroy() {
+    this.$socket.off('meetings_status', this.onMeetingStatus);
+  },
+  methods: {
+    /**
+     * On meeting status data received
+     */
+    onMeetingStatus(data) {
+      this.$store.dispatch('meeting/status/set', data);
+    }
   }
 };
 </script>

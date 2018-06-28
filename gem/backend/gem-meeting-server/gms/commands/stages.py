@@ -92,6 +92,7 @@ def switch_stage(context, sid, data):
 def close(context, sid, data):
     """Close meeting"""
     context.send_broadcast("close", {})
+    context.sessions.delete_all()
     return {"success": True}
 
 
@@ -107,6 +108,9 @@ def stage_timer(context, sid, data):
 def user_inactive(context, sid, data):
     """User away from keyboard"""
     user = context.get_user(sid)
+    if not user:
+        return {"success": False}
+
     value = data.get("value", False)
     context.set_user_inactivity_status(user, value)
     context.send_broadcast("inactive_users", context.inactive_users)

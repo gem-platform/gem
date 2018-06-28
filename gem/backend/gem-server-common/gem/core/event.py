@@ -31,6 +31,9 @@ class Event:
         Notify subscribers
         :param args: Event arguments
         """
+        result = None
         for handler in self.handlers:
             # todo: if multiple handlers registered?
-            return handler(*args)
+            result = handler(*args)
+        
+        return result

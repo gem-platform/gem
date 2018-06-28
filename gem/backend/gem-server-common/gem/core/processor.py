@@ -1,14 +1,15 @@
 """Commands processor."""
 
+
 class Processor:
     """Commands processor to manipulate meeting state."""
 
-    def __init__(self):
+    def __init__(self, context):
         """
         Initializes new instance of the Processor class.
         """
         self.__handlers = {}
-        self.__context = None
+        self.__context = context
 
     @property
     def context(self):
@@ -17,14 +18,6 @@ class Processor:
         :return: User defined object.
         """
         return self.__context
-
-    @context.setter
-    def context(self, value):
-        """
-        Sets processor execution context.
-        :param value: User defined object.
-        """
-        self.__context = value
 
     def register(self, command, handler):
         """
