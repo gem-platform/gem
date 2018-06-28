@@ -167,6 +167,7 @@ export default {
      * Meeting is closed
      */
     closed() {
+      if (!this.closed) { return; }
       const { $router, $store } = this;
 
       this.$dialog.alert({

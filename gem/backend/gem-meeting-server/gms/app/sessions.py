@@ -1,3 +1,5 @@
+from logging import getLogger
+
 from gem.core import Event
 
 
@@ -8,6 +10,7 @@ class Sessions:
         """Initializes new instance of the Sessions class."""
         self.__sessions = {}
         self.__changed = Event()
+        self.__log = getLogger("sessions")
 
     @property
     def changed(self):
@@ -51,6 +54,7 @@ class Sessions:
         """
         self.__sessions[session_id] = user
         self.__changed.notify()
+        self.__log.debug("add %s -> %s", user.name, session_id)
 
     def delete(self, session_id):
         """
@@ -60,5 +64,13 @@ class Sessions:
             session_id {str} -- Session id.
         """
         if session_id in self.__sessions:
+            self.__log.debug("Delete %s", session_id)
             del self.__sessions[session_id]
             self.__changed.notify()
+        else:
+            self.__log.error("Unable delete %s", session_id)
+
+    def delete_all(self):
+        """Delete all sessions"""
+        self.__sessions = {}
+        self.__changed.notify()

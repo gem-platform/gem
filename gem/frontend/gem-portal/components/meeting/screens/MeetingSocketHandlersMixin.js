@@ -4,7 +4,6 @@ export default {
     this.$socket.on('connect_error', this.disconnect);
     this.$socket.on('reconnect', this.reconnect);
     this.$socket.on('stage', this.stage);
-    this.$socket.on('meeting_status', this.meeting_status);
     this.$socket.on('stage_timer', this.stage_timer);
     this.$socket.on('close', this.close);
 
@@ -15,7 +14,6 @@ export default {
     this.$socket.off('connect_error', this.disconnect);
     this.$socket.off('reconnect', this.reconnect);
     this.$socket.off('stage', this.stage);
-    this.$socket.off('meeting_status', this.meeting_status);
     this.$socket.off('stage_timer', this.stage_timer);
     this.$socket.off('close', this.close);
   },
@@ -68,6 +66,7 @@ export default {
           this.$store.dispatch('meeting/user', response.user);
           this.$store.dispatch('meeting/meetingState', response.state);
           this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
+          this.$store.dispatch('meeting/close', false);
         }
 
         // set connection state
