@@ -137,7 +137,6 @@ export default {
      * On meeting status data received
      */
     onMeetingStatus(data) {
-      console.log('onMeetingStatus', data);
       this.$store.dispatch('meeting/status/set', data);
     }
   }
