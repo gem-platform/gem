@@ -71,6 +71,13 @@ export default {
 
         this.$router.push(this._url());
         this.$snackbar.open({ message: 'Proposal has been updated' });
+      } catch (e) {
+        const { response } = e;
+        if (response.status === 422) {
+          this.$snackbar.open({ message: 'Validation error', type: 'is-danger' });
+        } else {
+          this.$snackbar.open({ message: 'Unknown error', type: 'is-danger' });
+        }
       } finally {
         this.busy = false;
       }

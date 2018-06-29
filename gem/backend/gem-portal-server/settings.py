@@ -18,40 +18,56 @@ ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
-proposal = {
+PROPOSALS = {
     "schema": {
         "title": {
-            "type": "string"
+            "type": "string",
+            "required": True,
+            "empty": False
         },
         "index": {
-            "type": "string"
+            "type": "string",
+            "required": True,
+            "empty": False
         },
         "stage": {
             "type": "string"
         },
         "content": {
-            "type": "string"
+            "type": "string",
+            "required": True,
+            "empty": False
         }
     }
 }
 
-laws = {
+LAWS = {
     "schema": {
         "title": {
-            "type": "string"
+            "type": "string",
+            "required": True,
+            "empty": False
         },
         "index": {
-            "type": "string"
+            "type": "string",
+            "required": True,
+            "empty": False
         },
         "content": {
-            "type": "string"
+            "type": "string",
+            "required": True,
+            "empty": False
         }
     }
 }
 
-users = {
+USERS = {
     "schema": {
-        "name": {"type": "string"},
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
         "roles": {
             "type": "list",
             "schema": {
@@ -65,19 +81,35 @@ users = {
     }
 }
 
-roles = {
+ROLES = {
     "schema": {
-        "name": {"type": "string"},
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
         "permissions": {"type": "list"}
     }
 }
 
-meetings = {
+MEETINGS = {
     "schema": {
-        "title": {"type": "string"},
+        "title": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
         "agenda": {"type": "string"},
-        "start": {"type": "datetime"},
-        "end": {"type": "datetime"},
+        "start": {
+            "type": "datetime",
+            "required": True,
+            "empty": False
+        },
+        "end": {
+            "type": "datetime",
+            "required": True,
+            "empty": False
+        },
         "proposals": {
             "type": "list",
             "schema": {
@@ -103,9 +135,9 @@ meetings = {
 
 
 DOMAIN = {
-    "proposals": proposal,
-    "users": users,
-    "roles": roles,
-    "meetings": meetings,
-    "laws": laws
+    "proposals": PROPOSALS,
+    "users": USERS,
+    "roles": ROLES,
+    "meetings": MEETINGS,
+    "laws": LAWS
 }
