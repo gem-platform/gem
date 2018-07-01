@@ -140,5 +140,62 @@ class Meeting(GemDocument):
         return list(result)
 
 
+# Zonal Assignments
+
+
+class Official(Document):
+    meta = {'collection': 'za_officials'}
+    name = StringField(required=True)
+    form_of_address = StringField(db_field="formOfAddress")
+    appendage = StringField()
+
+    def semi_formal_name(self):
+        formats = {
+            "P": {"prefix": "", "postfix": " Das"},
+            "S": {"prefix": "", "postfix": " Svami"},
+            "G": {"prefix": "", "postfix": " Goswami"},
+            "D": {"prefix": "", "postfix": " Das Goswami"},
+            "B": {"prefix": "Bhakta ", "postfix": ""},
+            "M": {"prefix": "", "postfix": " Devi Dasi"},
+            "N": {"prefix": "", "postfix": ""},
+        }
+        name_format = formats.get(self.form_of_address, None)
+        if not name_format:
+            return self.name
+
+        return "{}{}{}{}".format(
+            name_format["prefix"], self.name, name_format["postfix"],
+            " (" + self.appendage + ")" if self.appendage else "")
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
+class Zone(Document):
+    meta = {'collection': 'za_zones'}
+    name = StringField(required=True)
+    parent = ReferenceField("Zone", db_field="parent_id")
+
+    @property
+    def assignees(self):
+        assignments = Assignment.objects(zone=self)
+        officials = list(map(lambda a: a.officials, assignments))
+        return list(chain.from_iterable(officials))
+
+    @property
+    def children(self):
+        return Zone.objects(parent=self)
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
+class Assignment(Document):
+    meta = {'collection': 'za_assignments'}
+    name = StringField(required=True)
+    zone = ReferenceField(Zone, db_field="zone_id")
+    officials = ListField(ReferenceField(Official))
+
+
 # signals
 signals.pre_save.connect(finalize_ballot, sender=Ballot)
