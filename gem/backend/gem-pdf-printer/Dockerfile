@@ -1,0 +1,10 @@
+FROM alpine:latest
+
+RUN apk --update --upgrade add bash cairo pango gdk-pixbuf py3-cffi py3-pillow py-lxml
+RUN pip3 install weasyprint gunicorn flask
+
+ADD ./fonts/* /root/.fonts/
+WORKDIR /myapp
+COPY . .
+
+CMD gunicorn --bind 0.0.0.0:4999 app:app
