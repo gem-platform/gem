@@ -1,5 +1,6 @@
 from os import environ
 from io import BytesIO
+from uuid import uuid4
 from requests import post
 from flask import Flask, jsonify
 from mongoengine import connect
@@ -23,16 +24,18 @@ def print_and_save(content):
     stream = BytesIO(content.encode())
     files = {'file': stream}
     req = post("http://gem-pdf-printer:4999/pdf", files=files)
-    w = open('/data/files/001.pdf', 'wb')
+    filename = str(uuid4()) + ".pdf"
+    w = open("/usr/shared/downloads/" + filename, "wb")
     w.write(req.content)
     w.close()
+    return filename
 
 
 @app.route('/office/zonal/report', methods=['GET'])
 def generate_zonal_report():
     report = zonal_assignments_report()
-    print_and_save(report)
-    return jsonify({"success": True, "path": "001.pdf"})
+    filename = print_and_save(report)
+    return jsonify({"success": True, "filename": filename})
 
 
 if __name__ == '__main__':

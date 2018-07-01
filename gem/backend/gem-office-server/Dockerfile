@@ -1,5 +1,6 @@
 FROM gemplatform/gem-server:latest
 
+RUN mkdir -p /usr/shared/downloads
 WORKDIR /usr/src/app
 COPY ./requirements.txt ./
 

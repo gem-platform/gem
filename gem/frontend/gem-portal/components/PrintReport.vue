@@ -50,12 +50,11 @@ export default {
 
       this.busy = !this.busy;
       try {
-        // const res =
-        await this.$axios.$get(this.url, {});
+        const res = await this.$axios.$get(this.url, {});
+        console.log(res);
 
-        this.name = 'report.pdf';
-        this.downloadUrl = '2.mp3';
-        this.downloadName = 'report.pdf';
+        this.downloadUrl = `/downloads/${res.filename}`;
+        this.downloadName = res.filename;
         this.busy = false;
       } catch (err) {
         this.notify('Report is not generated', 'is-danger');

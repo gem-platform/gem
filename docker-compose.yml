@@ -52,6 +52,8 @@ services:
       - gem-portal-client:gem-portal-client
       - gem-portal-server:gem-portal-server
       - gem-office-server:gem-office-server
+    volumes:
+      - ./.data/shared/downloads:/usr/shared/downloads
     
 
   ##
@@ -115,7 +117,7 @@ services:
       - gem-pdf-printer:gem-pdf-printer
     volumes:
       - ./gem/backend/gem-office-server:/usr/src/app
-      - ./.data/files:/data/files
+      - ./.data/shared/downloads:/usr/shared/downloads
 
   # PDF Printer
   gem-pdf-printer:
