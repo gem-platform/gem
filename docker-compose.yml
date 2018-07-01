@@ -51,6 +51,7 @@ services:
       - gem-meeting-server:gem-meeting-server
       - gem-portal-client:gem-portal-client
       - gem-portal-server:gem-portal-server
+      - gem-office-server:gem-office-server
     
 
   ##
