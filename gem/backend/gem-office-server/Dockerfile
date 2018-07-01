@@ -8,4 +8,5 @@ COPY . .
 
 EXPOSE 5001
 
-CMD gunicorn --bind 0.0.0.0:5001 main:app
+# CMD gunicorn --bind 0.0.0.0:5001 main:app
+CMD [ "python", "-u", "/usr/src/gem-server-common/_runner.py" ]
