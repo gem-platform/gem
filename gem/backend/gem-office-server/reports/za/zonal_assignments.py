@@ -1,37 +1,38 @@
 from itertools import groupby
 
 from jinja2 import Template
-from gem.db.models import Official, Assignment
+from gem.db.models import Official, Zone
 
 
 def zonal_assignments_report():
     report = []
+
+    # Go through all officials
     for official in Official.objects.all():
-        assignments = Assignment.objects(officials__contains=official)
-        if not assignments:
+        # Get zones there this person is present
+        zones = Zone.objects(officials__contains=official)
+        if not zones:
             continue
 
-        report_record = {"name": official.semi_formal_name(), "groups": []}
+        report_record = {"name": official.formal_name(), "groups": []}
 
-        assignments = sorted(assignments, key=lambda x: (len(x.zone.assignees), x.zone.assignees))
-        groups = groupby(assignments, key=lambda x: x.zone.assignees)
+        # sort and group records by co-zonals
+        groups = sorted(zones,
+                        key=lambda x: (len(x.officials), sorted(x.officials)))
+        groups = groupby(groups, key=lambda x: x.officials)
 
-        for assignees, assignments in groups:
-            assignees_without_self = list(filter(lambda x: x != official, assignees))
-            cozonal = True if assignees_without_self else False
-            cozonal_names = list(map(lambda a: a.semi_formal_name(), assignees_without_self))
+        for assignees, zones in groups:
+            without_self = list(filter(lambda x: x != official, assignees))
+            co_zonals = list(map(lambda a: a.formal_name(), without_self))
 
-            report_record_group = {"with": cozonal_names, "zones": []}
+            report_record_group = {"with": co_zonals, "zones": []}
 
             rz = []
-            for assignment in assignments:
-                for child_zone in assignment.zone.children:
-                    rz.append(child_zone)
+            for zone in list(zones):
+                for ch in zone.children:
+                    rz.append(ch.name)
 
-            rz = sorted(rz)
-            for r in rz:
-                report_record_group["zones"].append(r.name)
-
+            report_record_group["zones"] = list(sorted(rz))
             report_record["groups"].append(report_record_group.copy())
         report.append(report_record)
 

@@ -144,12 +144,15 @@ class Meeting(GemDocument):
 
 
 class Official(Document):
-    meta = {'collection': 'za_officials'}
+    meta = {'collection': 'officials'}
     name = StringField(required=True)
-    form_of_address = StringField(db_field="formOfAddress")
+    form_of_address = StringField(db_field="formOfAddress", required=True)
+    email = StringField(db_field="email")
     appendage = StringField()
+    secretary = BooleanField()
+    gbc = BooleanField()
 
-    def semi_formal_name(self):
+    def formal_name(self):
         formats = {
             "P": {"prefix": "", "postfix": " Das"},
             "S": {"prefix": "", "postfix": " Svami"},
@@ -172,15 +175,10 @@ class Official(Document):
 
 
 class Zone(Document):
-    meta = {'collection': 'za_zones'}
+    meta = {'collection': 'zones'}
     name = StringField(required=True)
-    parent = ReferenceField("Zone", db_field="parent_id")
-
-    @property
-    def assignees(self):
-        assignments = Assignment.objects(zone=self)
-        officials = list(map(lambda a: a.officials, assignments))
-        return list(chain.from_iterable(officials))
+    parent = ReferenceField("Zone")
+    officials = ListField(ReferenceField(Official))
 
     @property
     def children(self):
@@ -188,13 +186,6 @@ class Zone(Document):
 
     def __lt__(self, other):
         return self.name < other.name
-
-
-class Assignment(Document):
-    meta = {'collection': 'za_assignments'}
-    name = StringField(required=True)
-    zone = ReferenceField(Zone, db_field="zone_id")
-    officials = ListField(ReferenceField(Official))
 
 
 # signals

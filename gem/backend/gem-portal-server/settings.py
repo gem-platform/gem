@@ -133,11 +133,65 @@ MEETINGS = {
     }
 }
 
+OFFICIALS = {
+    "schema": {
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
+        "formOfAddress": {
+            "type": "string",
+            "required": True,
+            "empty": False,
+            "allowed": ["P", "M", "B", "S", "G", "N"]
+        },
+        "email": {
+            "type": "string"
+        },
+        "appendage": {
+            "type": "string"
+        },
+        "secretary": {
+            "type": "bool"
+        },
+        "gbc": {
+            "type": "bool"
+        }
+    }
+}
+
+ZONES = {
+    "schema": {
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
+        "parent": {
+            "type": "objectid",
+            "data_relation": {
+                "resource": "zones"
+            }
+        },
+        "officials": {
+            "type": "list",
+            "schema": {
+                "type": "objectid",
+                "data_relation": {
+                    "resource": "zones"
+                }
+            }
+        },
+    }
+}
 
 DOMAIN = {
     "proposals": PROPOSALS,
     "users": USERS,
     "roles": ROLES,
     "meetings": MEETINGS,
-    "laws": LAWS
+    "laws": LAWS,
+    "officials": OFFICIALS,
+    "zones": ZONES
 }
