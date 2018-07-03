@@ -36,4 +36,4 @@ def app_autocomplete():
     ]
 
     # return result
-    return dumps({"success": True, "suggestions": suggestions, "fields": fields})
+    return dumps({"success": True, "suggestions": suggestions})

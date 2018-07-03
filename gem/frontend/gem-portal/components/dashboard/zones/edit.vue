@@ -13,7 +13,7 @@
     <!-- Parent -->
     <b-field label="Parent">
       <ZoneSelect
-        @change="onParentZoneChanged" />
+        @select="onParentZoneChanged"/>
     </b-field>
 
     <!-- Officials -->
@@ -29,14 +29,25 @@ import ZoneSelect from '@/components/ZoneSelect.vue';
 
 export default {
   components: { ZoneSelect },
+  filters: {
+    join(value) {
+      return value.join(', ');
+    }
+  },
   props: {
     entity: {
       type: Object,
       required: true
     }
   },
+  data() {
+    return {
+      parent: ''
+    };
+  },
   methods: {
     onParentZoneChanged(parent) {
+      console.log(parent);
       this.entity.parent = parent ? parent._id : undefined;
     }
   }

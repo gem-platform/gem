@@ -1,69 +1,45 @@
 <template>
   <div>
-    <b-autocomplete
+    <Autocomplete
       v-model="query"
-      :loading="loading"
-      :data="suggestions"
+      :fields="['_id', 'path']"
+      collection="zones"
       field="name"
-      placeholder="Search zone by name"
-      icon="fas fa-search"
-      @input="onInput"
       @select="onSelected">
-      <template slot="empty">No results found</template>
-      <template slot-scope="props">
+      <template slot-scope="{option: { name, path }}">
         <div class="media">
           <div class="media-content">
-            <span v-html="highlight(props.option.name)"/>
+            <span v-html="highlight(name)"/>
             <br>
-            <small v-if="props.option.path">
-              {{ props.option.path | join }}
+            <small v-if="path !== undefined && path.length > 0">
+              {{ path | join }}
             </small>
           </div>
         </div>
       </template>
-    </b-autocomplete>
+    </Autocomplete>
   </div>
 </template>
 
 <script>
-import NotificationMixin from '@/components/NotificationMixin';
 import regex from '@/lib/regex';
+import Autocomplete from '@/components/Autocomplete.vue';
 
 export default {
+  components: { Autocomplete },
   filters: {
     join(value) {
       return value.join(', ');
     }
   },
-  mixins: [NotificationMixin],
   data() {
     return {
-      query: '', // Search query,
-      suggestions: [],
-      loading: false
+      query: ''
     };
   },
   methods: {
-    async onInput(value) {
-      if (!value || value.length < 1) { return; }
-
-      const escaped = regex.escape(value);
-      try {
-        this.loading = true;
-        const result = await this.$axios.$get('/api/autocomplete', {
-          params: {
-            collection: 'zones', field: 'name', value: escaped, fields: ['_id', 'path']
-          }
-        });
-        this.suggestions = result.suggestions;
-      } catch (e) {
-        this.notify(e.response.data.message || e.message || 'Error', 'is-danger');
-      } finally {
-        this.loading = false;
-      }
-    },
     onSelected(data) {
-      this.$emit('change', data);
+      this.$emit('select', data);
     },
     highlight(value) {
       const escaped = regex.escape(this.query);
