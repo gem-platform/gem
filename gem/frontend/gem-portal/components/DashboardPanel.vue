@@ -59,18 +59,13 @@
       class="menu-list">
       <li v-if="haveAccess('za')">
         <nuxt-link
-          to="/dashboard/za_officials"
+          to="/dashboard/officials"
           active-class="is-active">Officials</nuxt-link>
       </li>
       <li v-if="haveAccess('za')">
         <nuxt-link
-          to="/dashboard/za_zones"
+          to="/dashboard/zones"
           active-class="is-active">Zones</nuxt-link>
-      </li>
-      <li v-if="haveAccess('za')">
-        <nuxt-link
-          to="/dashboard/za_asignments"
-          active-class="is-active">Assignments</nuxt-link>
       </li>
     </ul>
 

@@ -1,5 +1,3 @@
-import os
-
 from flask import Blueprint, jsonify, request
 from mongoengine import DoesNotExist
 from gem.db import User

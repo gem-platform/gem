@@ -179,6 +179,7 @@ class Zone(Document):
     name = StringField(required=True)
     parent = ReferenceField("Zone")
     officials = ListField(ReferenceField(Official))
+    path = ListField(StringField())
 
     @property
     def children(self):

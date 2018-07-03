@@ -153,10 +153,10 @@ OFFICIALS = {
             "type": "string"
         },
         "secretary": {
-            "type": "bool"
+            "type": "boolean"
         },
         "gbc": {
-            "type": "bool"
+            "type": "boolean"
         }
     }
 }

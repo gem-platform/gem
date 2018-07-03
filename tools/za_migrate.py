@@ -51,8 +51,9 @@ with open('data/Officials Names.csv', newline='') as file:
 zone_levels = [
     {"file": "data/dbo_T_Continents.csv", "parent_row": -999, "name_row": 2},
     {"file": "data/GBC Zones.csv", "parent_row": 1, "name_row": 2},
-    {"file": "data/Zonal Subregions.csv", "parent_row": 2, "name_row": 3},
-    {"file": "data/States Subdivisions.csv", "parent_row": 3, "name_row": 2}
+    {"file": "data/Zonal Subregions.csv", "parent_row": 2, "name_row": 3}
+    
+    #{"file": "data/States Subdivisions.csv", "parent_row": 3, "name_row": 2}
 ]
 
 id_map = {}
@@ -96,6 +97,23 @@ for idx, level in enumerate(zone_levels):
             # append
             zones.append(entity)
 
+
+def get_parents_path(zone, result):
+    parent_id = zone.get("parent", None)
+    if parent_id:
+        zone = list(filter(lambda z: z["_id"] == parent_id, zones))[0]
+        result.append(zone["name"])
+        get_parents_path(zone, result)
+    return result
+
+
+for zone in zones:
+    if "parent" not in zone:
+        pass
+
+    parents_path = get_parents_path(zone, [])
+    parents_path.reverse()
+    zone["path"] = parents_path.copy()
 
 print(zones)
 print(officials)

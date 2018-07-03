@@ -6,6 +6,7 @@ from mongoengine import connect
 
 from api_search import api_search
 from api_login import api_login
+from api_autocomplete import api_autocomplete
 
 db_host = os.environ.get('DB_HOST', "localhost")
 db_username = os.environ.get('MONGO_USERNAME')
@@ -21,6 +22,7 @@ connect("gem",
 app = Eve()
 app.register_blueprint(api_search)
 app.register_blueprint(api_login)
+app.register_blueprint(api_autocomplete)
 CORS(app)
 
 
