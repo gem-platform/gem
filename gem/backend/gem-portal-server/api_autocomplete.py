@@ -11,7 +11,7 @@ def app_autocomplete():
     collection = request.args.get("collection", None)
     field = request.args.get("field", None)
     value = request.args.get("value", None)
-    fields = request.args.getlist("fields[]", [])
+    fields = request.args.getlist("fields[]") or []
 
     # no required arguments provided
     if not (collection and field and value):

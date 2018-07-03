@@ -6,12 +6,14 @@
       :data="suggestions"
       :placeholder="placeholder"
       :field="field"
-      icon="fas fa-search"
+      :icon="icon"
       @input="onInput"
       @select="onSelected">
       <template slot="empty">No results found</template>
-      <template slot-scope="props">
-        <slot :option="props.option"/>
+      <template
+        slot-scope="{option}"
+        :slot="defaultSlotName">
+        <slot :option="option"/>
       </template>
     </b-autocomplete>
   </div>
@@ -24,6 +26,14 @@ import regex from '@/lib/regex';
 export default {
   mixins: [NotificationMixin],
   props: {
+    value: {
+      type: String,
+      default: ''
+    },
+    icon: {
+      type: String,
+      default: 'fas fa-search'
+    },
     placeholder: {
       type: String,
       default: 'Type to search'
@@ -44,10 +54,15 @@ export default {
   },
   data() {
     return {
-      query: '', // Search query,
+      query: this.value, // Search query,
       suggestions: [],
       loading: false
     };
+  },
+  computed: {
+    defaultSlotName() {
+      return this.$scopedSlots.default ? 'default' : 'not_default';
+    }
   },
   methods: {
     async onInput(value) {
@@ -72,7 +87,7 @@ export default {
       }
     },
     onSelected(data) {
-      this.$emit('select', data);
+      this.$emit('select', data ? data._id.$oid : undefined);
     }
   }
 };

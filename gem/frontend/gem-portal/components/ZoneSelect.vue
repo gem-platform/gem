@@ -32,14 +32,20 @@ export default {
       return value.join(', ');
     }
   },
+  props: {
+    value: {
+      type: String,
+      default: undefined
+    }
+  },
   data() {
     return {
-      query: ''
+      query: this.value
     };
   },
   methods: {
     onSelected(data) {
-      this.$emit('select', data);
+      this.$emit('input', data);
     },
     highlight(value) {
       const escaped = regex.escape(this.query);

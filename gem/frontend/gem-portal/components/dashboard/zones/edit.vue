@@ -13,22 +13,22 @@
     <!-- Parent -->
     <b-field label="Parent">
       <ZoneSelect
-        @select="onParentZoneChanged"/>
+        v-model="parent" />
     </b-field>
 
     <!-- Officials -->
     <b-field label="Officials">
-      <b-input
-        placeholder="Officials" />
+      <OfficialsList/>
     </b-field>
   </div>
 </template>
 
 <script>
 import ZoneSelect from '@/components/ZoneSelect.vue';
+import OfficialsList from '@/components/OfficialsList.vue';
 
 export default {
-  components: { ZoneSelect },
+  components: { ZoneSelect, OfficialsList },
   filters: {
     join(value) {
       return value.join(', ');
@@ -42,7 +42,7 @@ export default {
   },
   data() {
     return {
-      parent: ''
+      parent: this.entity.parent
     };
   },
   methods: {
