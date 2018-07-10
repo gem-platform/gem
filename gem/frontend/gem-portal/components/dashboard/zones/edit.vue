@@ -5,7 +5,7 @@
       label="Name"
       expanded>
       <b-input
-        v-model="entity.name"
+        v-model="name"
         placeholder="Name"
         size="is-large"/>
     </b-field>
@@ -16,9 +16,10 @@
         v-model="parent" />
     </b-field>
 
-    <!-- Officials -->
+    <!-- Officials list -->
     <b-field label="Officials">
-      <OfficialsList/>
+      <OfficialsList
+        v-model="officials" />
     </b-field>
   </div>
 </template>
@@ -26,30 +27,39 @@
 <script>
 import ZoneSelect from '@/components/ZoneSelect.vue';
 import OfficialsList from '@/components/OfficialsList.vue';
+import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 
 export default {
   components: { ZoneSelect, OfficialsList },
-  filters: {
-    join(value) {
-      return value.join(', ');
-    }
-  },
+  mixins: [
+    /**
+     * Provide properties to update entity
+     */
+    CrudEditComponentMixin({
+      properties: ['name', 'parent', 'officials']
+    })
+  ],
   props: {
+    /**
+     * Entity to edit
+     */
     entity: {
       type: Object,
       required: true
     }
   },
-  data() {
-    return {
-      parent: this.entity.parent
-    };
-  },
-  methods: {
-    onParentZoneChanged(parent) {
-      console.log(parent);
-      this.entity.parent = parent ? parent._id : undefined;
-    }
+  async fetch({
+    store, entity, mass, newEntity
+  }) {
+    if (newEntity) { return; }
+
+    // fetch related resources:
+    // - parent zone
+    // - assigned officials
+    await mass.fetch(store, [
+      { resource: 'zones', one: entity.parent },
+      { resource: 'officials', list: entity.officials }
+    ]);
   }
 };
 </script>

@@ -9,4 +9,4 @@ COPY . .
 
 EXPOSE 5000
 
-CMD [ "python", "-u", "main.py" ]
+CMD [ "python", "-u", "/usr/src/gem-server-common/_runner.py" ]

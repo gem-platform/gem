@@ -175,10 +175,6 @@ export default {
 </script>
 
 <style scoped>
-nav.navbar {
-  border-top: 4px solid #7957d5;
-  margin-bottom: 1rem;
-}
 .blink_me {
   animation: blinker 1s linear infinite;
 }

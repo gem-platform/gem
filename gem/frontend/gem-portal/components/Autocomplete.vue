@@ -1,22 +1,22 @@
 <template>
-  <div>
-    <b-autocomplete
-      v-model="query"
-      :loading="loading"
-      :data="suggestions"
-      :placeholder="placeholder"
-      :field="field"
-      :icon="icon"
-      @input="onInput"
-      @select="onSelected">
-      <template slot="empty">No results found</template>
-      <template
-        slot-scope="{option}"
-        :slot="defaultSlotName">
-        <slot :option="option"/>
-      </template>
-    </b-autocomplete>
-  </div>
+  <b-autocomplete
+    v-model="query"
+    :loading="loading"
+    :data="suggestions"
+    :placeholder="placeholder"
+    :field="field"
+    :icon="icon"
+    expanded
+    @input="input"
+    @select="selected">
+    <template slot="empty">No results found</template>
+    <template
+      slot-scope="{option}"
+      :slot="defaultSlotName">
+      <slot :option="option"/>
+    </template>
+  </b-autocomplete>
+
 </template>
 
 <script>
@@ -65,10 +65,23 @@ export default {
     }
   },
   methods: {
-    async onInput(value) {
+    /**
+     * On input
+     */
+    async input(value) {
       this.$emit('input', value);
-      if (!value || value.length < 1) { return; }
 
+      // Field is empty, so emit nothing selected event
+      if (value === '') {
+        this.$emit('select', undefined);
+      }
+
+      // Input too short, abort
+      if (!value || value.length < 1) {
+        return;
+      }
+
+      // Fetch data
       try {
         this.loading = true;
         const result = await this.$axios.$get('/api/autocomplete', {
@@ -86,8 +99,12 @@ export default {
         this.loading = false;
       }
     },
-    onSelected(data) {
-      this.$emit('select', data ? data._id.$oid : undefined);
+
+    /**
+     * On item selected
+     */
+    selected(data) {
+      this.$emit('select', data);
     }
   }
 };

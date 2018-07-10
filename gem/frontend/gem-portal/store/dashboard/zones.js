@@ -1,3 +1,3 @@
 import crudStore from '@/lib/crud/store';
 
-export default crudStore({ name: 'zones' });
+export default crudStore({ collection: 'zones' });

@@ -1,6 +1,5 @@
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request, current_app, jsonify
 from re import IGNORECASE
-from bson.json_util import dumps
 from bson.regex import Regex
 
 api_autocomplete = Blueprint('api_autocomplete', __name__)
@@ -15,7 +14,7 @@ def app_autocomplete():
 
     # no required arguments provided
     if not (collection and field and value):
-        return dumps({
+        return jsonify({
             "success": False,
             "message": "Provide 'collection', 'field' and 'value' args"
         }), 400
@@ -35,5 +34,32 @@ def app_autocomplete():
         for obj in results
     ]
 
+    #
+    for suggestion in suggestions:
+        suggestion["_id"] = str(suggestion["_id"])
+
     # return result
-    return dumps({"success": True, "suggestions": suggestions})
+    return jsonify({"success": True, "suggestions": suggestions})
+
+
+@api_autocomplete.route("/api/names", methods=["GET"])
+def app_names():
+    collection = request.args.get("collection", None)
+    field = request.args.get("field", None)
+
+    # no required arguments provided
+    if not (collection and field):
+        return jsonify({
+            "success": False,
+            "message": "Provide 'collection' and 'field' args"
+        }), 400
+
+    db_collection = current_app.data.driver.db[collection]
+    results = db_collection.find({})
+
+    # map suggestions
+    suggestions = {str(obj["_id"]): obj[field] for obj in results}
+
+    # return result
+    return jsonify({"success": True, "items": suggestions})
+

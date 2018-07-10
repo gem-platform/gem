@@ -1,5 +1,12 @@
 <template>
   <div>
+    <b-message
+      v-if="partially.yes"
+      title="The data is partially displayed"
+      type="is-warning">
+      Only last {{ partially.count }} meetings are displayed
+    </b-message>
+
     <div
       v-for="(events, date) in schedule"
       :key="date">
@@ -86,8 +93,9 @@ export default {
      * Get list of events to display
      */
     schedule() {
-      const today = moment.utc().subtract(1, 'h'); // Subtract one hour in case meeting is little late
-      const allEvents = this.$store.getters['dashboard/meetings/all'];
+      // Subtract one hour in case meeting is little late
+      // const today = moment.utc().subtract(1, 'h');
+      const allEvents = this.$store.getters['dashboard/meetings/list'];
 
       const schedule = allEvents.map(m => _.assign({}, m, {
         active: this.activeMeetings.includes(m._id),
@@ -95,24 +103,17 @@ export default {
         type: (m.proposals) ? 'meeting' : 'break',
         proposals: (m.proposals || []).map(id => ({
           _id: id,
-          title: this.proposals(id)[0].title,
+          title: this.proposalTitle(id),
           url: `/dashboard/proposals/${id}`
         }))
       }));
 
       return _
         .chain(schedule)
-        .filter(m => (moment.utc(m.start) >= today)) // todo: use da end instead?
+        // .filter(m => (moment.utc(m.end) >= today))
         .sortBy('start')
         .groupBy('date')
         .value();
-    },
-
-    /**
-     * Return all proposals
-     */
-    proposals() {
-      return this.$store.getters['dashboard/proposals/get'];
     },
 
     /**
@@ -120,6 +121,14 @@ export default {
      */
     activeMeetings() {
       return this.$store.getters['meeting/status/active'];
+    },
+
+    /**
+     * Is data displayed partially?
+     */
+    partially() {
+      const meta = this.$store.getters['dashboard/meetings/meta'];
+      return { yes: meta.total > meta.perPage, count: meta.perPage };
     }
   },
   mounted() {
@@ -138,6 +147,14 @@ export default {
      */
     onMeetingStatus(data) {
       this.$store.dispatch('meeting/status/set', data);
+    },
+
+    /**
+     * Get proposal title using specified ID
+     */
+    proposalTitle(id) {
+      const proposalTitles = this.$store.getters['names/get'].proposals;
+      return proposalTitles[id] || "<Proposal doesn't exist>";
     }
   }
 };

@@ -57,12 +57,12 @@
     <ul
       v-if="showAdministrationSection"
       class="menu-list">
-      <li v-if="haveAccess('za')">
+      <li v-if="haveAccess('za.officials')">
         <nuxt-link
           to="/dashboard/officials"
           active-class="is-active">Officials</nuxt-link>
       </li>
-      <li v-if="haveAccess('za')">
+      <li v-if="haveAccess('za.zones')">
         <nuxt-link
           to="/dashboard/zones"
           active-class="is-active">Zones</nuxt-link>

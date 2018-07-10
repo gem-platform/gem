@@ -1,28 +1,30 @@
 <template>
   <div>
+    <!-- User's name -->
     <b-field label="Name">
       <b-input
-        v-model="entity.name"
+        v-model="name"
         placeholder="Name"
         size="is-large"/>
     </b-field>
 
+    <!-- Users password -->
     <b-field label="Password">
       <b-input
-        v-model="entity.password"
+        v-model="password"
         placeholder="Password"/>
     </b-field>
 
+    <!-- Users roles -->
     <b-field label="Roles">
       <b-taginput
-        v-model="userRoles"
+        v-model="roles"
         :data="filteredRoles"
         field="name"
         autocomplete
         icon="fas fa-user"
         placeholder="Add a role"
-        @typing="onRolesTyping"
-        @input="onRolesInput">
+        @typing="onRolesTyping">
         <template slot="empty">
           There are no items
         </template>
@@ -32,9 +34,18 @@
 </template>
 
 <script>
+import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 import str from '@/lib/string';
 
 export default {
+  mixins: [
+    CrudEditComponentMixin({
+      properties: [
+        'name',
+        'password'
+      ]
+    })
+  ],
   props: {
     entity: {
       type: Object,
@@ -43,37 +54,44 @@ export default {
   },
   data() {
     return {
-      userRoles: [],
       filteredRoles: []
     };
   },
   computed: {
-    roles() {
-      return this.$store.getters['dashboard/roles/all'];
-    }
-  },
-  created() {
-    // user have no roles, no additional initialization required
-    if (!this.entity.roles) { return; }
+    roles: {
+      get() {
+        const roles = this.entity.roles || [];
+        return roles.map(x => this.rolesList.find(y => y._id === x));
+      },
+      set(roles) {
+        if (this.entity._id === undefined) {
+          Object.assign(this.entity, { roles: roles.map(x => x._id) });
+          return; // creating new entity. it is not in store yet
+        }
 
-    // get all roles
-    const roles = this.$store.getters['dashboard/roles/all'];
-    this.userRoles = roles.filter(x => this.entity.roles.includes(x._id));
+        this.$store.dispatch('dashboard/users/update', {
+          _id: this.entity._id, roles: roles.map(x => x._id)
+        });
+      }
+    },
+    rolesList() {
+      const list = this.$store.getters['names/get'].roles;
+      return Object.keys(list).map(_id => ({ _id, name: list[_id] }));
+    }
   },
   methods: {
     onRolesTyping(text) {
       // get roles what contains specified text in names
       // and filter out roles what already been added
-      this.filteredRoles = this.roles
+      this.filteredRoles = this.rolesList
         .filter(option => str.contains(option.name, text))
-        .filter(option => !this.userRoles.map(x => x._id).includes(option._id));
-    },
-    onRolesInput(value) {
-      this.entity.roles = value.map(x => x._id);
+        .filter(option => !this.roles.map(x => x._id).includes(option._id));
     }
   },
   async fetch({ store }) {
-    await store.dispatch('dashboard/roles/fetch');
+    await store.dispatch('names/fetch', {
+      collection: 'roles', field: 'name'
+    });
   }
 };
 </script>

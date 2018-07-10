@@ -1,3 +1,3 @@
 import crudStore from '@/lib/crud/store';
 
-export default crudStore({ name: 'meetings' });
+export default crudStore({ collection: 'meetings' });

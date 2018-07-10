@@ -5,13 +5,13 @@ URL_PREFIX = "api"
 MONGO_URI = "mongodb://"+db_host+":27017/gem"
 DEBUG = True
 IF_MATCH = False
-CACHE_EXPIRES = 1
-PAGINATION = False
 
 MONGO_USERNAME = os.environ.get('MONGO_USERNAME')
 MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
 MONGO_AUTH_SOURCE = os.environ.get('MONGO_AUTH_SOURCE')
 MONGO_AUTH_MECHANISM = os.environ.get('MONGO_AUTH_MECHANISM')
+
+print(MONGO_USERNAME, MONGO_PASSWORD, MONGO_AUTH_SOURCE, MONGO_AUTH_MECHANISM)
 
 RESOURCE_METHODS = ['GET', 'POST', 'DELETE']
 ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
@@ -19,6 +19,11 @@ ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
 PROPOSALS = {
+    "datasource": {
+        "default_sort": [
+            ("title", 1)
+        ]
+    },
     "schema": {
         "title": {
             "type": "string",
@@ -62,6 +67,11 @@ LAWS = {
 }
 
 USERS = {
+    "datasource": {
+        "projection": {
+            "password": 0
+        }
+    },
     "schema": {
         "name": {
             "type": "string",
@@ -82,6 +92,11 @@ USERS = {
 }
 
 ROLES = {
+    "datasource": {
+        "default_sort": [
+            ("name", 1)
+        ]
+    },
     "schema": {
         "name": {
             "type": "string",
@@ -93,6 +108,11 @@ ROLES = {
 }
 
 MEETINGS = {
+    "datasource": {
+        "default_sort": [
+            ("start", 1)
+        ]
+    },
     "schema": {
         "title": {
             "type": "string",
@@ -115,7 +135,8 @@ MEETINGS = {
             "schema": {
                 "type": "objectid",
                 "data_relation": {
-                    "resource": "proposals"
+                    "resource": "proposals",
+                    "embeddable": True
                 }
             }
         },
@@ -125,8 +146,14 @@ MEETINGS = {
                 "type": "dict",
                 "schema": {
                     "scope": {"type": "string"},
-                    "user": {"type": "objectid", "data_relation": {"resource": "users"}},
-                    "role": {"type": "objectid", "data_relation": {"resource": "roles"}}
+                    "user": {
+                        "type": "objectid",
+                        "data_relation": {"resource": "users"}
+                    },
+                    "role": {
+                        "type": "objectid",
+                        "data_relation": {"resource": "roles"}
+                    }
                 }
             }
         }
@@ -134,6 +161,11 @@ MEETINGS = {
 }
 
 OFFICIALS = {
+    "datasource": {
+        "default_sort": [
+            ("name", 1)
+        ]
+    },
     "schema": {
         "name": {
             "type": "string",
@@ -171,7 +203,8 @@ ZONES = {
         "parent": {
             "type": "objectid",
             "data_relation": {
-                "resource": "zones"
+                "resource": "zones",
+                "embeddable": True
             }
         },
         "officials": {
@@ -179,10 +212,18 @@ ZONES = {
             "schema": {
                 "type": "objectid",
                 "data_relation": {
-                    "resource": "zones"
+                    "resource": "officials",
+                    "embeddable": True
                 }
             }
         },
+        "path": {
+            "type": "list",
+            "schema": {
+                "type": "string",
+                "empty": False,
+            }
+        }
     }
 }
 

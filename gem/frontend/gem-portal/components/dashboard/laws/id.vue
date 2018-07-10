@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>{{ entity.title }} ({{ entity.index }})</h1>
+    <h1>{{ entity.title }}</h1>
     <div v-html="entity.content"/>
   </div>
 </template>

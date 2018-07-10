@@ -2,65 +2,57 @@
   <div>
     <!-- Index of proposal -->
     <b-field
-      :type="validationHasError($v.model.index)"
-      :message="validationMessages($v.model.index)"
       label="Index">
       <b-input
-        v-model.trim="model.index"
+        v-model.trim="index"
         placeholder="Index"
-        size="is-large"
-        @input="validationTouch($v.model.index)"/>
+        size="is-large" />
     </b-field>
 
     <!-- Title of proposal -->
     <b-field
-      :type="validationHasError($v.model.title)"
-      :message="validationMessages($v.model.title)"
       label="Title">
       <b-input
-        v-model.trim="model.title"
+        v-model.trim="title"
         placeholder="Title"
-        size="is-large"
-        @input="validationTouch($v.model.title)"/>
+        size="is-large" />
     </b-field>
 
     <!-- Stage of proposal -->
     <b-field
-      :type="validationHasError($v.model.stage)"
-      :message="validationMessages($v.model.stage)"
       label="Stage">
       <b-autocomplete
-        v-model="stageInput"
-        :data="filteredStages"
+        v-model="stage"
+        :data="stages"
         :keep-first="true"
         :open-on-focus="true"
         placeholder="Stage"
-        field="title"
-        @select="onStageChanged"/>
+        field="title"/>
     </b-field>
 
     <!-- Content of proposal -->
     <b-field
-      :type="validationHasError($v.model.content)"
-      :message="validationMessages($v.model.content)"
       label="Content">
       <div
-        v-quill:myQuillEditor="editorOption"
-        :content="model.content"
+        v-quill:editor="editorOption"
+        :content="content"
         class="quill-editor"
-        @change="onEditorChange($event)"/>
+        @change="content = $event.html"/>
     </b-field>
 
   </div>
 </template>
 
 <script>
-import { required, alphaNum } from 'vuelidate/lib/validators';
-import ValidationMixin from '@/components/ValidationMixin';
+import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
+
 import flow from '@/lib/flow';
+import eoptions from '@/lib/config/editor';
 
 export default {
-  mixins: [ValidationMixin],
+  mixins: [
+    CrudEditComponentMixin({ properties: ['index', 'title', 'content'] })
+  ],
   props: {
     entity: {
       type: Object,
@@ -68,60 +60,26 @@ export default {
     }
   },
   data() {
-    const stage = flow.stages.find(x => x.value === this.entity.stage);
-
     return {
-      model: {
-        index: this.entity.index,
-        title: this.entity.title,
-        stage: this.entity.stage,
-        content: this.entity.content || ''
-      },
-      stageInput: stage ? stage.title : '',
       stages: flow.stages,
-      editorOption: {
-        modules: {
-          toolbar: [
-            [{ list: 'ordered' }, { list: 'bullet' }],
-            ['bold', 'italic', 'underline', 'strike'],
-            ['blockquote'],
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ align: [] }],
-            ['clean']
-          ]
-        }
-      }
+      editorOption: eoptions
     };
   },
-  validations: {
-    model: {
-      index: { required, alphaNum },
-      title: { required },
-      content: { required },
-      stage: { required }
-    }
-  },
   computed: {
-    filteredStages() {
-      return this.stages;
-    }
-  },
-  watch: {
-    model: {
-      handler() {
-        Object.assign(this.entity, this.model);
+    /**
+     * Stage of proposal
+     *
+     * Converts value 'deputy:review' to Deputy review and vice versa.
+     */
+    stage: {
+      get() {
+        const stage = flow.stages.find(x => x.value === this.entity.stage);
+        return stage ? stage.title : '';
       },
-      deep: true
-    }
-  },
-  methods: {
-    onEditorChange({ html }) {
-      this.model.content = html;
-      this.validationTouch(this.$v.model.content);
-    },
-    onStageChanged(stage) {
-      this.model.stage = stage ? stage.value : undefined;
-      this.validationTouch(this.$v.model.stage);
+      set(stage) {
+        const f = flow.stages.find(x => x.title === stage);
+        if (f) { this.update({ stage: f.value }); }
+      }
     }
   }
 };

@@ -5,7 +5,8 @@
       :fields="['_id', 'path']"
       collection="zones"
       field="name"
-      @select="onSelected">
+      @select="selected">
+
       <template slot-scope="{option: { name, path }}">
         <div class="media">
           <div class="media-content">
@@ -39,14 +40,30 @@ export default {
     }
   },
   data() {
+    // Get parent zone
+    const zones = this.$store.getters['dashboard/zones/keyed'];
+    const parent = zones[this.value];
+    if (this.value && parent === undefined) {
+      // if parent is specified but not found
+      throw Error('No parent zone found');
+    }
+
+    // Return data
     return {
-      query: this.value
+      query: parent ? parent.name : ''
     };
   },
   methods: {
-    onSelected(data) {
-      this.$emit('input', data);
+    /**
+     * On zone selected from list
+     */
+    selected(data) {
+      this.$emit('input', data ? data._id : undefined);
     },
+
+    /**
+     * Highlight matches
+     */
     highlight(value) {
       const escaped = regex.escape(this.query);
       return value.replace(

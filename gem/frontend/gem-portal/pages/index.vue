@@ -23,8 +23,8 @@ export default {
     }
   },
   async fetch({ store }) {
-    await store.dispatch('dashboard/meetings/fetch');
-    await store.dispatch('dashboard/proposals/fetch');
+    await store.dispatch('dashboard/meetings/fetchPage', { max_results: 50 });
+    await store.dispatch('names/fetch', { collection: 'proposals', field: 'title' });
   }
 };
 </script>
