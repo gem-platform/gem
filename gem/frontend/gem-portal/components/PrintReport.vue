@@ -2,7 +2,9 @@
   <a
     :download="downloadName"
     :href="downloadUrl"
-    :class="{'is-loading': busy, 'is-success': downloadUrl}"
+    :class="{'is-loading': busy,
+             'is-success': downloadUrl,
+             'is-danger': error}"
     class="button is-fullwidth"
     @click="click">
     <span class="icon">
@@ -28,36 +30,49 @@ export default {
     url: {
       type: String,
       required: true
+    },
+    filename: {
+      type: String,
+      default() { return undefined; }
     }
   },
   data() {
     return {
       busy: false,
       downloadUrl: undefined,
-      downloadName: undefined
+      downloadName: undefined,
+      error: undefined
     };
   },
   computed: {
+    /**
+     * Gets title for button
+     */
     buttonTitle() {
-      return this.downloadUrl ? `Download ${this.title}` : this.title;
+      return this.downloadUrl
+        ? `Download "${this.title}"`
+        : this.error || this.title;
     }
   },
   methods: {
     async click() {
-      if (this.downloadUrl) {
-        return;
-      }
+      // report already generated and
+      // url to download it provided
+      if (this.downloadUrl) { return; }
 
-      this.busy = !this.busy;
+      // generate report
       try {
+        this.error = undefined;
+        this.busy = true;
         const res = await this.$axios.$get(this.url, {});
-        console.log(res);
 
         this.downloadUrl = `/downloads/${res.filename}`;
-        this.downloadName = res.filename;
-        this.busy = false;
+        this.downloadName = this.filename || res.filename;
       } catch (err) {
         this.notify('Report is not generated', 'is-danger');
+        this.error = err.message || 'Report is not generated';
+      } finally {
+        this.busy = false;
       }
     }
   }

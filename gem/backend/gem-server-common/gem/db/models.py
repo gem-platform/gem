@@ -143,7 +143,7 @@ class Meeting(GemDocument):
 # Zonal Assignments
 
 
-class Official(Document):
+class Official(GemDocument):
     meta = {'collection': 'officials'}
     name = StringField(required=True)
     form_of_address = StringField(db_field="formOfAddress", required=True)
@@ -174,7 +174,7 @@ class Official(Document):
         return self.name < other.name
 
 
-class Zone(Document):
+class Zone(GemDocument):
     meta = {'collection': 'zones'}
     name = StringField(required=True)
     parent = ReferenceField("Zone")

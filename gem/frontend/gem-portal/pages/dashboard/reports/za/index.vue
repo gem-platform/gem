@@ -1,8 +1,9 @@
 <template>
   <div>
     <PrintReport
-      title="Zonal Assignment Report"
-      url="office/zonal/report" />
+      title="Zonal Assignments Report"
+      url="office/zonal/report"
+      filename="Zonal Assignments Report.pdf" />
   </div>
 </template>
 
