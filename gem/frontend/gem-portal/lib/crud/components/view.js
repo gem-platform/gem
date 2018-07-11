@@ -1,5 +1,5 @@
-import proposals from '@/components/dashboard/proposals/id.vue';
-import laws from '@/components/dashboard/laws/id.vue';
+import proposals from '@/components/dashboard/view/proposals.vue';
+import laws from '@/components/dashboard/view/laws.vue';
 
 export default {
   proposals,
