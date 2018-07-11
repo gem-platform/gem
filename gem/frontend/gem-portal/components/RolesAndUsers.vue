@@ -6,7 +6,7 @@
     autocomplete
     icon="fas fa-angle-right"
     placeholder="Add a user or role"
-    @typing="onTyping">
+    @typing="typing">
     <template slot="empty">
       There are no items
     </template>
@@ -34,14 +34,14 @@ export default {
       this.$emit('input', val);
     }
   },
-  async beforeCreate() {
-    await this.$store.dispatch('dashboard/roles/fetch');
-    await this.$store.dispatch('dashboard/users/fetch');
-  },
   methods: {
-    onTyping(text) {
-      const { roles } = this.$store.state.dashboard.roles;
-      const { users } = this.$store.state.dashboard.users;
+    /**
+     * On typing
+     */
+    typing(text) {
+      let { roles, users } = this.$store.getters['names/get'];
+      roles = Object.keys(roles).map(_id => ({ _id, name: roles[_id] }));
+      users = Object.keys(users).map(_id => ({ _id, name: users[_id] }));
 
       const _users = users
         .filter(user => str.contains(user.name, text))

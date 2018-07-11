@@ -140,5 +140,54 @@ class Meeting(GemDocument):
         return list(result)
 
 
+# Zonal Assignments
+
+
+class Official(GemDocument):
+    meta = {'collection': 'officials'}
+    name = StringField(required=True)
+    form_of_address = StringField(db_field="formOfAddress", required=True)
+    email = StringField(db_field="email")
+    appendage = StringField()
+    secretary = BooleanField()
+    gbc = BooleanField()
+
+    def formal_name(self):
+        formats = {
+            "P": {"prefix": "", "postfix": " Das"},
+            "S": {"prefix": "", "postfix": " Svami"},
+            "G": {"prefix": "", "postfix": " Goswami"},
+            "D": {"prefix": "", "postfix": " Das Goswami"},
+            "B": {"prefix": "Bhakta ", "postfix": ""},
+            "M": {"prefix": "", "postfix": " Devi Dasi"},
+            "N": {"prefix": "", "postfix": ""},
+        }
+        name_format = formats.get(self.form_of_address, None)
+        if not name_format:
+            return self.name
+
+        return "{}{}{}{}".format(
+            name_format["prefix"], self.name, name_format["postfix"],
+            " (" + self.appendage + ")" if self.appendage else "")
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
+class Zone(GemDocument):
+    meta = {'collection': 'zones'}
+    name = StringField(required=True)
+    parent = ReferenceField("Zone")
+    officials = ListField(ReferenceField(Official))
+    path = ListField(StringField())
+
+    @property
+    def children(self):
+        return Zone.objects(parent=self)
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
 # signals
 signals.pre_save.connect(finalize_ballot, sender=Ballot)

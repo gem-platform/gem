@@ -1,0 +1,26 @@
+<style>
+    p {
+        margin-bottom: 0px;
+    }
+    ul {
+        margin-top: 0px;
+    }
+</style>
+
+{% for record in data %}
+    <h3>{{ record.name }}</h3>
+
+    {% for group in record.groups %}
+        {% if not group.with %}
+            <span>Zonal Secretary for:</span>
+        {% else %}
+            <span>Co-Zonal Secretary with {{ group.with | join(', ') }}:</span>
+        {% endif %}
+
+        <ul>
+        {% for zone in group.zones %}
+            <li>{{ zone }}</li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+{% endfor %}

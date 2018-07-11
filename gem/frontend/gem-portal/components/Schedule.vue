@@ -1,5 +1,18 @@
 <template>
   <div>
+    <b-message
+      v-if="partially.yes"
+      title="The data is partially displayed"
+      type="is-warning">
+      Only last {{ partially.count }} meetings are displayed
+    </b-message>
+
+    <b-message
+      v-if="empty"
+      type="is-warning">
+      No scheduled meetings
+    </b-message>
+
     <div
       v-for="(events, date) in schedule"
       :key="date">
@@ -54,12 +67,13 @@
           <!-- Join Button -->
           <transition name="fade">
             <div
-              v-if="event.active"
+              v-if="event.active || canManage"
               class="buttons is-centered">
               <nuxt-link
                 :to="'/meeting/'+event._id"
-                class="button is-primary is-fullwidth">
-                Join
+                :class="{'is-primary': !canManage || event.active}"
+                class="button is-fullwidth">
+                {{ joinButtonTitle(event) }}
               </nuxt-link>
             </div>
           </transition>
@@ -71,23 +85,26 @@
 </template>
 
 <script>
+import AuthMixin from '@/components/AuthMixin';
 import * as moment from 'moment';
 import _ from 'lodash';
 
 export default {
-  layout: 'portal',
   filters: {
     time(value) {
       return moment.utc(value).format('HH:mm');
     }
   },
+  mixins: [AuthMixin],
+  layout: 'portal',
   computed: {
     /**
      * Get list of events to display
      */
     schedule() {
-      const today = moment.utc().subtract(1, 'h'); // Subtract one hour in case meeting is little late
-      const allEvents = this.$store.getters['dashboard/meetings/all'];
+      // Subtract one hour in case meeting is little late
+      const today = moment.utc().subtract(1, 'h');
+      const allEvents = this.$store.getters['dashboard/meetings/list'];
 
       const schedule = allEvents.map(m => _.assign({}, m, {
         active: this.activeMeetings.includes(m._id),
@@ -95,24 +112,24 @@ export default {
         type: (m.proposals) ? 'meeting' : 'break',
         proposals: (m.proposals || []).map(id => ({
           _id: id,
-          title: this.proposals(id)[0].title,
+          title: this.proposalTitle(id),
           url: `/dashboard/proposals/${id}`
         }))
       }));
 
       return _
         .chain(schedule)
-        .filter(m => (moment.utc(m.start) >= today)) // todo: use da end instead?
+        .filter(m => (moment.utc(m.end) >= today))
         .sortBy('start')
         .groupBy('date')
         .value();
     },
 
     /**
-     * Return all proposals
+     * There is no any scheduled meeting.
      */
-    proposals() {
-      return this.$store.getters['dashboard/proposals/get'];
+    empty() {
+      return Object.keys(this.schedule).length <= 0;
     },
 
     /**
@@ -120,6 +137,21 @@ export default {
      */
     activeMeetings() {
       return this.$store.getters['meeting/status/active'];
+    },
+
+    /**
+     * Is data displayed partially?
+     */
+    partially() {
+      const meta = this.$store.getters['dashboard/meetings/meta'];
+      return { yes: meta.total > meta.perPage, count: meta.perPage };
+    },
+
+    /**
+     * Can user manage meeting?
+     */
+    canManage() {
+      return this.haveAccess('meeting.manage');
     }
   },
   mounted() {
@@ -134,10 +166,25 @@ export default {
   },
   methods: {
     /**
+     * Join button title
+     */
+    joinButtonTitle(event) {
+      return this.canManage && !event.active ? 'Start' : 'Join';
+    },
+
+    /**
      * On meeting status data received
      */
     onMeetingStatus(data) {
       this.$store.dispatch('meeting/status/set', data);
+    },
+
+    /**
+     * Get proposal title using specified ID
+     */
+    proposalTitle(id) {
+      const proposals = this.$store.getters['dashboard/proposals/keyed'];
+      return proposals[id] ? proposals[id].title : "<Proposal doesn't exist>";
     }
   }
 };

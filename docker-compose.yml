@@ -51,6 +51,9 @@ services:
       - gem-meeting-server:gem-meeting-server
       - gem-portal-client:gem-portal-client
       - gem-portal-server:gem-portal-server
+      - gem-office-server:gem-office-server
+    volumes:
+      - ./.data/shared/downloads:/usr/shared/downloads
     
 
   ##
@@ -97,6 +100,34 @@ services:
       - gem-database:gem-database
     volumes:
       - ./gem/backend/gem-portal-server:/usr/src/app
+
+  # Meeting server
+  gem-office-server:
+    image: gemplatform/gem-office-server
+    restart: always
+    build: ./gem/backend/gem-office-server
+    ports:
+      - "5001:5001"
+    expose:
+      - "5001"
+    env_file:
+      - environment.${GEM_ENV-dev}.env
+    links:
+      - gem-database:gem-database
+      - gem-pdf-printer:gem-pdf-printer
+    volumes:
+      - ./gem/backend/gem-office-server:/usr/src/app
+      - ./.data/shared/downloads:/usr/shared/downloads
+
+  # PDF Printer
+  gem-pdf-printer:
+    image: gemplatform/gem-pdf-printer
+    restart: always
+    build: ./gem/backend/gem-pdf-printer
+    ports:
+      - "4999:4999"
+    expose:
+      - "4999"
 
   ##
   ## APPS: FRONTEND

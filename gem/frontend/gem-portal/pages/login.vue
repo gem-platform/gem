@@ -36,10 +36,16 @@ export default {
     };
   },
   computed: {
+    /**
+     * Get list of all logins
+     */
     logins() {
-      // get names only form users
-      return this.$store.getters['dashboard/users/all'].map(x => x.name);
+      return Object.values(this.$store.getters['names/get'].users);
     },
+
+    /**
+     * Return background class
+     */
     background() {
       const { backgroundId } = this.$store.state.config;
       return `bg-${backgroundId}`;
@@ -49,6 +55,9 @@ export default {
     this.show = true;
   },
   methods: {
+    /**
+     * Login callback
+     */
     onLogin({ success }) {
       this.shake = !success;
       setTimeout(() => { this.shake = false; }, 1000);
@@ -59,9 +68,10 @@ export default {
     }
   },
   async fetch({ store }) {
-    // fetch all of the users to make autocomplete
-    // at login field possible
-    await store.dispatch('dashboard/users/fetch');
+    // fetch names of all users to make autocomple possible
+    await store.dispatch('names/fetch', {
+      collection: 'users', field: 'name'
+    });
   }
 };
 </script>
