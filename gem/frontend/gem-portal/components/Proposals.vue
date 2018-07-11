@@ -129,7 +129,7 @@ export default {
      */
     selected(data) {
       // Selected proposal already been added
-      if (data === null) { return; }
+      if (!data) { return; }
       if (this.selectedIds.includes(data._id)) { return; }
 
       // Add selected proposal
