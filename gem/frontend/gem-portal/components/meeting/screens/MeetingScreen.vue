@@ -39,7 +39,11 @@
         <div
           v-if="showProposal"
           class="box content">
-          <div v-html="proposal.content"/>
+          <ProposalReader
+            v-if="showProposalReader"/>
+          <div
+            v-else
+            v-html="proposal.content"/>
         </div>
       </div>
     </div>
@@ -47,6 +51,7 @@
 </template>
 
 <script>
+import ProposalReader from '@/components/meeting/ProposalReader.vue';
 import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
@@ -58,6 +63,7 @@ import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
 export default {
   name: 'MeetingScreen',
   components: {
+    ProposalReader,
     ControlPanel,
     StageViewPresenter,
     StageControlsPresenter,
@@ -111,6 +117,13 @@ export default {
     },
 
     /**
+     * Show proposal reader or content?
+     */
+    showProposalReader() {
+      return this.stageConfig.proposalReader === true;
+    },
+
+    /**
      * Show global contol panel or not?
      */
     showControlPanel() {
@@ -130,25 +143,47 @@ export default {
     stageConfig() {
       const type = this.stageType;
       const stages = {
-        ConnectedStage: { title: 'Connected' },
-        AgendaStage: { title: 'Agenda', view: true },
+        ConnectedStage: {
+          title: 'Connected'
+        },
+        AgendaStage: {
+          title: 'Agenda',
+          view: true
+        },
         AcquaintanceStage: {
-          title: 'Acquaintance', controls: true, view: true, type: true
+          title: 'Acquaintance',
+          controls: false,
+          view: true,
+          type: true,
+          proposalReader: true
         },
         BallotStage: {
-          title: 'Ballot', controls: true, view: true, type: true
+          title: 'Ballot',
+          controls: true,
+          view: true,
+          type: true
         },
         BallotResultsStage: {
-          title: 'Ballot results', view: true, type: true
+          title: 'Ballot results',
+          view: true,
+          type: true
         },
         DiscussionStage: {
-          title: 'Discussion', controls: true, view: true, type: true
+          title: 'Discussion',
+          controls: true,
+          view: true,
+          type: true
         },
         CommentsStage: {
-          title: 'Comments', controls: true, view: true, type: true
+          title: 'Comments',
+          controls: true,
+          view: true,
+          type: true
         },
         FinalStage: {
-          title: 'Final', controls: true, view: true
+          title: 'Final',
+          controls: true,
+          view: true
         }
       };
       return stages[type];

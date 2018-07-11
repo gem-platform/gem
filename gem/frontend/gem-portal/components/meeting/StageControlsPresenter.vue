@@ -4,7 +4,6 @@
 
 <script>
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
-import AcquaintanceControls from '@/components/meeting/stages/controls/AcquaintanceControls.vue';
 import BallotControls from '@/components/meeting/stages/controls/BallotControls.vue';
 import CommentsControls from '@/components/meeting/stages/controls/CommentsControls.vue';
 import DiscussionControls from '@/components/meeting/stages/controls/DiscussionControls.vue';
@@ -13,7 +12,6 @@ import FinalControls from '@/components/meeting/stages/controls/FinalControls.vu
 export default {
   name: 'StageControlsPresenter',
   components: {
-    AcquaintanceControls,
     BallotControls,
     CommentsControls,
     DiscussionControls,
