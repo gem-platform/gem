@@ -61,12 +61,13 @@
           <!-- Join Button -->
           <transition name="fade">
             <div
-              v-if="event.active"
+              v-if="event.active || canManage"
               class="buttons is-centered">
               <nuxt-link
                 :to="'/meeting/'+event._id"
-                class="button is-primary is-fullwidth">
-                Join
+                :class="{'is-primary': !canManage || event.active}"
+                class="button is-fullwidth">
+                {{ joinButtonTitle(event) }}
               </nuxt-link>
             </div>
           </transition>
@@ -78,16 +79,18 @@
 </template>
 
 <script>
+import AuthMixin from '@/components/AuthMixin';
 import * as moment from 'moment';
 import _ from 'lodash';
 
 export default {
-  layout: 'portal',
   filters: {
     time(value) {
       return moment.utc(value).format('HH:mm');
     }
   },
+  mixins: [AuthMixin],
+  layout: 'portal',
   computed: {
     /**
      * Get list of events to display
@@ -129,6 +132,13 @@ export default {
     partially() {
       const meta = this.$store.getters['dashboard/meetings/meta'];
       return { yes: meta.total > meta.perPage, count: meta.perPage };
+    },
+
+    /**
+     * Can user manage meeting?
+     */
+    canManage() {
+      return this.haveAccess('meeting.manage');
     }
   },
   mounted() {
@@ -142,6 +152,13 @@ export default {
     this.$socket.off('meetings_status', this.onMeetingStatus);
   },
   methods: {
+    /**
+     * Join button title
+     */
+    joinButtonTitle(event) {
+      return this.canManage && !event.active ? 'Start' : 'Join';
+    },
+
     /**
      * On meeting status data received
      */
