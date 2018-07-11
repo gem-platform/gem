@@ -13,6 +13,8 @@
 
 <script>
 import Schedule from '@/components/Schedule.vue';
+import * as moment from 'moment';
+import _ from 'lodash';
 
 export default {
   layout: 'portal',
@@ -23,8 +25,26 @@ export default {
     }
   },
   async fetch({ store }) {
-    await store.dispatch('dashboard/meetings/fetchPage', { max_results: 50 });
-    await store.dispatch('names/fetch', { collection: 'proposals', field: 'title' });
+    const now = moment.utc().subtract(1, 'h');
+
+    // Fetch list of meetings to be displayed at page
+    const meetings = await store.dispatch('dashboard/meetings/fetchPage', {
+      max_results: 50,
+      where: {
+        start: { $gte: now.toISOString() }
+      }
+    });
+
+    // Fetch related proposals if required
+    const proposalIds = _
+      .chain(meetings._items)
+      .map(m => m.proposals)
+      .filter(ids => ids !== undefined)
+      .flatten()
+      .value();
+    if (proposalIds && proposalIds.length > 0) {
+      await store.dispatch('dashboard/proposals/fetchList', proposalIds);
+    }
   }
 };
 </script>

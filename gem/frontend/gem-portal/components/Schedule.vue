@@ -7,6 +7,12 @@
       Only last {{ partially.count }} meetings are displayed
     </b-message>
 
+    <b-message
+      v-if="empty"
+      type="is-warning">
+      No scheduled meetings
+    </b-message>
+
     <div
       v-for="(events, date) in schedule"
       :key="date">
@@ -97,7 +103,7 @@ export default {
      */
     schedule() {
       // Subtract one hour in case meeting is little late
-      // const today = moment.utc().subtract(1, 'h');
+      const today = moment.utc().subtract(1, 'h');
       const allEvents = this.$store.getters['dashboard/meetings/list'];
 
       const schedule = allEvents.map(m => _.assign({}, m, {
@@ -113,10 +119,17 @@ export default {
 
       return _
         .chain(schedule)
-        // .filter(m => (moment.utc(m.end) >= today))
+        .filter(m => (moment.utc(m.end) >= today))
         .sortBy('start')
         .groupBy('date')
         .value();
+    },
+
+    /**
+     * There is no any scheduled meeting.
+     */
+    empty() {
+      return Object.keys(this.schedule).length <= 0;
     },
 
     /**
@@ -170,8 +183,8 @@ export default {
      * Get proposal title using specified ID
      */
     proposalTitle(id) {
-      const proposalTitles = this.$store.getters['names/get'].proposals;
-      return proposalTitles[id] || "<Proposal doesn't exist>";
+      const proposals = this.$store.getters['dashboard/proposals/keyed'];
+      return proposals[id] ? proposals[id].title : "<Proposal doesn't exist>";
     }
   }
 };
