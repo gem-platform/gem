@@ -31,6 +31,12 @@ export default (options) => {
         Vue.set(state.paginated, page, entities);
       },
 
+      unset(state, value) {
+        value.forEach((x) => {
+          Vue.set(state.items, x._id, undefined);
+        });
+      },
+
       update(state, data) {
         Object.assign(state.items[data._id], data);
       }
@@ -113,6 +119,11 @@ export default (options) => {
         } else {
           await this.$axios.$post(api, data);
         }
+      },
+
+      async remove({ commit }, data) {
+        await this.$axios.$delete(`${api}/${data.id}`);
+        commit('unset', [{ _id: data.id }]);
       }
     },
 
