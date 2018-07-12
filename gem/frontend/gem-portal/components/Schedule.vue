@@ -67,7 +67,7 @@
           <!-- Join Button -->
           <transition name="fade">
             <div
-              v-if="event.active || canManage"
+              v-if="event.type == 'meeting' && (event.active || canManage)"
               class="buttons is-centered">
               <nuxt-link
                 :to="'/meeting/'+event._id"
