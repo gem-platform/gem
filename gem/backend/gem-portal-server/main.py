@@ -28,8 +28,8 @@ CORS(app)
 
 # register model hooks
 app.on_replace_users += mh.user_replace_password
-app.on_replace_zones += mh.zone_update_path
-app.on_insert_zones += mh.zone_update_path_items
+app.on_replaced_zones += mh.zone_update_path
+app.on_inserted_zones += mh.zone_update_path_items
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

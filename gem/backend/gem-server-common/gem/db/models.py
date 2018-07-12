@@ -5,7 +5,7 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DateTimeField, GenericReferenceField,
                          EmbeddedDocumentListField)
 
-from gem.db.signals import finalize_ballot
+from gem.db.signals import finalize_ballot, update_cached_fields
 
 
 class OpForbidden(Exception):
@@ -181,6 +181,8 @@ class Zone(GemDocument):
     officials = ListField(ReferenceField(Official))
     path = ListField(StringField())
 
+    cachedOfficials = ListField(ReferenceField(Official))
+
     @property
     def children(self):
         return Zone.objects(parent=self)
@@ -191,3 +193,4 @@ class Zone(GemDocument):
 
 # signals
 signals.pre_save.connect(finalize_ballot, sender=Ballot)
+signals.pre_save.connect(update_cached_fields, sender=Zone)

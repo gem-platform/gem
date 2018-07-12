@@ -34,6 +34,10 @@ export default {
     filename: {
       type: String,
       default() { return undefined; }
+    },
+    params: {
+      type: Object,
+      default() { return {}; }
     }
   },
   data() {
@@ -58,13 +62,16 @@ export default {
     async click() {
       // report already generated and
       // url to download it provided
-      if (this.downloadUrl) { return; }
+      if (this.downloadUrl) {
+        this.downloadUrl = undefined;
+        return;
+      }
 
       // generate report
       try {
         this.error = undefined;
         this.busy = true;
-        const res = await this.$axios.$get(this.url, {});
+        const res = await this.$axios.$get(this.url, { params: this.params });
 
         this.downloadUrl = `/downloads/${res.filename}`;
         this.downloadName = this.filename || res.filename;

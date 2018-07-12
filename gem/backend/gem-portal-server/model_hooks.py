@@ -1,4 +1,6 @@
+from bson import ObjectId
 from flask import current_app
+from gem.db.models import Zone
 
 
 def user_replace_password(item, original):
@@ -18,9 +20,12 @@ def __get_parents_path(zone, result):
 
 
 def zone_update_path(item, original):
-    item["path"] = __get_parents_path(item, [])
+    zone = Zone.objects.get(id=ObjectId(item["_id"]))
+    zone.save()  # call mongoengine hooks
 
 
 def zone_update_path_items(items):
     for item in items:
-        item["path"] = __get_parents_path(item, [])
+        zone = Zone.objects.get(id=ObjectId(item["_id"]))
+        zone.save()  # call mongoengine hooks
+

@@ -2,7 +2,7 @@ from os import environ
 from io import BytesIO
 from uuid import uuid4
 from requests import post
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from mongoengine import connect
 
 from reports.za import zonal_assignments_report
@@ -33,9 +33,12 @@ def print_and_save(content):
 
 @app.route('/office/zonal/report', methods=['GET'])
 def generate_zonal_report():
-    report = zonal_assignments_report()
+    hierarchy = request.args.get("hierarchy") in ["true", 1]
+    leafs_only = request.args.get("leafsOnly") in ["true", 1]
+
+    report = zonal_assignments_report(hierarchy=hierarchy, leafs_only=leafs_only)
     filename = print_and_save(report)
-    return jsonify({"success": True, "filename": filename})
+    return jsonify({"success": True, "filename": filename, "hierarchy": hierarchy})
 
 
 if __name__ == '__main__':

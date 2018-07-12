@@ -1,9 +1,27 @@
 <template>
-  <div>
-    <PrintReport
-      title="Zonal Assignments Report"
-      url="office/zonal/report"
-      filename="Zonal Assignments Report.pdf" />
+  <div class="notification">
+    <p class="title">Zonal assignments report</p>
+    <b-field label="Hierarchy">
+      <b-switch
+        v-model="hierarchy">
+        Display the hierarchy of zones.
+      </b-switch>
+    </b-field>
+
+    <b-field label="Leafs">
+      <b-switch
+        v-model="leafsOnly">
+        Display only last nodes of tree.
+      </b-switch>
+    </b-field>
+
+    <b-field>
+      <PrintReport
+        :params="params"
+        title="Zonal Assignments Report"
+        url="office/zonal/report"
+        filename="Zonal Assignments Report.pdf"/>
+    </b-field>
   </div>
 </template>
 
@@ -12,7 +30,18 @@ import PrintReport from '@/components/PrintReport.vue';
 
 export default {
   layout: 'dashboard',
-  components: { PrintReport }
+  components: { PrintReport },
+  data() {
+    return {
+      hierarchy: false,
+      leafsOnly: true
+    };
+  },
+  computed: {
+    params() {
+      return { hierarchy: this.hierarchy, leafsOnly: this.leafsOnly };
+    }
+  }
 };
 </script>
 
