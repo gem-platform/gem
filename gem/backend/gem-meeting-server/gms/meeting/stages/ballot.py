@@ -1,4 +1,5 @@
 from gms.meeting.stages import MeetingStage
+from gem.db import OpForbidden
 
 
 class BallotMeetingStage(MeetingStage):
@@ -27,6 +28,9 @@ class BallotMeetingStage(MeetingStage):
         """
         return self.__ballot
 
+    def _switch_from(self):
+        self.__ballot.save()
+
     def vote(self, user, value):
         """
         Commit specified vote of specified user.
@@ -35,7 +39,9 @@ class BallotMeetingStage(MeetingStage):
             user {User} -- User
             value {str} -- Value
         """
-        self.__ballot.set(user, value)
-        self.changed.notify()
-        self.__ballot.save()  # todo: performance fix: save on exit from stage
-
+        try:
+            self.__ballot.set(user, value)
+            self.changed.notify()
+            return (True, "Accepted")
+        except OpForbidden as exc:
+            return (False, str(exc))

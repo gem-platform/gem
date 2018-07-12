@@ -1,14 +1,17 @@
 <template>
   <div class="content">
-    <div class="field is-grouped is-grouped-multiline">
+    <div
+      v-if="canEdit"
+      class="field is-grouped is-grouped-multiline">
+
       <p class="control">
         <nuxt-link
-          :to="editUrl(entity._id)"
+          :to="linkToEdit(entity._id)"
           class="button is-light">Edit</nuxt-link>
       </p>
       <p class="control">
         <nuxt-link
-          :to="deleteUrl"
+          :to="linkToDelete(entity._id)"
           class="button is-light">Delete</nuxt-link>
       </p>
     </div>
@@ -20,17 +23,31 @@
 </template>
 
 <script>
-import CrudComponentMixin from '@/components/CrudComponentMixin';
-import CrudComponents from '@/lib/crud/components';
+import CrudViewComponents from '@/lib/crud/components/view';
+import AuthMixin from '@/components/AuthMixin';
+import CrudLinksComponentMixin from '@/components/CrudLinksComponentMixin';
 
 export default {
   layout: 'dashboard',
-  components: CrudComponents.id,
-  mixins: [CrudComponentMixin],
+  components: CrudViewComponents,
+  mixins: [AuthMixin, CrudLinksComponentMixin],
   computed: {
+    id() {
+      return this.$route.params.id;
+    },
     component() {
       return this.$route.params.entities;
+    },
+    entity() {
+      return this.$store.getters[`dashboard/${this.component}/keyed`][this.id];
+    },
+    canEdit() {
+      return this.haveAccess(`${this.component}.edit`);
     }
+  },
+  async fetch(opt) {
+    const method = `dashboard/${opt.params.entities}/fetchOne`;
+    await opt.store.dispatch(method, opt.params.id);
   }
 };
 </script>

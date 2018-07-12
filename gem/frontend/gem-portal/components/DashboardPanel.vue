@@ -47,6 +47,43 @@
           active-class="is-active">Roles</nuxt-link>
       </li>
     </ul>
+
+    <p
+      v-if="showAdministrationSection"
+      class="menu-label">
+      Zonal Assignments
+    </p>
+
+    <ul
+      v-if="showAdministrationSection"
+      class="menu-list">
+      <li v-if="haveAccess('za.officials')">
+        <nuxt-link
+          to="/dashboard/officials"
+          active-class="is-active">Officials</nuxt-link>
+      </li>
+      <li v-if="haveAccess('za.zones')">
+        <nuxt-link
+          to="/dashboard/zones"
+          active-class="is-active">Zones</nuxt-link>
+      </li>
+    </ul>
+
+    <p
+      v-if="showAdministrationSection"
+      class="menu-label">
+      Reports
+    </p>
+
+    <ul
+      v-if="showAdministrationSection"
+      class="menu-list">
+      <li v-if="haveAccess('za')">
+        <nuxt-link
+          to="/dashboard/reports/za"
+          active-class="is-active">Zonal Assignments</nuxt-link>
+      </li>
+    </ul>
   </aside>
 </template>
 

@@ -2,15 +2,12 @@
   <div>
     <!-- Search proposal field -->
     <div class="field">
-      <b-autocomplete
+      <Autocomplete
         v-model="query"
-        :data="searchResults"
+        :fields="['_id', 'title', 'stage']"
+        collection="proposals"
         field="title"
-        placeholder="Search proposal by title or index"
-        icon="fas fa-search"
-        @select="onSelected">
-        <template slot="empty">No results found</template>
-      </b-autocomplete>
+        @select="selected"/>
     </div>
 
     <!-- List of selected proposals -->
@@ -42,7 +39,7 @@
               class="icon">
               <i
                 class="fa fa-angle-up"
-                @click="moveUp(index)"/>
+                @click="up(index)"/>
             </span>
 
             <!-- Move proposal down button -->
@@ -50,7 +47,7 @@
               class="icon disabled">
               <i
                 class="fa fa-angle-down"
-                @click="moveDown(index)"/>
+                @click="down(index)"/>
             </span>
 
             <!-- Remove proposal from list button -->
@@ -68,11 +65,14 @@
 </template>
 
 <script>
-import str from '@/lib/string';
+import Autocomplete from '@/components/Autocomplete.vue';
 import arr from '@/lib/array';
 import flow from '@/lib/flow';
 
 export default {
+  components: {
+    Autocomplete
+  },
   filters: {
     stage(value) {
       const stage = flow.stages.find(s => s.value === value);
@@ -80,58 +80,61 @@ export default {
     }
   },
   props: {
-    // Array of proposals to search in
-    proposals: {
-      type: Array,
-      required: true
-    },
     // Array of selected proposal IDs
-    selected: {
+    value: {
       type: Array,
-      required: false,
       default: () => []
     }
   },
   data() {
+    const proposals = this.$store.getters['dashboard/proposals/keyed'];
+
     return {
       query: '', // Search query
-      list: [] // Array of selected proposals (object)
+      list: this.value.map(id => proposals[id])
     };
   },
   computed: {
-    searchResults() {
-      return this.proposals.filter(p =>
-        str.contains(p.title, this.query) ||
-        str.contains(p.index, this.query));
+    selectedIds() {
+      return this.list.map(x => x._id);
     }
-  },
-  watch: {
-    list() {
-      this.$emit('change', this.list.map(p => p._id));
-    }
-  },
-  created() {
-    // Convert list of selected ids to list of proposals (keeping order)
-    this.list = this.selected.map(id => this.proposals.find(p => p._id === id));
   },
   methods: {
-    moveUp(index) {
+    /**
+     * Move proposal up
+     */
+    up(index) {
       arr.move(this.list, index, index - 1);
+      this.$emit('input', this.selectedIds);
     },
-    moveDown(index) {
+
+    /**
+     * Move proposal down
+     */
+    down(index) {
       arr.move(this.list, index, index + 1);
+      this.$emit('input', this.selectedIds);
     },
+
+    /**
+     * Remove proposal
+     */
     remove(index) {
       arr.removeIndex(this.list, index);
+      this.$emit('input', this.selectedIds);
     },
-    onSelected(data) {
+
+    /**
+     * On proposal selected
+     */
+    selected(data) {
       // Selected proposal already been added
-      const selectedIds = this.list.map(x => x._id);
-      if (data === null) { return; }
-      if (selectedIds.includes(data._id)) { return; }
+      if (!data) { return; }
+      if (this.selectedIds.includes(data._id)) { return; }
 
       // Add selected proposal
       this.list.push(data);
+      this.$emit('input', this.selectedIds);
       this.query = '';
     }
   }

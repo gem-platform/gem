@@ -14,8 +14,8 @@
     <!-- Search results -->
     <div
       v-for="r in results"
-      :key="r.id"
-      class="content">
+      :key="r._id"
+      class="notification is-grey content">
 
       <!-- Law title -->
       <nuxt-link :to="r.url">
@@ -23,13 +23,7 @@
       </nuxt-link>
 
       <!-- Search highlights -->
-      <ul>
-        <li
-          v-for="(h, id) in r.highlights"
-          :key="id">
-          <span v-html="h"/>
-        </li>
-      </ul>
+      <span v-html="r.highlights"/>
     </div>
   </div>
 </template>
@@ -51,10 +45,10 @@ export default {
       const res = await this.$axios.$get(`${SEARCH_API}${this.query}`);
 
       // map search results
-      this.results = res.hits.hits.map(x => ({
-        id: x._id,
-        title: (x.highlight.title && x.highlight.title[0]) || x._source.title,
-        highlights: x.highlight.content,
+      this.results = res.map(x => ({
+        _id: x._id,
+        title: x.title,
+        highlights: x.highlights,
         url: `/dashboard/laws/${x._id}`
       }));
     }

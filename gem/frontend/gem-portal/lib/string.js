@@ -1,6 +1,7 @@
 export default {
   contains(string, match) {
-    return string.toString()
+    return (string || '')
+      .toString()
       .toLowerCase()
       .indexOf(match.toLowerCase()) >= 0;
   }

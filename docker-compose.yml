@@ -1,3 +1,9 @@
+# Start for specified environment:
+# sudo GEM_ENV=staging docker-compose up -d
+#
+# dev is default, so for development just run:
+# sudo docker-compose up
+
 version: '3'
 services:
   ##
@@ -9,33 +15,46 @@ services:
   gem-database:
     image: gemplatform/gem-database
     restart: always
-    image: mongo:latest
+    build: ./gem/backend/gem-database
     volumes:
       - ./.data/db:/data/db
     ports:
       - "27017:27017"
+    env_file:
+      - environment.${GEM_ENV-dev}.env
 
-  gem-elastic-search:
-    image: gemplatform/gem-elastic-search
+  gem-search:
+    image: gemplatform/gem-search
     restart: "no"
-    build: ./gem/backend/gem-elastic-search
-    environment:
-      - ELASTIC_PASSWORD=elastic
-    volumes:
-      - ./.data/es:/usr/share/elasticsearch/data
+    build: ./gem/backend/gem-search
+    env_file:
+      - environment.${GEM_ENV-dev}.env
     ports:
-      - 9200:9200
+      - 9306:9306
+      - 9312:9312
+    links:
+      - gem-database:gem-database
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
   gem-web:
     image: gemplatform/gem-web
     restart: always
-    build: ./gem/frontend/gem-web/
+    build: 
+      context: ./gem/frontend/gem-web
+      args:
+        env: ${GEM_ENV-dev}
     ports:
       - "80:80"
+      - "443:443"
     links:
       - gem-meeting-server:gem-meeting-server
+      - gem-portal-client:gem-portal-client
+      - gem-portal-server:gem-portal-server
+      - gem-office-server:gem-office-server
+    volumes:
+      - ./.data/shared/downloads:/usr/shared/downloads
+    
 
   ##
   ## IMAGES
@@ -59,8 +78,8 @@ services:
       - "8090:8090"
     expose:
       - "8090"
-    environment:
-      - DB_HOST=gem-database
+    env_file:
+      - environment.${GEM_ENV-dev}.env
     links:
       - gem-database:gem-database
     volumes:
@@ -75,13 +94,40 @@ services:
       - "5000:5000"
     expose:
       - "5000"
-    environment:
-      - DB_HOST=gem-database
-      - ES_HOST=gem-elastic-search
+    env_file:
+      - environment.${GEM_ENV-dev}.env
     links:
       - gem-database:gem-database
     volumes:
       - ./gem/backend/gem-portal-server:/usr/src/app
+
+  # Meeting server
+  gem-office-server:
+    image: gemplatform/gem-office-server
+    restart: always
+    build: ./gem/backend/gem-office-server
+    ports:
+      - "5001:5001"
+    expose:
+      - "5001"
+    env_file:
+      - environment.${GEM_ENV-dev}.env
+    links:
+      - gem-database:gem-database
+      - gem-pdf-printer:gem-pdf-printer
+    volumes:
+      - ./gem/backend/gem-office-server:/usr/src/app
+      - ./.data/shared/downloads:/usr/shared/downloads
+
+  # PDF Printer
+  gem-pdf-printer:
+    image: gemplatform/gem-pdf-printer
+    restart: always
+    build: ./gem/backend/gem-pdf-printer
+    ports:
+      - "4999:4999"
+    expose:
+      - "4999"
 
   ##
   ## APPS: FRONTEND
@@ -102,7 +148,5 @@ services:
     volumes:
       - ./gem/frontend/gem-portal:/usr/src/app
       - /usr/src/app/node_modules
-    environment:
-      - API_URL_BROWSER=/
-      - API_HOST=gem-portal-server
-      - API_PORT=5000
+    env_file:
+      - environment.${GEM_ENV-dev}.env

@@ -17,11 +17,27 @@
 </template>
 
 <script>
-import CrudComponentMixin from '@/components/CrudComponentMixin';
-
 export default {
+  data() {
+    return {
+      busy: false
+    };
+  },
   layout: 'dashboard',
-  mixins: [CrudComponentMixin]
+  methods: {
+    async remove() {
+      try {
+        this.busy = true;
+        const id = this.entity._id;
+        await this.$store.dispatch(this._storeMethod('remove'), { id });
+
+        this.$router.push(this._url());
+        this.$snackbar.open({ message: 'Record has been deleted' });
+      } finally {
+        this.busy = false;
+      }
+    }
+  }
 };
 </script>
 

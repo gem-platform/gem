@@ -1,4 +1,4 @@
-FROM python:3
+FROM python:slim
 
 # install basic requirements
 WORKDIR /usr/src/app
@@ -12,6 +12,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 # volumes: - ./gem/gem-meeting-server:/usr/src/app
 WORKDIR /usr/src/gem-server-common
 COPY . .
+RUN pip install --no-cache-dir .
 
 # well done
 CMD [ "true" ]

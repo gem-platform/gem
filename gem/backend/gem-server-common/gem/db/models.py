@@ -5,8 +5,11 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DateTimeField, GenericReferenceField,
                          EmbeddedDocumentListField)
 
-from gem.db.signals import make_ballot_secret
+from gem.db.signals import finalize_ballot, update_cached_fields
 
+
+class OpForbidden(Exception):
+    pass
 
 class GemDocument(Document):
     meta = {
@@ -57,10 +60,14 @@ class User(GemDocument):
         permissions = chain.from_iterable([r.permissions for r in self.roles])
         return list(set(permissions))
 
+    def have_permission(self, permission):
+        return (permission in self.permissions) or ("*" in self.permissions)
+
 
 class BallotRecord(EmbeddedDocument):
     user = ReferenceField(User)
     value = StringField()
+    roles = ListField(ReferenceField(Role))
 
 
 class Ballot(Document):
@@ -70,16 +77,19 @@ class Ballot(Document):
     secret = BooleanField()
     votes = ListField(EmbeddedDocumentField(BallotRecord))
     proposal = ReferenceField(Proposal)
+    finished = BooleanField()
 
     def __init__(self, proposal=None, **data):
         super().__init__(**data)
         self.proposal = proposal
 
     def set(self, user, value):
-        # self.votes[user.id] = value
+        if self.finished:
+            raise OpForbidden("Ballot is finished already.")
         record = self.__get(user) or BallotRecord()
         record.user = user
         record.value = value
+        record.roles = user.roles.copy()
         if record not in self.votes:
             self.votes.append(record)
 
@@ -130,5 +140,57 @@ class Meeting(GemDocument):
         return list(result)
 
 
+# Zonal Assignments
+
+
+class Official(GemDocument):
+    meta = {'collection': 'officials'}
+    name = StringField(required=True)
+    form_of_address = StringField(db_field="formOfAddress", required=True)
+    email = StringField(db_field="email")
+    appendage = StringField()
+    secretary = BooleanField()
+    gbc = BooleanField()
+
+    def formal_name(self):
+        formats = {
+            "P": {"prefix": "", "postfix": " Das"},
+            "S": {"prefix": "", "postfix": " Svami"},
+            "G": {"prefix": "", "postfix": " Goswami"},
+            "D": {"prefix": "", "postfix": " Das Goswami"},
+            "B": {"prefix": "Bhakta ", "postfix": ""},
+            "M": {"prefix": "", "postfix": " Devi Dasi"},
+            "N": {"prefix": "", "postfix": ""},
+        }
+        name_format = formats.get(self.form_of_address, None)
+        if not name_format:
+            return self.name
+
+        return "{}{}{}{}".format(
+            name_format["prefix"], self.name, name_format["postfix"],
+            " (" + self.appendage + ")" if self.appendage else "")
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
+class Zone(GemDocument):
+    meta = {'collection': 'zones'}
+    name = StringField(required=True)
+    parent = ReferenceField("Zone")
+    officials = ListField(ReferenceField(Official))
+    path = ListField(StringField())
+
+    cachedOfficials = ListField(ReferenceField(Official))
+
+    @property
+    def children(self):
+        return Zone.objects(parent=self)
+
+    def __lt__(self, other):
+        return self.name < other.name
+
+
 # signals
-signals.pre_save.connect(make_ballot_secret, sender=Ballot)
+signals.pre_save.connect(finalize_ballot, sender=Ballot)
+signals.pre_save.connect(update_cached_fields, sender=Zone)

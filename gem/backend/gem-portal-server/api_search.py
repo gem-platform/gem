@@ -1,58 +1,29 @@
 import os
-
+from bson import ObjectId
 from flask import Blueprint, jsonify, request, current_app
-from elasticsearch import Elasticsearch
-from misc import remove_html_tags
+import sphinxapi
+
 
 api_search = Blueprint('api_search', __name__)
 db_host = os.environ.get('ES_HOST', "localhost")
-es = Elasticsearch([db_host])
+c = sphinxapi.SphinxClient()
+c.SetServer(db_host)
 
 
 @api_search.route("/api/laws/search", methods=["GET"])
 def laws_search():
+    response = []
     query = request.args.get("query", "")
-    result = es.search(index="gem", body={
-        "query": {
-            "multi_match": {
-                "query": query,
-                "fuzziness": "AUTO",
-                "fields": ["title", "content"]
-            }
-        },
-        "highlight": {
-            "fields": {
-                "content": {},
-                "title": {}
-            }
-        }
-    })
-    return jsonify(result)
+    search_result = c.Query(query)
 
-
-@api_search.route("/api/laws/rebuild_index", methods=["GET"])
-def update_laws_index():
-    es.indices.delete(index='gem')
-    laws = current_app.data.driver.db["laws"].find({})
-    for law in list(laws):
-        law_id = str(law["_id"])
-        es.index(index="gem", doc_type="law", id=law_id, body={
-            "title": law["title"],
-            "content": remove_html_tags(law["content"])
+    for match in search_result["matches"]:
+        proposal_id = match["attrs"]["_id"]
+        proposal = current_app.data.driver.db["laws"].find_one({"_id": ObjectId(proposal_id)})
+        a = c.BuildExcerpts([proposal["content"]], 'mongo', query, {"limit": 1024})
+        response.append({
+            "_id": str(proposal["_id"]),
+            "title": proposal["title"],
+            "highlights": a[0]
         })
 
-    return jsonify({"success": True})
-
-
-# def on_inserted_laws(items):
-#     db_host = os.environ.get('ES_HOST', "localhost")
-#     es = Elasticsearch([db_host])
-
-#     for item in items:
-#         item2 = item.copy()
-#         item2["content"] = remove_html_tags(item2["content"])
-#         item2["mongo_id"] = str(item2["_id"])
-#         del item2["_id"]
-#         es.index(index="gem", doc_type="law", id=item["index"], body=item2)
-
-# app.on_inserted_laws += on_inserted_laws
+    return jsonify(response)

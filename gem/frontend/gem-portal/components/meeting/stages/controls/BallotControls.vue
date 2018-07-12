@@ -55,14 +55,13 @@
 </template>
 
 <script>
-import com from '@/lib/communication';
 import AuthMixin from '@/components/AuthMixin';
-import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import NotificationMixin from '@/components/NotificationMixin';
+import CommunicationMixin from '@/components/CommunicationMixin';
 
 export default {
   name: 'BallotStageControls',
-  mixins: [AuthMixin, StageStateMixin, NotificationMixin],
+  mixins: [AuthMixin, NotificationMixin, CommunicationMixin],
   data() {
     return {
       voteCommited: false,
@@ -89,12 +88,12 @@ export default {
      * Commit a vote
      */
     async vote(value) {
-      const res = await com.send('vote', { value });
-      if (res.success) {
+      try {
+        await this.send('vote', { value });
         this.notify('Your vote has been accepted');
         this.voteCommited = true;
-      } else {
-        this.notify(res.message, 'is-danger');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
       }
     },
 
@@ -109,12 +108,11 @@ export default {
      * Set ballot secret value
      */
     async changeSecret(value) {
-      this.isSecret = value;
-      const res = await com.send('ballot_secret', { value });
-      if (res.success) {
+      try {
+        await this.send('ballot_secret', { value });
         this.notify('Ballot secret state changed');
-      } else {
-        this.notify(res.message, 'is-danger');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
       }
     }
   }

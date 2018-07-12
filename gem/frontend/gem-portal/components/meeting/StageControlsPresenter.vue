@@ -1,27 +1,29 @@
 <template>
-  <component :is="controlType"/>
+  <component :is="componentType"/>
 </template>
 
 <script>
-import AcquaintanceControls from './stages/controls/AcquaintanceControls.vue';
-import BallotControls from './stages/controls/BallotControls.vue';
-import CommentsControls from './stages/controls/CommentsControls.vue';
-import DiscussionControls from './stages/controls/DiscussionControls.vue';
-import FinalControls from './stages/controls/FinalControls.vue';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import BallotControls from '@/components/meeting/stages/controls/BallotControls.vue';
+import CommentsControls from '@/components/meeting/stages/controls/CommentsControls.vue';
+import DiscussionControls from '@/components/meeting/stages/controls/DiscussionControls.vue';
+import FinalControls from '@/components/meeting/stages/controls/FinalControls.vue';
 
 export default {
   name: 'StageControlsPresenter',
   components: {
-    AcquaintanceControls,
     BallotControls,
     CommentsControls,
     DiscussionControls,
     FinalControls
   },
+  mixins: [StageStateMixin],
   computed: {
-    controlType() {
-      const stage = this.$store.getters['meeting/stage/type'];
-      const shortType = stage.replace('Stage', '');
+    /**
+     * Return component type to render
+     */
+    componentType() {
+      const shortType = this.stageType.replace('Stage', '');
       return `${shortType}Controls`;
     }
   }

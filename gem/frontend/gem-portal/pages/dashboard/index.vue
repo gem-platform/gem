@@ -1,5 +1,12 @@
 <template>
   <div>
+    <b-message
+      v-if="partially.yes"
+      title="The data is partially displayed"
+      type="is-warning">
+      Only last {{ partially.count }} meetings are displayed
+    </b-message>
+
     <!-- Editable switch -->
     <div class="field">
       <b-switch v-model="editable">
@@ -107,7 +114,7 @@ import _ from 'lodash';
 export default {
   layout: 'dashboard',
   data() {
-    const events = this.$store.getters['dashboard/meetings/all'].map(m => ({
+    const events = this.$store.getters['dashboard/meetings/list'].map(m => ({
       _id: m._id,
       title: m.title,
       date: moment.utc(m.start).format('YYYY/MM/DD'),
@@ -129,6 +136,10 @@ export default {
     },
     eventsByDate() {
       return _.groupBy(this.events, 'date');
+    },
+    partially() {
+      const meta = this.$store.getters['dashboard/meetings/meta'];
+      return { yes: meta.total > meta.perPage, count: meta.perPage };
     }
   },
   methods: {
@@ -247,10 +258,11 @@ export default {
           data.end = moment.utc(`${date} ${event.end} +0000`, 'YYYY/MM/DD HH:mm Z').toDate();
 
           if (!isNew) {
-            this.$store.dispatch('dashboard/meetings/mutate', data);
+            this.$store.dispatch('dashboard/meetings/update', data);
+            this.$store.dispatch('dashboard/meetings/save', data);
           } else {
             delete data._id;
-            this.$store.dispatch('dashboard/meetings/create', data);
+            this.$store.dispatch('dashboard/meetings/save', data);
           }
         } else {
           this.$store.dispatch('dashboard/meetings/remove', { id });
@@ -261,7 +273,7 @@ export default {
   },
   async fetch({ store }) {
     // Fetch all meetings
-    await store.dispatch('dashboard/meetings/fetch');
+    await store.dispatch('dashboard/meetings/fetchPage', { max_results: 50 });
   }
 };
 </script>
@@ -280,8 +292,5 @@ export default {
 }
 .events-list-enter, .events-list-leave-to {
   opacity: 0;
-  /*transform: translateX(30px);*/
-}
-.changed {
 }
 </style>

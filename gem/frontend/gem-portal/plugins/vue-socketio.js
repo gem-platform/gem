@@ -1,10 +1,8 @@
 import Vue from 'vue';
-import VueSocket from 'vue-socket.io';
-import sockets from '@/lib/socket';
+import io from 'socket.io-client';
 
-export default (context) => {
+export default () => {
   if (process.browser) {
-    Vue.use(VueSocket, '/');
-    Vue.options.sockets = sockets(context.store);
+    Vue.prototype.$socket = io('/');
   }
 };

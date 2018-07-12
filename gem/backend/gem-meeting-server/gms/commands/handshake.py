@@ -1,6 +1,7 @@
-import logging
-
+from logging import getLogger
 from gms.net.serializers.meeting import MeetingSerializer
+
+__log = getLogger("handlers")
 
 
 def connect(context, sid, environ):
@@ -10,7 +11,7 @@ def connect(context, sid, environ):
     # todo: add to "spectators" list
     # todo: to observe connected but not authenticated
     # todo: users (for security reasons)
-    logging.info("Client %s connected", sid)
+    __log.info("Client %s connected", sid)
 
 
 def disconnect(context, sid):
@@ -18,13 +19,13 @@ def disconnect(context, sid):
     # socket connection with specified
     # session id is closed
     # todo: remove from "spectators" list (if present)
-    logging.info("Client %s disconnected", sid)
+    __log.info("Client %s disconnected", sid)
     context.logout_user(sid)
 
 
 def handshake(context, sid, data):
     """Handshake message received."""
-    logging.info("Handshake received from '%s'", sid)
+    __log.info("Handshake received from '%s'", sid)
 
     # find user by specified credentials
     token = data.get("token", None)

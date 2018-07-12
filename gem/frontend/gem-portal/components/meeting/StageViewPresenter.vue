@@ -1,8 +1,9 @@
 <template>
-  <component :is="controlType"/>
+  <component :is="componentType"/>
 </template>
 
 <script>
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import AgendaView from './stages/views/AgendaView.vue';
 import AcquaintanceView from './stages/views/AcquaintanceView.vue';
 import ConnectedView from './stages/views/ConnectedView.vue';
@@ -24,10 +25,13 @@ export default {
     DiscussionView,
     FinalView
   },
+  mixins: [StageStateMixin],
   computed: {
-    controlType() {
-      const stage = this.$store.getters['meeting/stage/type'];
-      const shortType = stage.replace('Stage', '');
+    /**
+     * Return component type to render
+     */
+    componentType() {
+      const shortType = this.stageType.replace('Stage', '');
       return `${shortType}View`;
     }
   }
