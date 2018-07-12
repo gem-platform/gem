@@ -27,7 +27,7 @@
 
       <!-- Appendage -->
       <b-field
-        label="Detail (if necessary)"
+        label="Details (if needed)"
         expanded>
         <b-input
           v-model="appendage"
