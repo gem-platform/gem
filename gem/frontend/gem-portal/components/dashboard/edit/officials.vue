@@ -13,7 +13,7 @@
       </b-field>
 
       <!-- Form of adddress -->
-      <b-field label="Form">
+      <b-field label="Address">
         <b-select
           v-model="formOfAddress"
           size="is-large">
@@ -27,7 +27,7 @@
 
       <!-- Appendage -->
       <b-field
-        label="Appendage"
+        label="Detail (if necessary)"
         expanded>
         <b-input
           v-model="appendage"
