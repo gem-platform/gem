@@ -262,7 +262,7 @@ export default {
             this.$store.dispatch('dashboard/meetings/save', data);
           } else {
             delete data._id;
-            this.$store.dispatch('dashboard/meetings/create', data);
+            this.$store.dispatch('dashboard/meetings/save', data);
           }
         } else {
           this.$store.dispatch('dashboard/meetings/remove', { id });
