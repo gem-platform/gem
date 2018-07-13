@@ -14,12 +14,20 @@ c.SetMatchMode(sphinxapi.SPH_MATCH_EXTENDED)
 def laws_search():
     response = []
     query = request.args.get("query", "")
-    search_result = c.Query(query)
+    search_result = c.Query(query, 'laws')
 
     for match in search_result["matches"]:
         proposal_id = match["attrs"]["_id"]
         proposal = current_app.data.driver.db["laws"].find_one({"_id": ObjectId(proposal_id)})
-        a = c.BuildExcerpts([proposal["content"]], 'mongo', query, {"limit": 1024})
+
+        if not proposal:
+            return jsonify({
+                "success": False,
+                "message": "Law not found from index",
+                "id": proposal_id
+            }), 500
+
+        a = c.BuildExcerpts([proposal["content"]], 'laws', query, {"limit": 1024})
         response.append({
             "_id": str(proposal["_id"]),
             "title": proposal["title"],

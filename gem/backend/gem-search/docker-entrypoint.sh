@@ -1,5 +1,5 @@
 #!/bin/sh
-indexer mongo
+indexer laws
 indexer entities
 crond
 searchd --nodetach

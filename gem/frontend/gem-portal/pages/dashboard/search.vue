@@ -5,6 +5,7 @@
       <form @submit.prevent="submit">
         <b-input
           v-model="query"
+          :loading="loading"
           placeholder="Search..."
           type="search"
           icon="fas fa-search"
@@ -60,17 +61,25 @@ export default {
       query: '',
       results: [],
       ready: {},
-      nothingFound: false
+      nothingFound: false,
+      loading: false,
+      pendingRequestsCnt: 0
     };
+  },
+  watch: {
+    pendingRequestsCnt(value) {
+      this.loading = value !== 0;
+    }
   },
   methods: {
     async submit() {
-      // query db
       this.ready = {};
+      this.pendingRequestsCnt = 1;
 
       const res = await this.$axios.$get(`${SEARCH_API}${this.query}`);
       this.results = _.groupBy(res, 'type');
       this.nothingFound = res.length === 0;
+      this.pendingRequestsCnt = Object.keys(this.results).length;
 
       Object.keys(this.results).forEach((entityType) => {
         this.$store.dispatch(
@@ -82,6 +91,7 @@ export default {
         )
           .then(() => {
             this.$set(this.ready, entityType, true);
+            this.pendingRequestsCnt -= 1;
           });
       });
     },
