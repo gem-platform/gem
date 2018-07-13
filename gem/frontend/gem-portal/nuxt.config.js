@@ -38,6 +38,7 @@ module.exports = {
   },
   plugins: [
     'plugins/vue-bus', 'plugins/vue-socketio', 'plugins/vue-validate',
+    'plugins/vue-truncate.js',
     { src: 'plugins/vue-timers.js', ssr: false },
     { src: '~plugins/vue-quill.js', ssr: false }],
   modules: ['nuxt-buefy', '@nuxtjs/axios', '@nuxtjs/auth', '@nuxtjs/font-awesome'],

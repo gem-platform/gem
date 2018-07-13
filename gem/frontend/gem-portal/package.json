@@ -26,6 +26,7 @@
     "vue-bus": "^1.1.0",
     "vue-quill-editor": "^3.0.6",
     "vue-timers": "^1.7.1",
+    "vue-truncate-filter": "^1.1.7",
     "vuelidate": "^0.6.2",
     "vuex": "^3.0.1"
   },

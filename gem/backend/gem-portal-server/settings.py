@@ -5,6 +5,7 @@ URL_PREFIX = "api"
 MONGO_URI = "mongodb://"+db_host+":27017/gem"
 DEBUG = True
 IF_MATCH = False
+CACHE_EXPIRES = 1
 
 MONGO_USERNAME = os.environ.get('MONGO_USERNAME')
 MONGO_PASSWORD = os.environ.get('MONGO_PASSWORD')
@@ -81,7 +82,8 @@ USERS = {
             "schema": {
                 "type": "objectid",
                 "data_relation": {
-                    "resource": "roles"
+                    "resource": "roles",
+                    "embeddable": True
                 }
             }
         },
@@ -187,6 +189,17 @@ OFFICIALS = {
         },
         "gbc": {
             "type": "boolean"
+        },
+        "cachedZones": {
+            "readonly": True,
+            "type": "list",
+            "schema": {
+                "type": "objectid",
+                "data_relation": {
+                    "resource": "zones",
+                    "embeddable": True
+                }
+            }
         }
     }
 }
@@ -221,6 +234,46 @@ ZONES = {
                 "type": "string",
                 "empty": False,
             }
+        },
+        "cachedOfficials": {
+            "readonly": True,
+            "type": "list",
+            "schema": {
+                "type": "objectid",
+                "data_relation": {
+                    "resource": "officials",
+                    "embeddable": True
+                }
+            }
+        }
+    }
+}
+
+COMMENTS = {
+    "schema": {
+        "user": {
+            "type": "objectid",
+            "data_relation": {
+                "resource": "users",
+                "embeddable": True
+            }
+        },
+        "proposal": {
+            "type": "objectid",
+            "data_relation": {
+                "resource": "proposals",
+                "embeddable": True
+            }
+        },
+        "content": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
+        "mark": {
+            "type": "string",
+            "required": True,
+            "empty": False
         }
     }
 }
@@ -232,5 +285,6 @@ DOMAIN = {
     "meetings": MEETINGS,
     "laws": LAWS,
     "officials": OFFICIALS,
-    "zones": ZONES
+    "zones": ZONES,
+    "comments": COMMENTS
 }

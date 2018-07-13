@@ -16,6 +16,7 @@ print("""
 <sphinx:docset>
     <sphinx:schema>
     <sphinx:attr name="_id" type="string"/>
+    <sphinx:attr name="type" type="string"/>
     <sphinx:field name="content"/>
     </sphinx:schema>
 """)
@@ -25,6 +26,7 @@ for law in laws.find({}):
     print("""
         <sphinx:document id='""" +str(id)+  """'>
         <_id>""" + str(law["_id"]) + """</_id>
+        <type>laws</type>
         <content><![CDATA[[""" + law["content"] + """]]></content>
         </sphinx:document>
     """)

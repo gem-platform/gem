@@ -67,21 +67,21 @@ export default (options) => {
        * @param {context} param0 Context
        * @param {Number} id Id of object to fetch
        */
-      async fetchList({ commit }, ids) {
-        if (ids === undefined) {
+      async fetchList({ commit }, options) {
+        if (options.ids === undefined) {
           throw Error('Unable to fetch list: IDs is not defined');
         }
-        if (ids.length === 0) {
+        if (options.ids.length === 0) {
           throw Error('Unable to fetch list: IDs is empty');
         }
-        if (ids.length > 25) {
+        if (options.ids.length > 25) {
           throw Error('Too many items requested. Pagination will cut results to 25');
         }
 
         const url = `${api}`;
         const res = await this.$axios.$get(
           url,
-          { params: { where: { _id: { $in: ids } } } }
+          { params: { where: { _id: { $in: options.ids } }, ...options.params } }
         );
 
         commit('set', { entities: res._items });

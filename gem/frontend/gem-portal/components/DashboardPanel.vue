@@ -6,6 +6,12 @@
     <ul class="menu-list">
       <li>
         <nuxt-link
+          to="/dashboard/search"
+          active-class="is-active"
+          exact>Search</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
           to="/dashboard"
           active-class="is-active"
           exact>Schedule</nuxt-link>

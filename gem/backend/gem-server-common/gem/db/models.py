@@ -152,6 +152,8 @@ class Official(GemDocument):
     secretary = BooleanField()
     gbc = BooleanField()
 
+    cachedZones = ListField(ReferenceField("Zone"))
+
     def formal_name(self):
         formats = {
             "P": {"prefix": "", "postfix": " Das"},
@@ -191,6 +193,13 @@ class Zone(GemDocument):
         return self.name < other.name
 
 
+def update_cached_fields_of(sender, document, **kwargs):
+    zones = Zone.objects(cachedOfficials__contains=document)
+    document.cachedZones = zones
+
+
 # signals
 signals.pre_save.connect(finalize_ballot, sender=Ballot)
 signals.pre_save.connect(update_cached_fields, sender=Zone)
+signals.pre_save.connect(update_cached_fields_of, sender=Official)
+

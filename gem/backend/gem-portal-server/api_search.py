@@ -8,7 +8,7 @@ api_search = Blueprint('api_search', __name__)
 db_host = os.environ.get('ES_HOST', "localhost")
 c = sphinxapi.SphinxClient()
 c.SetServer(db_host)
-
+c.SetMatchMode(sphinxapi.SPH_MATCH_EXTENDED)
 
 @api_search.route("/api/laws/search", methods=["GET"])
 def laws_search():
@@ -24,6 +24,23 @@ def laws_search():
             "_id": str(proposal["_id"]),
             "title": proposal["title"],
             "highlights": a[0]
+        })
+
+    return jsonify(response)
+
+
+@api_search.route("/api/search", methods=["GET"])
+def search():
+    response = []
+    query = request.args.get("query", "")
+    search_result = c.Query(query)
+
+    for match in search_result["matches"]:
+        entity_id = str(match["attrs"]["_id"])
+        entity_type = match["attrs"]["type"]
+        response.append({
+            "_id": entity_id,
+            "type": entity_type
         })
 
     return jsonify(response)
