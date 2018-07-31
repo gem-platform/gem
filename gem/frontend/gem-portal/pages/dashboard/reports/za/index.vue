@@ -8,7 +8,7 @@
       </b-switch>
     </b-field>
 
-    <b-field label="Leafs">
+    <b-field label="Levels">
       <b-switch
         v-model="leafsOnly">
         Display only last nodes of tree.
