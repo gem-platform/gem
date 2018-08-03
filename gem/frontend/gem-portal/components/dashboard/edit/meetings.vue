@@ -91,7 +91,7 @@ export default {
     }
   },
   data() {
-    const currentTime = new Date().toISOString();
+    const currentTime = new Date();
     const utcOffset = -(new Date().getTimezoneOffset());
     const startTime = this.entity.start
       ? moment.utc(this.entity.start).utcOffset(utcOffset, true).toDate()
