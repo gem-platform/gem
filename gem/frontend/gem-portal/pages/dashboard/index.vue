@@ -88,7 +88,9 @@
     </transition-group>
 
     <!-- Control buttons -->
-    <div class="field is-grouped dashboard-controls">
+    <div
+      v-if="editable"
+      class="field is-grouped dashboard-controls">
       <!-- Add new day button -->
       <p class="control">
         <button
@@ -108,11 +110,13 @@
 </template>
 
 <script>
+import NotificationMixin from '@/components/NotificationMixin';
 import * as moment from 'moment';
 import _ from 'lodash';
 
 export default {
   layout: 'dashboard',
+  mixins: [NotificationMixin],
   data() {
     const events = this.$store.getters['dashboard/meetings/list'].map(m => ({
       _id: m._id,
@@ -268,7 +272,18 @@ export default {
           this.$store.dispatch('dashboard/meetings/remove', { id });
         }
       });
+
+      // Show notification if some changes found
+      const changesCount = ids.length;
+      if (changesCount > 0) {
+        this.notify(`${changesCount} event(s) updated`);
+      } else {
+        this.notify('No changes found', 'is-danger');
+      }
+
+      // Return back to readonly state
       this.changes = [];
+      this.editable = false;
     }
   },
   async fetch({ store }) {
