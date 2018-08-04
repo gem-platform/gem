@@ -41,7 +41,10 @@ def laws_search():
 def search():
     response = []
     query = request.args.get("query", "")
-    search_result = c.Query(query)
+    search_result = c.Query(query, "entities")
+
+    if not search_result:
+        return jsonify([])
 
     for match in search_result["matches"]:
         entity_id = str(match["attrs"]["_id"])
@@ -52,3 +55,4 @@ def search():
         })
 
     return jsonify(response)
+
