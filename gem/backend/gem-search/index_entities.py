@@ -17,8 +17,8 @@ collections = {
     "proposals": {"field": "title"},
     "meetings": {"field": "title"},
     "roles": {"field": "name"},
-    "comments": {"field": "content"}
-    # "laws": {"field": "title"},
+    "comments": {"field": "content"},
+    "laws": {"field": "title"}
 }
 
 print("""
