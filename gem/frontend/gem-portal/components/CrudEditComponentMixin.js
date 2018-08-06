@@ -20,10 +20,6 @@ export default (options) => {
     },
     methods: {
       update(data) {
-        if (this.entity._id === undefined) {
-          Object.assign(this.entity, data);
-          return; // creating new entity. it is not in store yet
-        }
         const { entities } = this.$route.params;
         this.$store.dispatch(`dashboard/${entities}/update`, { _id: this.entity._id, ...data });
       }

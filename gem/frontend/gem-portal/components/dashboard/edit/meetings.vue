@@ -179,6 +179,11 @@ export default {
   async fetch({
     store, entity, mass, newEntity
   }) {
+    await Promise.all([
+      store.dispatch('names/fetch', { collection: 'roles', field: 'name' }),
+      store.dispatch('names/fetch', { collection: 'users', field: 'name' })
+    ]);
+
     if (newEntity) { return; }
 
     // fetch related resources:
@@ -186,11 +191,6 @@ export default {
     // - assigned officials
     await mass.fetch(store, [
       { resource: 'proposals', list: entity.proposals }
-    ]);
-
-    await Promise.all([
-      store.dispatch('names/fetch', { collection: 'roles', field: 'name' }),
-      store.dispatch('names/fetch', { collection: 'users', field: 'name' })
     ]);
   }
 };

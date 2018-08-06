@@ -6,7 +6,14 @@ export default (options) => {
 
   return {
     state: () => ({
-      items: {},
+      items: {
+        '@new': {
+          _id: '@new',
+
+          // provide default fields to make them reactive
+          ...options.empty ? options.empty() : {}
+        }
+      },
       paginated: {},
       total: 0,
       perPage: 0
@@ -107,17 +114,18 @@ export default (options) => {
         commit('update', data);
       },
 
-      async save(_, entity) {
-        let data = omit(entity, ['_created', '_updated', '_links']);
-        if (options.beforeSave) {
-          data = options.beforeSave(data);
-        }
+      async save({ commit }, entity) {
+        const data = omit(entity, ['_created', '_updated', '_links']);
 
-        if (entity._id) {
+        if (entity._id !== '@new') {
           const url = `${api}/${entity._id}`;
           await this.$axios.$put(url, data);
         } else {
-          await this.$axios.$post(api, data);
+          await this.$axios.$post(api, omit(data, ['_id']));
+
+          // make @new clean again
+          const empty = options.empty ? options.empty() : {};
+          commit('update', { _id: '@new', ...empty });
         }
       },
 

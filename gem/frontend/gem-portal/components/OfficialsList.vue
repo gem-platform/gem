@@ -53,7 +53,7 @@ export default {
     const officials = this.$store.getters['dashboard/officials/keyed'];
 
     return {
-      officials: this.value.map(id => officials[id])
+      officials: this.value ? this.value.map(id => officials[id]) : []
     };
   },
   computed: {
