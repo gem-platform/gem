@@ -6,13 +6,11 @@ export default (options) => {
 
   return {
     state: () => ({
-      items: {
-        '@new': {
-          _id: '@new',
-
-          // provide default fields to make them reactive
-          ...options.empty ? options.empty() : {}
-        }
+      items: {},
+      newItem: {
+        _id: '@new',
+        // provide default fields to make them reactive
+        ...options.empty ? options.empty() : {}
       },
       paginated: {},
       total: 0,
@@ -45,7 +43,11 @@ export default (options) => {
       },
 
       update(state, data) {
-        Object.assign(state.items[data._id], data);
+        if (data._id === '@new') {
+          Object.assign(state.newItem, data);
+        } else {
+          Object.assign(state.items[data._id], data);
+        }
       }
     },
     actions: {
@@ -151,8 +153,8 @@ export default (options) => {
           perPage: state.perPage
         };
       },
-      empty() {
-        return () => (options.empty ? options.empty() : {});
+      newItem(state) {
+        return state.newItem;
       }
     }
   };
