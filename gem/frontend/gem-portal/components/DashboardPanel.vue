@@ -21,6 +21,11 @@
           to="/dashboard/proposals"
           active-class="is-active">Proposals</nuxt-link>
       </li>
+      <li v-if="haveAccess('dashboard.comments')">
+        <nuxt-link
+          to="/dashboard/comments"
+          active-class="is-active">Comments</nuxt-link>
+      </li>
       <li v-if="haveAccess('dashboard.meetings')">
         <nuxt-link
           to="/dashboard/meetings"

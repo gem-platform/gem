@@ -48,6 +48,11 @@ export default {
   async fetch(opt) {
     const method = `dashboard/${opt.params.entities}/fetchOne`;
     await opt.store.dispatch(method, opt.params.id);
+
+    const component = CrudViewComponents[opt.params.entities];
+    if (component && component.fetch) {
+      await component.fetch(opt);
+    }
   }
 };
 </script>

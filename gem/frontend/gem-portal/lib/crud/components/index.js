@@ -1,3 +1,4 @@
+import _ from 'lodash';
 
 export default {
   /**
@@ -9,7 +10,36 @@ export default {
         field: 'title',
         label: 'Title'
       }
-    ]
+    ],
+    indexLinkToEdit: false
+  },
+
+  /**
+   * Comments
+   */
+  comments: {
+    columns: [
+      {
+        field: 'content',
+        label: 'Content'
+      },
+      {
+        label: 'Proposal',
+        field(row, options) {
+          const proposals = options.$store.getters['dashboard/proposals/keyed'];
+          return proposals[row.proposal] ? proposals[row.proposal].title : '<Deleted>';
+        }
+      },
+      {
+        field: 'mark',
+        label: 'Mark'
+      }
+    ],
+    async fetch(context, entities) {
+      const ids = _.chain(entities._items).map(x => x.proposal).uniq().value();
+      await context.store.dispatch('dashboard/proposals/fetchList', { ids });
+    },
+    indexLinkToEdit: true
   },
 
   /**
@@ -21,7 +51,8 @@ export default {
         field: 'title',
         label: 'Title'
       }
-    ]
+    ],
+    indexLinkToEdit: false
   },
 
   /**
@@ -45,7 +76,8 @@ export default {
     ],
     async fetch(context) {
       await context.store.dispatch('names/fetch', { collection: 'roles', field: 'name' });
-    }
+    },
+    indexLinkToEdit: true
   },
 
   /**
@@ -57,7 +89,8 @@ export default {
         field: 'name',
         label: 'Name'
       }
-    ]
+    ],
+    indexLinkToEdit: true
   },
 
   /**
@@ -69,7 +102,8 @@ export default {
         field: 'title',
         label: 'Title'
       }
-    ]
+    ],
+    indexLinkToEdit: true
   },
 
   /**
@@ -89,7 +123,8 @@ export default {
             : '<Root>';
         }
       }
-    ]
+    ],
+    indexLinkToEdit: true
   },
 
   /**
@@ -101,6 +136,7 @@ export default {
         field: 'name',
         label: 'Name'
       }
-    ]
+    ],
+    indexLinkToEdit: true
   }
 };

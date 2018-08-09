@@ -31,7 +31,7 @@
 
           <nuxt-link
             v-if="idx === 0"
-            :to="linkToEdit(props.row._id)">
+            :to="indexLinkToEdit ? linkToEdit(props.row._id) : linkToView(props.row._id)">
             {{ columnText(props.row, column) }}
           </nuxt-link>
           <span v-else>
@@ -88,8 +88,15 @@ export default {
     columns() {
       const config = CrudIndexComponents[this.component];
       return config.columns;
-    }
+    },
 
+    /**
+     * Columns for table
+     */
+    indexLinkToEdit() {
+      const config = CrudIndexComponents[this.component];
+      return config.indexLinkToEdit;
+    }
   },
 
   methods: {
@@ -118,10 +125,10 @@ export default {
   async fetch(context) {
     const options = CrudIndexComponents[context.params.entities];
     const method = `dashboard/${context.params.entities}/fetchPage`;
-    await context.store.dispatch(method);
+    const result = await context.store.dispatch(method);
 
     if (options && options.fetch) {
-      await options.fetch(context);
+      await options.fetch(context, result);
     }
   }
 };

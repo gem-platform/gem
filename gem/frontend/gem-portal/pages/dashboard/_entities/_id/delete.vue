@@ -24,18 +24,40 @@ export default {
     };
   },
   layout: 'dashboard',
+  computed: {
+    entity() {
+      const { entities, id } = this.$route.params;
+
+      const method = `dashboard/${entities}/keyed`;
+      const getter = this.$store.getters[method];
+      const entity = getter[id];
+
+      return entity;
+    }
+  },
   methods: {
     async remove() {
       try {
         this.busy = true;
-        const id = this.entity._id;
-        await this.$store.dispatch(this._storeMethod('remove'), { id });
+        const { entities, id } = this.$route.params;
+        const method = `dashboard/${entities}/remove`;
 
-        this.$router.push(this._url());
+        await this.$store.dispatch(method, { id });
+
+        this.$router.push(`/dashboard/${entities}`);
         this.$snackbar.open({ message: 'Record has been deleted' });
       } finally {
         this.busy = false;
       }
+    }
+  },
+  async fetch(opt) {
+    try {
+      this.busy = true;
+      const method = `dashboard/${opt.params.entities}/fetchOne`;
+      await opt.store.dispatch(method, opt.params.id);
+    } finally {
+      this.busy = false;
     }
   }
 };
