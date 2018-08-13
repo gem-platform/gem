@@ -35,6 +35,14 @@
           <StageViewPresenter/>
         </div>
 
+        <!-- Additional stage widgets -->
+        <div
+          v-for="(widget, index) in widgets"
+          :key="index"
+          class="box">
+          <div :is="widget"/>
+        </div>
+
         <!-- Stage proposal -->
         <div
           v-if="showProposal"
@@ -59,6 +67,10 @@ import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
+
+import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
+import BallotResults from '@/components/meeting/stages/widgets/BallotResults.vue';
+
 
 export default {
   name: 'MeetingScreen',
@@ -137,6 +149,10 @@ export default {
       return this.$store.state.meeting.closed;
     },
 
+    widgets() {
+      return this.stageConfig.widgets;
+    },
+
     /**
      * Return configuration of stage
      */
@@ -155,7 +171,11 @@ export default {
           controls: false,
           view: true,
           type: true,
-          proposalReader: true
+          proposalReader: true,
+          widgets: [
+            BallotResults,
+            CommentsList
+          ]
         },
         BallotStage: {
           title: 'Ballot',
