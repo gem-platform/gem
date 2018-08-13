@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ changes }}
     <b-message
       v-if="partially.yes"
       title="The data is partially displayed"
@@ -47,7 +46,6 @@
           <div
             v-for="event in day.events"
             :key="event._id"
-            :class="{'changed': isChanged(event._id)}"
             class="field is-grouped">
 
             <!-- Start time -->
@@ -122,6 +120,7 @@ export default {
   data() {
     const events = this.$store.getters['dashboard/meetings/list'].map(m => ({
       _id: m._id,
+
       title: m.title,
       date: moment.utc(m.start).format('YYYY/MM/DD'),
       start: moment.utc(m.start).format('HH:mm'),
@@ -137,18 +136,33 @@ export default {
     };
   },
   computed: {
+    /**
+     * Return events keyed by id
+     */
     eventsById() {
       return _.keyBy(this.events, '_id');
     },
+
+    /**
+     * Return events keyed by date
+     */
     eventsByDate() {
       return _.groupBy(this.events, 'date');
     },
+
+    /**
+     * Are there any changes?
+     */
+    hasChanges() {
+      return Object.keys(this.changes).length > 0;
+    },
+
+    /**
+     * Is data rendered
+     */
     partially() {
       const meta = this.$store.getters['dashboard/meetings/meta'];
       return { yes: meta.total > meta.perPage, count: meta.perPage };
-    },
-    hasChanges() {
-      return Object.keys(this.changes).length > 0;
     }
   },
   methods: {
@@ -171,13 +185,6 @@ export default {
       }));
 
       return res;
-    },
-
-    /**
-     * Is event changed?
-     */
-    isChanged(id) {
-      return this.changes[id] === true;
     },
 
     /**
