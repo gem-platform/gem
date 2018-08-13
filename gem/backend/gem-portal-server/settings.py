@@ -49,6 +49,11 @@ PROPOSALS = {
 }
 
 LAWS = {
+    "datasource": {
+        "default_sort": [
+            ("title", 1)
+        ]
+    },
     "schema": {
         "title": {
             "type": "string",
@@ -72,7 +77,10 @@ USERS = {
     "datasource": {
         "projection": {
             "password": 0
-        }
+        },
+        "default_sort": [
+            ("name", 1)
+        ]
     },
     "schema": {
         "name": {
@@ -208,6 +216,11 @@ OFFICIALS = {
 }
 
 ZONES = {
+    "datasource": {
+        "default_sort": [
+            ("name", 1)
+        ]
+    },
     "schema": {
         "name": {
             "type": "string",

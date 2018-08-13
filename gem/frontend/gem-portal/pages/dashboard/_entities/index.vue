@@ -25,19 +25,25 @@
 
     <b-table
       :data="entities"
-      :columns="columns"
       :current-page.sync="currentPage"
       :per-page="perPage"
       :total="total"
       :loading="loading"
+      :default-sort="defaultSort"
+      default-sort-direction="asc"
       hoverable
       paginated
       backend-pagination
-      @page-change="pageChanged">
+      backend-sorting
+      @page-change="pageChanged"
+      @sort="onSort">
       <template slot-scope="props">
         <b-table-column
           v-for="(column, idx) in columns"
-          :key="column.title">
+          :key="column.label"
+          :label="column.label"
+          :field="column.sortable ? column.field : undefined"
+          :sortable="column.sortable">
 
           <nuxt-link
             v-if="idx === 0"
@@ -63,11 +69,17 @@ export default {
   layout: 'dashboard',
   mixins: [CrudLinksComponentMixin],
   data() {
+    const component = this.$route.params.entities;
+    const config = CrudIndexComponents[component];
+
     return {
       loading: false,
       currentPage: 1,
       perPage: 25,
-      searchQuery: ''
+      searchQuery: '',
+      sortColumn: undefined,
+      sortOrder: undefined,
+      defaultSort: config.defaultSort
     };
   },
   computed: {
@@ -120,6 +132,12 @@ export default {
   },
 
   methods: {
+    onSort(column, order) {
+      this.sortColumn = column;
+      this.sortOrder = order;
+      this.loadData();
+    },
+
     /**
      * Load data
      */
@@ -131,12 +149,17 @@ export default {
         page: this.currentPage
       };
 
-      // if search columna and query provided
+      // if search column and query provided
       if (this.searchColumn && this.searchQuery) {
         const regex = _.escapeRegExp(this.searchQuery);
         query.where = {
           [this.searchColumn]: { $regex: `(?i).*${regex}.*` }
         };
+      }
+
+      // if sort column provided
+      if (this.sortColumn) {
+        query.sort = this.sortOrder === 'asc' ? this.sortColumn : `-${this.sortColumn}`;
       }
 
       // fetch

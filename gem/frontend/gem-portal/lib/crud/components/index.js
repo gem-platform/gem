@@ -8,11 +8,13 @@ export default {
     columns: [
       {
         field: 'title',
-        label: 'Title'
+        label: 'Title',
+        sortable: true
       }
     ],
     indexLinkToEdit: false,
-    searchColumn: 'title'
+    searchColumn: 'title',
+    defaultSort: ['title', 'asc']
   },
 
   /**
@@ -50,11 +52,13 @@ export default {
     columns: [
       {
         field: 'title',
-        label: 'Title'
+        label: 'Title',
+        sortable: true
       }
     ],
     indexLinkToEdit: false,
-    searchColumn: 'title'
+    searchColumn: 'title',
+    defaultSort: ['title', 'asc']
   },
 
   /**
@@ -64,7 +68,8 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       },
       {
         label: 'Roles',
@@ -80,7 +85,8 @@ export default {
       await context.store.dispatch('names/fetch', { collection: 'roles', field: 'name' });
     },
     indexLinkToEdit: true,
-    searchColumn: 'name'
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc']
   },
 
   /**
@@ -90,11 +96,13 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       }
     ],
     indexLinkToEdit: true,
-    searchColumn: 'name'
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc']
   },
 
   /**
@@ -104,11 +112,13 @@ export default {
     columns: [
       {
         field: 'title',
-        label: 'Title'
+        label: 'Title',
+        sortable: true
       }
     ],
     indexLinkToEdit: true,
-    searchColumn: 'title'
+    searchColumn: 'title',
+    defaultSort: ['title', 'asc']
   },
 
   /**
@@ -118,7 +128,8 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       },
       {
         label: 'Path',
@@ -130,7 +141,8 @@ export default {
       }
     ],
     indexLinkToEdit: true,
-    searchColumn: 'name'
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc']
   },
 
   /**
@@ -140,10 +152,12 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       }
     ],
     indexLinkToEdit: true,
-    searchColumn: 'name'
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc']
   }
 };
