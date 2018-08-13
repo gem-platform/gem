@@ -15,15 +15,19 @@
         {{ user.name }}: {{ user.progress }}%
       </div>
     </div>
+
+    <CommentsList/>
   </div>
 </template>
 
 <script>
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import AuthMixin from '@/components/AuthMixin';
+import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
 
 export default {
   name: 'AcquaintanceStageView',
+  components: { CommentsList },
   mixins: [StageStateMixin, AuthMixin],
   data() {
     return {
