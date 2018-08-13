@@ -28,19 +28,12 @@
       </div>
 
       <div class="column is-8">
-        <!-- Stage view -->
-        <div
-          v-if="showStageView"
-          class="box">
-          <StageViewPresenter/>
-        </div>
-
         <!-- Additional stage widgets -->
         <div
           v-for="(widget, index) in widgets"
           :key="index"
           class="box">
-          <div :is="widget"/>
+          <component :is="widget"/>
         </div>
 
         <!-- Stage proposal -->
@@ -67,6 +60,18 @@ import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
+
+// view components
+
+import AgendaView from '@/components/meeting/stages/views/AgendaView.vue';
+import AcquaintanceView from '@/components/meeting/stages/views/AcquaintanceView.vue';
+import BallotView from '@/components/meeting/stages/views/BallotView.vue';
+import BallotResultsView from '@/components/meeting/stages/views/BallotResultsView.vue';
+import CommentsView from '@/components/meeting/stages/views/CommentsView.vue';
+import DiscussionView from '@/components/meeting/stages/views/DiscussionView.vue';
+import FinalView from '@/components/meeting/stages/views/FinalView.vue';
+
+// view vidgets
 
 import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
 import BallotResults from '@/components/meeting/stages/widgets/BallotResults.vue';
@@ -122,13 +127,6 @@ export default {
     },
 
     /**
-     * Show stage view or not?
-     */
-    showStageView() {
-      return this.stageConfig.view === true;
-    },
-
-    /**
      * Show proposal reader or content?
      */
     showProposalReader() {
@@ -164,15 +162,17 @@ export default {
         },
         AgendaStage: {
           title: 'Agenda',
-          view: true
+          widgets: [
+            AgendaView
+          ]
         },
         AcquaintanceStage: {
           title: 'Acquaintance',
           controls: false,
-          view: true,
           type: true,
           proposalReader: true,
           widgets: [
+            AcquaintanceView,
             BallotResults,
             CommentsList
           ]
@@ -180,30 +180,40 @@ export default {
         BallotStage: {
           title: 'Ballot',
           controls: true,
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            BallotView
+          ]
         },
         BallotResultsStage: {
           title: 'Ballot results',
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            BallotResultsView
+          ]
         },
         DiscussionStage: {
           title: 'Discussion',
           controls: true,
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            DiscussionView
+          ]
         },
         CommentsStage: {
           title: 'Comments',
           controls: true,
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            CommentsView
+          ]
         },
         FinalStage: {
           title: 'Final',
           controls: true,
-          view: true
+          widgets: [
+            FinalView
+          ]
         }
       };
       return stages[type];
