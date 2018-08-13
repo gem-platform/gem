@@ -24,7 +24,8 @@ export default {
       return result;
     },
     summaryData() {
-      const { summary } = this.$store.getters['meeting/stage/state'];
+      const state = this.$store.getters['meeting/stage/state'];
+      const summary = state.summary || state.ballotSummary;
       const roles = this.$store.getters['meeting/roles'];
 
       const roleIds = Object.keys(summary);
