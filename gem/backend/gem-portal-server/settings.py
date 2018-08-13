@@ -17,6 +17,9 @@ ITEM_METHODS = ['GET', 'PATCH', 'PUT', 'DELETE']
 
 DATE_FORMAT = "%Y-%m-%dT%H:%M:%S.%fZ"
 
+MONGO_QUERY_BLACKLIST = ['$where']
+
+
 PROPOSALS = {
     "datasource": {
         "default_sort": [

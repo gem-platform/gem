@@ -11,7 +11,8 @@ export default {
         label: 'Title'
       }
     ],
-    indexLinkToEdit: false
+    indexLinkToEdit: false,
+    searchColumn: 'title'
   },
 
   /**
@@ -52,7 +53,8 @@ export default {
         label: 'Title'
       }
     ],
-    indexLinkToEdit: false
+    indexLinkToEdit: false,
+    searchColumn: 'title'
   },
 
   /**
@@ -77,7 +79,8 @@ export default {
     async fetch(context) {
       await context.store.dispatch('names/fetch', { collection: 'roles', field: 'name' });
     },
-    indexLinkToEdit: true
+    indexLinkToEdit: true,
+    searchColumn: 'name'
   },
 
   /**
@@ -90,7 +93,8 @@ export default {
         label: 'Name'
       }
     ],
-    indexLinkToEdit: true
+    indexLinkToEdit: true,
+    searchColumn: 'name'
   },
 
   /**
@@ -103,7 +107,8 @@ export default {
         label: 'Title'
       }
     ],
-    indexLinkToEdit: true
+    indexLinkToEdit: true,
+    searchColumn: 'title'
   },
 
   /**
@@ -124,7 +129,8 @@ export default {
         }
       }
     ],
-    indexLinkToEdit: true
+    indexLinkToEdit: true,
+    searchColumn: 'name'
   },
 
   /**
@@ -137,6 +143,7 @@ export default {
         label: 'Name'
       }
     ],
-    indexLinkToEdit: true
+    indexLinkToEdit: true,
+    searchColumn: 'name'
   }
 };

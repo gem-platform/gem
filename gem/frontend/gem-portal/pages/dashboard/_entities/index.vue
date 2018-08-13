@@ -13,6 +13,16 @@
       </p>
     </div>
 
+    <b-field
+      grouped
+      group-multiline>
+      <b-input
+        v-if="searchColumn"
+        v-model.trim="searchQuery"
+        placeholder="Search"
+        @change.native="searchQueryChanged"/>
+    </b-field>
+
     <b-table
       :data="entities"
       :columns="columns"
@@ -23,7 +33,7 @@
       hoverable
       paginated
       backend-pagination
-      @page-change="onPageChange">
+      @page-change="pageChanged">
       <template slot-scope="props">
         <b-table-column
           v-for="(column, idx) in columns"
@@ -47,6 +57,7 @@
 <script>
 import CrudLinksComponentMixin from '@/components/CrudLinksComponentMixin';
 import CrudIndexComponents from '@/lib/crud/components/index';
+import _ from 'lodash';
 
 export default {
   layout: 'dashboard',
@@ -55,7 +66,8 @@ export default {
     return {
       loading: false,
       currentPage: 1,
-      perPage: 25
+      perPage: 25,
+      searchQuery: ''
     };
   },
   computed: {
@@ -91,6 +103,14 @@ export default {
     },
 
     /**
+     * Search column
+     */
+    searchColumn() {
+      const config = CrudIndexComponents[this.component];
+      return config.searchColumn;
+    },
+
+    /**
      * Columns for table
      */
     indexLinkToEdit() {
@@ -101,12 +121,42 @@ export default {
 
   methods: {
     /**
+     * Load data
+     */
+    async loadData() {
+      this.loading = true;
+
+      // query
+      const query = {
+        page: this.currentPage
+      };
+
+      // if search columna and query provided
+      if (this.searchColumn && this.searchQuery) {
+        const regex = _.escapeRegExp(this.searchQuery);
+        query.where = {
+          [this.searchColumn]: { $regex: `(?i).*${regex}.*` }
+        };
+      }
+
+      // fetch
+      await this.$store.dispatch(`dashboard/${this.component}/fetchPage`, query);
+      this.loading = false;
+    },
+
+    /**
      * Page changed
      */
-    async onPageChange(page) {
-      this.loading = true;
-      await this.$store.dispatch(`dashboard/${this.component}/fetchPage`, { page });
-      this.loading = false;
+    async pageChanged(page) {
+      this.currentPage = page;
+      this.loadData();
+    },
+
+    /**
+     * Search query changed
+     */
+    async searchQueryChanged() {
+      this.loadData();
     },
 
     /**
