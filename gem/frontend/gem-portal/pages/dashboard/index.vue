@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ changes }}
     <b-message
       v-if="partially.yes"
       title="The data is partially displayed"
@@ -101,6 +102,7 @@
       <!-- Save changes button -->
       <p class="control">
         <button
+          :disabled="!hasChanges"
           class="button is-light"
           @click="save">Save</button>
       </p>
@@ -144,6 +146,9 @@ export default {
     partially() {
       const meta = this.$store.getters['dashboard/meetings/meta'];
       return { yes: meta.total > meta.perPage, count: meta.perPage };
+    },
+    hasChanges() {
+      return Object.keys(this.changes).length > 0;
     }
   },
   methods: {
@@ -194,11 +199,11 @@ export default {
      */
     onEventChanged(event, type) {
       // mark event as changed
-      this.changes[event._id] = true;
+      this.$set(this.changes, event._id, true);
 
       // there is no changes if new event deleted
       if (event._new && type === 'delete') {
-        delete this.changes[event._id];
+        this.$delete(this.changes, event._id);
       }
 
       // update view
