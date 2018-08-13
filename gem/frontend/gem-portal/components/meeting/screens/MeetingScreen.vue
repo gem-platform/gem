@@ -54,7 +54,6 @@
 <script>
 import ProposalReader from '@/components/meeting/ProposalReader.vue';
 import ControlPanel from '@/components/meeting/ControlPanel.vue';
-import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
@@ -82,7 +81,6 @@ export default {
   components: {
     ProposalReader,
     ControlPanel,
-    StageViewPresenter,
     StageControlsPresenter,
     StageInfo,
     UsersOnline
