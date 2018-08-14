@@ -5,7 +5,14 @@ export default (options) => {
     return {
       [name]: {
         get() { return this.entity[name]; },
-        set(value) { this.update({ [name]: value }); }
+        set(value) {
+          this.update({ [name]: value });
+
+          // update validation info
+          if (this.$v && this.$v[name]) {
+            this.$v[name].$touch();
+          }
+        }
       }
     };
   }

@@ -4,10 +4,16 @@ export default {
       return value.$error ? 'is-danger' : '';
     },
     validationMessages(value) {
+      // there is no errors, so return nothing
+      if (!value.$error) {
+        return [];
+      }
+
       const errors = [];
 
       if (value.required === false) { errors.push('Value is required'); }
-      if (value.alphaNum === false) { errors.push('Value should be alphanum'); }
+      if (value.minLength === false) { errors.push('Value is to short'); }
+      if (value.maxLength === false) { errors.push('Value is to long'); }
 
       return errors;
     },
