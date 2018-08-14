@@ -114,7 +114,13 @@ ROLES = {
             "required": True,
             "empty": False
         },
-        "permissions": {"type": "list"}
+        "permissions": {
+            "type": "list"
+        },
+        "priority": {
+            "type": "integer",
+            "required": True
+        }
     }
 }
 
