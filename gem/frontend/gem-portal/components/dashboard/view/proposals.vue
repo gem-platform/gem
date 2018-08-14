@@ -4,6 +4,7 @@
     <div v-html="entity.content"/>
 
     <hr>
+    <div class="title">Comments</div>
 
     <article
       v-for="comment in comments"
@@ -31,7 +32,6 @@
             </b-tag>
           </span>
 
-
           <!-- Content -->
           <br>
           {{ comment.content }}
@@ -43,13 +43,24 @@
         <b-tag :type="comment.type">{{ comment.mark | mark }}</b-tag>
       </div>
     </article>
+
+    <hr>
+    <PrintReport
+      :params="{'proposal': entity._id}"
+      title="Proposal Comments"
+      url="office/proposals/comments"
+      filename="Proposal Comments.pdf"/>
   </div>
 </template>
 
 <script>
+import PrintReport from '@/components/PrintReport.vue';
 import _ from 'lodash';
 
 export default {
+  components: {
+    PrintReport
+  },
   filters: {
     mark(value) {
       if (value === '+') return 'Plus';
