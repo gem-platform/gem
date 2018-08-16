@@ -81,9 +81,11 @@ export default (options) => {
         if (options.ids === undefined) {
           throw Error('Unable to fetch list: IDs is not defined');
         }
+        /*
         if (options.ids.length === 0) {
           throw Error('Unable to fetch list: IDs is empty');
         }
+        */
         if (options.ids.length > 25) {
           throw Error('Too many items requested. Pagination will cut results to 25');
         }
