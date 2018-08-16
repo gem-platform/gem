@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="field is-grouped is-grouped-multiline">
+    <b-field grouped>
       <p class="control">
         <nuxt-link
           :to="linkToCreate()"
@@ -11,14 +11,12 @@
           <span>Create new</span>
         </nuxt-link>
       </p>
-    </div>
-
-    <b-field
-      grouped
-      group-multiline>
       <b-input
         v-if="searchColumn"
         v-model.trim="searchQuery"
+        expanded
+        type="search"
+        icon="fas fa-search"
         placeholder="Search"
         @input="searchQueryChanged"/>
     </b-field>
