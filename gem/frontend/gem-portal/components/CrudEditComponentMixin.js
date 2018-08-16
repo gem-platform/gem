@@ -9,7 +9,7 @@ export default (options) => {
           this.update({ [name]: value });
 
           // update validation info
-          if (this.$v && this.$v[name]) {
+          if (Object.prototype.hasOwnProperty.call(this, '$v')) {
             this.$v[name].$touch();
           }
         }

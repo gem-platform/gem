@@ -14,7 +14,8 @@ export default {
     ],
     indexLinkToEdit: false,
     searchColumn: 'title',
-    defaultSort: ['title', 'asc']
+    defaultSort: ['title', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -42,7 +43,8 @@ export default {
       const ids = _.chain(entities._items).map(x => x.proposal).uniq().value();
       await context.store.dispatch('dashboard/proposals/fetchList', { ids });
     },
-    indexLinkToEdit: true
+    indexLinkToEdit: true,
+    searchColumn: 'content'
   },
 
   /**
@@ -58,7 +60,8 @@ export default {
     ],
     indexLinkToEdit: false,
     searchColumn: 'title',
-    defaultSort: ['title', 'asc']
+    defaultSort: ['title', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -86,7 +89,8 @@ export default {
     },
     indexLinkToEdit: true,
     searchColumn: 'name',
-    defaultSort: ['name', 'asc']
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -102,7 +106,8 @@ export default {
     ],
     indexLinkToEdit: true,
     searchColumn: 'name',
-    defaultSort: ['name', 'asc']
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -118,7 +123,8 @@ export default {
     ],
     indexLinkToEdit: true,
     searchColumn: 'title',
-    defaultSort: ['title', 'asc']
+    defaultSort: ['title', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -142,7 +148,8 @@ export default {
     ],
     indexLinkToEdit: true,
     searchColumn: 'name',
-    defaultSort: ['name', 'asc']
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -158,6 +165,7 @@ export default {
     ],
     indexLinkToEdit: true,
     searchColumn: 'name',
-    defaultSort: ['name', 'asc']
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   }
 };

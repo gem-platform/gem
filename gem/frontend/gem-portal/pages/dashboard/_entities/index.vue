@@ -1,7 +1,9 @@
 <template>
   <div>
     <b-field grouped>
-      <p class="control">
+      <p
+        v-if="canCreate"
+        class="control">
         <nuxt-link
           :to="linkToCreate()"
           class="button is-light">
@@ -139,6 +141,14 @@ export default {
     indexLinkToEdit() {
       const config = CrudIndexComponents[this.component];
       return config.indexLinkToEdit;
+    },
+
+    /**
+     * Can create new entities from dashboard page
+     */
+    canCreate() {
+      const config = CrudIndexComponents[this.component];
+      return config.canCreate;
     }
   },
 
