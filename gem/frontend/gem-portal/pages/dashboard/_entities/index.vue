@@ -20,7 +20,7 @@
         v-if="searchColumn"
         v-model.trim="searchQuery"
         placeholder="Search"
-        @change.native="searchQueryChanged"/>
+        @input="searchQueryChanged"/>
     </b-field>
 
     <b-table
@@ -55,6 +55,19 @@
           </span>
 
         </b-table-column>
+      </template>
+
+      <template slot="empty">
+        <section class="section">
+          <div class="content has-text-grey has-text-centered">
+            <p>
+              <b-icon
+                icon="fas fa-frown-o"
+                size="is-large"/>
+            </p>
+            <p>Nothing found.</p>
+          </div>
+        </section>
       </template>
     </b-table>
   </div>
@@ -178,9 +191,9 @@ export default {
     /**
      * Search query changed
      */
-    async searchQueryChanged() {
+    searchQueryChanged: _.debounce(function loadDataDebounced() {
       this.loadData();
-    },
+    }, 350),
 
     /**
      * Get text for cell
