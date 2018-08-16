@@ -39,6 +39,7 @@ export default (options) => {
       unset(state, value) {
         value.forEach((x) => {
           Vue.set(state.items, x._id, undefined);
+          delete state.items[x._id];
         });
       },
 
