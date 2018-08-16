@@ -46,7 +46,6 @@
           <div
             v-for="event in day.events"
             :key="event._id"
-            :class="{'changed': isChanged(event._id)}"
             class="field is-grouped">
 
             <!-- Start time -->
@@ -88,7 +87,9 @@
     </transition-group>
 
     <!-- Control buttons -->
-    <div class="field is-grouped dashboard-controls">
+    <div
+      v-if="editable"
+      class="field is-grouped dashboard-controls">
       <!-- Add new day button -->
       <p class="control">
         <button
@@ -99,6 +100,7 @@
       <!-- Save changes button -->
       <p class="control">
         <button
+          :disabled="!hasChanges"
           class="button is-light"
           @click="save">Save</button>
       </p>
@@ -108,14 +110,17 @@
 </template>
 
 <script>
+import NotificationMixin from '@/components/NotificationMixin';
 import * as moment from 'moment';
 import _ from 'lodash';
 
 export default {
   layout: 'dashboard',
+  mixins: [NotificationMixin],
   data() {
     const events = this.$store.getters['dashboard/meetings/list'].map(m => ({
       _id: m._id,
+
       title: m.title,
       date: moment.utc(m.start).format('YYYY/MM/DD'),
       start: moment.utc(m.start).format('HH:mm'),
@@ -131,12 +136,30 @@ export default {
     };
   },
   computed: {
+    /**
+     * Return events keyed by id
+     */
     eventsById() {
       return _.keyBy(this.events, '_id');
     },
+
+    /**
+     * Return events keyed by date
+     */
     eventsByDate() {
       return _.groupBy(this.events, 'date');
     },
+
+    /**
+     * Are there any changes?
+     */
+    hasChanges() {
+      return Object.keys(this.changes).length > 0;
+    },
+
+    /**
+     * Is data rendered
+     */
     partially() {
       const meta = this.$store.getters['dashboard/meetings/meta'];
       return { yes: meta.total > meta.perPage, count: meta.perPage };
@@ -165,13 +188,6 @@ export default {
     },
 
     /**
-     * Is event changed?
-     */
-    isChanged(id) {
-      return this.changes[id] === true;
-    },
-
-    /**
      * Date changed
      */
     onDateChanged(date, newDate, events) {
@@ -190,11 +206,11 @@ export default {
      */
     onEventChanged(event, type) {
       // mark event as changed
-      this.changes[event._id] = true;
+      this.$set(this.changes, event._id, true);
 
       // there is no changes if new event deleted
       if (event._new && type === 'delete') {
-        delete this.changes[event._id];
+        this.$delete(this.changes, event._id);
       }
 
       // update view
@@ -268,7 +284,18 @@ export default {
           this.$store.dispatch('dashboard/meetings/remove', { id });
         }
       });
+
+      // Show notification if some changes found
+      const changesCount = ids.length;
+      if (changesCount > 0) {
+        this.notify(`${changesCount} event(s) updated`);
+      } else {
+        this.notify('No changes found', 'is-danger');
+      }
+
+      // Return back to readonly state
       this.changes = [];
+      this.editable = false;
     }
   },
   async fetch({ store }) {

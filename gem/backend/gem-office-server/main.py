@@ -6,6 +6,7 @@ from flask import Flask, jsonify, request
 from mongoengine import connect
 
 from reports.za import zonal_assignments_report
+from reports.proposals import proposal_comments_report
 
 app = Flask("office")
 
@@ -38,8 +39,16 @@ def generate_zonal_report():
 
     report = zonal_assignments_report(hierarchy=hierarchy, leafs_only=leafs_only)
     filename = print_and_save(report)
-    return jsonify({"success": True, "filename": filename, "hierarchy": hierarchy})
+    return jsonify({"success": True, "filename": filename})
 
+
+@app.route('/office/proposals/comments', methods=['GET'])
+def generate_proposal_comments_report():
+    proposal_id = request.args.get("proposal")
+
+    report = proposal_comments_report(proposal_id=proposal_id)
+    filename = print_and_save(report)
+    return jsonify({"success": True, "filename": filename})
 
 if __name__ == '__main__':
     app.run(port=5001, host="0.0.0.0")

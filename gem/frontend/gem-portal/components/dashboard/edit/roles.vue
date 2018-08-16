@@ -8,6 +8,13 @@
         size="is-large"/>
     </b-field>
 
+    <!-- Priority of the role -->
+    <b-field label="Priority">
+      <b-input
+        v-model="priority"
+        placeholder="Priority" />
+    </b-field>
+
     <!-- List of permissions -->
     <label class="label">Permissions</label>
     <div
@@ -40,7 +47,7 @@ import _ from 'lodash';
 export default {
   mixins: [
     CrudEditComponentMixin({
-      properties: ['name', 'permissions']
+      properties: ['name', 'permissions', 'priority']
     })],
   props: {
     entity: {

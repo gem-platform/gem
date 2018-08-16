@@ -62,6 +62,10 @@ export default {
     entity() {
       const { entities } = this.$route.params;
 
+      if (this.entityId === '@new') {
+        return this.$store.getters[`dashboard/${entities}/newItem`];
+      }
+
       const method = `dashboard/${entities}/keyed`;
       const getter = this.$store.getters[method];
       const entity = getter[this.entityId];
@@ -70,7 +74,7 @@ export default {
         throw Error('Entity does not found');
       }
 
-      return entity || this.$store.getters[`dashboard/${entities}/empty`]();
+      return entity;
     }
   },
   methods: {

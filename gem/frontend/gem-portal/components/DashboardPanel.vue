@@ -6,6 +6,12 @@
     <ul class="menu-list">
       <li>
         <nuxt-link
+          to="/dashboard/search"
+          active-class="is-active"
+          exact>Search</nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
           to="/dashboard"
           active-class="is-active"
           exact>Schedule</nuxt-link>
@@ -14,6 +20,11 @@
         <nuxt-link
           to="/dashboard/proposals"
           active-class="is-active">Proposals</nuxt-link>
+      </li>
+      <li v-if="haveAccess('dashboard.comments')">
+        <nuxt-link
+          to="/dashboard/comments"
+          active-class="is-active">Comments</nuxt-link>
       </li>
       <li v-if="haveAccess('dashboard.meetings')">
         <nuxt-link

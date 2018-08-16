@@ -28,11 +28,12 @@
       </div>
 
       <div class="column is-8">
-        <!-- Stage view -->
+        <!-- Additional stage widgets -->
         <div
-          v-if="showStageView"
+          v-for="(widget, index) in widgets"
+          :key="index"
           class="box">
-          <StageViewPresenter/>
+          <component :is="widget"/>
         </div>
 
         <!-- Stage proposal -->
@@ -53,19 +54,33 @@
 <script>
 import ProposalReader from '@/components/meeting/ProposalReader.vue';
 import ControlPanel from '@/components/meeting/ControlPanel.vue';
-import StageViewPresenter from '@/components/meeting/StageViewPresenter.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
 
+// view components
+
+import AgendaView from '@/components/meeting/stages/views/AgendaView.vue';
+import AcquaintanceView from '@/components/meeting/stages/views/AcquaintanceView.vue';
+import BallotView from '@/components/meeting/stages/views/BallotView.vue';
+import BallotResultsView from '@/components/meeting/stages/views/BallotResultsView.vue';
+import CommentsView from '@/components/meeting/stages/views/CommentsView.vue';
+import DiscussionView from '@/components/meeting/stages/views/DiscussionView.vue';
+import FinalView from '@/components/meeting/stages/views/FinalView.vue';
+
+// view vidgets
+
+import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
+import BallotResults from '@/components/meeting/stages/widgets/BallotResults.vue';
+
+
 export default {
   name: 'MeetingScreen',
   components: {
     ProposalReader,
     ControlPanel,
-    StageViewPresenter,
     StageControlsPresenter,
     StageInfo,
     UsersOnline
@@ -110,13 +125,6 @@ export default {
     },
 
     /**
-     * Show stage view or not?
-     */
-    showStageView() {
-      return this.stageConfig.view === true;
-    },
-
-    /**
      * Show proposal reader or content?
      */
     showProposalReader() {
@@ -137,6 +145,10 @@ export default {
       return this.$store.state.meeting.closed;
     },
 
+    widgets() {
+      return this.stageConfig.widgets;
+    },
+
     /**
      * Return configuration of stage
      */
@@ -148,42 +160,58 @@ export default {
         },
         AgendaStage: {
           title: 'Agenda',
-          view: true
+          widgets: [
+            AgendaView
+          ]
         },
         AcquaintanceStage: {
           title: 'Acquaintance',
           controls: false,
-          view: true,
           type: true,
-          proposalReader: true
+          proposalReader: true,
+          widgets: [
+            AcquaintanceView,
+            BallotResults,
+            CommentsList
+          ]
         },
         BallotStage: {
           title: 'Ballot',
           controls: true,
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            BallotView
+          ]
         },
         BallotResultsStage: {
           title: 'Ballot results',
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            BallotResultsView
+          ]
         },
         DiscussionStage: {
           title: 'Discussion',
           controls: true,
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            DiscussionView
+          ]
         },
         CommentsStage: {
           title: 'Comments',
           controls: true,
-          view: true,
-          type: true
+          type: true,
+          widgets: [
+            CommentsView
+          ]
         },
         FinalStage: {
           title: 'Final',
           controls: true,
-          view: true
+          widgets: [
+            FinalView
+          ]
         }
       };
       return stages[type];

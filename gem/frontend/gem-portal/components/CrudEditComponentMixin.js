@@ -5,7 +5,14 @@ export default (options) => {
     return {
       [name]: {
         get() { return this.entity[name]; },
-        set(value) { this.update({ [name]: value }); }
+        set(value) {
+          this.update({ [name]: value });
+
+          // update validation info
+          if (Object.prototype.hasOwnProperty.call(this, '$v')) {
+            this.$v[name].$touch();
+          }
+        }
       }
     };
   }
@@ -20,10 +27,6 @@ export default (options) => {
     },
     methods: {
       update(data) {
-        if (this.entity._id === undefined) {
-          Object.assign(this.entity, data);
-          return; // creating new entity. it is not in store yet
-        }
         const { entities } = this.$route.params;
         this.$store.dispatch(`dashboard/${entities}/update`, { _id: this.entity._id, ...data });
       }

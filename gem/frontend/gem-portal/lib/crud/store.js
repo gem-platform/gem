@@ -7,6 +7,11 @@ export default (options) => {
   return {
     state: () => ({
       items: {},
+      newItem: {
+        _id: '@new',
+        // provide default fields to make them reactive
+        ...options.empty ? options.empty() : {}
+      },
       paginated: {},
       total: 0,
       perPage: 0
@@ -34,11 +39,16 @@ export default (options) => {
       unset(state, value) {
         value.forEach((x) => {
           Vue.set(state.items, x._id, undefined);
+          delete state.items[x._id];
         });
       },
 
       update(state, data) {
-        Object.assign(state.items[data._id], data);
+        if (data._id === '@new') {
+          Object.assign(state.newItem, data);
+        } else {
+          Object.assign(state.items[data._id], data);
+        }
       }
     },
     actions: {
@@ -67,21 +77,21 @@ export default (options) => {
        * @param {context} param0 Context
        * @param {Number} id Id of object to fetch
        */
-      async fetchList({ commit }, ids) {
-        if (ids === undefined) {
+      async fetchList({ commit }, options) {
+        if (options.ids === undefined) {
           throw Error('Unable to fetch list: IDs is not defined');
         }
-        if (ids.length === 0) {
+        if (options.ids.length === 0) {
           throw Error('Unable to fetch list: IDs is empty');
         }
-        if (ids.length > 25) {
+        if (options.ids.length > 25) {
           throw Error('Too many items requested. Pagination will cut results to 25');
         }
 
         const url = `${api}`;
         const res = await this.$axios.$get(
           url,
-          { params: { where: { _id: { $in: ids } } } }
+          { params: { where: { _id: { $in: options.ids } }, ...options.params } }
         );
 
         commit('set', { entities: res._items });
@@ -107,17 +117,18 @@ export default (options) => {
         commit('update', data);
       },
 
-      async save(_, entity) {
-        let data = omit(entity, ['_created', '_updated', '_links']);
-        if (options.beforeSave) {
-          data = options.beforeSave(data);
-        }
+      async save({ commit }, entity) {
+        const data = omit(entity, ['_created', '_updated', '_links']);
 
-        if (entity._id) {
+        if (entity._id !== '@new') {
           const url = `${api}/${entity._id}`;
           await this.$axios.$put(url, data);
         } else {
-          await this.$axios.$post(api, data);
+          await this.$axios.$post(api, omit(data, ['_id']));
+
+          // make @new clean again
+          const empty = options.empty ? options.empty() : {};
+          commit('update', { _id: '@new', ...empty });
         }
       },
 
@@ -143,8 +154,8 @@ export default (options) => {
           perPage: state.perPage
         };
       },
-      empty() {
-        return () => (options.empty ? options.empty() : {});
+      newItem(state) {
+        return state.newItem;
       }
     }
   };

@@ -7,7 +7,7 @@ RUN pip3 install --no-cache-dir pymongo
 # Copy files
 COPY docker-entrypoint.sh /
 COPY sphinx.conf /etc/sphinx/sphinx.conf
-COPY index_laws.py /
+COPY *.py /
 RUN mkdir -p /var/lib/sphinx/data && mkdir -p /var/log/sphinx/ && mkdir -p /var/run/sphinx 
 RUN chmod +x /docker-entrypoint.sh
 

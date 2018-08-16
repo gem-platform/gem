@@ -1,3 +1,4 @@
+import _ from 'lodash';
 
 export default {
   /**
@@ -7,9 +8,43 @@ export default {
     columns: [
       {
         field: 'title',
-        label: 'Title'
+        label: 'Title',
+        sortable: true
       }
-    ]
+    ],
+    indexLinkToEdit: false,
+    searchColumn: 'title',
+    defaultSort: ['title', 'asc'],
+    canCreate: true
+  },
+
+  /**
+   * Comments
+   */
+  comments: {
+    columns: [
+      {
+        field: 'content',
+        label: 'Content'
+      },
+      {
+        label: 'Proposal',
+        field(row, options) {
+          const proposals = options.$store.getters['dashboard/proposals/keyed'];
+          return proposals[row.proposal] ? proposals[row.proposal].title : '<Deleted>';
+        }
+      },
+      {
+        field: 'mark',
+        label: 'Mark'
+      }
+    ],
+    async fetch(context, entities) {
+      const ids = _.chain(entities._items).map(x => x.proposal).uniq().value();
+      await context.store.dispatch('dashboard/proposals/fetchList', { ids });
+    },
+    indexLinkToEdit: true,
+    searchColumn: 'content'
   },
 
   /**
@@ -19,9 +54,14 @@ export default {
     columns: [
       {
         field: 'title',
-        label: 'Title'
+        label: 'Title',
+        sortable: true
       }
-    ]
+    ],
+    indexLinkToEdit: false,
+    searchColumn: 'title',
+    defaultSort: ['title', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -31,7 +71,8 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       },
       {
         label: 'Roles',
@@ -45,7 +86,11 @@ export default {
     ],
     async fetch(context) {
       await context.store.dispatch('names/fetch', { collection: 'roles', field: 'name' });
-    }
+    },
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -55,9 +100,14 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       }
-    ]
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -67,9 +117,14 @@ export default {
     columns: [
       {
         field: 'title',
-        label: 'Title'
+        label: 'Title',
+        sortable: true
       }
-    ]
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'title',
+    defaultSort: ['title', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -79,7 +134,8 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       },
       {
         label: 'Path',
@@ -89,7 +145,11 @@ export default {
             : '<Root>';
         }
       }
-    ]
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   },
 
   /**
@@ -99,8 +159,13 @@ export default {
     columns: [
       {
         field: 'name',
-        label: 'Name'
+        label: 'Name',
+        sortable: true
       }
-    ]
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   }
 };

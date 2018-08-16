@@ -44,8 +44,8 @@ class BallotSerializeMixin:
     def calculate_votes(votes):
         result = {}
         for vote in votes:
-            for role in vote.roles:
-                if str(role.id) not in result:
-                    result[str(role.id)] = {"yes": 0, "no": 0, "abstained": 0}
-                result[str(role.id)][vote.value] += 1
+            rid = str(vote.role.id)
+            if rid not in result:
+                result[rid] = {"yes": 0, "no": 0, "abstained": 0}
+            result[rid][vote.value] += 1
         return result

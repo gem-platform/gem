@@ -5,6 +5,7 @@ import roles from '@/components/dashboard/edit/roles.vue';
 import meetings from '@/components/dashboard/edit/meetings.vue';
 import zones from '@/components/dashboard/edit/zones.vue';
 import officials from '@/components/dashboard/edit/officials.vue';
+import comments from '@/components/dashboard/edit/comments.vue';
 
 
 export default {
@@ -14,5 +15,6 @@ export default {
   roles,
   meetings,
   zones,
-  officials
+  officials,
+  comments
 };

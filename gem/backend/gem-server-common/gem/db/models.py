@@ -3,7 +3,7 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DictField, ListField, ReferenceField,
                          EmbeddedDocumentField, EmbeddedDocument,
                          DateTimeField, GenericReferenceField,
-                         EmbeddedDocumentListField)
+                         EmbeddedDocumentListField, IntField)
 
 from gem.db.signals import finalize_ballot, update_cached_fields
 
@@ -45,6 +45,7 @@ class Role(GemDocument):
 
     name = StringField(required=True)
     permissions = ListField()
+    priority = IntField(required=True)
 
 
 class User(GemDocument):
@@ -54,6 +55,18 @@ class User(GemDocument):
     name = StringField(required=True)
     roles = ListField(ReferenceField(Role))
     password = StringField(required=True)
+
+    @property
+    def main_role(self):
+        """Returns role with highest priority
+
+        Returns:
+            Role -- Role with highest priority
+        """
+
+        big_int = 999999
+        roles = sorted(self.roles, key=lambda x: x.priority or big_int)
+        return roles[0] if roles else None
 
     @property
     def permissions(self):
@@ -67,7 +80,7 @@ class User(GemDocument):
 class BallotRecord(EmbeddedDocument):
     user = ReferenceField(User)
     value = StringField()
-    roles = ListField(ReferenceField(Role))
+    role = ReferenceField(Role)
 
 
 class Ballot(Document):
@@ -89,7 +102,7 @@ class Ballot(Document):
         record = self.__get(user) or BallotRecord()
         record.user = user
         record.value = value
-        record.roles = user.roles.copy()
+        record.role = user.main_role
         if record not in self.votes:
             self.votes.append(record)
 
@@ -152,6 +165,8 @@ class Official(GemDocument):
     secretary = BooleanField()
     gbc = BooleanField()
 
+    cachedZones = ListField(ReferenceField("Zone"))
+
     def formal_name(self):
         formats = {
             "P": {"prefix": "", "postfix": " Das"},
@@ -191,6 +206,13 @@ class Zone(GemDocument):
         return self.name < other.name
 
 
+def update_cached_fields_of(sender, document, **kwargs):
+    zones = Zone.objects(cachedOfficials__contains=document)
+    document.cachedZones = zones
+
+
 # signals
 signals.pre_save.connect(finalize_ballot, sender=Ballot)
 signals.pre_save.connect(update_cached_fields, sender=Zone)
+signals.pre_save.connect(update_cached_fields_of, sender=Official)
+

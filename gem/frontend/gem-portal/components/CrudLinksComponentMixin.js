@@ -30,7 +30,7 @@ export default {
      */
     linkToDelete(id) {
       const { entities } = this.$route.params;
-      return `/dashboard/${entities}/${id}/edit`;
+      return `/dashboard/${entities}/${id}/delete`;
     }
   }
 };

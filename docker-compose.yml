@@ -27,6 +27,9 @@ services:
     image: gemplatform/gem-search
     restart: "no"
     build: ./gem/backend/gem-search
+    volumes:
+      - ./.data/search/data:/var/lib/sphinx/data
+      - ./.data/search/logs:/var/log/sphinx
     env_file:
       - environment.${GEM_ENV-dev}.env
     ports:

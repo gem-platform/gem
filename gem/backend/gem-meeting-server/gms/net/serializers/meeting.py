@@ -115,7 +115,7 @@ class AcquaintanceMeetingStageSerializer(BallotSerializeMixin, CommentsSerialize
             "type": "AcquaintanceStage",
             "progress": stage.progress,
             "comments": self.comments_serialize(stage),
-            "summary": self.summary_serialize(stage),
+            "ballotSummary": self.summary_serialize(stage),
             "proposalId": str(stage.group.proposal.id)
         }
 

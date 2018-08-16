@@ -43,7 +43,7 @@ export default {
       .flatten()
       .value();
     if (proposalIds && proposalIds.length > 0) {
-      await store.dispatch('dashboard/proposals/fetchList', proposalIds);
+      await store.dispatch('dashboard/proposals/fetchList', { ids: proposalIds });
     }
   }
 };

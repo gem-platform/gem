@@ -1,7 +1,9 @@
 <template>
   <div>
-    <div class="field is-grouped is-grouped-multiline">
-      <p class="control">
+    <b-field grouped>
+      <p
+        v-if="canCreate"
+        class="control">
         <nuxt-link
           :to="linkToCreate()"
           class="button is-light">
@@ -11,27 +13,41 @@
           <span>Create new</span>
         </nuxt-link>
       </p>
-    </div>
+      <b-input
+        v-if="searchColumn"
+        v-model.trim="searchQuery"
+        expanded
+        type="search"
+        icon="fas fa-search"
+        placeholder="Search"
+        @input="searchQueryChanged"/>
+    </b-field>
 
     <b-table
       :data="entities"
-      :columns="columns"
       :current-page.sync="currentPage"
       :per-page="perPage"
       :total="total"
       :loading="loading"
+      :default-sort="defaultSort"
+      default-sort-direction="asc"
       hoverable
       paginated
       backend-pagination
-      @page-change="onPageChange">
+      backend-sorting
+      @page-change="pageChanged"
+      @sort="onSort">
       <template slot-scope="props">
         <b-table-column
           v-for="(column, idx) in columns"
-          :key="column.title">
+          :key="column.label"
+          :label="column.label"
+          :field="column.sortable ? column.field : undefined"
+          :sortable="column.sortable">
 
           <nuxt-link
             v-if="idx === 0"
-            :to="linkToEdit(props.row._id)">
+            :to="indexLinkToEdit ? linkToEdit(props.row._id) : linkToView(props.row._id)">
             {{ columnText(props.row, column) }}
           </nuxt-link>
           <span v-else>
@@ -40,6 +56,19 @@
 
         </b-table-column>
       </template>
+
+      <template slot="empty">
+        <section class="section">
+          <div class="content has-text-grey has-text-centered">
+            <p>
+              <b-icon
+                icon="fas fa-frown-o"
+                size="is-large"/>
+            </p>
+            <p>Nothing found.</p>
+          </div>
+        </section>
+      </template>
     </b-table>
   </div>
 </template>
@@ -47,15 +76,23 @@
 <script>
 import CrudLinksComponentMixin from '@/components/CrudLinksComponentMixin';
 import CrudIndexComponents from '@/lib/crud/components/index';
+import _ from 'lodash';
 
 export default {
   layout: 'dashboard',
   mixins: [CrudLinksComponentMixin],
   data() {
+    const component = this.$route.params.entities;
+    const config = CrudIndexComponents[component];
+
     return {
       loading: false,
       currentPage: 1,
-      perPage: 25
+      perPage: 25,
+      searchQuery: '',
+      sortColumn: undefined,
+      sortOrder: undefined,
+      defaultSort: config.defaultSort
     };
   },
   computed: {
@@ -88,19 +125,83 @@ export default {
     columns() {
       const config = CrudIndexComponents[this.component];
       return config.columns;
-    }
+    },
 
+    /**
+     * Search column
+     */
+    searchColumn() {
+      const config = CrudIndexComponents[this.component];
+      return config.searchColumn;
+    },
+
+    /**
+     * Columns for table
+     */
+    indexLinkToEdit() {
+      const config = CrudIndexComponents[this.component];
+      return config.indexLinkToEdit;
+    },
+
+    /**
+     * Can create new entities from dashboard page
+     */
+    canCreate() {
+      const config = CrudIndexComponents[this.component];
+      return config.canCreate;
+    }
   },
 
   methods: {
+    onSort(column, order) {
+      this.sortColumn = column;
+      this.sortOrder = order;
+      this.loadData();
+    },
+
+    /**
+     * Load data
+     */
+    async loadData() {
+      this.loading = true;
+
+      // query
+      const query = {
+        page: this.currentPage
+      };
+
+      // if search column and query provided
+      if (this.searchColumn && this.searchQuery) {
+        const regex = _.escapeRegExp(this.searchQuery);
+        query.where = {
+          [this.searchColumn]: { $regex: `(?i).*${regex}.*` }
+        };
+      }
+
+      // if sort column provided
+      if (this.sortColumn) {
+        query.sort = this.sortOrder === 'asc' ? this.sortColumn : `-${this.sortColumn}`;
+      }
+
+      // fetch
+      await this.$store.dispatch(`dashboard/${this.component}/fetchPage`, query);
+      this.loading = false;
+    },
+
     /**
      * Page changed
      */
-    async onPageChange(page) {
-      this.loading = true;
-      await this.$store.dispatch(`dashboard/${this.component}/fetchPage`, { page });
-      this.loading = false;
+    async pageChanged(page) {
+      this.currentPage = page;
+      this.loadData();
     },
+
+    /**
+     * Search query changed
+     */
+    searchQueryChanged: _.debounce(function loadDataDebounced() {
+      this.loadData();
+    }, 350),
 
     /**
      * Get text for cell
@@ -118,10 +219,10 @@ export default {
   async fetch(context) {
     const options = CrudIndexComponents[context.params.entities];
     const method = `dashboard/${context.params.entities}/fetchPage`;
-    await context.store.dispatch(method);
+    const result = await context.store.dispatch(method);
 
     if (options && options.fetch) {
-      await options.fetch(context);
+      await options.fetch(context, result);
     }
   }
 };

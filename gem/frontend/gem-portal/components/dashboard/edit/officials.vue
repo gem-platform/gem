@@ -25,13 +25,13 @@
         </b-select>
       </b-field>
 
-      <!-- Appendage -->
+      <!-- Details -->
       <b-field
         label="Details (if needed)"
         expanded>
         <b-input
           v-model="appendage"
-          placeholder="Appendage"
+          placeholder="Details"
           size="is-large"/>
       </b-field>
     </b-field>

@@ -2,6 +2,8 @@
   <div>
     <!-- Index of proposal -->
     <b-field
+      :type="validationHasError($v.index)"
+      :message="validationMessages($v.index)"
       label="Index">
       <b-input
         v-model.trim="index"
@@ -11,6 +13,8 @@
 
     <!-- Title of proposal -->
     <b-field
+      :type="validationHasError($v.title)"
+      :message="validationMessages($v.title)"
       label="Title">
       <b-input
         v-model.trim="title"
@@ -20,6 +24,8 @@
 
     <!-- Stage of proposal -->
     <b-field
+      :type="validationHasError($v.stage)"
+      :message="validationMessages($v.stage)"
       label="Stage">
       <b-autocomplete
         v-model="stage"
@@ -32,6 +38,8 @@
 
     <!-- Content of proposal -->
     <b-field
+      :type="validationHasError($v.content)"
+      :message="validationMessages($v.content)"
       label="Content">
       <div
         v-quill:editor="editorOption"
@@ -44,13 +52,17 @@
 </template>
 
 <script>
+import ValidationMixin from '@/components/ValidationMixin';
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
+
+import { required, minLength } from 'vuelidate/lib/validators';
 
 import flow from '@/lib/flow';
 import eoptions from '@/lib/config/editor';
 
 export default {
   mixins: [
+    ValidationMixin,
     CrudEditComponentMixin({ properties: ['index', 'title', 'content'] })
   ],
   props: {
@@ -64,6 +76,22 @@ export default {
       stages: flow.stages,
       editorOption: eoptions
     };
+  },
+  validations: {
+    index: {
+      required,
+      minLength: minLength(4)
+    },
+    title: {
+      required,
+      minLength: minLength(4)
+    },
+    stage: {
+      required
+    },
+    content: {
+      required
+    }
   },
   computed: {
     /**
@@ -79,6 +107,7 @@ export default {
       set(stage) {
         const f = flow.stages.find(x => x.title === stage);
         if (f) { this.update({ stage: f.value }); }
+        this.$v.stage.$touch();
       }
     }
   }

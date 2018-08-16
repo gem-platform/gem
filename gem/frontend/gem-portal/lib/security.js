@@ -28,6 +28,12 @@ export default {
       group: 'Dashboard Access'
     },
     {
+      _id: 'dashboard.comments',
+      name: 'Comments',
+      desc: 'Access Comments page at dashboard',
+      group: 'Dashboard Access'
+    },
+    {
       _id: 'dashboard.users',
       name: 'Users',
       desc: 'Access Users page at dashboard',

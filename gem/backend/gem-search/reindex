@@ -1,2 +1,3 @@
 #!/bin/sh
-indexer mongo --rotate
+indexer laws --rotate
+indexer entities --rotate

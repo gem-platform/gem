@@ -74,7 +74,7 @@
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 import RolesAndUsers from '@/components/RolesAndUsers.vue';
 import Proposals from '@/components/Proposals.vue';
-import time from '@/lib/time';
+import moment from 'moment';
 import _ from 'lodash';
 
 export default {
@@ -91,15 +91,21 @@ export default {
     }
   },
   data() {
-    const currentTime = new Date().toISOString();
+    const currentTime = new Date();
+    const utcOffset = -(new Date().getTimezoneOffset());
+    const startTime = this.entity.start
+      ? moment.utc(this.entity.start).utcOffset(utcOffset, true).toDate()
+      : currentTime;
+    const endTime = this.entity.end
+      ? moment.utc(this.entity.end).utcOffset(utcOffset, true).toDate()
+      : currentTime;
 
     return {
       permissionsJoin: this.getPermissions('meeting.join'),
       permissionsVote: this.getPermissions('meeting.vote'),
-
-      date: time.stripTime(time.parseIsoDatetime(this.entity.start || currentTime)),
-      startTime: time.parseIsoDatetime(this.entity.start || currentTime),
-      endTime: time.parseIsoDatetime(this.entity.end || currentTime)
+      date: startTime,
+      startTime,
+      endTime
     };
   },
   computed: {
@@ -151,22 +157,33 @@ export default {
 
     timeChanged() {
       if (this.date && this.startTime && this.endTime) {
-        const startDate = time.stripTime(this.date).getTime();
-        const startHours = this.startTime.getHours();
-        const startMinutes = this.startTime.getMinutes();
-        const endHours = this.endTime.getHours();
-        const endMinutes = this.endTime.getMinutes();
+        const start = moment(this.date)
+          .startOf('day')
+          .add(this.startTime.getHours(), 'hours')
+          .add(this.startTime.getMinutes(), 'minutes')
+          .utcOffset(-0, true)
+          .toISOString();
+        const end = moment(this.date)
+          .startOf('day')
+          .add(this.endTime.getHours(), 'hours')
+          .add(this.endTime.getMinutes(), 'minutes')
+          .utcOffset(-0, true)
+          .toISOString();
 
-        this.entity.start = time.toIso(new Date(startDate + (1000 * 60 * 60 * startHours)
-          + (1000 * 60 * startMinutes)));
-        this.entity.end = time.toIso(new Date(startDate + (1000 * 60 * 60 * endHours)
-          + (1000 * 60 * endMinutes)));
+        this.update({
+          start, end
+        });
       }
     }
   },
   async fetch({
     store, entity, mass, newEntity
   }) {
+    await Promise.all([
+      store.dispatch('names/fetch', { collection: 'roles', field: 'name' }),
+      store.dispatch('names/fetch', { collection: 'users', field: 'name' })
+    ]);
+
     if (newEntity) { return; }
 
     // fetch related resources:
@@ -174,11 +191,6 @@ export default {
     // - assigned officials
     await mass.fetch(store, [
       { resource: 'proposals', list: entity.proposals }
-    ]);
-
-    await Promise.all([
-      store.dispatch('names/fetch', { collection: 'roles', field: 'name' }),
-      store.dispatch('names/fetch', { collection: 'users', field: 'name' })
     ]);
   }
 };
