@@ -85,7 +85,7 @@ export default {
   mixins: [
     ValidationMixin,
     CrudEditComponentMixin({
-      properties: ['index', 'title', 'content', 'workflow', 'stage']
+      properties: ['index', 'title', 'content']
     }),
     StoreMixin([
       { collection: 'workflowTypes', name: '$wtypes' },
