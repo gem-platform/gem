@@ -22,18 +22,32 @@
         size="is-large" />
     </b-field>
 
+    <!-- Workflow of proposal -->
+    <b-field
+      :type="validationHasError($v.workflow)"
+      :message="validationMessages($v.workflow)"
+      label="Workflow">
+      <Autocomplete
+        :value="workflow ? workflow.name : ''"
+        :fields="['_id']"
+        field="name"
+        collection="workflowTypes"
+        placeholder="Type to search"
+        @select="workflow = $event"/>
+    </b-field>
+
     <!-- Stage of proposal -->
     <b-field
       :type="validationHasError($v.stage)"
       :message="validationMessages($v.stage)"
       label="Stage">
-      <b-autocomplete
-        v-model="stage"
-        :data="stages"
-        :keep-first="true"
-        :open-on-focus="true"
-        placeholder="Stage"
-        field="title"/>
+      <Autocomplete
+        :value="stage ? stage.name : ''"
+        :fields="['_id']"
+        field="name"
+        collection="workflowStages"
+        placeholder="Type to search"
+        @select="stage = $event"/>
     </b-field>
 
     <!-- Content of proposal -->
@@ -52,18 +66,31 @@
 </template>
 
 <script>
+// Mixins
 import ValidationMixin from '@/components/ValidationMixin';
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
+import StoreMixin from '@/components/StoreMixin';
 
+// Components
+import Autocomplete from '@/components/Autocomplete.vue';
+
+// Misc
 import { required, minLength } from 'vuelidate/lib/validators';
-
-import flow from '@/lib/flow';
 import eoptions from '@/lib/config/editor';
 
 export default {
+  components: {
+    Autocomplete
+  },
   mixins: [
     ValidationMixin,
-    CrudEditComponentMixin({ properties: ['index', 'title', 'content'] })
+    CrudEditComponentMixin({
+      properties: ['index', 'title', 'content', 'workflow', 'stage']
+    }),
+    StoreMixin([
+      { collection: 'workflowTypes', name: '$wtypes' },
+      { collection: 'workflowStages', name: '$wstages' }
+    ])
   ],
   props: {
     entity: {
@@ -73,7 +100,6 @@ export default {
   },
   data() {
     return {
-      stages: flow.stages,
       editorOption: eoptions
     };
   },
@@ -91,25 +117,52 @@ export default {
     },
     content: {
       required
+    },
+    workflow: {
+      required
     }
   },
   computed: {
     /**
-     * Stage of proposal
-     *
-     * Converts value 'deputy:review' to Deputy review and vice versa.
+     * Workflow
+     */
+    workflow: {
+      get() {
+        return this.$wtypes.get(this.entity.workflow);
+      },
+      async set(value) {
+        if (value && value._id) { await this.$wtypes.fetch(value._id); }
+        this.update({ workflow: value ? value._id : undefined });
+        this.$v.workflow.$touch();
+      }
+    },
+
+    /**
+     * Stage of the workflow
      */
     stage: {
       get() {
-        const stage = flow.stages.find(x => x.value === this.entity.stage);
-        return stage ? stage.title : '';
+        return this.$wstages.get(this.entity.stage);
       },
-      set(stage) {
-        const f = flow.stages.find(x => x.title === stage);
-        if (f) { this.update({ stage: f.value }); }
+      async set(value) {
+        if (value && value._id) { await this.$wstages.fetch(value._id); }
+        this.update({ stage: value ? value._id : undefined });
         this.$v.stage.$touch();
       }
     }
+  },
+  async fetch({
+    store, entity, mass, newEntity
+  }) {
+    if (newEntity) { return; }
+
+    // fetch related resources:
+    // - parent zone
+    // - assigned officials
+    await mass.fetch(store, [
+      { resource: 'workflowTypes', one: entity.workflow },
+      { resource: 'workflowStages', one: entity.stage }
+    ]);
   }
 };
 </script>
