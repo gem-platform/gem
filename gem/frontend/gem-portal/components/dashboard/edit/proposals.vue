@@ -69,7 +69,6 @@
 // Mixins
 import ValidationMixin from '@/components/ValidationMixin';
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
-import StoreMixin from '@/components/StoreMixin';
 
 // Components
 import Autocomplete from '@/components/Autocomplete.vue';
@@ -85,12 +84,12 @@ export default {
   mixins: [
     ValidationMixin,
     CrudEditComponentMixin({
-      properties: ['index', 'title', 'content']
-    }),
-    StoreMixin([
-      { collection: 'workflowTypes', name: '$wtypes' },
-      { collection: 'workflowStages', name: '$wstages' }
-    ])
+      properties: [
+        'index', 'title', 'content',
+        { name: 'workflow', collection: 'workflowTypes' },
+        { name: 'stage', collection: 'workflowStages' }
+      ]
+    })
   ],
   props: {
     entity: {
@@ -112,43 +111,16 @@ export default {
       required,
       minLength: minLength(4)
     },
-    stage: {
+    workflow: {
       required
+    },
+    stage: {
+      required,
+      belongToStage: (value, vm) =>
+        vm.workflow.stages.includes(value ? value._id : undefined)
     },
     content: {
       required
-    },
-    workflow: {
-      required
-    }
-  },
-  computed: {
-    /**
-     * Workflow
-     */
-    workflow: {
-      get() {
-        return this.$wtypes.get(this.entity.workflow);
-      },
-      async set(value) {
-        if (value && value._id) { await this.$wtypes.fetch(value._id); }
-        this.update({ workflow: value ? value._id : undefined });
-        this.$v.workflow.$touch();
-      }
-    },
-
-    /**
-     * Stage of the workflow
-     */
-    stage: {
-      get() {
-        return this.$wstages.get(this.entity.stage);
-      },
-      async set(value) {
-        if (value && value._id) { await this.$wstages.fetch(value._id); }
-        this.update({ stage: value ? value._id : undefined });
-        this.$v.stage.$touch();
-      }
     }
   },
   async fetch({
@@ -157,8 +129,8 @@ export default {
     if (newEntity) { return; }
 
     // fetch related resources:
-    // - parent zone
-    // - assigned officials
+    // - selected workflow of the proposal
+    // - selected stage of the proposal
     await mass.fetch(store, [
       { resource: 'workflowTypes', one: entity.workflow },
       { resource: 'workflowStages', one: entity.stage }
