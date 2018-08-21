@@ -37,8 +37,19 @@ PROPOSALS = {
             "required": True,
             "empty": False
         },
+        "workflow": {
+            "type": "objectid",
+            "data_relation": {
+                "resource": "workflowTypes",
+                "embeddable": True
+            }
+        },
         "stage": {
-            "type": "string"
+            "type": "objectid",
+            "data_relation": {
+                "resource": "workflowStages",
+                "embeddable": True
+            }
         },
         "content": {
             "type": "string",
@@ -300,6 +311,39 @@ COMMENTS = {
     }
 }
 
+WORKFLOW_STAGES = {
+    "schema": {
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
+        "description": {
+            "type": "string"
+        },
+    }
+}
+
+WORKFLOW_TYPES = {
+    "schema": {
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
+        "stages": {
+            "type": "list",
+            "schema": {
+                "type": "objectid",
+                "data_relation": {
+                    "resource": "workflowStages",
+                    "embeddable": True
+                }
+            }
+        }
+    }
+}
+
 DOMAIN = {
     "proposals": PROPOSALS,
     "users": USERS,
@@ -308,5 +352,7 @@ DOMAIN = {
     "laws": LAWS,
     "officials": OFFICIALS,
     "zones": ZONES,
-    "comments": COMMENTS
+    "comments": COMMENTS,
+    "workflowStages": WORKFLOW_STAGES,
+    "workflowTypes": WORKFLOW_TYPES
 }
