@@ -187,8 +187,7 @@ export default {
     if (newEntity) { return; }
 
     // fetch related resources:
-    // - parent zone
-    // - assigned officials
+    // - proposals
     await mass.fetch(store, [
       { resource: 'proposals', list: entity.proposals }
     ]);
