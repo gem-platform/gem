@@ -26,6 +26,7 @@ class WorkflowStage(GemDocument):
     meta = {'collection': 'workflowStages'}
     name = StringField(required=True)
     description = StringField()
+    actions = ListField(StringField(), required=True)
 
 
 class WorkflowType(GemDocument):

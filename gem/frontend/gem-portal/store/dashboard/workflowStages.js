@@ -4,7 +4,7 @@ export default crudStore({
   collection: 'workflowStages',
   empty() {
     return {
-      name: '', description: ''
+      name: '', description: '', actions: []
     };
   }
 });

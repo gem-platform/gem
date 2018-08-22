@@ -321,6 +321,14 @@ WORKFLOW_STAGES = {
         "description": {
             "type": "string"
         },
+        "actions": {
+            "type": "list",
+            "required": True,
+            "empty": False,
+            "schema": {
+                "type": "string"
+            }
+        }
     }
 }
 
