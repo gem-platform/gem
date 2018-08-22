@@ -167,5 +167,33 @@ export default {
     searchColumn: 'name',
     defaultSort: ['name', 'asc'],
     canCreate: true
+  },
+
+  workflowTypes: {
+    columns: [
+      {
+        field: 'name',
+        label: 'Name',
+        sortable: true
+      }
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
+  },
+
+  workflowStages: {
+    columns: [
+      {
+        field: 'name',
+        label: 'Name',
+        sortable: true
+      }
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   }
 };

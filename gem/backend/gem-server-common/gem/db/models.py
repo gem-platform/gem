@@ -11,6 +11,7 @@ from gem.db.signals import finalize_ballot, update_cached_fields
 class OpForbidden(Exception):
     pass
 
+
 class GemDocument(Document):
     meta = {
         'abstract': True,
@@ -20,6 +21,21 @@ class GemDocument(Document):
     etag = StringField(db_field="_etag")
 
 
+class WorkflowStage(GemDocument):
+    """Stage of a workflow"""
+    meta = {'collection': 'workflowStages'}
+    name = StringField(required=True)
+    description = StringField()
+    actions = ListField(StringField(), required=True)
+
+
+class WorkflowType(GemDocument):
+    """Type of a workflow"""
+    meta = {'collection': 'workflowTypes'}
+    name = StringField(required=True)
+    stages = ListField(ReferenceField(WorkflowStage))
+
+
 class Proposal(GemDocument):
     """Proposal document"""
     meta = {'collection': 'proposals'}
@@ -27,7 +43,8 @@ class Proposal(GemDocument):
     title = StringField(required=True)
     index = StringField(required=True)
     content = StringField(required=True)
-    stage = StringField()
+    workflow = ReferenceField(WorkflowType)
+    stage = ReferenceField(WorkflowStage)
 
 
 class Law(GemDocument):

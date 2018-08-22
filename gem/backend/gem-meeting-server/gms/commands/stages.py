@@ -93,6 +93,7 @@ def close(context, sid, data):
     """Close meeting"""
     context.send_broadcast("close", {})
     context.sessions.delete_all()
+    context.close_meeting()
     return {"success": True}
 
 

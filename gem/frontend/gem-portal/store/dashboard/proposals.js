@@ -4,7 +4,11 @@ export default crudStore({
   collection: 'proposals',
   empty() {
     return {
-      index: '', title: '', stage: '', content: ''
+      index: '',
+      title: '',
+      stage: '',
+      content: '',
+      workflow: ''
     };
   }
 });

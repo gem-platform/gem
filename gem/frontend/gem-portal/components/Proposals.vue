@@ -31,7 +31,7 @@
           <div class="level-right">
             <!-- Stage of proposal -->
             <span class="stage">
-              {{ proposal.stage | stage }}
+              {{ stageName(proposal.stage) }}
             </span>
 
             <!-- Move proposal up button -->
@@ -65,20 +65,24 @@
 </template>
 
 <script>
+// Mixins
+import StoreMixin from '@/components/StoreMixin';
+
+// Components
 import Autocomplete from '@/components/Autocomplete.vue';
+
+// Misc
 import arr from '@/lib/array';
-import flow from '@/lib/flow';
 
 export default {
   components: {
     Autocomplete
   },
-  filters: {
-    stage(value) {
-      const stage = flow.stages.find(s => s.value === value);
-      return stage ? stage.title : '';
-    }
-  },
+  mixins: [
+    StoreMixin([
+      { collection: 'workflowStages', name: 'wstages' }
+    ])
+  ],
   props: {
     // Array of selected proposal IDs
     value: {
@@ -132,10 +136,22 @@ export default {
       if (!data) { return; }
       if (this.selectedIds.includes(data._id)) { return; }
 
+      // fetch some data
+      this.wstages.fetch(data.stage);
+
       // Add selected proposal
       this.list.push(data);
       this.$emit('input', this.selectedIds);
       this.query = '';
+    },
+
+    /**
+     * Get name of the stage
+     */
+    stageName(id) {
+      const stage = this.wstages.get(id);
+      if (!stage) { this.wstages.fetch(id); }
+      return stage ? stage.name : '';
     }
   }
 };

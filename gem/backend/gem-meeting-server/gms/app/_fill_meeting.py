@@ -25,9 +25,9 @@ def fill_meeting(meeting, meeting_id):
             authentication_source=db_auth_source,
             authentication_mechanism=db_auth_mechanism)
 
+    # get meeting from database
     db_meeting = Meeting.objects.get(id=ObjectId(meeting_id))
-    # Meeting.objects[0] if len(Meeting.objects) > 0 else init_db()
-
+    
     # add agenda stage
     agenda_stage = AgendaMeetingStage(db_meeting.agenda)
     meeting.stages.append(agenda_stage)
@@ -48,15 +48,27 @@ def fill_meeting(meeting, meeting_id):
 
 
 def add_group(meeting, proposal):
+    stage = proposal.stage
+
     ballots = Ballot.objects(proposal=proposal)
     ballot = ballots[0] if ballots else Ballot(proposal=proposal)
 
     comments = list(Comment.objects(proposal=proposal))
 
     group = StagesGroup(meeting, proposal=proposal)
-    meeting.stages.append(AcquaintanceMeetingStage(ballot, comments, group=group))
-    meeting.stages.append(BallotMeetingStage(ballot, group=group))
-    meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
-    meeting.stages.append(CommentsMeetingStage(comments, group=group))
-    meeting.stages.append(DiscussionMeetingStage(group=group))
+    if "acquaintance" in stage.actions:
+        meeting.stages.append(AcquaintanceMeetingStage(ballot, comments, group=group))
+    
+    if "ballot" in stage.actions:
+        meeting.stages.append(BallotMeetingStage(ballot, group=group))
+
+    if "ballot.results" in stage.actions:
+        meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
+
+    if "comments" in stage.actions:
+        meeting.stages.append(CommentsMeetingStage(comments, group=group))
+
+    if "discussion" in stage.actions:
+        meeting.stages.append(DiscussionMeetingStage(group=group))
+    
     meeting.proposals.append(proposal)
