@@ -30,6 +30,12 @@ export default (options) => {
             throw Error('Unable to store entity without id');
           }
 
+          // add fields from 'empty' if not present
+          if (options.empty) {
+            const def = omit(options.empty(), Object.keys(entity));
+            Object.assign(entity, def);
+          }
+
           Vue.set(state.items, entity._id, entity);
         });
 
