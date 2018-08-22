@@ -324,7 +324,6 @@ WORKFLOW_STAGES = {
         "actions": {
             "type": "list",
             "required": True,
-            "empty": False,
             "schema": {
                 "type": "string"
             }
