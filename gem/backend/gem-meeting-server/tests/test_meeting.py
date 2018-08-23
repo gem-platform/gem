@@ -38,10 +38,17 @@ def test_switch_event(meeting, stages):
     switch_handler_data = None
 
     def switch_event_handler(index, stage):
+        """switch event handler"""
         nonlocal switch_handler_data
         switch_handler_data = (index, stage)
 
+    # switch to new stage
     meeting.stages.switch.subscribe(switch_event_handler)
     meeting.stages.switch_to(1)
     assert switch_handler_data is not None
     assert switch_handler_data == (1, stages[1])
+
+    # switch to the same stage, no handler should be called
+    switch_handler_data = None
+    meeting.stages.switch_to(1)
+    assert switch_handler_data is None
