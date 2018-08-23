@@ -11,7 +11,8 @@ def test_all_returns_list_of_stages(meeting, stages):
 
 
 def test_current_stage(empty_meeting, stages):
-    """'current' property should return current stage or None if no stages added."""
+    """'current' property should return current stage or None if
+        no stages added."""
     assert empty_meeting.stages.current is None
     empty_meeting.stages.append(stages[0])
     assert empty_meeting.stages.current == stages[0]
@@ -34,7 +35,7 @@ def test_switch_to_wrong_stage(meeting):
 
 
 def test_switch_event(meeting, stages):
-    """Switch event should be called."""
+    """'switch' event should be called."""
     switch_handler_data = None
 
     def switch_event_handler(index, stage):
@@ -52,3 +53,21 @@ def test_switch_event(meeting, stages):
     switch_handler_data = None
     meeting.stages.switch_to(1)
     assert switch_handler_data is None
+
+
+def test_stage_changed_event(meeting, stages):
+    """'changed' event should be called on stage change."""
+    stages_changed_handler_data = None
+
+    # changes handler
+    def on_stages_changed(index, stage):
+        """meeting changed event handler"""
+        nonlocal stages_changed_handler_data
+        stages_changed_handler_data = (index, stage)
+
+    # subscribe for changes
+    meeting.stages.changed.subscribe(on_stages_changed)
+
+    # provide some action
+    stages[1].do_something()
+    assert stages_changed_handler_data == (1, stages[1])

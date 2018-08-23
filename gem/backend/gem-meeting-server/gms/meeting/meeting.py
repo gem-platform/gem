@@ -96,6 +96,12 @@ class MeetingStages:
 
     @property
     def changed(self):
+        """
+        Calls on any stage changed.
+
+        Returns:
+            Event -- Event.
+        """
         return self.__changed
 
     def switch_to(self, index):
