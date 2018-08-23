@@ -34,6 +34,25 @@ def test_user_role_in_votes_persistent():
     assert ballot.votes[0].role == role2
 
 
+def test_right_role_priority():
+    meeting = Meeting(context=Context())
+
+    proposal = Proposal()
+    ballot = Ballot(proposal=proposal)
+
+    role1 = Role()
+    role2 = Role()
+    role1.priority = 1
+    role2.priority = 5
+
+    user = User()
+    user.roles.append(role1)
+    user.roles.append(role2)
+
+    ballot.set(user, True)
+    assert ballot.votes[0].role == role2
+
+
 def test_unapproved_vote_in_finished_meeting():
     meeting = Meeting(context=Context())
 
@@ -44,4 +63,3 @@ def test_unapproved_vote_in_finished_meeting():
     user = User()
     with pytest.raises(OpForbidden, match="Ballot is finished already."):
         ballot.set(user, False)
-
