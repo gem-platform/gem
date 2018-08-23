@@ -1,20 +1,8 @@
 import pytest
-import sys
-
-sys.path.append('.')
-sys.path.append("../gem-server-common")
-
 from gem.db import Proposal, Ballot, Role, User, OpForbidden
-
-from gms.meeting import Meeting
-from gms.meeting.stages import *
-from gms.app.context import Context
-from gms.app._fill_meeting import add_group
 
 
 def test_user_role_in_votes_persistent():
-    meeting = Meeting(context=Context())
-
     proposal = Proposal()
     ballot = Ballot(proposal=proposal)
 
@@ -35,8 +23,6 @@ def test_user_role_in_votes_persistent():
 
 
 def test_right_role_priority():
-    meeting = Meeting(context=Context())
-
     proposal = Proposal()
     ballot = Ballot(proposal=proposal)
 
@@ -50,12 +36,10 @@ def test_right_role_priority():
     user.roles.append(role2)
 
     ballot.set(user, True)
-    assert ballot.votes[0].role == role2
+    assert ballot.votes[0].role == role1
 
 
 def test_unapproved_vote_in_finished_meeting():
-    meeting = Meeting(context=Context())
-
     proposal = Proposal()
     ballot = Ballot(proposal=proposal)
     ballot.finished = True
