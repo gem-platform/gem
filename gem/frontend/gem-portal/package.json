@@ -14,33 +14,33 @@
     "precommit": "npm run lint"
   },
   "dependencies": {
-    "@nuxtjs/auth": "^4.1.0",
+    "@nuxtjs/auth": "^4.5.1",
     "@nuxtjs/axios": "^5.1.1",
     "@nuxtjs/font-awesome": "^1.0.3",
-    "lodash": "^4.17.5",
-    "moment": "^2.22.1",
-    "nuxt": "^1.0.0",
+    "lodash": "^4.17.10",
+    "moment": "^2.22.2",
+    "nuxt": "^1.4.2",
     "nuxt-buefy": "0.0.4",
     "socket.io-client": "^2.1.1",
-    "vue": "^2.5.16",
+    "vue": "^2.5.17",
     "vue-bus": "^1.1.0",
     "vue-quill-editor": "^3.0.6",
-    "vue-timers": "^1.7.1",
+    "vue-timers": "^1.7.3",
     "vue-truncate-filter": "^1.1.7",
     "vuelidate": "^0.6.2",
     "vuex": "^3.0.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-eslint": "^3.0.0-alpha.13",
-    "@vue/cli-service": "^3.0.0-alpha.13",
-    "@vue/eslint-config-airbnb": "^3.0.0-beta.6",
-    "babel-eslint": "^8.2.1",
+    "@vue/cli-plugin-eslint": "^3.0.1",
+    "@vue/cli-service": "^3.0.1",
+    "@vue/eslint-config-airbnb": "^3.0.1",
+    "babel-eslint": "^8.2.6",
     "eslint": "^4.15.0",
     "eslint-friendly-formatter": "^3.0.0",
     "eslint-import-resolver-webpack": "^0.9.0",
     "eslint-loader": "^1.7.1",
-    "eslint-plugin-import": "^2.11.0",
-    "eslint-plugin-vue": "^4.0.0"
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-vue": "^4.7.1"
   },
   "babel": {
     "presets": [
