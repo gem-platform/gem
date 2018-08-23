@@ -144,5 +144,28 @@ class Context:
 
     # actions
 
+    def close_meeting(self):
+        # move all proposals to the next stage
+        for proposal in self.meeting.proposals:
+            # skip if no workflow or workflow stages specified
+            if not (proposal.workflow and proposal.workflow.stages):
+                continue
+
+            # get workflow data
+            stages = proposal.workflow.stages
+            stage = proposal.stage
+
+            try:
+                # calculate index
+                current_index = stages.index(stage)
+                next_index = current_index + 1
+
+                # set next stage from workflow
+                if next_index <= len(stages) - 1:
+                    proposal.stage = stages[next_index]
+                    proposal.save()
+            except ValueError:
+                pass
+
     def send_broadcast(self, message, data):
         self.broadcast.notify(message, data)

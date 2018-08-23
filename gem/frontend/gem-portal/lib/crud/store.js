@@ -30,6 +30,12 @@ export default (options) => {
             throw Error('Unable to store entity without id');
           }
 
+          // add fields from 'empty' if not present
+          if (options.empty) {
+            const def = omit(options.empty(), Object.keys(entity));
+            Object.assign(entity, def);
+          }
+
           Vue.set(state.items, entity._id, entity);
         });
 
@@ -81,9 +87,11 @@ export default (options) => {
         if (options.ids === undefined) {
           throw Error('Unable to fetch list: IDs is not defined');
         }
+        /*
         if (options.ids.length === 0) {
           throw Error('Unable to fetch list: IDs is empty');
         }
+        */
         if (options.ids.length > 25) {
           throw Error('Too many items requested. Pagination will cut results to 25');
         }

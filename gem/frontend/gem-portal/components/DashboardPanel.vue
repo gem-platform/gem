@@ -39,6 +39,25 @@
     </ul>
 
     <p
+      class="menu-label">
+      Workflow
+    </p>
+    <ul
+      class="menu-list">
+      <li v-if="haveAccess('dashboard.workflow')">
+        <nuxt-link
+          to="/dashboard/workflowTypes"
+          active-class="is-active">Workflows</nuxt-link>
+      </li>
+      <li v-if="haveAccess('dashboard.workflow')">
+        <nuxt-link
+          to="/dashboard/workflowStages"
+          active-class="is-active">Stages</nuxt-link>
+      </li>
+    </ul>
+
+
+    <p
       v-if="showAdministrationSection"
       class="menu-label">
       Administration

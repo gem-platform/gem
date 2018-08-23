@@ -1,6 +1,7 @@
 from flask import Blueprint, request, current_app, jsonify
 from re import IGNORECASE
 from bson.regex import Regex
+from bson import ObjectId
 
 api_autocomplete = Blueprint('api_autocomplete', __name__)
 
@@ -34,9 +35,12 @@ def app_autocomplete():
         for obj in results
     ]
 
-    #
+    # convert ObjectId to str
     for suggestion in suggestions:
-        suggestion["_id"] = str(suggestion["_id"])
+        for key in suggestion:
+            if isinstance(suggestion[key], ObjectId):
+                suggestion[key] = str(suggestion[key])
+
 
     # return result
     return jsonify({"success": True, "suggestions": suggestions})
