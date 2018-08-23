@@ -1,8 +1,13 @@
-from pytest import raises, fixture
+from pytest import raises
 
 from gms.meeting import Meeting
 from gms.meeting.stages import AgendaMeetingStage
 from gms.app.context import Context
+
+from tools import drop_db
+
+def teardown_function():
+    drop_db()
 
 
 def test_all_returns_list_of_stages(meeting, stages):
@@ -28,7 +33,7 @@ def test_switch_to_stage(meeting, stages):
 def test_switch_to_wrong_stage(meeting):
     """Test switching to wrong stage."""
     with raises(IndexError, match="Stage index out of bounds"):
-        meeting.stages.switch_to(2)
+        meeting.stages.switch_to(99)
 
     with raises(ValueError, match="Index can not be negative"):
         meeting.stages.switch_to(-1)

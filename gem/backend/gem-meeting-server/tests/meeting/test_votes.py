@@ -1,6 +1,11 @@
 import pytest
 from gem.db import Proposal, Ballot, Role, User, OpForbidden
 
+from tools import drop_db
+
+def teardown_function():
+    drop_db()
+
 
 def test_user_role_in_votes_persistent():
     proposal = Proposal()

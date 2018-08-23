@@ -37,12 +37,14 @@ class CommentsMeetingStage(MeetingStage):
             message {str} -- Message.
             mark {str} -- Mark (+, -, i, etc).
         """
+        # no proposal provided for stage
+        if not (self.group and self.group.proposal):
+            raise ValueError("No proposal provided for comment")
+
+        # create new comment
         comment = Comment(user, self.group.proposal)
         comment.content = message
         comment.mark = mark
         self.__comments.append(comment)
         self.changed.notify()
         comment.save()
-
-        msg = "comment '{}' accepted from '{}' with mark '{}'"
-        print(msg.format(message, user.name, mark))

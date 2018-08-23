@@ -1,7 +1,7 @@
 class StagesGroup:
     """Shares state of the stages."""
 
-    def __init__(self, meeting, proposal=None):
+    def __init__(self, meeting=None, proposal=None):
         """
         Initialize new instance of the StagesGroup class.
 
