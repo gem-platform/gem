@@ -9,10 +9,12 @@ from gem.db.signals import finalize_ballot, update_cached_fields
 
 
 class OpForbidden(Exception):
+    """Operation forbidden exception."""
     pass
 
 
 class GemDocument(Document):
+    """Abstract GEM document."""
     meta = {
         'abstract': True,
     }
@@ -95,6 +97,7 @@ class User(GemDocument):
 
 
 class BallotRecord(EmbeddedDocument):
+    """Ballot record."""
     user = ReferenceField(User)
     value = StringField()
     role = ReferenceField(Role)
@@ -139,6 +142,7 @@ class Comment(Document):
 
 
 class MeetingPermission(EmbeddedDocument):
+    """Meeting permission document."""
     scope = StringField()
     user = ReferenceField(User, required=False)
     role = ReferenceField(Role, required=False)
@@ -174,6 +178,7 @@ class Meeting(GemDocument):
 
 
 class Official(GemDocument):
+    """Official person document."""
     meta = {'collection': 'officials'}
     name = StringField(required=True)
     form_of_address = StringField(db_field="formOfAddress", required=True)
@@ -207,6 +212,7 @@ class Official(GemDocument):
 
 
 class Zone(GemDocument):
+    """Zone document."""
     meta = {'collection': 'zones'}
     name = StringField(required=True)
     parent = ReferenceField("Zone")

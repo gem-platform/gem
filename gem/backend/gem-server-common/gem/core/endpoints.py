@@ -17,8 +17,9 @@ class Endpoints:
     def all(self):
         """
         Returns list of all endpoints.
-        :rtype: list[Endpoint]
-        :return: List of endpoints.
+
+        Returns:
+            list[Endpoint] -- List of all events.
         """
         # todo: return readonly
         return self.__endpoints
@@ -26,17 +27,19 @@ class Endpoints:
     @property
     def event(self):
         """
-        On event of endpoint.
-        :rtype: Event
-        :return: Event
+        Event of endpoint.
+
+        Returns:
+            Event -- Event.
         """
         return self.__event
 
     def add(self, endpoint):
         """
-        Adds endpoint.
-        :type endpoint: Endpoint
-        :param endpoint: Endpoint to add.
+        Add endpoint to list.
+
+        Arguments:
+            endpoint {Endpoint} -- Endpoint to add.
         """
         self.__endpoints.append(endpoint)
         endpoint.event.subscribe(self.__on_endpoint_event)
@@ -44,8 +47,11 @@ class Endpoints:
     def __on_endpoint_event(self, event, *data):
         """
         On endpoint event.
-        :param event: Name of event.
-        :param data: Data of event.
-        :return: Result of event's handler.
+
+        Arguments:
+            event {str} -- Event
+
+        Returns:
+            obj -- Result
         """
         return self.__event.notify(event, *data)

@@ -15,17 +15,19 @@ class Processor:
     def context(self):
         """
         Returns processor execution context.
-        :return: User defined object.
+
+        Returns:
+            obj -- User defined object.
         """
         return self.__context
 
     def register(self, command, handler):
         """
-        Registers handler for specified command.
-        :type command: str
-        :type handler: callable
-        :param command: Command
-        :param handler: Handler
+        Register handler for specified command.
+
+        Arguments:
+            command {str} -- Command name.
+            handler {func} -- Command handler.
         """
         self.__handlers[command] = handler
 
@@ -37,15 +39,21 @@ class Processor:
         Arguments:
             handlers {list[(name, handler)]} -- List of tuple (name, handler)
         """
-
         for handler in handlers:
             self.register(handler[0], handler[1])
 
     def exec(self, command, *data):
         """
-        Executes command with specified data
-        :param command: Command to execute
-        :param data: Data to pass to handler
+        Executes command with specified data.
+        
+        Arguments:
+            command {str} -- Command to execute.
+        
+        Raises:
+            Exception -- If command is not registered.
+        
+        Returns:
+            obj -- Result of execution.
         """
         if command not in self.__handlers:
             raise Exception("No '{}' command registered".format(command))

@@ -1,3 +1,4 @@
+"""Abstract class for GEM Platform applications."""
 from abc import ABCMeta
 
 from gem.core.endpoints import Endpoints
@@ -17,9 +18,10 @@ class Application(metaclass=ABCMeta):
     @property
     def endpoints(self):
         """
-        Returns endpoints of the application.
-        :rtype: Endpoints
-        :return: Endpoints.
+        Return list of endpoints.
+
+        Returns:
+            list[Endpoint] -- List of endpoints.
         """
         return self.__endpoints
 
@@ -28,5 +30,5 @@ class Application(metaclass=ABCMeta):
         Runs application.
         """
         for endpoint in self.__endpoints.all:
-            # todo: run in thread
+            # todo: run in a separate thread
             endpoint.open()
