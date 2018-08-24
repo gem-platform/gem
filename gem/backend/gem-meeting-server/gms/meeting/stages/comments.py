@@ -1,3 +1,5 @@
+"""Commenting stage of a meeting."""
+
 from gem.db import Comment
 from gms.meeting.stages import MeetingStage
 
