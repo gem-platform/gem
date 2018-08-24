@@ -28,7 +28,7 @@ class BallotMeetingStage(MeetingStage):
         """
         return self.__ballot
 
-    def _switch_from(self):
+    def on_leave(self):
         self.__ballot.save()
 
     def vote(self, user, value):

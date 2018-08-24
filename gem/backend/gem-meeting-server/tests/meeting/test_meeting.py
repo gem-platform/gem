@@ -32,7 +32,7 @@ def test_switch_to_stage(meeting, stages):
 
 def test_switch_to_wrong_stage(meeting):
     """Test switching to wrong stage."""
-    with raises(IndexError, match="Stage index out of bounds"):
+    with raises(ValueError, match="Stage index out of bounds"):
         meeting.stages.switch_to(99)
 
     with raises(ValueError, match="Index can not be negative"):

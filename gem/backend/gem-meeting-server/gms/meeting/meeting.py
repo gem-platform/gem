@@ -112,10 +112,9 @@ class MeetingStages:
             index {int} -- Index of stage.
 
         Raises:
-            IndexError -- If index out of bounds.
-            ValueError -- Index should be positive.
+            ValueError -- If index out of bounds.
         """
-        # if index not changed
+        # Index not changed, do nothong
         if index == self.index:
             return
 
@@ -124,12 +123,12 @@ class MeetingStages:
             raise ValueError("Index can not be negative")
 
         if index > len(self.__stages) - 1:
-            raise IndexError("Stage index out of bounds")
+            raise ValueError("Stage index out of bounds")
 
         # switch to stage using specified index
-        self.current._switch_from()
+        self.current.on_leave()
         self.__index = index
-        self.current._switch_to()
+        self.current.on_enter()
         self.__switch.notify(index, self.current)
 
     def append(self, stage):

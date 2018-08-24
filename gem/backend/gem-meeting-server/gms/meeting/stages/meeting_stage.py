@@ -48,8 +48,8 @@ class MeetingStage(metaclass=ABCMeta):
         """
         return self.__changed
 
-    def _switch_to(self):
+    def on_enter(self):
         pass
 
-    def _switch_from(self):
+    def on_leave(self):
         pass
