@@ -4,6 +4,7 @@ from gms.meeting.stages import MeetingStage
 
 class CommentsMeetingStage(MeetingStage):
     """Comments stage of the meeting."""
+    __VALID_MARKS = ["+", "-", "i"]
 
     def __init__(self, comments, group=None):
         """
@@ -39,12 +40,17 @@ class CommentsMeetingStage(MeetingStage):
         """
         # no proposal provided for stage
         if not (self.group and self.group.proposal):
-            raise ValueError("No proposal provided for comment")
+            raise ValueError("No proposal provided for stage")
+
+        # validate mark
+        if mark not in self.__VALID_MARKS:
+            raise ValueError("Invalid mark")
 
         # create new comment
-        comment = Comment(user, self.group.proposal)
-        comment.content = message
-        comment.mark = mark
+        comment = Comment(
+            user=user, proposal=self.group.proposal,
+            content=message, mark=mark)
+        comment.save()
+
         self.__comments.append(comment)
         self.changed.notify()
-        comment.save()
