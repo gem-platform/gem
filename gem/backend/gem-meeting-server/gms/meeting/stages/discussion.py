@@ -1,3 +1,5 @@
+"""Discussion stage of the meeting."""
+
 from gms.meeting.stages import MeetingStage
 
 
@@ -42,8 +44,9 @@ class DiscussionMeetingStage(MeetingStage):
         Arguments:
             user {User} -- Request a floor.
         """
+        # user already in the queue
         if user in self.__queue:
-            return  # user alerady in queue
+            return
 
         self.__queue.append(user)
         self.changed.notify()
@@ -55,6 +58,7 @@ class DiscussionMeetingStage(MeetingStage):
         Arguments:
             user {User} -- User to remove from queue.
         """
+        # user is not in the queue
         if user not in self.__queue:
             return
 

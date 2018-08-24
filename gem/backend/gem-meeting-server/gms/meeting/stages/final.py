@@ -8,7 +8,7 @@ class FinalMeetingStage(MeetingStage):
 
     def __init__(self, group=None):
         """
-        Initialize new instance of the AgendaMeetingStage class.
+        Initialize new instance of the FinalMeetingStage class.
 
         Keyword Arguments:
             group {StageGroup} -- Group of the stage. (default: {None})

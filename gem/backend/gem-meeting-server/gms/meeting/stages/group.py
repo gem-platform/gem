@@ -1,3 +1,6 @@
+"""SharedGroup class."""
+
+
 class StagesGroup:
     """Shares state of the stages."""
 
