@@ -10,7 +10,7 @@
 
     <b-field label="Levels">
       <b-switch
-        v-model="leafsOnly">
+        v-model="leavesOnly">
         Display only last nodes of tree.
       </b-switch>
     </b-field>
@@ -34,12 +34,12 @@ export default {
   data() {
     return {
       hierarchy: false,
-      leafsOnly: true
+      leavesOnly: true
     };
   },
   computed: {
     params() {
-      return { hierarchy: this.hierarchy, leafsOnly: this.leafsOnly };
+      return { hierarchy: this.hierarchy, leavesOnly: this.leavesOnly };
     }
   }
 };

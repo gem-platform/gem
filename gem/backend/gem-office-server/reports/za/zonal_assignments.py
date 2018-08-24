@@ -8,15 +8,15 @@ def __by_cozonals(zone):
     return (len(officials), sorted(officials))
 
 
-def __get_leafs(zone, result):
+def __get_leaves(zone, result):
     if not zone.children:
         result.append(zone)
         return result
     for child in zone.children:
-        __get_leafs(child, result)
+        __get_leaves(child, result)
 
 
-def zonal_assignments_report(hierarchy=False, leafs_only=True):
+def zonal_assignments_report(hierarchy=False, leaves_only=True):
     report = []
 
     # Go through all officials
@@ -40,7 +40,7 @@ def zonal_assignments_report(hierarchy=False, leafs_only=True):
             report_record_group = {"with": co_zonals, "zones": []}
 
             rz = zones
-            if leafs_only:
+            if leaves_only:
                 rz = list(filter(lambda x: not x.children, rz))
 
             if hierarchy:
