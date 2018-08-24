@@ -52,7 +52,7 @@ class MeetingStage(metaclass=ABCMeta):
 
     def on_enter(self):
         """
-        Called when stage activated,
+        Called when stage activated.
         """
         pass
 
