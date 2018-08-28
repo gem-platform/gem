@@ -104,7 +104,13 @@ export default {
         const { entities } = this.$route.params;
         await this.$store.dispatch(`dashboard/${entities}/save`, this.entity);
         this.$router.push(`/dashboard/${entities}`);
-        this.$snackbar.open({ message: 'Record has been updated' });
+        const snackbarNamestoShow = { proposals: 'proposal', laws: 'law', meetings: 'meeting' };
+        const snackBarName = snackbarNamestoShow[entities] || 'record';
+        if (this.entityId === '@new') {
+          this.$snackbar.open({ message: `New ${snackBarName} has been created` });
+        } else {
+          this.$snackbar.open({ message: `The ${snackBarName} has been updated` });
+        }
       } catch (e) {
         const { response } = e;
         if (response && response.status === 422) {
