@@ -35,9 +35,9 @@ def print_and_save(content):
 @app.route('/office/zonal/report', methods=['GET'])
 def generate_zonal_report():
     hierarchy = request.args.get("hierarchy") in ["true", 1]
-    leafs_only = request.args.get("leafsOnly") in ["true", 1]
-
-    report = zonal_assignments_report(hierarchy=hierarchy, leafs_only=leafs_only)
+    leaves_only = request.args.get("leavesOnly") in ["true", 1]
+    report = zonal_assignments_report(
+        hierarchy=hierarchy, leaves_only=leaves_only)
     filename = print_and_save(report)
     return jsonify({"success": True, "filename": filename})
 

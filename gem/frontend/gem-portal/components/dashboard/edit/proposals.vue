@@ -116,8 +116,12 @@ export default {
     },
     stage: {
       required,
-      belongToStage: (value, vm) =>
-        vm.workflow.stages.includes(value ? value._id : undefined)
+      belongToStage: (value, vm) => {
+        if (vm.workflow && vm.workflow.stages) {
+          return vm.workflow.stages.includes(value ? value._id : undefined);
+        }
+        return true;
+      }
     },
     content: {
       required

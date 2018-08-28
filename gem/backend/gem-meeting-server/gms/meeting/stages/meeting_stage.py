@@ -1,3 +1,5 @@
+"""Abstract meeting stage to inherit all meeting stages from."""
+
 from abc import ABCMeta
 from gem.core import Event
 
@@ -48,8 +50,14 @@ class MeetingStage(metaclass=ABCMeta):
         """
         return self.__changed
 
-    def _switch_to(self):
+    def on_enter(self):
+        """
+        Called when stage activated.
+        """
         pass
 
-    def _switch_from(self):
+    def on_leave(self):
+        """
+        Called when stage deactivated.
+        """
         pass

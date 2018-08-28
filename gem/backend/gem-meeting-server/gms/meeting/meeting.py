@@ -53,30 +53,82 @@ class MeetingStages:
 
     @property
     def all(self):
+        """
+        Returns list of all stages.
+
+        Returns:
+            [list] -- List of stages.
+        """
         # todo: return readonly
         return self.__stages
 
     @property
     def current(self):
+        """
+        Returns current stage.
+
+        Returns:
+            MeetingStage -- Current stage.
+        """
+        if not self.__stages:
+            return None  # return None if no stages added
         return self.__stages[self.__index]
 
     @property
     def index(self):
+        """
+        Returns index of current stage.
+
+        Returns:
+            int -- Index of the stage.
+        """
         return self.__index
 
     @property
     def switch(self):
+        """
+        Calls after switching to another stage.
+
+        Returns:
+            Event -- Event.
+        """
         return self.__switch
 
     @property
     def changed(self):
+        """
+        Calls on any stage changed.
+
+        Returns:
+            Event -- Event.
+        """
         return self.__changed
 
     def switch_to(self, index):
-        """Switches stage to specified"""
-        self.current._switch_from()
+        """
+        Switch to stage using specified index.
+
+        Arguments:
+            index {int} -- Index of stage.
+
+        Raises:
+            ValueError -- If index out of bounds.
+        """
+        # Index not changed, do nothong
+        if index == self.index:
+            return
+
+        # check index range
+        if index < 0:
+            raise ValueError("Index can not be negative")
+
+        if index > len(self.__stages) - 1:
+            raise ValueError("Stage index out of bounds")
+
+        # switch to stage using specified index
+        self.current.on_leave()
         self.__index = index
-        self.current._switch_to()
+        self.current.on_enter()
         self.__switch.notify(index, self.current)
 
     def append(self, stage):

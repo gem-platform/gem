@@ -1,9 +1,12 @@
+"""Commenting stage of a meeting."""
+
 from gem.db import Comment
 from gms.meeting.stages import MeetingStage
 
 
 class CommentsMeetingStage(MeetingStage):
     """Comments stage of the meeting."""
+    __VALID_MARKS = ["+", "-", "i"]
 
     def __init__(self, comments, group=None):
         """
@@ -37,12 +40,19 @@ class CommentsMeetingStage(MeetingStage):
             message {str} -- Message.
             mark {str} -- Mark (+, -, i, etc).
         """
-        comment = Comment(user, self.group.proposal)
-        comment.content = message
-        comment.mark = mark
-        self.__comments.append(comment)
-        self.changed.notify()
+        # no proposal provided for stage
+        if not (self.group and self.group.proposal):
+            raise ValueError("No proposal provided for stage")
+
+        # validate mark
+        if mark not in self.__VALID_MARKS:
+            raise ValueError("Invalid mark")
+
+        # create new comment
+        comment = Comment(
+            user=user, proposal=self.group.proposal,
+            content=message, mark=mark)
         comment.save()
 
-        msg = "comment '{}' accepted from '{}' with mark '{}'"
-        print(msg.format(message, user.name, mark))
+        self.__comments.append(comment)
+        self.changed.notify()

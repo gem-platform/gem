@@ -11,8 +11,8 @@ class AcquaintanceMeetingStage(MeetingStage):
         Initialize new instance of the AcquaintanceMeetingStage class.
 
         Arguments:
-            ballot {Ballot} -- Ballot from previous stage of proposal
-            comments {Comments} -- Comments from previous stage of proposal
+            ballot {Ballot} -- Ballot to display results of.
+            comments {list[Comments]} -- List of comments to display.
 
         Keyword Arguments:
             group {StageGroup} -- Group of the stage. (default: {None})
