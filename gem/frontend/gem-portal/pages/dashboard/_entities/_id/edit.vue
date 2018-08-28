@@ -104,7 +104,15 @@ export default {
         const { entities } = this.$route.params;
         await this.$store.dispatch(`dashboard/${entities}/save`, this.entity);
         this.$router.push(`/dashboard/${entities}`);
-        this.$snackbar.open({ message: 'Record has been updated' });
+        const snackbarNamestoShow = {
+          proposals: 'proposal', laws: 'law', meetings: 'meeting', zones: 'zone', officials: 'official', roles: 'role', users: 'user', comments: 'comment', workflowStages: 'workflowstage', workflowtypes: 'workflowtype'
+        };
+        const snackBarName = snackbarNamestoShow[entities.toLowerCase()] || 'record';
+        if (this.entityId === '@new') {
+          this.$snackbar.open({ message: `New ${snackBarName} has been created` });
+        } else {
+          this.$snackbar.open({ message: `The ${snackBarName} has been updated` });
+        }
       } catch (e) {
         const { response } = e;
         if (response && response.status === 422) {
@@ -123,7 +131,6 @@ export default {
 
     ondelete() {
       const deleteLink = this.linkToDelete(22);
-      console.log(deleteLink);
       this.$router.go(deleteLink);
     }
   },
