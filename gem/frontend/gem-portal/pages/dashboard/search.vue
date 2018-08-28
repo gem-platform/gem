@@ -33,7 +33,7 @@
     <b-message
       v-show="nothingFound"
       type="is-danger">
-      Nothong found
+      Nothing found
     </b-message>
   </div>
 </template>
