@@ -95,7 +95,7 @@ export default {
 
     return {
       query: '', // Search query
-      list: this.value.map(id => proposals[id])
+      list: this.value.map(id => proposals[id] || { _id: id, title: '<Removed>' })
     };
   },
   computed: {
