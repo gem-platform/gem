@@ -3,12 +3,19 @@
     <div v-if="entity">
       <h1>Delete</h1>
       <p>Are you sure you want to delete?</p>
-      <a
-        :class="{'is-loading': busy}"
-        class="button is-danger"
-        @click="remove">
-        Confirm
-      </a>
+      <div class="field is-grouped is-grouped-centered">
+        <a
+          :class="{'is-loading': busy}"
+          class="button is-danger control"
+          @click="remove">
+          Confirm
+        </a>
+        <a
+          class="button is-light control"
+          @click="cancel">
+          Cancel
+        </a>
+      </div>
     </div>
     <div v-else>
       Entity doesn't exist any more.
@@ -49,6 +56,9 @@ export default {
       } finally {
         this.busy = false;
       }
+    },
+    cancel() {
+      this.$router.go(-1);
     }
   },
   async fetch(opt) {

@@ -32,18 +32,35 @@
             <span>Cancel</span>
           </button>
         </p>
+
+        <p
+          v-if="entityId != '@new'"
+          class="control">
+          <nuxt-link
+            :to="linkToDelete(entityId)"
+            class="button is-light">
+            <span class="icon">
+              <i class="fa fa-trash"/>
+            </span>
+            <span>Delete</span>
+          </nuxt-link>
+        </p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import CrudLinksComponentMixin from '@/components/CrudLinksComponentMixin';
 import CrudEditComponents from '@/lib/crud/components/edit';
 import mass from '@/lib/crud/mass';
 
 export default {
   layout: 'dashboard',
   components: CrudEditComponents,
+  mixins: [
+    CrudLinksComponentMixin
+  ],
   data() {
     return {
       busy: false,
@@ -102,6 +119,12 @@ export default {
 
     cancel() {
       this.$router.go(-1);
+    },
+
+    ondelete() {
+      const deleteLink = this.linkToDelete(22);
+      console.log(deleteLink);
+      this.$router.go(deleteLink);
     }
   },
   async fetch(opt) {
