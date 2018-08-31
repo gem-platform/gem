@@ -12,4 +12,4 @@ before_install:
 
 script:
   - docker run --network gem_default gemplatform/gem-meeting-server /bin/sh -c "PYTHONPATH=. pytest"
-  - cd tests && cypress run
+  - cd ./gem/tests && cypress run
