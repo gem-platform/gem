@@ -1,14 +1,16 @@
 sudo: required
 
+node_js:
+  - "10"
+
 services:
   - docker
+  - nodejs
 
 before_install:
-  - sudo docker-compose build
-  - sudo docker ps
-  - sudo docker network list    
-  - sudo docker-compose up -d
   - sudo npm install cypress -g
+  - sudo docker-compose build 
+  - sudo docker-compose up -d
 
 script:
   - docker run --network gem_default gemplatform/gem-meeting-server /bin/sh -c "PYTHONPATH=. pytest"
