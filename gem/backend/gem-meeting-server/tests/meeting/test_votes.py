@@ -44,11 +44,20 @@ def test_right_role_priority():
     assert ballot.votes[0].role == role1
 
 
-def test_unapproved_vote_in_finished_meeting():
+def test_unapproved_vote_in_finished_meeting(user):
     proposal = Proposal()
-    ballot = Ballot(proposal=proposal)
-    ballot.finished = True
+    ballot = Ballot(proposal=proposal, finished=True)
 
-    user = User()
     with pytest.raises(OpForbidden, match="Ballot is finished already."):
         ballot.set(user, False)
+
+
+def test_userid_is_not_saved_for_secret_ballot(user):
+    """User is should not be saved for secret ballot."""
+    proposal = Proposal()
+    ballot = Ballot(proposal=proposal, secret=True)
+    ballot.set(user, True)
+    ballot.save()
+
+    for vote in ballot.votes:
+        assert vote.user is None
