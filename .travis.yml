@@ -14,4 +14,4 @@ before_install:
 script:
   - docker run --network gem_default -e TARGETS=gem-portal-client:3000 -e TIMEOUT=180 waisbrot/wait
   - docker run --network gem_default gemplatform/gem-meeting-server /bin/sh -c "PYTHONPATH=. pytest"
-  - cd ./gem/tests && cypress run
+  - cd ./gem/tests && cypress run --record --key $CYPRESS
