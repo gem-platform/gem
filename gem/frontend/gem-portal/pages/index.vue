@@ -2,7 +2,9 @@
   <div>
     <div class="columns">
       <div class="column is-8 is-offset-2">
-        <p class="title">
+        <p
+          id="greetings"
+          class="title">
           Welcome back, {{ name }}!
         </p>
         <Schedule/>

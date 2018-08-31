@@ -20,6 +20,7 @@
       <b-field
         :type="loginFieldType">
         <b-autocomplete
+          id="login"
           v-model="login"
           :data="suggestions"
           placeholder="Name"
@@ -32,6 +33,7 @@
       <b-field
         :type="passwordFieldType">
         <b-input
+          id="password"
           ref="password"
           v-model="password"
           type="password"
@@ -42,6 +44,7 @@
       <!-- Login button -->
       <div class="field">
         <button
+          id="submit"
           :class="{'is-loading': busy}"
           type="submit"
           class="button is-fullwidth is-primary">
