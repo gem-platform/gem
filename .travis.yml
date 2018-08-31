@@ -5,10 +5,9 @@ node_js:
 
 services:
   - docker
-  - nodejs
 
 before_install:
-  - sudo $(which npm) install cypress -g
+  - npm install cypress -g
   - sudo docker-compose build 
   - sudo docker-compose up -d
 
