@@ -17,7 +17,7 @@ export default {
   },
   computed: {
     url() {
-      return `/dashboard/propoals/${this.entity._id}`;
+      return `/dashboard/proposals/${this.entity._id}`;
     }
   }
 };
