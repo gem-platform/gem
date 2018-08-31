@@ -2,10 +2,12 @@
   <div>
     <!-- Index of proposal -->
     <b-field
+      id="index-field"
       :type="validationHasError($v.index)"
       :message="validationMessages($v.index)"
       label="Index">
       <b-input
+        id="index"
         v-model.trim="index"
         placeholder="Index"
         size="is-large" />
@@ -13,10 +15,12 @@
 
     <!-- Title of proposal -->
     <b-field
+      id="title-field"
       :type="validationHasError($v.title)"
       :message="validationMessages($v.title)"
       label="Title">
       <b-input
+        id="title"
         v-model.trim="title"
         placeholder="Title"
         size="is-large" />
@@ -28,6 +32,7 @@
       :message="validationMessages($v.workflow)"
       label="Workflow">
       <Autocomplete
+        id="workflow"
         :value="workflow ? workflow.name : ''"
         :fields="['_id']"
         field="name"
@@ -42,6 +47,7 @@
       :message="validationMessages($v.stage)"
       label="Stage">
       <Autocomplete
+        id="stage"
         :value="stage ? stage.name : ''"
         :fields="['_id']"
         field="name"
@@ -57,6 +63,7 @@
       label="Content">
       <div
         v-quill:editor="editorOption"
+        id="content"
         :content="content"
         class="quill-editor"
         @change="content = $event.html"/>
