@@ -9,6 +9,7 @@
     <transition name="fade">
       <b-message
         v-show="error"
+        id="error"
         type="is-danger">
         {{ error }}
       </b-message>
