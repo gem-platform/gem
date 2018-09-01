@@ -1,0 +1,21 @@
+{
+  "workflowStages": [
+    { "id": "5b8ab052df6e3a05bb720fec", "name": "name1", "actions": ["ballot"] }
+  ],
+  "workflowTypes": [
+    { 
+      "id": "5b8ab2a6df6e3a05d98c80a7",
+      "name": "General", 
+      "stages": ["5b8ab052df6e3a05bb720fec"]
+    }
+  ],
+  "proposals": [
+    { 
+      "title": "Proposal 01",
+      "index": "p01",
+      "content": "some content",
+      "workflow": "5b8ab2a6df6e3a05d98c80a7",
+      "stage": "5b8ab052df6e3a05bb720fec"
+    }
+  ]
+}

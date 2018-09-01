@@ -7,7 +7,7 @@ from mongoengine import connect
 from api_search import api_search
 from api_login import api_login
 from api_autocomplete import api_autocomplete
-from api_debug import api_debug
+from api_debug import API_DEBUG
 
 import model_hooks as mh
 
@@ -28,7 +28,7 @@ app.register_blueprint(api_search)
 app.register_blueprint(api_login)
 app.register_blueprint(api_autocomplete)
 if (debug):
-    app.register_blueprint(api_debug)
+    app.register_blueprint(API_DEBUG)
 CORS(app)
 
 # register model hooks

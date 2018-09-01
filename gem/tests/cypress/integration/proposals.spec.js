@@ -2,21 +2,11 @@
 
 context('Dashboard / Proposals', () => {
   beforeEach(() => {
-    cy.request('POST', 'http://localhost/api/debug/reset')
-
-    cy.createEntity('workflowStages', {
-      name: 'Initial',
-      actions: ['ballot']
-    })
-    .its('body._id')
-    .then((id) => {
-      cy.createEntity('workflowTypes', {
-        name: 'General',
-        stages: [id]
+    cy.fixture('workflows').then((json) => {
+      cy.request('POST', 'http://localhost/api/debug/reset', json).then(() => {
+        cy.login('root', 'root')
       })
     })
-
-    cy.login('root', 'root')
     cy.visit('http://localhost/dashboard/proposals/@new/edit')
   })
 
@@ -47,7 +37,7 @@ context('Dashboard / Proposals', () => {
 
   it('proposal created', () => {
     cy.server()
-    cy.route('/api/proposals').as('proposals')
+    cy.route('GET', '/api/proposals').as('proposals')
 
     cy.get('#index').type('PRP-001')
     cy.get('#title').type('New Proposal')
@@ -64,12 +54,5 @@ context('Dashboard / Proposals', () => {
         .should('match', /dashboard\/proposals$/);
       cy.get('.table').should('contain', 'New Proposal')
     })
-
-    
-    
-    
-    // asserts
-    //
-  });
-
+  })
 })
