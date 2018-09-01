@@ -9,12 +9,14 @@
 // ***********************************************
 
 Cypress.Commands.add("login", (login, password) => {
-    cy.visit('http://localhost/login')
-    cy.get('#login').type(login)
-    cy.get('#password').type(password, {force: true})
-    cy.get('#submit').click()
-    
-    cy.location().should((loc) => {
-        expect(loc.pathname).to.eq('/');
-    });
+  cy.request('POST', 'http://localhost/api/auth/login', { login, password })
+    .then((response) => {
+      const token = response.body.token;
+      cy.setCookie('auth._refresh_token.local', 'false')
+      cy.setCookie('auth._token.local', 'Bearer%20'+token)
+    })
+});
+
+Cypress.Commands.add("createEntity", (type, data) => {
+    return cy.request('POST', 'http://localhost/api/' + type, data)
 });
