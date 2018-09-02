@@ -1,8 +1,9 @@
 /// <reference types="Cypress" />
 
-context('Actions', () => {
+context('Login', () => {
   beforeEach(() => {
-    cy.visit('http://localhost')
+    cy.resetDb()
+    cy.visit('/')
   })
 
   

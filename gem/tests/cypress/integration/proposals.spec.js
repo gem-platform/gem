@@ -2,12 +2,8 @@
 
 context('Dashboard / Proposals', () => {
   beforeEach(() => {
-    cy.fixture('workflows').then((json) => {
-      cy.request('POST', 'http://localhost/api/debug/reset', json).then(() => {
-        cy.login('root', 'root')
-      })
-    })
-    cy.visit('http://localhost/dashboard/proposals/@new/edit')
+    cy.resetAndLogin('workflows', 'root', 'root')
+    cy.visit('/dashboard/proposals/@new/edit')
   })
 
   it('creation page is available', () => {

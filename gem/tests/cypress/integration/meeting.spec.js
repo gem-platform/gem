@@ -2,11 +2,7 @@
 
 context('Meeting', () => {
   beforeEach(() => {
-    cy.fixture('basic').then((json) => {
-      cy.request('POST', 'http://localhost/api/debug/reset', json).then(() => {
-        cy.login('root', 'root')
-      })
-    })
+    cy.resetAndLogin('basic', 'root', 'root')
   })
 
   it('test', () => {

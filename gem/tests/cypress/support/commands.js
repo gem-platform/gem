@@ -1,13 +1,3 @@
-// ***********************************************
-// This example commands.js shows you how to
-// create various custom commands and overwrite
-// existing commands.
-//
-// For more comprehensive examples of custom
-// commands please read more here:
-// https://on.cypress.io/custom-commands
-// ***********************************************
-
 Cypress.Commands.add("login", (login, password) => {
   cy.request('POST', 'http://localhost/api/auth/login', { login, password })
     .then((response) => {
@@ -19,4 +9,16 @@ Cypress.Commands.add("login", (login, password) => {
 
 Cypress.Commands.add("createEntity", (type, data) => {
     return cy.request('POST', 'http://localhost/api/' + type, data)
+});
+
+Cypress.Commands.add("resetAndLogin", (fixture, login, password) => {
+  cy.fixture(fixture).then((json) => {
+    cy.request('POST', 'http://localhost/api/debug/reset', json).then(() => {
+      cy.login(login, password)
+    })
+  })
+});
+
+Cypress.Commands.add("resetDb", () => {
+  cy.request('POST', 'http://localhost/api/debug/reset', {});
 });
