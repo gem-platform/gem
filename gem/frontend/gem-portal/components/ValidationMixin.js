@@ -12,8 +12,8 @@ export default {
       const errors = [];
 
       if (value.required === false) { errors.push('Value is required'); }
-      if (value.minLength === false) { errors.push('Value is to short'); }
-      if (value.maxLength === false) { errors.push('Value is to long'); }
+      if (value.minLength === false) { errors.push('Value is too short'); }
+      if (value.maxLength === false) { errors.push('Value is too long'); }
       if (value.belongToStage === false) { errors.push('Does not belong to workflow'); }
 
       return errors;

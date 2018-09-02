@@ -11,6 +11,7 @@
       <div class="field is-grouped is-grouped-multiline">
         <p class="control">
           <button
+            id="save"
             :disabled="!isFormValid"
             :class="{'is-loading':busy}"
             type="submit"
@@ -24,6 +25,7 @@
         </p>
         <p class="control">
           <button
+            id="cancel"
             class="button is-light"
             @click="cancel">
             <span class="icon">
