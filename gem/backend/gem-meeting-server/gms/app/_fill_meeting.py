@@ -1,7 +1,5 @@
 """Provides function to fill meeting with testing data."""
-import os
 from bson import ObjectId
-from mongoengine import connect
 
 from gem.db import (Proposal, Ballot, User, Meeting,
                     Comment, Role, MeetingPermission)
@@ -14,17 +12,6 @@ from gms.meeting.stages import (
 
 def fill_meeting(meeting, meeting_id):
     """Fill specified meeting with test data"""
-    db_host = os.environ.get('DB_HOST', "localhost")
-    db_username = os.environ.get('MONGO_USERNAME')
-    db_password = os.environ.get('MONGO_PASSWORD')
-    db_auth_source = os.environ.get('MONGO_AUTH_SOURCE')
-    db_auth_mechanism = os.environ.get('MONGO_AUTH_MECHANISM')
-
-    connect("gem",
-            host=db_host, username=db_username, password=db_password,
-            authentication_source=db_auth_source,
-            authentication_mechanism=db_auth_mechanism)
-
     # get meeting from database
     db_meeting = Meeting.objects.get(id=ObjectId(meeting_id))
 

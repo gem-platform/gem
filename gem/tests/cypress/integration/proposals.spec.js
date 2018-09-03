@@ -48,7 +48,7 @@ context('Dashboard / Proposals', () => {
       cy.get('.snackbar').should('contain', 'New proposal has been created')
       cy.location('pathname', {timeout: 1500})
         .should('match', /dashboard\/proposals$/);
-      cy.get('.table').should('contain', 'New Proposal')
+      cy.get('.table', {timeout: 5000}).should('contain', 'New Proposal')
     })
   })
 })

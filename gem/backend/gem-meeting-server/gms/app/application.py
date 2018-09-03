@@ -20,9 +20,12 @@ class MeetingServerApplication(Application):
     def __on_endpoint_event(self, event, *data):
         """
         On endpoint event.
-        :param event: Event name.
-        :param data: Event data.
-        :return: Execution result.
+
+        Arguments:
+            event {str} -- Name of the event.
+
+        Returns:
+            obj -- Result of the event.
         """
         return self.__active_meetings.command(event, *data)
 
