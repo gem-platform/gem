@@ -27,7 +27,7 @@ def fill_meeting(meeting, meeting_id):
 
     # get meeting from database
     db_meeting = Meeting.objects.get(id=ObjectId(meeting_id))
-    
+
     # add agenda stage
     agenda_stage = AgendaMeetingStage(db_meeting.agenda)
     meeting.stages.append(agenda_stage)
@@ -42,7 +42,13 @@ def fill_meeting(meeting, meeting_id):
     for user in db_meeting.resolve("meeting.join"):
         meeting.allowed_users.append(user)
 
-    #
+    # append users with superuser rights
+    superuser_roles = Role.objects(permissions__in=["*"])
+    for user in User.objects(roles__in=superuser_roles):
+        if user not in meeting.allowed_users:
+            meeting.allowed_users.append(user)
+
+    # set time
     meeting.start = db_meeting.start
     meeting.end = db_meeting.end
 
@@ -58,7 +64,7 @@ def add_group(meeting, proposal):
     group = StagesGroup(meeting, proposal=proposal)
     if "acquaintance" in stage.actions:
         meeting.stages.append(AcquaintanceMeetingStage(ballot, comments, group=group))
-    
+
     if "ballot" in stage.actions:
         meeting.stages.append(BallotMeetingStage(ballot, group=group))
 
@@ -70,5 +76,5 @@ def add_group(meeting, proposal):
 
     if "discussion" in stage.actions:
         meeting.stages.append(DiscussionMeetingStage(group=group))
-    
+
     meeting.proposals.append(proposal)
