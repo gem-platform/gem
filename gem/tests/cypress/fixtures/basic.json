@@ -1,6 +1,10 @@
 {
   "workflowStages": [
-    { "id": "5b8ab052df6e3a05bb720fec", "name": "name1", "actions": ["ballot"] }
+    { 
+      "id": "5b8ab052df6e3a05bb720fec", 
+      "name": "name1", 
+      "actions": ["acquaintance", "ballot"] 
+    }
   ],
   "workflowTypes": [
     { 
@@ -11,11 +15,22 @@
   ],
   "proposals": [
     { 
+      "id": "5a5deebeb5385609a9c9cea4",
       "title": "Proposal 01",
       "index": "p01",
       "content": "some content",
       "workflow": "5b8ab2a6df6e3a05d98c80a7",
       "stage": "5b8ab052df6e3a05bb720fec"
+    }
+  ],
+  "meetings": [
+    {
+      "id": "5b476cb4a872bf00105e13d2",
+      "title": "Meeting",
+      "agenda": "Meeting for testing purposes",
+      "proposals": ["5a5deebeb5385609a9c9cea4"],
+      "start": "2017-09-13 09:00:00",
+      "end": "2017-09-13 10:00:00"
     }
   ]
 }

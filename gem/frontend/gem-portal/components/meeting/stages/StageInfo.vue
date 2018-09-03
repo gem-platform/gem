@@ -6,7 +6,11 @@
       <div class="level-left">
         <div class="level-item">
           <div>
-            <p class="heading">{{ type }}</p>
+            <p
+              id="stage-type"
+              class="heading">
+              {{ type }}
+            </p>
             <p class="title">
               {{ title }}
             </p>

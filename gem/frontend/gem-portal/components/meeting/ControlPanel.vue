@@ -23,6 +23,7 @@
       <!-- "Previous stage" button -->
       <p class="control">
         <button
+          id="prev"
           :disabled="prevDisabled"
           class="button"
           @click="move(-1)">Prev</button>
@@ -31,6 +32,7 @@
       <!-- "Next stage" button -->
       <p class="control is-expanded">
         <button
+          id="next"
           :disabled="nextDisabled"
           class="button is-fullwidth"
           @click="move(1)">
