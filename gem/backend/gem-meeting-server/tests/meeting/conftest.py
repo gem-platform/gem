@@ -20,7 +20,7 @@ class DummyMeetingStage(MeetingStage):
 
 
 @fixture(name="workflow")
-def fixture_workflow():
+def workflow_fixture():
     stage1 = WorkflowStage(name="General", actions=["ballot"])
     stage1.save()
     workflow1 = WorkflowType(name="General Workflow", stages=[stage1])
@@ -29,7 +29,7 @@ def fixture_workflow():
 
 
 @fixture(name="proposal")
-def fixture_proposal(workflow):
+def proposal_fixture(workflow):
     """Proposal."""
     proposal1 = Proposal(
         title="Proposal 01", index="p01", content="content",
@@ -39,7 +39,7 @@ def fixture_proposal(workflow):
 
 
 @fixture(name="stages")
-def fixture_stages(proposal):
+def stages_fixture(proposal):
     """Meeting stages."""
     group1 = StagesGroup(proposal=proposal)
 
@@ -50,7 +50,7 @@ def fixture_stages(proposal):
 
 
 @fixture(name="meeting_obj")
-def fixture_meeting_obj(proposal):
+def meeting_obj_fixture(proposal):
     """Meeting with stages."""
     meeting1 = MeetingObj(
         title="Meeting", agenda="Agenda", proposals=[proposal])
@@ -58,7 +58,7 @@ def fixture_meeting_obj(proposal):
     return meeting1
 
 @fixture(name="meeting")
-def fixture_meeting(stages):
+def meeting_fixture(stages):
     """Meeting with stages."""
     meeting1 = Meeting(context=Context())
     for stage in stages:
@@ -67,14 +67,13 @@ def fixture_meeting(stages):
 
 
 @fixture(name="empty_meeting")
-def fixture_empty_meeting():
+def empty_meeting_fixture():
     """Empty meeting."""
-    meeting1 = Meeting(context=Context())
-    return meeting1
+    return Meeting(context=Context())
 
 
 @fixture(name="user")
-def fixture_user():
+def user_fixture():
     """Dummy user"""
     role = Role(name="Tester", priority=99, permissions=['*'])
     role.save()
