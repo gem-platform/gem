@@ -27,7 +27,7 @@ class ActiveMeeting:
 
         # configure meeting
         self.__meeting = Meeting(self.__context)
-        self.__meeting.stages.switch.subscribe(self.__on_stage_changed)
+        self.__meeting.stages.switched.subscribe(self.__on_stage_changed)
         self.__meeting.stages.changed.subscribe(self.__on_stage_changed)
 
         # configure processor:

@@ -7,3 +7,4 @@ from .comments import CommentsMeetingStage
 from .discussion import DiscussionMeetingStage
 from .final import FinalMeetingStage
 from .group import StagesGroup
+from .meeting_stages import MeetingStages
