@@ -1,6 +1,5 @@
 from pytest import raises
 
-from gms.meeting import Meeting
 from gms.meeting.stages import AgendaMeetingStage
 from gms.app.context import Context
 

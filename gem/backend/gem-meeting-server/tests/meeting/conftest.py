@@ -1,7 +1,8 @@
 from pytest import fixture
 
-from gem.db import User, Role, Proposal, Meeting as MeetingObj, WorkflowType, WorkflowStage
-from gms.meeting import Meeting
+from gem.db import (User, Role, Proposal, Meeting as MeetingObj, WorkflowType,
+                    WorkflowStage)
+from gms.app.active_meeting import ActiveMeeting
 from gms.meeting.stages import (MeetingStage, AgendaMeetingStage,
                                 CommentsMeetingStage, StagesGroup)
 from gms.app.context import Context
@@ -57,10 +58,11 @@ def meeting_obj_fixture(proposal):
     meeting1.save()
     return meeting1
 
+
 @fixture(name="meeting")
 def meeting_fixture(stages):
     """Meeting with stages."""
-    meeting1 = Meeting(context=Context())
+    meeting1 = ActiveMeeting()
     for stage in stages:
         meeting1.stages.append(stage)
     return meeting1
@@ -69,7 +71,7 @@ def meeting_fixture(stages):
 @fixture(name="empty_meeting")
 def empty_meeting_fixture():
     """Empty meeting."""
-    return Meeting(context=Context())
+    return ActiveMeeting()
 
 
 @fixture(name="user")

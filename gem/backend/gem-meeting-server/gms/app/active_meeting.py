@@ -2,9 +2,9 @@ from inspect import getmembers, isfunction
 
 from gem.core import Processor, Event
 from gms.app.context import Context
-from gms.meeting import Meeting
 from gms.net.serializers.meeting import MeetingStageSerializer
 from gms.app._fill_meeting import fill_meeting
+from gms.meeting.stages import MeetingStages
 
 import gms.commands as commands
 
@@ -12,7 +12,7 @@ import gms.commands as commands
 class ActiveMeeting:
     """Active meeting."""
 
-    def __init__(self, meeting_id):
+    def __init__(self, meeting_id=None):
         """
         Initialize new instance of the ActiveMeeting class.
 
@@ -26,9 +26,16 @@ class ActiveMeeting:
         self.__context.sessions.changed.subscribe(self.__on_sessions_changed)
 
         # configure meeting
-        self.__meeting = Meeting(self.__context)
-        self.__meeting.stages.switched.subscribe(self.__on_stage_changed)
-        self.__meeting.stages.changed.subscribe(self.__on_stage_changed)
+        self.__stages = MeetingStages()
+        self.__proposals = []
+        self.__allowed_users = []
+        self.start = None
+        self.end = None
+
+        self.__stages.switched.subscribe(self.__on_stage_changed)
+        self.__stages.changed.subscribe(self.__on_stage_changed)
+
+        self.__context.meeting = self
 
         # configure processor:
         # get list of all functions in module
@@ -42,7 +49,33 @@ class ActiveMeeting:
         self.__state_changed = Event()
         self.__broadcast = Event()
 
-        fill_meeting(self.__meeting, meeting_id)
+        if meeting_id is not None:
+            fill_meeting(self, meeting_id)
+
+    @property
+    def context(self):
+        """
+        Returns meeting context.
+
+        Returns:
+            Object -- User defined context.
+        """
+        return self.__context
+
+    @property
+    def stages(self):
+        return self.__stages
+
+    @property
+    def proposals(self):
+        # todo: return readonly
+        return self.__proposals
+
+    @property
+    def allowed_users(self):
+        # todo: return readonly
+        return self.__allowed_users
+
 
     # Events
 
