@@ -6,9 +6,9 @@ from gem.core import Event
 class Context:
     """Execution context."""
 
-    def __init__(self):
+    def __init__(self, meeting=None):
         """Initialize new instance of the Context class."""
-        self.__meeting = None
+        self.__meeting = meeting
         self.__sessions = Sessions()
         self.broadcast = Event()
         self.__inactive_users = []

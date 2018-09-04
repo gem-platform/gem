@@ -21,21 +21,19 @@ class ActiveMeeting:
         """
         # create execution context
         self.__meeting_id = meeting_id
-        self.__context = Context()
+        self.__context = Context(meeting=self)
         self.__context.broadcast.subscribe(self.__on_broadcast)
         self.__context.sessions.changed.subscribe(self.__on_sessions_changed)
 
-        # configure meeting
+        # configure meeting stages
         self.__stages = MeetingStages()
+        self.__stages.switched.subscribe(self.__on_stage_changed)
+        self.__stages.changed.subscribe(self.__on_stage_changed)
+
         self.__proposals = []
         self.__allowed_users = []
         self.start = None
         self.end = None
-
-        self.__stages.switched.subscribe(self.__on_stage_changed)
-        self.__stages.changed.subscribe(self.__on_stage_changed)
-
-        self.__context.meeting = self
 
         # configure processor:
         # get list of all functions in module
@@ -108,16 +106,6 @@ class ActiveMeeting:
             str -- Meeting ID
         """
         return self.__meeting_id
-
-    @property
-    def context(self):
-        """
-        Retrun execution context.
-
-        Returns:
-            Context -- Execution context.
-        """
-        return self.__context
 
     def command(self, event, *data):
         """
