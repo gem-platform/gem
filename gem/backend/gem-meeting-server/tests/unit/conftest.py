@@ -27,6 +27,12 @@ def meeting_stages_list_fixture():
     ]
 
 
+@fixture(name="meeting_stages_empty")
+def meeting_stages_empty_fixture():
+    """Returns dummy meeting stages."""
+    return MeetingStages()
+
+
 @fixture(name="meeting_stages")
 def meeting_stages_fixture(meeting_stages_list):
     """Returns dummy meeting stages with several stages added."""

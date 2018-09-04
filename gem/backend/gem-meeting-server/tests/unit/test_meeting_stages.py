@@ -1,18 +1,15 @@
 from pytest import raises
 
-from gms.meeting.stages import MeetingStages
-
 
 def test_all(meeting_stages, meeting_stages_list):
     """All should return all appended stages."""
     assert meeting_stages.all == meeting_stages_list
 
 
-def test_current_none():
+def test_current_none(meeting_stages_empty):
     """current should return None, index - 0 if no stage added."""
-    meeting_stages = MeetingStages()
-    assert meeting_stages.current is None
-    assert meeting_stages.index == 0
+    assert meeting_stages_empty.current is None
+    assert meeting_stages_empty.index == 0
 
 
 def test_switch_to(meeting_stages, meeting_stages_list):
