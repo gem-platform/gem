@@ -6,7 +6,6 @@ context('Meeting', () => {
   })
 
   it('test', () => {
-    cy.visit('http://localhost/dashboard/proposals')
+    cy.visit('/dashboard/proposals')
   })
-  
 })
