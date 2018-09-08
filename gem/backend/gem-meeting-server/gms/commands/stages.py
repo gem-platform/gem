@@ -1,3 +1,5 @@
+"""Meeting command handlers."""
+
 from ._aux import permissions_required
 
 # Acquaintance Stage
@@ -10,8 +12,8 @@ def reading_progress(context, sid, data):
     context.stage.set_progress(user, quantity)
     return {"success": True}
 
-# Ballot Stage
 
+# Ballot Stage
 
 @permissions_required(["meeting.vote"])
 def vote(context, sid, data):
@@ -29,8 +31,8 @@ def ballot_secret(context, sid, data):
     context.stage.ballot.secret = value
     return {"success": True, "value": context.stage.ballot.secret}
 
-# Comments Stage
 
+# Comments Stage
 
 @permissions_required(["meeting.comment"])
 def comment(context, sid, data):
@@ -41,12 +43,12 @@ def comment(context, sid, data):
     context.stage.comment(user, message, mark)
     return {"success": True}
 
-# Discussion Stage
 
+# Discussion Stage
 
 @permissions_required(["meeting.discuss"])
 def request_floor(context, sid, data):
-    """Request floor."""
+    """Request the floor."""
     user = context.get_user(sid)
     context.stage.request_floor(user)
     return {"success": True}
@@ -77,8 +79,8 @@ def give_voice(context, sid, data):
     context.stage.give_voice(user_to_give_voice)
     return {"success": True}
 
-# General
 
+# General
 
 @permissions_required(["meeting.manage"])
 def switch_stage(context, sid, data):
@@ -99,7 +101,7 @@ def close(context, sid, data):
 
 @permissions_required(["meeting.manage"])
 def stage_timer(context, sid, data):
-    """Add time for stage"""
+    """Add time for stage."""
     context.send_broadcast("stage_timer", data)
     return {"success": True}
 
@@ -107,7 +109,7 @@ def stage_timer(context, sid, data):
 # Info
 
 def user_inactive(context, sid, data):
-    """User away from keyboard"""
+    """User away from keyboard."""
     user = context.get_user(sid)
     if not user:
         return {"success": False}
@@ -119,5 +121,6 @@ def user_inactive(context, sid, data):
 
 
 def meeting_users_online(context, sid, data):
+    """List of users online."""
     ids = list(map(lambda u: str(u.id), context.sessions.online))
     return {"success": True, "online": ids}
