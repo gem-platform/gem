@@ -1,3 +1,5 @@
+"""Meeting server application class."""
+
 from gem.core import Application
 from gms.app.active_meetings import ActiveMeetings
 
@@ -27,7 +29,10 @@ class MeetingServerApplication(Application):
         Returns:
             obj -- Result of the event.
         """
-        return self.__active_meetings.command(event, *data)
+        try:
+            return self.__active_meetings.command(event, *data)
+        except Exception as exc:
+            return {"success": False, "message": "Unknown error: " + str(exc)}
 
     def __on_emit(self, event, data, to):
         for endpoint in self.endpoints.all:
