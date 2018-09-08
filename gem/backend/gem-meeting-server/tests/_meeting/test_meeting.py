@@ -5,7 +5,9 @@ from gms.app.context import Context
 
 from tools import drop_db
 
-def teardown_function():
+
+def setup_function():
+    """Clear database before each test."""
     drop_db()
 
 

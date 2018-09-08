@@ -5,8 +5,8 @@ from tools import drop_db
 from gms.meeting.stages import CommentsMeetingStage
 
 
-def teardown_function():
-    """Teardown test."""
+def setup_function():
+    """Clear database before each test."""
     drop_db()
 
 
@@ -18,7 +18,7 @@ def test_comment_with_no_proposal(user):
 
 
 def test_comment(meeting, user, proposal):
-    comments_stage = meeting.stages.all[2]
+    comments_stage = meeting.stages.all[3]
     comments_stage.comment(user, "test comment", "+")
 
     # comment saved
@@ -34,6 +34,6 @@ def test_comment(meeting, user, proposal):
 
 def test_comment_invalid_mark(meeting, user):
     """Comment with invalid mark should raise exception."""
-    comments_stage = meeting.stages.all[2]
+    comments_stage = meeting.stages.all[3]
     with raises(ValueError, match="Invalid mark"):
         comments_stage.comment(user, "test comment", "InvalidMark")
