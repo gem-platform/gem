@@ -1,9 +1,13 @@
-// Create roles
+// Creat role for superuser
 superuser = db.roles.insertOne({
     name: "Superuser",
     permissions: ["*"],
     priority: 9999
 });
 
-// Create users
-db.users.insertOne({name: "root", password: "root", roles: [ superuser.insertedId ]});
+// Create admin
+db.users.insertOne({
+    name: "root",
+    password: "root",
+    roles: [ superuser.insertedId ]
+});
