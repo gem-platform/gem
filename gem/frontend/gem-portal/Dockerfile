@@ -16,4 +16,8 @@ RUN npm run build
 ENV HOST 0.0.0.0
 EXPOSE 3000
 
+# site should be accesible
+HEALTHCHECK  --interval=5m --timeout=3s \
+  CMD wget --quiet --tries=1 --spider http://0.0.0.0:3000/ || exit 1
+
 CMD [ "npm", "run", "start" ]
