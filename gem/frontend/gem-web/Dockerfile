@@ -4,6 +4,7 @@ ARG env
 
 # copy config depends on environment
 COPY ./sites-enabled/gem-web-client.${env}.conf /etc/nginx/conf.d/default.conf
+COPY ./configs /etc/nginx
 
 # copy custom error pages
 COPY ./maintenance /usr/share/nginx/html
