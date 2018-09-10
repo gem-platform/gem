@@ -11,5 +11,4 @@ context('Meeting', () => {
     cy.get("#next").click()
     cy.get('#stage-type').should("contain", "Acquaintance")
   })
-  
 })
