@@ -3,7 +3,7 @@ from pymongo import MongoClient
 
 
 client = MongoClient(
-    'gem-database',
+    'db',
     username=os.environ['MONGO_USERNAME'],
     password=os.environ['MONGO_PASSWORD'],
     authSource=os.environ['MONGO_AUTH_SOURCE'],
