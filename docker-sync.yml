@@ -1,8 +1,8 @@
 version: "2"
 
 syncs:
-  gem-portal-client-sync:
-    src: './gem/frontend/gem-portal'
+  portal-sync:
+    src: './gem/frontend/portal'
     sync_excludes: ['node_modules', '.gitignore', '.git', '.nuxt']
     # monit can be used to monitor the health of unison in the native_osx strategy and can restart unison if it detects a problem
     # optional: use this to switch monit monitoring on

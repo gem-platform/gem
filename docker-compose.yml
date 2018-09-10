@@ -50,7 +50,7 @@ services:
       - "443:443"
     links:
       - gem-meeting-server:gem-meeting-server
-      - gem-portal-client:gem-portal-client
+      - portal:portal
       - gem-portal-server:gem-portal-server
       - gem-office-server:gem-office-server
     volumes:
@@ -136,10 +136,9 @@ services:
   ##
 
   # Web client for meeting
-  gem-portal-client:
-    image: gemplatform/gem-portal-client
+  portal:
     restart: always
-    build: ./gem/frontend/gem-portal
+    build: ./gem/frontend/portal
     command: npm run dev
     ports:
       - "3000:3000"
@@ -148,7 +147,7 @@ services:
     links:
       - gem-meeting-server:gem-meeting-server
     volumes:
-      - ./gem/frontend/gem-portal:/usr/src/app
+      - ./gem/frontend/portal:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - environment.${GEM_ENV-dev}.env

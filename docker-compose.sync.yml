@@ -17,13 +17,13 @@ services:
       - ./gem/backend/gem-portal-server:/usr/src/app
 
   # Web client for meeting
-  gem-portal-client:
+  portal:
     volumes:
-      - ./gem/frontend/gem-portal:/usr/src/app
+      - ./gem/frontend/portal:/usr/src/app
       - /usr/src/app/node_modules
 
 volumes:
-  gem-portal-client-sync:
+  portal-sync:
     external: true
 
   gem-meeting-server-sync:
