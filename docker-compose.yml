@@ -57,6 +57,7 @@ services:
       - gem-office-server:gem-office-server
     volumes:
       - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.keys:/etc/nginx/ssl
     
 
   ##
