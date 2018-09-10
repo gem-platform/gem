@@ -1,12 +1,13 @@
 from pytest import raises
 
-from gms.meeting import Meeting
 from gms.meeting.stages import AgendaMeetingStage
 from gms.app.context import Context
 
 from tools import drop_db
 
-def teardown_function():
+
+def setup_function():
+    """Clear database before each test."""
     drop_db()
 
 
@@ -49,7 +50,7 @@ def test_switch_event(meeting, stages):
         switch_handler_data = (index, stage)
 
     # switch to new stage
-    meeting.stages.switch.subscribe(switch_event_handler)
+    meeting.stages.switched.subscribe(switch_event_handler)
     meeting.stages.switch_to(1)
     assert switch_handler_data is not None
     assert switch_handler_data == (1, stages[1])

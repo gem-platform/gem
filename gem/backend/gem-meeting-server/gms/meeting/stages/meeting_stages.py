@@ -1,54 +1,17 @@
+""""MeetingStages - meeting stages container."""
+
 from gem.core import Event
-
-
-class Meeting:
-    """Meeting model."""
-
-    def __init__(self, context=None):
-        """Initialize new instance of the Meeting class."""
-        self.__stages = MeetingStages(self)
-        self.__proposals = []
-        self.__allowed_users = []
-        self.__context = context
-        self.__context.meeting = self
-        self.start = None
-        self.end = None
-
-    @property
-    def context(self):
-        """
-        Returns meeting context.
-
-        Returns:
-            Object -- User defined context.
-        """
-        return self.__context
-
-    @property
-    def stages(self):
-        return self.__stages
-
-    @property
-    def proposals(self):
-        # todo: return readonly
-        return self.__proposals
-
-    @property
-    def allowed_users(self):
-        # todo: return readonly
-        return self.__allowed_users
 
 
 class MeetingStages:
     """Meeting stages container."""
 
-    def __init__(self, meeting):
+    def __init__(self):
         """Initializes new instance of the MeetingStages class."""
-        self.__meeting = meeting
-        self.__stages = []
-        self.__index = 0
+        self.__stages = []  # array of stages
+        self.__index = 0  # index of active stage
 
-        self.__switch = Event()
+        self.__switched = Event()
         self.__changed = Event()
 
     @property
@@ -59,7 +22,6 @@ class MeetingStages:
         Returns:
             [list] -- List of stages.
         """
-        # todo: return readonly
         return self.__stages
 
     @property
@@ -85,14 +47,14 @@ class MeetingStages:
         return self.__index
 
     @property
-    def switch(self):
+    def switched(self):
         """
         Calls after switching to another stage.
 
         Returns:
             Event -- Event.
         """
-        return self.__switch
+        return self.__switched
 
     @property
     def changed(self):
@@ -129,7 +91,7 @@ class MeetingStages:
         self.current.on_leave()
         self.__index = index
         self.current.on_enter()
-        self.__switch.notify(index, self.current)
+        self.__switched.notify(index, self.current)
 
     def append(self, stage):
         """
@@ -143,7 +105,7 @@ class MeetingStages:
         """
         # do not allow to append one stage twice
         if stage in self.__stages:
-            raise Exception("Stage already present.")
+            raise Exception("Stage already present")
 
         # we need to handle all stage "changed" events to
         # sync it with client, so subscribe specified

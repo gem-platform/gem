@@ -1,4 +1,3 @@
-from pytest import fixture
 from mongoengine import connect
 
 from tools import drop_db

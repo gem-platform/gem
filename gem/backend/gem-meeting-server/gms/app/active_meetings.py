@@ -22,6 +22,12 @@ class ActiveMeetings:
 
     @property
     def status_changed(self):
+        """
+        Status of active meetings changes.
+
+        Returns:
+            Event -- Event.
+        """
         return self.__status_changed
 
     @property
@@ -142,4 +148,3 @@ class ActiveMeetings:
             self.__meetings_log.debug("Meeting closed %s", meeting_id)
 
         self.status_changed.notify()
-

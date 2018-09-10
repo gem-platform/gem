@@ -1,0 +1,1 @@
+echo 'db.runCommand("ping").ok == 1 ? 0 : 1' | mongo localhost:27017 --quiet

@@ -1,10 +1,12 @@
-import pytest
+from pytest import raises
+
 from gem.db import Proposal, Ballot, Role, User, OpForbidden
 
 from tools import drop_db
 
 
-def teardown_function():
+def setup_function():
+    """Clear database before each test."""
     drop_db()
 
 
@@ -39,7 +41,7 @@ def test_unable_to_vote_for_finished_ballot(user):
     proposal = Proposal()
     ballot = Ballot(proposal=proposal, finished=True)
 
-    with pytest.raises(OpForbidden, match="Ballot is finished already."):
+    with raises(OpForbidden, match="Ballot is finished already."):
         ballot.set(user, False)
 
 

@@ -1,4 +1,5 @@
-from gem.db import User, Meeting
+"""Meeting execution context class."""
+
 from gms.app.sessions import Sessions
 from gem.core import Event
 
@@ -6,9 +7,14 @@ from gem.core import Event
 class Context:
     """Execution context."""
 
-    def __init__(self):
-        """Initialize new instance of the Context class."""
-        self.__meeting = None
+    def __init__(self, meeting):
+        """
+        Initialize new instance of the Context class.
+
+        Keyword Arguments:
+            meeting {ActiveMeeting} -- Meeting.
+        """
+        self.__meeting = meeting
         self.__sessions = Sessions()
         self.broadcast = Event()
         self.__inactive_users = []
@@ -22,16 +28,6 @@ class Context:
             Meeting -- Meeting.
         """
         return self.__meeting
-
-    @meeting.setter
-    def meeting(self, value):
-        """
-        Set meeting.
-
-        Arguments:
-            value {Meeting} -- Meeting.
-        """
-        self.__meeting = value
 
     @property
     def stage(self):
@@ -52,13 +48,6 @@ class Context:
             Sessions -- Sessions.
         """
         return self.__sessions
-
-    # Meeting
-
-    def get_meeting(self, meeting_id):
-        if not meeting_id:
-            return None
-        return Meeting.objects(id=meeting_id)
 
     # User section
 

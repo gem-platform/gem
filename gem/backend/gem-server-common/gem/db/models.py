@@ -131,7 +131,7 @@ class Ballot(Document):
         return votes_of_user[0] if votes_of_user else None
 
 
-class Comment(Document):
+class Comment(GemDocument):
     """Comment"""
     meta = {'collection': 'comments'}
 

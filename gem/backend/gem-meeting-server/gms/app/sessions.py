@@ -1,3 +1,5 @@
+"""Sessions container."""
+
 from logging import getLogger
 
 from gem.core import Event
@@ -54,7 +56,7 @@ class Sessions:
         """
         self.__sessions[session_id] = user
         self.__changed.notify()
-        self.__log.debug("add %s -> %s", user.name, session_id)
+        self.__log.debug("Add %s -> %s", user.name, session_id)
 
     def delete(self, session_id):
         """

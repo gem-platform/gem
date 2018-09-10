@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:10-alpine
 
 # install all the dependences
 WORKDIR /usr/src/lib

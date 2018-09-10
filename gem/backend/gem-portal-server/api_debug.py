@@ -8,7 +8,8 @@ API_DEBUG = Blueprint('api_debug', __name__)
 ENTITY_MAP = {
     "workflowStages": db.WorkflowStage,
     "workflowTypes": db.WorkflowType,
-    "proposals": db.Proposal
+    "proposals": db.Proposal,
+    "meetings": db.Meeting
 }
 
 
