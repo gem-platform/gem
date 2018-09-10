@@ -5,3 +5,4 @@
 ```sh
 GEM_ENV=staging docker-compose up -d --build
 ```
+4. Check containers status `docker ps`. All of them should be in `healthy` status.
