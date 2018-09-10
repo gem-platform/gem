@@ -13,7 +13,6 @@ services:
   # Provides MongoDB database to store
   # all the GEM data
   db:
-    image: gemplatform/db
     restart: always
     build: ./gem/backend/db
     volumes:
@@ -40,11 +39,10 @@ services:
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
-  gem-web:
-    image: gemplatform/gem-web
+  web:
     restart: always
     build: 
-      context: ./gem/frontend/gem-web
+      context: ./gem/frontend/web
       args:
         env: ${GEM_ENV-dev}
     ports:
