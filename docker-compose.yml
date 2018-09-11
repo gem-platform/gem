@@ -150,7 +150,7 @@ services:
     links:
       - gem-meeting-server:gem-meeting-server
     volumes:
-      - ./gem/frontend/gem-portal:/usr/src/app
+      - ./gem/frontend/portal:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - environment.${GEM_ENV-dev}.env
