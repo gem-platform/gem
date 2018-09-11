@@ -12,8 +12,8 @@ services:
 
   # Provides MongoDB database to store
   # all the GEM data
-  database:
-    image: gemplatform/database
+  dbs:
+    image: gemplatform/dbs
     restart: always
     build: ./gem/backend/db
     volumes:
@@ -36,7 +36,7 @@ services:
       - 9306:9306
       - 9312:9312
     links:
-      - database:database
+      - dbs:dbs
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
@@ -85,7 +85,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - database:database
+      - dbs:dbs
     volumes:
       - ./gem/backend/gem-meeting-server:/usr/src/app
 
@@ -101,7 +101,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - database:database
+      - dbs:dbs
     volumes:
       - ./gem/backend/gem-portal-server:/usr/src/app
 
@@ -117,7 +117,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - database:database
+      - dbs:dbs
       - gem-pdf-printer:gem-pdf-printer
     volumes:
       - ./gem/backend/gem-office-server:/usr/src/app
