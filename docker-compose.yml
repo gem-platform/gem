@@ -72,6 +72,7 @@ services:
 
   # Meeting server
   gem-meeting-server:
+    image: gem-meeting-server:latest
     restart: always
     build: ./gem/backend/gem-meeting-server
     ports:
