@@ -12,7 +12,8 @@ services:
 
   # Provides MongoDB database to store
   # all the GEM data
-  db:
+  gem-database:
+    image: gemplatform/gem-database
     restart: always
     build: ./gem/backend/db
     volumes:
@@ -35,11 +36,12 @@ services:
       - 9306:9306
       - 9312:9312
     links:
-      - db:db
+      - gem-database:gem-database
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
-  web:
+  gem-web:
+    image: gemplatform/gem-web
     restart: always
     build: 
       context: ./gem/backend/web
@@ -50,7 +52,7 @@ services:
       - "443:443"
     links:
       - gem-meeting-server:gem-meeting-server
-      - portal:portal
+      - gem-portal-client:gem-portal-client
       - gem-portal-server:gem-portal-server
       - gem-office-server:gem-office-server
     volumes:
@@ -83,7 +85,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - db:db
+      - gem-database:gem-database
     volumes:
       - ./gem/backend/gem-meeting-server:/usr/src/app
 
@@ -99,7 +101,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - db:db
+      - gem-database:gem-database
     volumes:
       - ./gem/backend/gem-portal-server:/usr/src/app
 
@@ -115,7 +117,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - db:db
+      - gem-database:gem-database
       - gem-pdf-printer:gem-pdf-printer
     volumes:
       - ./gem/backend/gem-office-server:/usr/src/app
@@ -136,7 +138,8 @@ services:
   ##
 
   # Web client for meeting
-  portal:
+  gem-portal-client:
+    image: gemplatform/gem-portal-client
     restart: always
     build: ./gem/frontend/portal
     command: npm run dev
@@ -147,7 +150,7 @@ services:
     links:
       - gem-meeting-server:gem-meeting-server
     volumes:
-      - ./gem/frontend/portal:/usr/src/app
+      - ./gem/frontend/gem-portal:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - environment.${GEM_ENV-dev}.env
