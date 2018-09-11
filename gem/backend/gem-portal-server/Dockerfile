@@ -1,4 +1,4 @@
-FROM gemplatform/gem-server:latest
+FROM gem-server:latest
 
 
 WORKDIR /usr/src/app
