@@ -85,6 +85,8 @@ services:
       - db:db
     volumes:
       - ./gem/backend/gem-meeting-server:/usr/src/app
+    depends_on:
+      - gem-server
 
   # Meeting server
   gem-portal-server:
@@ -100,6 +102,8 @@ services:
       - db:db
     volumes:
       - ./gem/backend/gem-portal-server:/usr/src/app
+    depends_on:
+      - gem-server
 
   # Meeting server
   gem-office-server:
@@ -117,6 +121,8 @@ services:
     volumes:
       - ./gem/backend/gem-office-server:/usr/src/app
       - ./.data/shared/downloads:/usr/shared/downloads
+    depends_on:
+      - gem-server
 
   # PDF Printer
   gem-pdf-printer:
@@ -126,6 +132,8 @@ services:
       - "4999:4999"
     expose:
       - "4999"
+    depends_on:
+      - gem-server
 
   ##
   ## APPS: FRONTEND
