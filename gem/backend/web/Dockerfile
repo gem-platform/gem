@@ -3,7 +3,7 @@ FROM nginx:1.15-alpine
 ARG env
 
 # copy config depends on environment
-COPY ./envs/gem-web-client.${env}.conf /etc/nginx/conf.d/default.conf
+COPY ./envs/${env}.conf /etc/nginx/conf.d/default.conf
 COPY ./configs /etc/nginx
 
 # copy custom error pages
