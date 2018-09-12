@@ -13,7 +13,7 @@ services:
   # Provides MongoDB database to store
   # all the GEM data
   db:
-    restart: always
+    restart: on-failure:5
     build: ./gem/backend/db
     volumes:
       - ./.data/db:/data/db
@@ -39,7 +39,7 @@ services:
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
   web:
-    restart: always
+    restart: on-failure:5
     build: 
       context: ./gem/backend/web
       args:
@@ -73,7 +73,7 @@ services:
   # Meeting server
   meeting-server:
     image: meeting-server:latest
-    restart: always
+    restart: on-failure:5
     build: ./gem/backend/meeting
     ports:
       - "8090:8090"
@@ -90,7 +90,7 @@ services:
 
   # Meeting server
   portal-server:
-    restart: always
+    restart: on-failure:5
     build: ./gem/backend/portal
     ports:
       - "5000:5000"
@@ -107,7 +107,7 @@ services:
 
   # Office server
   office-server:
-    restart: always
+    restart: on-failure:5
     build: ./gem/backend/office
     ports:
       - "5001:5001"
@@ -126,7 +126,7 @@ services:
 
   # PDF Printer
   pdf-printer:
-    restart: always
+    restart: on-failure:5
     build: ./gem/backend/pdf-printer
     ports:
       - "4999:4999"
@@ -137,7 +137,7 @@ services:
   ## APPS: FRONTEND
   #portal for meeting
   portal:
-    restart: always
+    restart: on-failure:5
     build: ./gem/frontend/portal
     command: npm run dev
     ports:
