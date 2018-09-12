@@ -12,10 +12,9 @@ services:
 
   # Provides MongoDB database to store
   # all the GEM data
-  gem-database:
-    image: gemplatform/gem-database
-    restart: always
-    build: ./gem/backend/gem-database
+  db:
+    restart: on-failure:5
+    build: ./gem/backend/db
     volumes:
       - ./.data/db:/data/db
     ports:
@@ -23,10 +22,9 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
 
-  gem-search:
-    image: gemplatform/gem-search
+  search:
     restart: "no"
-    build: ./gem/backend/gem-search
+    build: ./gem/backend/search
     volumes:
       - ./.data/search/data:/var/lib/sphinx/data
       - ./.data/search/logs:/var/log/sphinx
@@ -36,27 +34,27 @@ services:
       - 9306:9306
       - 9312:9312
     links:
-      - gem-database:gem-database
+      - db:db
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
-  gem-web:
-    image: gemplatform/gem-web
-    restart: always
+  web:
+    restart: on-failure:5
     build: 
-      context: ./gem/frontend/gem-web
+      context: ./gem/backend/web
       args:
         env: ${GEM_ENV-dev}
     ports:
       - "80:80"
       - "443:443"
     links:
-      - gem-meeting-server:gem-meeting-server
-      - gem-portal-client:gem-portal-client
-      - gem-portal-server:gem-portal-server
-      - gem-office-server:gem-office-server
+      - meeting-server
+      - portal-server
+      - office-server
+      - portal
     volumes:
       - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.keys:/etc/nginx/ssl
     
 
   ##
@@ -65,18 +63,18 @@ services:
 
   # Base image for all python-based backend cantainers
   gem-server:
-    image: gemplatform/gem-server
-    build: ./gem/backend/gem-server-common
+    image: gem-server:latest
+    build: ./gem/backend/gem-server
 
   ##
   ## APPS: BACKEND
   ##
 
   # Meeting server
-  gem-meeting-server:
-    image: gemplatform/gem-meeting-server
-    restart: always
-    build: ./gem/backend/gem-meeting-server
+  meeting-server:
+    image: meeting-server:latest
+    restart: on-failure:5
+    build: ./gem/backend/meeting
     ports:
       - "8090:8090"
     expose:
@@ -84,15 +82,16 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - gem-database:gem-database
+      - db:db
     volumes:
-      - ./gem/backend/gem-meeting-server:/usr/src/app
+      - ./gem/backend/meeting:/usr/src/app
+    depends_on:
+      - gem-server
 
   # Meeting server
-  gem-portal-server:
-    image: gemplatform/gem-portal-server
-    restart: always
-    build: ./gem/backend/gem-portal-server
+  portal-server:
+    restart: on-failure:5
+    build: ./gem/backend/portal
     ports:
       - "5000:5000"
     expose:
@@ -100,15 +99,16 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - gem-database:gem-database
+      - db:db
     volumes:
-      - ./gem/backend/gem-portal-server:/usr/src/app
+      - ./gem/backend/portal:/usr/src/app
+    depends_on:
+      - gem-server
 
-  # Meeting server
-  gem-office-server:
-    image: gemplatform/gem-office-server
-    restart: always
-    build: ./gem/backend/gem-office-server
+  # Office server
+  office-server:
+    restart: on-failure:5
+    build: ./gem/backend/office
     ports:
       - "5001:5001"
     expose:
@@ -116,17 +116,18 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
-      - gem-database:gem-database
-      - gem-pdf-printer:gem-pdf-printer
+      - db:db
+      - pdf-printer
     volumes:
-      - ./gem/backend/gem-office-server:/usr/src/app
+      - ./gem/backend/office-server:/usr/src/app
       - ./.data/shared/downloads:/usr/shared/downloads
+    depends_on:
+      - gem-server
 
   # PDF Printer
-  gem-pdf-printer:
-    image: gemplatform/gem-pdf-printer
-    restart: always
-    build: ./gem/backend/gem-pdf-printer
+  pdf-printer:
+    restart: on-failure:5
+    build: ./gem/backend/pdf-printer
     ports:
       - "4999:4999"
     expose:
@@ -134,22 +135,19 @@ services:
 
   ##
   ## APPS: FRONTEND
-  ##
-
-  # Web client for meeting
-  gem-portal-client:
-    image: gemplatform/gem-portal-client
-    restart: always
-    build: ./gem/frontend/gem-portal
+  #portal for meeting
+  portal:
+    restart: on-failure:5
+    build: ./gem/frontend/portal
     command: npm run dev
     ports:
       - "3000:3000"
     expose:
       - "3000"
     links:
-      - gem-meeting-server:gem-meeting-server
+      - meeting-server:meeting-server
     volumes:
-      - ./gem/frontend/gem-portal:/usr/src/app
+      - ./gem/frontend/portal:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - environment.${GEM_ENV-dev}.env
