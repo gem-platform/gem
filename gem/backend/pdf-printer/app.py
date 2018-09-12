@@ -10,6 +10,12 @@ fileConfig('logging.conf')
 APP = Flask('pdf')
 
 
+@APP.route('/health', methods=['GET'])
+def index():
+    """Returns health status of the service."""
+    return 'ok'
+
+
 @APP.route('/pdf', methods=['POST'])
 def generate():
     """Generate PDF using specified data."""
