@@ -1,0 +1,2 @@
+sphinxapi-py3
+pymongo
