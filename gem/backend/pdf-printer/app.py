@@ -3,14 +3,14 @@
 from logging import debug
 from logging.config import fileConfig
 
-from weasyprint import HTML
 from flask import Flask, request, make_response
+from weasyprint import HTML
 
 fileConfig('logging.conf')
-app = Flask('pdf')
+APP = Flask('pdf')
 
 
-@app.route('/pdf', methods=['POST'])
+@APP.route('/pdf', methods=['POST'])
 def generate():
     """Generate PDF using specified data."""
     # get request data
@@ -30,4 +30,4 @@ def generate():
 
 
 if __name__ == '__main__':
-    app.run()
+    APP.run()
