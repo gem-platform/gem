@@ -24,7 +24,7 @@ connect("gem",
 def print_and_save(content):
     stream = BytesIO(content.encode())
     files = {'file': stream}
-    req = post("http://gem-pdf-printer:4999/pdf", files=files)
+    req = post("http://pdf-printer:4999/pdf", files=files)
     filename = str(uuid4()) + ".pdf"
     w = open("/usr/shared/downloads/" + filename, "wb")
     w.write(req.content)

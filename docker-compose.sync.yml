@@ -7,14 +7,14 @@
 version: '3'
 services:
   # Meeting server
-  gem-meeting-server:
+  meeting-server:
     volumes:
-      - gem-meeting-server-sync:/usr/src/app:nocopy
+      - meeting-server-sync:/usr/src/app:nocopy
 
   # Meeting server
-  gem-portal-server:
+  portal-server:
     volumes:
-      - ./gem/backend/gem-portal-server:/usr/src/app
+      - ./gem/backend/portal:/usr/src/app
 
   # Web client for meeting
   portal:
@@ -26,5 +26,5 @@ volumes:
   portal-sync:
     external: true
 
-  gem-meeting-server-sync:
+  meeting-server-sync:
     external: true
