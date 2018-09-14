@@ -1,4 +1,5 @@
 """Restarts application if any file changed."""
+
 import time
 from subprocess import Popen
 
