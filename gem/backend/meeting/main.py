@@ -6,7 +6,7 @@ import logging.config
 from mongoengine import connect
 
 from gms.app import MeetingServerApplication
-from gms.net import SocketIoEndpoint
+from gms.net import SocketIoEndpoint, HealthEndpoint
 
 # setup logging
 logging.config.fileConfig("logging.conf")
@@ -24,9 +24,11 @@ connect("gem",
         authentication_mechanism=DB_AUTH_MECHANISM)
 
 # configure application endpoints
-ENDPOINT = SocketIoEndpoint("0.0.0.0", 8090)
+MEETING_ENDPOINT = SocketIoEndpoint("0.0.0.0", 8090)
+HEALTH_ENDPOINT = HealthEndpoint("0.0.0.0", 8099)
 
 # run app
 APP = MeetingServerApplication()
-APP.endpoints.add(ENDPOINT)
+APP.endpoints.add(HEALTH_ENDPOINT)
+APP.endpoints.add(MEETING_ENDPOINT)
 APP.run()

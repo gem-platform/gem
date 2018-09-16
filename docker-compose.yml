@@ -77,8 +77,10 @@ services:
     build: ./gem/backend/meeting
     ports:
       - "8090:8090"
+      - "8099:8099"
     expose:
       - "8090"
+      - "8099"
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
