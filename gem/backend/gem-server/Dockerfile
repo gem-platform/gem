@@ -1,5 +1,8 @@
 FROM python:slim
 
+# install wget
+RUN apt-get update && apt-get install -y wget
+
 # install basic requirements
 WORKDIR /usr/src/app
 COPY requirements.txt .
