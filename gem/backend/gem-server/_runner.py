@@ -1,47 +1,46 @@
 """Restarts application if any file changed."""
+
 import time
+from subprocess import Popen
 
 from watchdog.events import PatternMatchingEventHandler
 from watchdog.observers import Observer
 
-process = None
+PROCESS = None
 
 
 def restart():
-    global process
-    import subprocess
+    """Restart process."""
+    global PROCESS
 
-    if process:
-        process.terminate()
-        returncode = process.kill()
-        print("Returncode of subprocess: %s" % returncode)
+    # kill previously started process
+    if PROCESS:
+        PROCESS.terminate()
+        PROCESS.kill()
+        time.sleep(3)
 
-    process = subprocess.Popen(["python3", "../app/main.py"])
-    print("Process ID of subprocess %s" % process.pid)
+    PROCESS = Popen(["python3", "../app/main.py"])
 
 
-class MyHandler(PatternMatchingEventHandler):
+class RestartHandler(PatternMatchingEventHandler):
+    """Restart handler."""
+
     def __init__(self):
+        """Initializes new instance of the RestartHandler class."""
         super().__init__(
             patterns=["*.py"],
             ignore_patterns=["process.py"])
 
     def on_any_event(self, event):
-        print(event)
+        """On any event."""
         restart()
 
 
 if __name__ == "__main__":
     restart()
 
-    event_handler = MyHandler()
-    observer = Observer()
-    observer.schedule(event_handler, path='.', recursive=True)
-    observer.start()
-
-    try:
-        while True:
-            time.sleep(1)
-    except KeyboardInterrupt:
-        observer.stop()
-    observer.join()
+    HANDLER = RestartHandler()
+    OBSERVER = Observer()
+    OBSERVER.schedule(HANDLER, path='.', recursive=True)
+    OBSERVER.start()
+    OBSERVER.join()
