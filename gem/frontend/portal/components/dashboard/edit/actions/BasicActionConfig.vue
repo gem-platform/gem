@@ -1,12 +1,11 @@
 <template>
   <div>
     <b-field
-      label="Proposal display mode">
-      <b-switch
-        v-model="parts"
-        @input="changed">
-        Show proposal in parts
-      </b-switch>
+      label="Duration (min)">
+      <b-input
+        v-model="duration"
+        placeholder="Duration of the stage in minutes"
+        @input="changed"/>
     </b-field>
   </div>
 </template>
@@ -21,12 +20,12 @@ export default {
   },
   data() {
     return {
-      parts: this.value.parts || false
+      duration: this.value.duration
     };
   },
   methods: {
     changed() {
-      this.$emit('change', { parts: this.parts });
+      this.$emit('change', { duration: this.duration });
     }
   }
 };

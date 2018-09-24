@@ -14,7 +14,8 @@ export default crudStore({
       const item = data.id === '@new'
         ? state.newItem
         : state.items[data.id];
-      item.actions[data.index].config = data.value;
+      const action = item.actions[data.index];
+      action.config = Object.assign({}, action.config, data.value);
     }
   }
 });

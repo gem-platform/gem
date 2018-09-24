@@ -38,22 +38,27 @@
                 </p>
               </header>
               <div
-                v-if="control(action.id)"
                 class="card-content">
                 <div
                   class="content">
+                  <!-- basic config -->
+                  <basic-action-config
+                    :value="action.config"
+                    @change="actionChanged({index, id: action.id, value: $event})"/>
+
+                  <!-- specific config -->
                   <div
                     :is="control(action.id)"
                     :value="action.config"
                     @change="actionChanged({index, id: action.id, value: $event})"/>
                 </div>
               </div>
-
             </div>
 
+            <!-- No actions added yet -->
             <div
               v-if="actions.length == 0">
-              Drag some actions from the "Available actions" list.
+              No actions added yet. Drag some actions from the "Available actions" list here.
             </div>
           </draggable>
         </b-field>
@@ -85,9 +90,10 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
+import Draggable from 'vuedraggable';
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 
+import BasicActionConfig from '@/components/dashboard/edit/actions/BasicActionConfig.vue';
 import AcquaintanceActionConfig from '@/components/dashboard/edit/actions/AcquaintanceActionConfig.vue';
 
 export default {
@@ -104,8 +110,9 @@ export default {
     }
   },
   components: {
-    draggable,
-    AcquaintanceActionConfig
+    Draggable,
+    AcquaintanceActionConfig,
+    BasicActionConfig
   },
   mixins: [
     CrudEditComponentMixin({
