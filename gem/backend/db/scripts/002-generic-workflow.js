@@ -9,11 +9,11 @@ stageReview = db.workflowStages.insertOne({
     name: "Review",
     description: "Review.",
     actions: [
-        "acquaintance",
-        "ballot",
-        "ballot.results",
-        "comments",
-        "discussion"
+        { id: "acquaintance" },
+        { id: "comments" },
+        { id: "discussion" },
+        { id: "ballot" },
+        { id: "ballot.results" }
     ]
 })
 
