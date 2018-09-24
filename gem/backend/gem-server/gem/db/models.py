@@ -3,7 +3,7 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DictField, ListField, ReferenceField,
                          EmbeddedDocumentField, EmbeddedDocument,
                          DateTimeField, GenericReferenceField,
-                         EmbeddedDocumentListField, IntField)
+                         EmbeddedDocumentListField, IntField, DictField)
 
 from gem.db.signals import finalize_ballot, update_cached_fields
 
@@ -23,12 +23,18 @@ class GemDocument(Document):
     etag = StringField(db_field="_etag")
 
 
+class WorkflowStageAction(EmbeddedDocument):
+    """Stage of a workflow"""
+    id = StringField(required=True)
+    config = DictField()
+
+
 class WorkflowStage(GemDocument):
     """Stage of a workflow"""
     meta = {'collection': 'workflowStages'}
     name = StringField(required=True)
     description = StringField()
-    actions = ListField(StringField(), required=True)
+    actions = EmbeddedDocumentListField(WorkflowStageAction)
 
 
 class WorkflowType(GemDocument):
