@@ -42,7 +42,10 @@
                 class="card-content">
                 <div
                   class="content">
-                  <div :is="control(action.id)"/>
+                  <div
+                    :is="control(action.id)"
+                    :value="action.config"
+                    @change="actionChanged({index, id: action.id, value: $event})"/>
                 </div>
               </div>
 
@@ -133,6 +136,12 @@ export default {
     control(id) {
       if (id === 'acquaintance') return AcquaintanceActionConfig;
       return undefined;
+    },
+    actionChanged({ index, value }) {
+      const entityId = this.$route.params.id;
+      this.$store.commit('dashboard/workflowStages/setActionConfig', {
+        id: entityId, index, value
+      });
     }
   }
 };
