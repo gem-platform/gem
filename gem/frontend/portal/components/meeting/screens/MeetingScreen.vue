@@ -128,7 +128,8 @@ export default {
      * Show proposal reader or content?
      */
     showProposalReader() {
-      return this.stageConfig.proposalReader === true;
+      const { config } = this.$stage;
+      return config && config.parts === true;
     },
 
     /**
@@ -168,7 +169,6 @@ export default {
           title: 'Acquaintance',
           controls: false,
           type: true,
-          proposalReader: true,
           widgets: [
             AcquaintanceView,
             BallotResults,
