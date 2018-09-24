@@ -223,7 +223,9 @@ export default {
      */
     stageIndex() {
       // set stage timer on stage change
-      this.setStageTimer(120);
+      const { config } = this.$stage;
+      const duration = ((config && config.duration) || 2) * 60;
+      this.setStageTimer(duration);
     },
 
     /**
