@@ -1,3 +1,5 @@
+"""Setup file for GEM."""
+
 from setuptools import setup
 
 setup(

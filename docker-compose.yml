@@ -77,8 +77,10 @@ services:
     build: ./gem/backend/meeting
     ports:
       - "8090:8090"
+      - "8099:8099"
     expose:
       - "8090"
+      - "8099"
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
@@ -119,7 +121,7 @@ services:
       - db:db
       - pdf-printer
     volumes:
-      - ./gem/backend/office-server:/usr/src/app
+      - ./gem/backend/office:/usr/src/app
       - ./.data/shared/downloads:/usr/shared/downloads
     depends_on:
       - gem-server
