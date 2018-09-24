@@ -49,19 +49,26 @@ def add_group(meeting, proposal):
     comments = list(Comment.objects(proposal=proposal))
 
     group = StagesGroup(meeting, proposal=proposal)
-    if "acquaintance" in stage.actions:
-        meeting.stages.append(AcquaintanceMeetingStage(ballot, comments, group=group))
+    for action in stage.actions:
+        stage = None
 
-    if "ballot" in stage.actions:
-        meeting.stages.append(BallotMeetingStage(ballot, group=group))
+        if "acquaintance" == action.id:
+            stage = AcquaintanceMeetingStage(ballot, comments, group=group)
 
-    if "ballot.results" in stage.actions:
-        meeting.stages.append(BallotResultsMeetingStage(ballot, group=group))
+        if "ballot" == action.id:
+            stage = BallotMeetingStage(ballot, group=group)
 
-    if "comments" in stage.actions:
-        meeting.stages.append(CommentsMeetingStage(comments, group=group))
+        if "ballot.results" == action.id:
+            stage = BallotResultsMeetingStage(ballot, group=group)
 
-    if "discussion" in stage.actions:
-        meeting.stages.append(DiscussionMeetingStage(group=group))
+        if "comments" == action.id:
+            stage = CommentsMeetingStage(comments, group=group)
 
+        if "discussion" == action.id:
+            stage = DiscussionMeetingStage(group=group)
+
+        stage.config = action.config
+        meeting.stages.append(stage)
+
+    # add proposal to the meeting
     meeting.proposals.append(proposal)
