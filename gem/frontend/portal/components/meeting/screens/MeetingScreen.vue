@@ -128,7 +128,8 @@ export default {
      * Show proposal reader or content?
      */
     showProposalReader() {
-      return this.stageConfig.proposalReader === true;
+      const { config } = this.$stage;
+      return config && config.parts === true;
     },
 
     /**
@@ -168,7 +169,6 @@ export default {
           title: 'Acquaintance',
           controls: false,
           type: true,
-          proposalReader: true,
           widgets: [
             AcquaintanceView,
             BallotResults,
@@ -223,7 +223,9 @@ export default {
      */
     stageIndex() {
       // set stage timer on stage change
-      this.setStageTimer(120);
+      const { config } = this.$stage;
+      const duration = ((config && config.duration) || 2) * 60;
+      this.setStageTimer(duration);
     },
 
     /**

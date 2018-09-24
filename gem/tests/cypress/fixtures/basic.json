@@ -3,7 +3,10 @@
     { 
       "id": "5b8ab052df6e3a05bb720fec", 
       "name": "name1", 
-      "actions": ["acquaintance", "ballot"] 
+      "actions": [
+        { "id": "acquaintance" },
+        { "id": "ballot" }
+      ]
     }
   ],
   "workflowTypes": [

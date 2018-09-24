@@ -58,6 +58,8 @@ export default (options) => {
       }
     },
     actions: {
+      ...options.actions,
+
       /**
        * Fetch one entity by specified id
        * @param {context} param0 Context

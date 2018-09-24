@@ -1,6 +1,12 @@
 {
   "workflowStages": [
-    { "id": "5b8ab052df6e3a05bb720fec", "name": "Initial", "actions": ["ballot"] }
+    { 
+      "id": "5b8ab052df6e3a05bb720fec",
+      "name": "Initial",
+      "actions": [
+        { "id": "ballot" }
+      ] 
+    }
   ],
   "workflowTypes": [
     { 
