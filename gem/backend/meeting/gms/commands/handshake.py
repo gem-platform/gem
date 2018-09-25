@@ -36,7 +36,11 @@ def handshake(context, sid, data):
     # no user found using specified credentails
     # send response with meaningful info
     if not user:
-        return {"success": False, "message": "Wrong access token"}
+        return {
+            "success": False,
+            "message": "You have no rights to join this meeting",
+            "actions": ["request-access"]
+        }
 
     # no meeting found (wrong ID, exception while loading meeting)
     if not context.meeting:
