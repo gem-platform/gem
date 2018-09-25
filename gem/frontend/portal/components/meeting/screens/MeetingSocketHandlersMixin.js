@@ -72,7 +72,8 @@ export default {
         // set connection state
         this.$store.dispatch('meeting/connection/setConnectionState', {
           state: response.success ? 'connected' : 'disconnected',
-          message: response.message
+          message: response.message,
+          actions: response.actions
         });
       });
     }
