@@ -129,7 +129,7 @@ export default {
      */
     showProposalReader() {
       const { config } = this.$stage;
-      return config && config.parts === true;
+      return config && config.proposalInParts === true;
     },
 
     /**
