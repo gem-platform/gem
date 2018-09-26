@@ -140,8 +140,8 @@ class ActiveMeeting:
         List of active sessions are changed.
         Update list of online users for clients.
         """
-        online = map(lambda u: str(u.id), self.__context.sessions.online)
-        self.send_message.notify("meeting_users_online", list(online))
+        state = self.__context.sessions.state
+        self.send_message.notify("meeting_users_online", state)
 
     def __on_send_message(self, message, data, to=None):
         """Send message requested."""

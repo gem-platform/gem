@@ -115,12 +115,5 @@ def user_inactive(context, sid, data):
         return {"success": False}
 
     value = data.get("value", False)
-    context.set_user_inactivity_status(user, value)
-    context.send("inactive_users", context.inactive_users)
+    context.sessions.meta.set(user, "inactive", value)
     return {"success": True}
-
-
-def meeting_users_online(context, sid, data):
-    """List of users online."""
-    ids = list(map(lambda u: str(u.id), context.sessions.online))
-    return {"success": True, "online": ids}

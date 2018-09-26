@@ -77,7 +77,7 @@ def request_access(context, sid, data):
         return { "success": False, "message": "No user found"}
     
     # request access
-    context.request_access(sid, user)
+    context.sessions.requests.add(sid, user)
 
     # send response
     return {
@@ -90,7 +90,7 @@ def request_access(context, sid, data):
 def grant_access(context, sid, data):
     token = data.get("token", None)
     user = context.find_user(token)
-    response_sid = context.request_access_sid(user)
+    response_sid = context.sessions.requests.sid(user)
 
     if not response_sid:
         return {"success": False, "message": "Session ID was not found"}
@@ -98,4 +98,3 @@ def grant_access(context, sid, data):
     context.meeting.allowed_users.append(user)
     context.send("open_meeting", context.meeting.meeting_id, response_sid)
     return { "success": True }    
-

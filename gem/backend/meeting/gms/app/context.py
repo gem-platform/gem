@@ -18,9 +18,6 @@ class Context:
         self.__meeting = meeting
         self.__sessions = Sessions()
         self.send_message = Event()
-        self.__inactive_users = []
-        self.__request_access = []
-        self.__request_access_u = {}
 
     @property
     def meeting(self):
@@ -53,10 +50,6 @@ class Context:
         return self.__sessions
 
     # User section
-
-    @property
-    def inactive_users(self):
-        return self.__inactive_users
 
     def find_user(self, id):
         return User.objects.get(pk=id)
@@ -125,18 +118,6 @@ class Context:
         """
         self.__sessions.delete(sid)
 
-    def set_user_inactivity_status(self, user, inactive):
-        user_id = str(user.id)
-        user_was_inactive = user_id in self.__inactive_users
-
-        # inactive user
-        if inactive and not user_was_inactive:
-            self.__inactive_users.append(user_id)
-
-        # user is active now
-        if not inactive and user_was_inactive:
-            self.__inactive_users.remove(user_id)
-
     # actions
 
     def close_meeting(self):
@@ -164,16 +145,3 @@ class Context:
 
     def send(self, message, data, to=None):
         self.send_message.notify(message, data, to)
-    
-    #
-    def request_access(self, sid, user):
-        if user not in self.__request_access:
-            self.__request_access.append(user)
-        
-        self.__request_access_u[user.id] = sid
-
-        online = map(lambda u: { "name": str(u.name), "id": str(u.id) }, self.__request_access)
-        self.send_message.notify("meeting_users_queue", list(online))
-    
-    def request_access_sid(self, user):
-        return self.__request_access_u.get(user.id, None)

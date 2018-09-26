@@ -1,5 +1,6 @@
 """GEM Meeting Server Entry point"""
 import os
+import json
 import logging
 import logging.config
 
@@ -8,8 +9,11 @@ from mongoengine import connect
 from gms.app import MeetingServerApplication
 from gms.net import SocketIoEndpoint, HealthEndpoint
 
-# setup logging
-logging.config.fileConfig("logging.conf")
+# configure loggers
+with open("logging.json", "r", encoding="utf-8") as fd:
+    logging.config.dictConfig(json.load(fd))
+
+# we are starting
 logging.getLogger("root").info("GEM Meeting Server is starting")
 
 # connect to DB
