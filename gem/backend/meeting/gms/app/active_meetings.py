@@ -160,6 +160,7 @@ class ActiveMeetings:
             k: v for k, v in self.__active.items() 
             if v not in meetings_to_close
         }
-        
+
         # status changes. notify all
         self.status_changed.notify()
+        

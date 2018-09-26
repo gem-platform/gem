@@ -5,7 +5,9 @@
       :message="message"
       :class="type"/>
 
-    <div class="box">
+    <div
+      v-if="actions.length > 0"
+      class="box">
       <!-- Actions response help message -->
       <b-message
         v-if="actionHelpMessage"
@@ -14,8 +16,7 @@
       </b-message>
 
       <!-- Actions to do -->
-      <div
-        v-if="actions.length > 0">
+      <div>
         <b-field
           v-for="action in actions"
           :key="action">

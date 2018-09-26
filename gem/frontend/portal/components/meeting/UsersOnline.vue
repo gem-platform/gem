@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <!-- List of request to access -->
+    <!-- List of requests to access -->
     <div
       v-if="canManage && requests.length > 0"
       class="notification is-danger">
@@ -34,6 +34,7 @@
       </div>
     </div>
 
+    <!-- Online users grouped by role -->
     <div
       v-for="(role, name) in users"
       :key="name"
@@ -82,20 +83,23 @@ export default {
     }
   },
   mounted() {
-    this.$socket.on('meeting_users_online', this.onOnlineUsersData);
+    this.$socket.on('meeting_users_online', this.onlineUsersData);
   },
   beforeDestroy() {
-    this.$socket.off('meeting_users_online', this.onOnlineUsersData);
+    this.$socket.off('meeting_users_online', this.onlineUsersData);
   },
   methods: {
     /**
      * List of online users have arrived
      */
-    onOnlineUsersData(data) {
+    onlineUsersData(data) {
       this.users = _.groupBy(data.online, u => u.role);
       this.requests = data.requests;
     },
 
+    /**
+     * Grant access rights to specified user
+     */
     grantAccessRights(user) {
       this.notify(`Access granted to ${user.name}`);
       this.$socket.emit('grant_access', { token: user.id });
