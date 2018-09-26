@@ -92,7 +92,7 @@ class ActiveMeetings:
         # todo: unsubscribe then meeting closed in __close_empty_meetings
         new_meeting.state_changed.subscribe(self.__state_changed(meeting_id))
         new_meeting.context.sessions.changed.subscribe(self.__on_sessions_changed)
-        new_meeting.broadcast.subscribe(self.__broadcast(meeting_id))
+        new_meeting.send_message.subscribe(self.__send_message(meeting_id))
         self.__active[meeting_id] = new_meeting
         return new_meeting
 
@@ -105,10 +105,10 @@ class ActiveMeetings:
             self.emit.notify("stage", data, meeting_id)
         return handler
 
-    def __broadcast(self, meeting_id):
-        def handler(message, data):
-            self.__comm_log.debug("< broadcast %s %s %s", meeting_id, message, data)
-            self.emit.notify(message, data, meeting_id)
+    def __send_message(self, meeting_id):
+        def handler(message, data, to=None):
+            self.__comm_log.debug("< send %s in %s %s %s", to, meeting_id, message, data)
+            self.emit.notify(message, data, to or meeting_id)
         return handler
 
     def __on_handshake(self, sid, data):

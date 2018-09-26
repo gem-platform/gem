@@ -2,6 +2,7 @@
 
 from logging import getLogger
 from gms.net.serializers.meeting import MeetingSerializer
+from ._aux import permissions_required
 
 LOG = getLogger("handlers")
 
@@ -39,7 +40,7 @@ def handshake(context, sid, data):
         return {
             "success": False,
             "message": "You have no rights to join this meeting",
-            "actions": ["request-access"]
+            "actions": ["request_access"]
         }
 
     # no meeting found (wrong ID, exception while loading meeting)
@@ -66,3 +67,35 @@ def handshake(context, sid, data):
             "permissions": user.permissions
         }
     }
+
+def request_access(context, sid, data):
+    token = data.get("token", None)
+    user = context.find_user(token)
+
+    # no user found to grant access to
+    if not user:
+        return { "success": False, "message": "No user found"}
+    
+    # request access
+    context.request_access(sid, user)
+
+    # send response
+    return {
+        "success": True,
+        "message": "Access rights have been requested. " + \
+            "Please wait until the secretary accepts your request.",
+    }
+
+@permissions_required(["meeting.manage"])
+def grant_access(context, sid, data):
+    token = data.get("token", None)
+    user = context.find_user(token)
+    response_sid = context.request_access_sid(user)
+
+    if not response_sid:
+        return {"success": False, "message": "Session ID was not found"}
+
+    context.meeting.allowed_users.append(user)
+    context.send("open_meeting", context.meeting.meeting_id, response_sid)
+    return { "success": True }    
+

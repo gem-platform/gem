@@ -2,6 +2,7 @@
 
 from gms.app.sessions import Sessions
 from gem.core import Event
+from gem.db import User
 
 
 class Context:
@@ -16,8 +17,10 @@ class Context:
         """
         self.__meeting = meeting
         self.__sessions = Sessions()
-        self.broadcast = Event()
+        self.send_message = Event()
         self.__inactive_users = []
+        self.__request_access = []
+        self.__request_access_u = {}
 
     @property
     def meeting(self):
@@ -54,6 +57,9 @@ class Context:
     @property
     def inactive_users(self):
         return self.__inactive_users
+
+    def find_user(self, id):
+        return User.objects.get(pk=id)
 
     def get_user(self, sid):
         """
@@ -156,5 +162,18 @@ class Context:
             except ValueError:
                 pass
 
-    def send_broadcast(self, message, data):
-        self.broadcast.notify(message, data)
+    def send(self, message, data, to=None):
+        self.send_message.notify(message, data, to)
+    
+    #
+    def request_access(self, sid, user):
+        if user not in self.__request_access:
+            self.__request_access.append(user)
+        
+        self.__request_access_u[user.id] = sid
+
+        online = map(lambda u: { "name": str(u.name), "id": str(u.id) }, self.__request_access)
+        self.send_message.notify("meeting_users_queue", list(online))
+    
+    def request_access_sid(self, user):
+        return self.__request_access_u.get(user.id, None)
