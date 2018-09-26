@@ -70,6 +70,10 @@ class ActiveMeetings:
         if meeting:
             result = meeting.command(event, *data)
 
+        # Meeting for specified SID closed already
+        if not meeting and event not in ["disconnect", "handshake"]:
+            return {"success": False, "message": "Your sessions is outdated"}
+
         # process meeting "disconnect" command first
         if event == "disconnect":
             self.__on_disconnect(sid)
@@ -97,7 +101,6 @@ class ActiveMeetings:
         return new_meeting
 
     def __on_sessions_changed(self):
-        self.__meetings_log.debug("Sessions changed %s", "123")
         self.__close_empty_meetings()
 
     def __state_changed(self, meeting_id):
@@ -139,12 +142,24 @@ class ActiveMeetings:
 
     def __close_empty_meetings(self):
         # stop active meetings if no connections
-        meetings_to_close = [m.meeting_id for m in self.__active.values()
-                             if not m.context.sessions.online]
+        meetings_to_close = [m for m in self.__active.values()
+                             if not m.context.sessions.online] 
 
-        # stop inactive meetings
-        for meeting_id in meetings_to_close:
-            del self.__active[meeting_id]
-            self.__meetings_log.debug("Meeting closed %s", meeting_id)
+        # nothing to close. quit
+        if not meetings_to_close:
+            return
 
+        # filter out connections associated with closing meeting
+        self.__connection = {
+            k: v for k, v in self.__connection.items() 
+            if v not in meetings_to_close
+        }
+
+        # filter out closing meetings
+        self.__active = {
+            k: v for k, v in self.__active.items() 
+            if v not in meetings_to_close
+        }
+        
+        # status changes. notify all
         self.status_changed.notify()

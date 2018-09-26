@@ -4,7 +4,7 @@ from logging import getLogger
 from gms.net.serializers.meeting import MeetingSerializer
 from ._aux import permissions_required
 
-LOG = getLogger("handlers")
+LOG = getLogger("meetings")
 
 
 def connect(context, sid, environ):
