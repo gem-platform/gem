@@ -74,8 +74,8 @@ def request_access(context, sid, data):
 
     # no user found to grant access to
     if not user:
-        return { "success": False, "message": "No user found"}
-    
+        return {"success": False, "message": "No user found"}
+
     # request access
     context.sessions.requests.add(sid, user)
 
@@ -89,12 +89,19 @@ def request_access(context, sid, data):
 @permissions_required(["meeting.manage"])
 def grant_access(context, sid, data):
     token = data.get("token", None)
+    value = data.get("value", False)
     user = context.find_user(token)
     response_sid = context.sessions.requests.sid(user)
 
     if not response_sid:
         return {"success": False, "message": "Session ID was not found"}
 
-    context.meeting.allowed_users.append(user)
-    context.send("open_meeting", context.meeting.meeting_id, response_sid)
-    return { "success": True }    
+    if value:
+        response = {"success": True, "id": context.meeting.meeting_id}
+        context.meeting.allowed_users.append(user)
+        context.send("open_meeting", response, response_sid)
+    else:
+        response = {"success": False, "message": "Your access request has been rejected"}
+        context.send("open_meeting", response, response_sid)
+
+    return {"success": True}

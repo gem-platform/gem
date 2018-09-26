@@ -26,8 +26,16 @@
         <b-tooltip label="Grant access rights">
           <span
             class="icon"
-            @click="grantAccessRights(user)">
+            @click="grantAccessRights(user, true)">
             <i class="fa fa-check"/>
+          </span>
+        </b-tooltip>
+
+        <b-tooltip label="Reject request">
+          <span
+            class="icon"
+            @click="grantAccessRights(user, false)">
+            <i class="fa fa-times"/>
           </span>
         </b-tooltip>
 
@@ -100,9 +108,12 @@ export default {
     /**
      * Grant access rights to specified user
      */
-    grantAccessRights(user) {
-      this.notify(`Access granted to ${user.name}`);
-      this.$socket.emit('grant_access', { token: user.id });
+    grantAccessRights(user, value) {
+      this.notify(value
+        ? `Access granted to ${user.name}`
+        : `Access request from ${user.name} rejected`);
+
+      this.$socket.emit('grant_access', { token: user.id, value });
       this.requests = this.requests.filter(x => x.id !== user.id);
     }
   }

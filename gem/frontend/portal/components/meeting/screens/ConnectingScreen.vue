@@ -97,7 +97,12 @@ export default {
   mounted() {
     this.$socket.on('open_meeting', (res) => {
       // this.$router.push({ path: `/meeting/${res}#reload` });
-      window.location = `/meeting/${res}`; // todo: do it more VUE-way
+      if (res.success) {
+        window.location = `/meeting/${res.id}`; // todo: do it more VUE-way
+      } else {
+        this.actionHelpClass = 'is-danger';
+        this.actionHelpMessage = res.message;
+      }
     });
   },
   beforeDestroy() {
