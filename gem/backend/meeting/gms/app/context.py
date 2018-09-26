@@ -1,8 +1,10 @@
 """Meeting execution context class."""
 
-from gms.app.sessions import Sessions
 from gem.core import Event
 from gem.db import User
+
+from gms.net.serializers.meeting import MeetingSerializer
+from gms.app.sessions import Sessions
 
 
 class Context:
@@ -145,3 +147,8 @@ class Context:
 
     def send(self, message, data, to=None):
         self.send_message.notify(message, data, to)
+
+    def full_sync(self):
+        serializer = MeetingSerializer()
+        meeting_state = serializer.serialize(self.meeting)
+        self.send_message.notify("full_sync", meeting_state)

@@ -6,6 +6,7 @@ export default {
     this.$socket.on('stage', this.stage);
     this.$socket.on('stage_timer', this.stage_timer);
     this.$socket.on('close', this.close);
+    this.$socket.on('full_sync', this.fullSync);
 
     this.sendHandshake();
   },
@@ -16,6 +17,7 @@ export default {
     this.$socket.off('stage', this.stage);
     this.$socket.off('stage_timer', this.stage_timer);
     this.$socket.off('close', this.close);
+    this.$socket.off('full_sync', this.fullSync);
   },
   methods: {
     disconnect(reason) {
@@ -76,6 +78,10 @@ export default {
           actions: response.actions
         });
       });
+    },
+    fullSync(data) {
+      this.$store.dispatch('meeting/meetingState', data);
+      this.$store.dispatch('meeting/meetingProposals', data.proposals);
     }
   }
 };

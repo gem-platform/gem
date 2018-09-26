@@ -99,6 +99,7 @@ def grant_access(context, sid, data):
     if value:
         response = {"success": True, "id": context.meeting.meeting_id}
         context.meeting.allowed_users.append(user)
+        context.full_sync()
         context.send("open_meeting", response, response_sid)
     else:
         response = {"success": False, "message": "Your access request has been rejected"}
