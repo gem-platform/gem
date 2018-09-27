@@ -3,7 +3,7 @@
     <b-field
       label="Proposal display mode">
       <b-switch
-        v-model="parts"
+        v-model="proposalInParts"
         @input="changed">
         Show proposal in parts
       </b-switch>
@@ -21,12 +21,12 @@ export default {
   },
   data() {
     return {
-      parts: this.value.parts || false
+      proposalInParts: this.value.proposalInParts || false
     };
   },
   methods: {
     changed() {
-      this.$emit('change', { parts: this.parts });
+      this.$emit('change', { proposalInParts: this.proposalInParts });
     }
   }
 };
