@@ -70,6 +70,10 @@ class ActiveMeetings:
         if meeting:
             result = meeting.command(event, *data)
 
+        # Meeting for specified SID closed already
+        if not meeting and event not in ["disconnect", "handshake"]:
+            return {"success": False, "message": "Your sessions is outdated"}
+
         # process meeting "disconnect" command first
         if event == "disconnect":
             self.__on_disconnect(sid)
@@ -92,12 +96,11 @@ class ActiveMeetings:
         # todo: unsubscribe then meeting closed in __close_empty_meetings
         new_meeting.state_changed.subscribe(self.__state_changed(meeting_id))
         new_meeting.context.sessions.changed.subscribe(self.__on_sessions_changed)
-        new_meeting.broadcast.subscribe(self.__broadcast(meeting_id))
+        new_meeting.send_message.subscribe(self.__send_message(meeting_id))
         self.__active[meeting_id] = new_meeting
         return new_meeting
 
     def __on_sessions_changed(self):
-        self.__meetings_log.debug("Sessions changed %s", "123")
         self.__close_empty_meetings()
 
     def __state_changed(self, meeting_id):
@@ -105,10 +108,10 @@ class ActiveMeetings:
             self.emit.notify("stage", data, meeting_id)
         return handler
 
-    def __broadcast(self, meeting_id):
-        def handler(message, data):
-            self.__comm_log.debug("< broadcast %s %s %s", meeting_id, message, data)
-            self.emit.notify(message, data, meeting_id)
+    def __send_message(self, meeting_id):
+        def handler(message, data, to=None):
+            self.__comm_log.debug("< send %s in %s %s %s", to, meeting_id, message, data)
+            self.emit.notify(message, data, to or meeting_id)
         return handler
 
     def __on_handshake(self, sid, data):
@@ -139,12 +142,25 @@ class ActiveMeetings:
 
     def __close_empty_meetings(self):
         # stop active meetings if no connections
-        meetings_to_close = [m.meeting_id for m in self.__active.values()
-                             if not m.context.sessions.online]
+        meetings_to_close = [m for m in self.__active.values()
+                             if not m.context.sessions.online] 
 
-        # stop inactive meetings
-        for meeting_id in meetings_to_close:
-            del self.__active[meeting_id]
-            self.__meetings_log.debug("Meeting closed %s", meeting_id)
+        # nothing to close. quit
+        if not meetings_to_close:
+            return
 
+        # filter out connections associated with closing meeting
+        self.__connection = {
+            k: v for k, v in self.__connection.items() 
+            if v not in meetings_to_close
+        }
+
+        # filter out closing meetings
+        self.__active = {
+            k: v for k, v in self.__active.items() 
+            if v not in meetings_to_close
+        }
+
+        # status changes. notify all
         self.status_changed.notify()
+        

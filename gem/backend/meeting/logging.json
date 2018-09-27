@@ -1,0 +1,31 @@
+{
+    "version": 1,
+    "formatters": { 
+        "f": { "format": "%(name)-14s %(levelname)-8s %(message)s" }
+    },
+    "handlers": {
+        "h": {
+            "class": "logging.StreamHandler",
+            "formatter": "f",
+            "level": "DEBUG"
+        }
+    },
+    "loggers": {
+        "communication": {
+            "handlers": ["h"],
+            "level": "ERROR"
+        },
+        "meetings": {
+            "handlers": ["h"],
+            "level": "ERROR"
+        },
+        "sessions": {
+            "handlers": ["h"],
+            "level": "ERROR"
+        },
+        "root": {
+            "handlers": ["h"],
+            "level": "ERROR"
+        }
+    }
+}

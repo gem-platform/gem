@@ -1,5 +1,48 @@
 <template>
   <div>
+
+    <!-- List of requests to access -->
+    <div
+      v-if="canManage && requests.length > 0"
+      class="notification is-danger">
+
+      <!-- Header -->
+      <span class="heading has-text-centered">
+        Access Requests
+      </span>
+
+      <!-- List of users -->
+      <div
+        v-for="user in requests"
+        :key="user.id">
+
+        <span class="icon">
+          <i class="fa fa-user"/>
+        </span>
+        <span>
+          {{ user.name }} ({{ user.role }})
+        </span>
+
+        <b-tooltip label="Grant access rights">
+          <span
+            class="icon"
+            @click="grantAccessRights(user, true)">
+            <i class="fa fa-check"/>
+          </span>
+        </b-tooltip>
+
+        <b-tooltip label="Reject request">
+          <span
+            class="icon"
+            @click="grantAccessRights(user, false)">
+            <i class="fa fa-times"/>
+          </span>
+        </b-tooltip>
+
+      </div>
+    </div>
+
+    <!-- Online users grouped by role -->
     <div
       v-for="(role, name) in users"
       :key="name"
@@ -11,93 +54,67 @@
 
       <div
         v-for="user in role"
-        :key="user.name"
-        class="level">
-        <div class="level-left">
-          <div class="level-item">
-            <span class="icon">
-              <i class="fa fa-user"/>
-            </span>
-            <span>
-              {{ user.name }}
-            </span>
-          </div>
-        </div>
-
-        <div class="level-right">
-          <div class="level-item">
-            <i
-              v-if="userInactive(user.id)"
-              class="fa fa-bed has-text-grey-light"/>
-          </div>
-        </div>
+        :key="user.name">
+        <span class="icon">
+          <i
+            v-if="user.meta && user.meta.inactive"
+            class="fa fa-bed has-text-grey-light"/>
+          <i
+            v-else
+            class="fa fa-user"/>
+        </span>
+        <span>
+          {{ user.name }}
+        </span>
       </div>
     </div>
-</div></template>
+  </div>
+</template>
 
 <script>
 import _ from 'lodash';
 
+import AuthMixin from '@/components/AuthMixin';
+import NotificationMixin from '@/components/NotificationMixin';
+
 export default {
+  mixins: [AuthMixin, NotificationMixin],
   data() {
     return {
-      users: [],
-      afk: []
+      requests: [],
+      users: []
     };
   },
   computed: {
-    /**
-     * Returns list of useers able to be at meeting
-     */
-    allUsers() {
-      return this.$store.getters['meeting/users'];
-    },
-
-    /**
-     * Return all roles able to be at meeting
-     */
-    allRoles() {
-      return this.$store.getters['meeting/roles'];
+    canManage() {
+      return this.haveAccess('meeting.manage');
     }
   },
   mounted() {
-    this.$socket.on('meeting_users_online', this.onOnlineUsersData);
-    this.$socket.on('inactive_users', this.onInactiveUsersData);
-
-    this.$socket.emit('meeting_users_online', {}, res => this.onOnlineUsersData(res.online));
+    this.$socket.on('meeting_users_online', this.onlineUsersData);
   },
   beforeDestroy() {
-    this.$socket.off('meeting_users_online', this.onOnlineUsersData);
-    this.$socket.off('inactive_users', this.onInactiveUsersData);
+    this.$socket.off('meeting_users_online', this.onlineUsersData);
   },
   methods: {
     /**
-     * Is the user inactive or not?
-     */
-    userInactive(id) {
-      return this.afk.includes(id);
-    },
-
-    /**
      * List of online users have arrived
      */
-    onOnlineUsersData(data) {
-      this.users = data
-        .map(uid => this.allUsers[uid])
-        .map(user => ({
-          id: user.id,
-          name: user.name,
-          role: this.allRoles[user.roles[0]].name
-        }));
-
-      this.users = _.groupBy(this.users, u => u.role);
+    onlineUsersData(data) {
+      this.users = _.groupBy(data.online, u => u.role);
+      this.requests = data.requests;
     },
 
     /**
-     * List of inactive users have arrived
+     * Grant access rights to specified user
      */
-    onInactiveUsersData(data) {
-      this.afk = data;
+    grantAccessRights(user, value) {
+      this.notify(value
+        ? `Access granted to ${user.name}`
+        : `Access request from ${user.name} rejected`);
+
+      this.$socket.emit('grant_access', { token: user.id, value });
+      this.requests = this.requests.filter(x => x.id !== user.id);
     }
   }
 };

@@ -110,8 +110,7 @@ export default {
      * Is the current user in the queue?
      */
     selfInQueue() {
-      const user = this.$store.getters['meeting/user'];
-      return this.$stage.queue.includes(user.id);
+      return this.$stage.queue.includes(this.user.id);
     },
 
     /**

@@ -1,7 +1,10 @@
 """Meeting execution context class."""
 
-from gms.app.sessions import Sessions
 from gem.core import Event
+from gem.db import User
+
+from gms.net.serializers.meeting import MeetingSerializer
+from gms.app.sessions import Sessions
 
 
 class Context:
@@ -16,8 +19,7 @@ class Context:
         """
         self.__meeting = meeting
         self.__sessions = Sessions()
-        self.broadcast = Event()
-        self.__inactive_users = []
+        self.send_message = Event()
 
     @property
     def meeting(self):
@@ -51,9 +53,8 @@ class Context:
 
     # User section
 
-    @property
-    def inactive_users(self):
-        return self.__inactive_users
+    def find_user(self, id):
+        return User.objects.get(pk=id)
 
     def get_user(self, sid):
         """
@@ -119,18 +120,6 @@ class Context:
         """
         self.__sessions.delete(sid)
 
-    def set_user_inactivity_status(self, user, inactive):
-        user_id = str(user.id)
-        user_was_inactive = user_id in self.__inactive_users
-
-        # inactive user
-        if inactive and not user_was_inactive:
-            self.__inactive_users.append(user_id)
-
-        # user is active now
-        if not inactive and user_was_inactive:
-            self.__inactive_users.remove(user_id)
-
     # actions
 
     def close_meeting(self):
@@ -156,5 +145,10 @@ class Context:
             except ValueError:
                 pass
 
-    def send_broadcast(self, message, data):
-        self.broadcast.notify(message, data)
+    def send(self, message, data, to=None):
+        self.send_message.notify(message, data, to)
+
+    def full_sync(self):
+        serializer = MeetingSerializer()
+        meeting_state = serializer.serialize(self.meeting)
+        self.send_message.notify("full_sync", meeting_state)

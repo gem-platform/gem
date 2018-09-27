@@ -1,5 +1,3 @@
-import User from '@/lib/user';
-
 export const state = () => ({
   id: 0,
   stageIndex: -1, // current stage number
@@ -7,7 +5,6 @@ export const state = () => ({
   proposals: {}, // proposals keyed by proposalId
   users: {}, // list of users keyed by Id
   roles: {},
-  user: {},
   start: undefined,
   end: undefined,
   attentionRequired: false,
@@ -60,7 +57,7 @@ export const actions = {
   meetingStage(context, data) {
     context.commit('setStageState', data);
 
-    // stage index is not changes, so do not call
+    // stage index is not changed, so do not call
     // setStageIndex unnecessary
     if (data.index !== context.state.stageIndex) {
       context.commit('setStageIndex', data.index);
@@ -70,15 +67,10 @@ export const actions = {
     context.commit('setMeetingRoles', data.roles);
     context.commit('setMeetingUsers', data.users);
     context.commit('setMeetingStages', data.stages.list);
+    context.commit('setProposals', data.proposals);
     context.commit('setStageIndex', data.stages.index);
     context.commit('setMeetingStart', data.start);
     context.commit('setMeetingEnd', data.end);
-  },
-  meetingProposals(context, data) {
-    context.commit('setProposals', data);
-  },
-  user(context, user) {
-    context.commit('setUserData', user);
   },
   attentionRequired({ commit }, value) {
     commit('setAttentionRequired', value);
@@ -91,9 +83,6 @@ export const actions = {
 export const getters = {
   users(state) {
     return state.users;
-  },
-  user(state) {
-    return state.user ? new User(state.user) : undefined;
   },
   roles(state) {
     return state.roles;
