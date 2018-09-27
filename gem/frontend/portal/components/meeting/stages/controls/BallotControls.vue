@@ -14,7 +14,7 @@
     </div>
 
     <!-- Voting controls -->
-    <div v-if="canVote">
+    <div v-if="canVote && !finished">
       <transition
         name="fade"
         mode="out-in">
@@ -45,9 +45,15 @@
       </transition>
     </div>
 
+    <div
+      v-if="finished"
+      class="has-text-danger has-text-centered">
+      Ballot completed
+    </div>
+
     <!-- No rights to vote -->
     <div
-      v-else
+      v-if="!canVote"
       class="has-text-danger has-text-centered">
       You do not have the right to vote.
     </div>
@@ -58,10 +64,11 @@
 import AuthMixin from '@/components/AuthMixin';
 import NotificationMixin from '@/components/NotificationMixin';
 import CommunicationMixin from '@/components/CommunicationMixin';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'BallotStageControls',
-  mixins: [AuthMixin, NotificationMixin, CommunicationMixin],
+  mixins: [AuthMixin, NotificationMixin, CommunicationMixin, StageStateMixin],
   data() {
     return {
       voteCommited: false,
@@ -69,6 +76,10 @@ export default {
     };
   },
   computed: {
+    finished() {
+      return this.$stage.finished;
+    },
+
     /**
      * Can user vote?
      */
@@ -80,7 +91,7 @@ export default {
      * Can user manage ballot stage?
      */
     canManage() {
-      return this.haveAccess('meeting.manage');
+      return this.haveAccess('meeting.manage') && !this.finished;
     }
   },
   methods: {

@@ -19,7 +19,9 @@ export default {
   mixins: [StageStateMixin],
   computed: {
     progress() {
-      return this.$stage.progress;
+      return this.$stage.finished
+        ? 100
+        : this.$stage.progress;
     }
   }
 };
