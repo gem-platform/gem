@@ -13,19 +13,19 @@
     "loggers": {
         "communication": {
             "handlers": ["h"],
-            "level": "DEBUG"
+            "level": "ERROR"
         },
         "meetings": {
             "handlers": ["h"],
-            "level": "DEBUG"
+            "level": "ERROR"
         },
         "sessions": {
             "handlers": ["h"],
-            "level": "DEBUG"
+            "level": "ERROR"
         },
         "root": {
             "handlers": ["h"],
-            "level": "DEBUG"
+            "level": "ERROR"
         }
     }
 }
