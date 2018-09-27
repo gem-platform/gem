@@ -64,6 +64,8 @@ def handshake(context, sid, data):
     }
 
 def request_access(context, sid, data):
+    """The user does not have permission to access the meeting,
+       and he is requesting access rights."""
     token = data.get("token", None)
     user = context.find_user(token)
 
@@ -83,20 +85,22 @@ def request_access(context, sid, data):
 
 @permissions_required(["meeting.manage"])
 def grant_access(context, sid, data):
+    """Grant access rights."""
     token = data.get("token", None)
     value = data.get("value", False)
     user = context.find_user(token)
     response_sid = context.sessions.requests.sid(user)
 
+    # session ID was not found
     if not response_sid:
         return {"success": False, "message": "Session ID was not found"}
 
-    if value:
+    if value:  # access granted
         response = {"success": True, "id": context.meeting.meeting_id}
         context.meeting.allowed_users.append(user)
         context.full_sync()
         context.send("open_meeting", response, response_sid)
-    else:
+    else:  # request was rejected
         response = {"success": False, "message": "Your access request has been rejected"}
         context.send("open_meeting", response, response_sid)
 
