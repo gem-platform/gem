@@ -1,5 +1,9 @@
 <template>
   <div>
+    <p class="heading has-text-centered">
+      Ballot progress
+    </p>
+
     <progress
       :value="progress"
       class="progress is-primary is-large"
@@ -15,7 +19,9 @@ export default {
   mixins: [StageStateMixin],
   computed: {
     progress() {
-      return this.$stage.progress;
+      return this.$stage.finished
+        ? 100
+        : this.$stage.progress;
     }
   }
 };

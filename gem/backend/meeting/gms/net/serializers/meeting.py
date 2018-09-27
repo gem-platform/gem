@@ -136,6 +136,7 @@ class BallotMeetingStageSerializer(BallotSerializeMixin):
             "progress": self.progress(stage),
             "secret": stage.ballot.secret,
             "proposalId": str(stage.group.proposal.id),
+            "finished": stage.ballot.finished,
             "config": stage.config
         }
 

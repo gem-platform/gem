@@ -5,11 +5,11 @@
       <div class="buttons is-centered">
         <a
           v-if="!selfInQueue"
-          class="button"
+          class="button is-fullwidth"
           @click="requestFloor()">Request a floor</a>
         <a
           v-else
-          class="button"
+          class="button is-fullwidth"
           @click="withdrawFromQueue()">Withdraw from queue</a>
       </div>
 

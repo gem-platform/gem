@@ -89,5 +89,8 @@ export const getters = {
   },
   attentionRequired(state) {
     return state.attentionRequired;
+  },
+  proposals(state) {
+    return state.proposals;
   }
 };

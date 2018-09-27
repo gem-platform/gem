@@ -1,17 +1,22 @@
 <template>
   <div>
     <!-- Reading progress bar -->
+    <p class="heading has-text-centered">
+      Reading progress
+    </p>
     <progress
       :value="progress"
       class="progress is-primary is-large"
       max="100"/>
 
     <!-- List of users still reading the proposal -->
-    <div v-if="showReaders">
-      Still reading:
+    <div
+      v-if="showReaders"
+      class="tags">
       <div
         v-for="user in readers"
-        :key="user.name">
+        :key="user.name"
+        class="tag">
         {{ user.name }}: {{ user.progress }}%
       </div>
     </div>
@@ -25,12 +30,14 @@ import AuthMixin from '@/components/AuthMixin';
 export default {
   name: 'AcquaintanceStageView',
   mixins: [StageStateMixin, AuthMixin],
-  data() {
-    return {
-      users: this.$store.getters['meeting/users']
-    };
-  },
   computed: {
+    /**
+     * Get list of users present on the meeting.
+     */
+    users() {
+      return this.$store.getters['meeting/users'];
+    },
+
     /**
      * Returns the average percentage of reading the proposal
      */
@@ -50,12 +57,16 @@ export default {
      * Returns a list of users who have not finished reading
      */
     readers() {
-      return Object.entries(this.$stage.progress.values)
+      const users = Object.entries(this.users);
+      const progress = this.$stage.progress.values;
+
+      return users
         .map(x => ({
-          name: this.users[x[0]].name,
-          progress: Math.floor(x[1] * 100)
+          name: x[1].name,
+          progress: Math.floor((progress[x[0]] || 0) * 100)
         }))
-        .filter(x => x.progress < 100);
+        .filter(x => x.progress < 100)
+        .sort((a, b) => (a.progress < b.progress ? 1 : -1));
     },
 
     /**

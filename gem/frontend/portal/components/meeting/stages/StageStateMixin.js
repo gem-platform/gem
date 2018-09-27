@@ -17,6 +17,9 @@ export default {
     },
     meetingTime() {
       return { start: this.$store.state.meeting.start, end: this.$store.state.meeting.end };
+    },
+    proposals() {
+      return Object.values(this.$store.getters['meeting/proposals']);
     }
   },
   methods: {
