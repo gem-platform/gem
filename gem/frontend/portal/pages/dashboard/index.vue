@@ -9,7 +9,9 @@
 
     <!-- Editable switch -->
     <div class="field">
-      <b-switch v-model="editable">
+      <b-switch
+        id="editable"
+        v-model="editable">
         Editable
       </b-switch>
     </div>
@@ -19,7 +21,7 @@
       name="events-list"
       tag="div">
       <div
-        v-for="day in view"
+        v-for="(day, di) in view"
         :key="day.date"
         class="box">
 
@@ -44,12 +46,13 @@
           name="events-list"
           tag="div">
           <div
-            v-for="event in day.events"
+            v-for="(event, ei) in day.events"
             :key="event._id"
             class="field is-grouped">
 
             <!-- Start time -->
             <b-input
+              :id="'event-start-'+di+'-'+ei"
               v-model="event.start"
               :readonly="!editable"
               placeholder="Start"
@@ -58,6 +61,7 @@
 
             <!-- End time -->
             <b-input
+              :id="'event-end-'+di+'-'+ei"
               v-model="event.end"
               :readonly="!editable"
               placeholder="End"
@@ -66,6 +70,7 @@
 
             <!-- Title and type field -->
             <b-input
+              :id="'event-title-'+di+'-'+ei"
               v-model="event.title"
               :readonly="!editable"
               placeholder="Name"
@@ -93,6 +98,7 @@
       <!-- Add new day button -->
       <p class="control">
         <button
+          id="add-day"
           class="button is-light"
           @click="addDay">Add day</button>
       </p>
@@ -100,6 +106,7 @@
       <!-- Save changes button -->
       <p class="control">
         <button
+          id="save"
           :disabled="!hasChanges"
           class="button is-light"
           @click="save">Save</button>

@@ -130,7 +130,7 @@ export default (options) => {
       async save({ commit }, entity) {
         const data = omit(entity, ['_created', '_updated', '_links']);
 
-        if (entity._id !== '@new') {
+        if (entity._id && entity._id !== '@new') {
           const url = `${api}/${entity._id}`;
           await this.$axios.$put(url, data);
         } else {
