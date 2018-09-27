@@ -8,7 +8,10 @@
     <!-- Stage controls and view -->
     <div class="columns">
       <!-- Stage controls -->
-      <div class="column is-4">
+      <div
+        v-if="!isPresenter"
+        class="column is-4">
+
         <!-- -->
         <div
           v-if="showControlPanel"
@@ -27,7 +30,9 @@
         </div>
       </div>
 
-      <div class="column is-8">
+      <div
+        :class="{'is-8': !isPresenter}"
+        class="column">
         <!-- Additional stage widgets -->
         <div
           v-for="(widget, index) in widgets"
@@ -135,7 +140,8 @@ export default {
      */
     showProposalReader() {
       const { config } = this.$stage;
-      return config && config.proposalInParts === true;
+      return this.isPresenter === false // user is not presenter
+        && (config && config.proposalInParts === true);
     },
 
     /**
@@ -143,6 +149,13 @@ export default {
      */
     showControlPanel() {
       return this.haveAccess('meeting.manage');
+    },
+
+    /**
+     * Is user presenter?
+     */
+    isPresenter() {
+      return this.haveScope('meeting.presenter');
     },
 
     /**
