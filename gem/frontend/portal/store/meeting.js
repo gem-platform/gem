@@ -57,7 +57,7 @@ export const actions = {
   meetingStage(context, data) {
     context.commit('setStageState', data);
 
-    // stage index is not changes, so do not call
+    // stage index is not changed, so do not call
     // setStageIndex unnecessary
     if (data.index !== context.state.stageIndex) {
       context.commit('setStageIndex', data.index);
