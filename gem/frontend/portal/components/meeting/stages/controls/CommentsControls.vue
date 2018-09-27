@@ -64,6 +64,14 @@ export default {
      */
     async sendComment() {
       const { message, mark } = this;
+
+      // validate message
+      if (!message) {
+        this.notify('Message can not be empty.', 'is-danger');
+        return;
+      }
+
+      // send message
       try {
         await this.send('comment', { message, mark });
         this.notify('Your comment has been accepted');
