@@ -14,7 +14,7 @@
     </b-message>
 
     <div
-      v-for="(events, date) in schedule"
+      v-for="(events, date, di) in schedule"
       :key="date">
 
       <!-- Date header -->
@@ -24,11 +24,12 @@
 
       <!-- Events for current date -->
       <div
-        v-for="event in events"
+        v-for="(event, ei) in events"
         :key="event._id">
 
         <!-- Event box -->
         <div
+          :id="'event-'+di+'-'+ei"
           :class="{'is-active': event.active}"
           class="schedule-time notification meeting-box">
           <div class="columns">
@@ -74,6 +75,7 @@
                 :class="{'is-primary': !canManage || event.active}"
                 class="button is-fullwidth">
                 {{ joinButtonTitle(event) }}
+                {{ event.type }}
               </nuxt-link>
             </div>
           </transition>
