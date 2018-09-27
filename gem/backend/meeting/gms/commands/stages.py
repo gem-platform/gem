@@ -93,7 +93,7 @@ def switch_stage(context, sid, data):
 @permissions_required(["meeting.manage"])
 def close(context, sid, data):
     """Close meeting"""
-    context.send_broadcast("close", {})
+    context.send("close", {})
     context.sessions.delete_all()
     context.close_meeting()
     return {"success": True}
@@ -102,7 +102,7 @@ def close(context, sid, data):
 @permissions_required(["meeting.manage"])
 def stage_timer(context, sid, data):
     """Add time for stage."""
-    context.send_broadcast("stage_timer", data)
+    context.send("stage_timer", data)
     return {"success": True}
 
 
@@ -115,12 +115,5 @@ def user_inactive(context, sid, data):
         return {"success": False}
 
     value = data.get("value", False)
-    context.set_user_inactivity_status(user, value)
-    context.send_broadcast("inactive_users", context.inactive_users)
+    context.sessions.meta.set(user, "inactive", value)
     return {"success": True}
-
-
-def meeting_users_online(context, sid, data):
-    """List of users online."""
-    ids = list(map(lambda u: str(u.id), context.sessions.online))
-    return {"success": True, "online": ids}

@@ -325,11 +325,22 @@ WORKFLOW_STAGES = {
             "type": "list",
             "required": True,
             "schema": {
-                "type": "string"
+                "type": "dict",
+                "schema": {
+                    "id": {
+                        "type": "string",
+                        "required": True,
+                        "empty": False
+                    },
+                    "config": {
+                        "allow_unknown": True
+                    }
+                }
             }
         }
     }
 }
+
 
 WORKFLOW_TYPES = {
     "schema": {

@@ -6,6 +6,7 @@ export default {
     this.$socket.on('stage', this.stage);
     this.$socket.on('stage_timer', this.stage_timer);
     this.$socket.on('close', this.close);
+    this.$socket.on('full_sync', this.fullSync);
 
     this.sendHandshake();
   },
@@ -16,6 +17,7 @@ export default {
     this.$socket.off('stage', this.stage);
     this.$socket.off('stage_timer', this.stage_timer);
     this.$socket.off('close', this.close);
+    this.$socket.off('full_sync', this.fullSync);
   },
   methods: {
     disconnect(reason) {
@@ -63,18 +65,20 @@ export default {
         // meta is not sent if handshake failed
         if (response.state) {
           this.$store.dispatch('meeting/meetingId', meetingId);
-          this.$store.dispatch('meeting/user', response.user);
           this.$store.dispatch('meeting/meetingState', response.state);
-          this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
           this.$store.dispatch('meeting/close', false);
         }
 
         // set connection state
         this.$store.dispatch('meeting/connection/setConnectionState', {
           state: response.success ? 'connected' : 'disconnected',
-          message: response.message
+          message: response.message,
+          actions: response.actions
         });
       });
+    },
+    fullSync(data) {
+      this.$store.dispatch('meeting/meetingState', data);
     }
   }
 };

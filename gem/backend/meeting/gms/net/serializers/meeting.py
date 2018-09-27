@@ -116,7 +116,8 @@ class AcquaintanceMeetingStageSerializer(BallotSerializeMixin, CommentsSerialize
             "progress": stage.progress,
             "comments": self.comments_serialize(stage),
             "ballotSummary": self.summary_serialize(stage),
-            "proposalId": str(stage.group.proposal.id)
+            "proposalId": str(stage.group.proposal.id),
+            "config": stage.config
         }
 
 
@@ -134,7 +135,9 @@ class BallotMeetingStageSerializer(BallotSerializeMixin):
             "type": "BallotStage",
             "progress": self.progress(stage),
             "secret": stage.ballot.secret,
-            "proposalId": str(stage.group.proposal.id)
+            "proposalId": str(stage.group.proposal.id),
+            "finished": stage.ballot.finished,
+            "config": stage.config
         }
 
 
@@ -144,7 +147,8 @@ class BallotResultsMeetingStageSerializer(BallotSerializeMixin):
             "type": "BallotResultsStage",
             "votes": self.votes_serialize(stage),
             "summary": self.summary_serialize(stage),
-            "proposalId": str(stage.group.proposal.id)
+            "proposalId": str(stage.group.proposal.id),
+            "config": stage.config
         }
 
 
@@ -154,7 +158,8 @@ class CommentsMeetingStageSerializer(CommentsSerializeMixin):
         return {
             "type": "CommentsStage",
             "comments": self.comments_serialize(stage),
-            "proposalId": str(stage.group.proposal.id)
+            "proposalId": str(stage.group.proposal.id),
+            "config": stage.config
         }
 
 
@@ -169,7 +174,8 @@ class DiscussionMeetingStageSerializer:
             "type": "DiscussionStage",
             "queue": list(user_ids),
             "speaker": str(speaker_id),
-            "proposalId": str(stage.group.proposal.id)
+            "proposalId": str(stage.group.proposal.id),
+            "config": stage.config
         }
 
 

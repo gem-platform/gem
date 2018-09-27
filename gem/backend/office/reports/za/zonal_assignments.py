@@ -1,5 +1,7 @@
+"""Zonal Assignments report."""
+
 from itertools import groupby
-from jinja2 import Template
+from jinja2 import Environment, FileSystemLoader
 from gem.db.models import Official, Zone
 
 
@@ -53,7 +55,9 @@ def zonal_assignments_report(hierarchy=False, leaves_only=True):
         report.append(report_record)
 
     # return generated html
-    template_file = open("./za.html", "r").read()
-    template = Template(template_file)
+    env = Environment(
+        loader=FileSystemLoader("templates")
+    )
+    template = env.get_template("zonal_assignments.html")
     report_html = template.render(data=report)
     return report_html

@@ -1,7 +1,7 @@
 from pytest import fixture
 
 from gem.db import (User, Role, Proposal, Meeting as MeetingObj, WorkflowType,
-                    WorkflowStage)
+                    WorkflowStage, WorkflowStageAction)
 from gms.app.active_meeting import ActiveMeeting
 from gms.meeting.stages import *
 from gms.app.context import Context
@@ -56,7 +56,8 @@ def user_fixture(role):
 
 @fixture(name="workflow")
 def workflow_fixture():
-    stage = WorkflowStage(name="General", actions=["ballot"])
+    action = WorkflowStageAction(id="ballot")
+    stage = WorkflowStage(name="General", actions=[action])
     stage.save()
     workflow = WorkflowType(name="General Workflow", stages=[stage])
     workflow.save()

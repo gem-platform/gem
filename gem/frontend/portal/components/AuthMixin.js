@@ -5,6 +5,10 @@ export default {
         return false;
       }
       return this.$auth.user.scopes.includes('*') || this.$auth.user.scopes.includes(scope);
+    },
+    haveScope(scope) {
+      if (!this.$auth.user) { return false; }
+      return this.$auth.user.scopes.includes(scope);
     }
   },
   computed: {

@@ -8,7 +8,10 @@
     <!-- Stage controls and view -->
     <div class="columns">
       <!-- Stage controls -->
-      <div class="column is-4">
+      <div
+        v-if="!isPresenter"
+        class="column is-4">
+
         <!-- -->
         <div
           v-if="showControlPanel"
@@ -27,7 +30,9 @@
         </div>
       </div>
 
-      <div class="column is-8">
+      <div
+        :class="{'is-8': !isPresenter}"
+        class="column">
         <!-- Additional stage widgets -->
         <div
           v-for="(widget, index) in widgets"
@@ -52,13 +57,19 @@
 </template>
 
 <script>
+// mixins
+
+import AuthMixin from '@/components/AuthMixin';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
+
+// components
+
 import ProposalReader from '@/components/meeting/ProposalReader.vue';
 import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
-import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
-import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
 
 // view components
 
@@ -85,7 +96,7 @@ export default {
     StageInfo,
     UsersOnline
   },
-  mixins: [StageStateMixin, UserInactiveMixin],
+  mixins: [AuthMixin, StageStateMixin, UserInactiveMixin],
   computed: {
     /**
      * Title for top panel
@@ -128,14 +139,23 @@ export default {
      * Show proposal reader or content?
      */
     showProposalReader() {
-      return this.stageConfig.proposalReader === true;
+      const { config } = this.$stage;
+      return this.isPresenter === false // user is not presenter
+        && (config && config.proposalInParts === true);
     },
 
     /**
      * Show global contol panel or not?
      */
     showControlPanel() {
-      return this.$store.getters['meeting/user'].hasPermission('meeting.manage');
+      return this.haveAccess('meeting.manage');
+    },
+
+    /**
+     * Is user presenter?
+     */
+    isPresenter() {
+      return this.haveScope('meeting.presenter');
     },
 
     /**
@@ -168,7 +188,6 @@ export default {
           title: 'Acquaintance',
           controls: false,
           type: true,
-          proposalReader: true,
           widgets: [
             AcquaintanceView,
             BallotResults,
@@ -223,7 +242,9 @@ export default {
      */
     stageIndex() {
       // set stage timer on stage change
-      this.setStageTimer(120);
+      const { config } = this.$stage;
+      const duration = ((config && config.duration) || 2) * 60;
+      this.setStageTimer(duration);
     },
 
     /**

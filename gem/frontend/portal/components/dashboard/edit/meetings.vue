@@ -125,6 +125,11 @@ export default {
         .value();
     }
   },
+  mounted() {
+    // update model "end" and "start" based on
+    // "endTime" and "startTime"
+    this.timeChanged();
+  },
   methods: {
     /**
      * Returns list of users or roles permitted to

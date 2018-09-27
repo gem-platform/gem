@@ -5,11 +5,11 @@
       <div class="buttons is-centered">
         <a
           v-if="!selfInQueue"
-          class="button"
+          class="button is-fullwidth"
           @click="requestFloor()">Request a floor</a>
         <a
           v-else
-          class="button"
+          class="button is-fullwidth"
           @click="withdrawFromQueue()">Withdraw from queue</a>
       </div>
 
@@ -110,8 +110,7 @@ export default {
      * Is the current user in the queue?
      */
     selfInQueue() {
-      const user = this.$store.getters['meeting/user'];
-      return this.$stage.queue.includes(user.id);
+      return this.$stage.queue.includes(this.user.id);
     },
 
     /**

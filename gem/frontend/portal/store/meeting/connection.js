@@ -1,12 +1,14 @@
 export const state = () => ({
   state: 'connecting',
-  message: ''
+  message: '',
+  actions: []
 });
 
 export const mutations = {
   setConnectionState(state, value) {
     state.state = value.state;
     state.message = value.message;
+    state.actions = value.actions;
   }
 };
 

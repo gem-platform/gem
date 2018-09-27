@@ -22,7 +22,7 @@ class ActiveMeeting:
         # create execution context
         self.__meeting_id = meeting_id
         self.__context = Context(meeting=self)
-        self.__context.broadcast.subscribe(self.__on_broadcast)
+        self.__context.send_message.subscribe(self.__on_send_message)
         self.__context.sessions.changed.subscribe(self.__on_sessions_changed)
 
         # configure meeting stages
@@ -45,7 +45,7 @@ class ActiveMeeting:
 
         # events
         self.__state_changed = Event()
-        self.__broadcast = Event()
+        self.__send_message = Event()
 
         if meeting_id is not None:
             fill_meeting(self, meeting_id)
@@ -88,14 +88,14 @@ class ActiveMeeting:
         return self.__state_changed
 
     @property
-    def broadcast(self):
+    def send_message(self):
         """
-        Retrun broadcast event.
+        Retrun send event.
 
         Returns:
-            Event -- Send broadcast message event.
+            Event -- Send message event.
         """
-        return self.__broadcast
+        return self.__send_message
 
     @property
     def meeting_id(self):
@@ -140,9 +140,9 @@ class ActiveMeeting:
         List of active sessions are changed.
         Update list of online users for clients.
         """
-        online = map(lambda u: str(u.id), self.__context.sessions.online)
-        self.broadcast.notify("meeting_users_online", list(online))
+        state = self.__context.sessions.state
+        self.send_message.notify("meeting_users_online", state)
 
-    def __on_broadcast(self, message, data):
-        """Send broadcast message requested."""
-        self.broadcast.notify(message, data)
+    def __on_send_message(self, message, data, to=None):
+        """Send message requested."""
+        self.send_message.notify(message, data, to)

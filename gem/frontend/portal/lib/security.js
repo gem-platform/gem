@@ -137,6 +137,12 @@ export default {
       name: 'Manage Meeting',
       desc: 'Mange meeting',
       group: 'Meeting'
+    },
+    {
+      _id: 'meeting.presenter',
+      name: 'Presenter',
+      desc: 'Hide all controls',
+      group: 'Meeting'
     }
   ]
 };

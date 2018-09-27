@@ -19,6 +19,7 @@ class MeetingStage(metaclass=ABCMeta):
         """
         self.__group = group
         self.__changed = Event()
+        self.__config = {}
 
     @property
     def group(self):
@@ -49,6 +50,24 @@ class MeetingStage(metaclass=ABCMeta):
             Event -- Stage changed event.
         """
         return self.__changed
+
+    @property
+    def config(self):
+        """
+        User defined configuration.
+
+        Returns:
+            Dict -- User defined configuration.
+        """
+        return self.__config
+
+    @config.setter
+    def config(self, value):
+        """
+        Sets user defined configuration.
+        """
+        self.__config = value
+    
 
     def on_enter(self):
         """
