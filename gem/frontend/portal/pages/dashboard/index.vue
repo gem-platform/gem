@@ -47,33 +47,35 @@
           tag="div">
           <div
             v-for="(event, ei) in day.events"
+            :id="'event-'+di+'-'+ei"
             :key="event._id"
             class="field is-grouped">
 
             <!-- Start time -->
             <b-input
-              :id="'event-start-'+di+'-'+ei"
               v-model="event.start"
               :readonly="!editable"
               placeholder="Start"
               class="short"
+              data-role="start"
               @blur="onEventChanged(event)"/>
 
             <!-- End time -->
             <b-input
-              :id="'event-end-'+di+'-'+ei"
               v-model="event.end"
               :readonly="!editable"
               placeholder="End"
               class="short"
+              data-role="end"
               @blur="onEventChanged(event)"/>
 
             <!-- Title and type field -->
             <b-input
-              :id="'event-title-'+di+'-'+ei"
               v-model="event.title"
               :readonly="!editable"
+              class="title"
               placeholder="Name"
+              data-role="title"
               expanded
               @input="onEventChanged(event);"/>
 
@@ -81,6 +83,7 @@
             <button
               v-if="editable"
               class="button"
+              data-role="delete"
               @click="removeEvent(event)">
               <span class="icon">
                 <i class="fa fa-trash"/>
