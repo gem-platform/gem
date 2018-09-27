@@ -65,9 +65,7 @@ export default {
         // meta is not sent if handshake failed
         if (response.state) {
           this.$store.dispatch('meeting/meetingId', meetingId);
-          this.$store.dispatch('meeting/user', response.user);
           this.$store.dispatch('meeting/meetingState', response.state);
-          this.$store.dispatch('meeting/meetingProposals', response.state.proposals);
           this.$store.dispatch('meeting/close', false);
         }
 
@@ -81,7 +79,6 @@ export default {
     },
     fullSync(data) {
       this.$store.dispatch('meeting/meetingState', data);
-      this.$store.dispatch('meeting/meetingProposals', data.proposals);
     }
   }
 };

@@ -52,13 +52,19 @@
 </template>
 
 <script>
+// mixins
+
+import AuthMixin from '@/components/AuthMixin';
+import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
+
+// components
+
 import ProposalReader from '@/components/meeting/ProposalReader.vue';
 import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
-import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
-import UserInactiveMixin from '@/components/meeting/screens/UserInactiveMixin';
 
 // view components
 
@@ -85,7 +91,7 @@ export default {
     StageInfo,
     UsersOnline
   },
-  mixins: [StageStateMixin, UserInactiveMixin],
+  mixins: [AuthMixin, StageStateMixin, UserInactiveMixin],
   computed: {
     /**
      * Title for top panel
@@ -136,7 +142,7 @@ export default {
      * Show global contol panel or not?
      */
     showControlPanel() {
-      return this.$store.getters['meeting/user'].hasPermission('meeting.manage');
+      return this.haveAccess('meeting.manage');
     },
 
     /**

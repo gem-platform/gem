@@ -60,12 +60,7 @@ def handshake(context, sid, data):
     return {
         "success": True,
         "message": "Welcome, {}!".format(user.name),
-        "state": meeting_state,
-        "user": {
-            "id": str(user.id),
-            "name": user.name,
-            "permissions": user.permissions
-        }
+        "state": meeting_state
     }
 
 def request_access(context, sid, data):

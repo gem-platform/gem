@@ -47,6 +47,7 @@ def api_auth_user():
         user = User.objects.get(id=token)
         return jsonify({
             "user": {
+                "id": str(user.id),
                 "name": user.name,
                 "token": str(user.id),
                 "scopes": user.permissions
