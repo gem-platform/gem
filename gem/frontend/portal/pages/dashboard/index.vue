@@ -41,6 +41,7 @@
           <!-- Add new event to current day button -->
           <button
             v-if="editable"
+            data-role="add-event"
             class="button is-large"
             @click="addEvent(day.date)">+</button>
         </div>

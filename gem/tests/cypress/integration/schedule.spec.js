@@ -6,6 +6,7 @@ context('Schedules', () => {
     cy.visit('/dashboard')
   })
 
+
   it('create new event', () => {
     cy.get("#editable").click()
     cy.get("#add-day").click()
@@ -15,6 +16,23 @@ context('Schedules', () => {
     cy.get("#save").click()
     
     cy.get('.snackbar').should('contain', '1 event(s) updated')
+  })
+
+  it.only('create multiple events for one day', () => {
+    cy.get("#editable").click()
+    cy.get("#add-day").click()
+    cy.get("#event-0-0 [data-role='start']").clear().type("09:00")
+    cy.get("#event-0-0 [data-role='end']").type("10:00")
+    cy.get("#event-0-0 [data-role='title']").type("New Event")
+
+    cy.get("#group-0 [data-role='add-event']").click()
+    cy.get("#event-0-1 [data-role='start']").clear().type("10:00")
+    cy.get("#event-0-1 [data-role='end']").type("11:00")
+    cy.get("#event-0-1 [data-role='title']").type("New Event 2")
+
+    cy.get("#save").click()
+    
+    cy.get('.snackbar').should('contain', '2 event(s) updated')
   })
 
   it('create events for different days', () => {
