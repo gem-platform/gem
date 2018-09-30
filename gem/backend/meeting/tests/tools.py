@@ -17,7 +17,6 @@ def drop_db():
         if not hasattr(c, "drop_collection"):
             continue
 
-        print("DROP", c)
         c.drop_collection()
 
 def without_keys(d, keys):
@@ -28,9 +27,17 @@ def import_db(path):
     json = loads(open(path).read())
 
     for obj in json:
+        data = without_keys(obj, ["$type"])
+
         obj_type = obj["$type"]
         obj_class = objs[obj_type]
 
-        instance = obj_class(**without_keys(obj, ["$type"]))
+        
+        # check if object already exist
+        exist = obj_class.objects(pk=obj["id"]).first()
+        if exist:
+            exist.delete()
+
+        instance = obj_class(**data)
         instance.save()
-        print(instance)
+

@@ -43,10 +43,10 @@ def fill_meeting(meeting, meeting_id):
 def add_group(meeting, proposal):
     stage = proposal.stage
 
-    ballots = Ballot.objects(proposal=proposal)
+    ballots = Ballot.objects(proposal=proposal, stage=proposal.stage)
     ballot = ballots[0] if ballots else Ballot(proposal=proposal)
 
-    comments = list(Comment.objects(proposal=proposal))
+    comments = list(Comment.objects(proposal=proposal, stage=proposal.stage))
 
     group = StagesGroup(meeting, proposal=proposal)
     for action in stage.actions:

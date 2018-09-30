@@ -115,13 +115,12 @@ class Ballot(GemDocument):
 
     secret = BooleanField()
     votes = ListField(EmbeddedDocumentField(BallotRecord))
-    proposal = ReferenceField(Proposal)
+    proposal = ReferenceField(Proposal, required=True)
     finished = BooleanField()
     stage = ReferenceField(WorkflowStage, required=True)
 
-    def __init__(self, proposal=None, **data):
+    def __init__(self, **data):
         super().__init__(**data)
-        self.proposal = proposal
 
     def set(self, user, value):
         if self.finished:

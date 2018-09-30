@@ -1,0 +1,76 @@
+[
+    { 
+        "$type": "WorkflowStage",
+        "id" : "5b8ab052df6e3a05bb121fec", 
+        "name" : "Final Vote", 
+        "actions" : [
+            { "id" : "acquaintance" },
+            { "id" : "comments" },
+            { "id" : "ballot" }
+        ]
+    },
+    { 
+        "$type": "Proposal",
+        "id": "5a5deebef5385609a9c9cea5",
+        "title" : "Proposal 02",
+        "index" : "P2018/10/01",
+        "content" : "Some content",
+        "workflow": "5b8ab2a6df6e3a05d98c80a7",
+        "stage": "5b8ab052df6e3a05bb121fec"
+    },
+    { 
+        "$type": "Comment",
+        "id" : "5b8ab052df6e3a05bb12bfe1", 
+        "user" : "5b8ab052df6e3105bb721fdd",
+        "proposal": "5a5deebeb5385609a9c9cea4",
+        "content": "Review Stage Comment",
+        "mark": "+",
+        "stage": "5b8ab052df6e3a05bb720fec"
+    },
+    { 
+        "$type": "Comment",
+        "id" : "5b8ab052df6e3a05bb12bfe2", 
+        "user" : "5b8ab052df6e3105bb721fdd",
+        "proposal": "5a5deebeb5385609a9c9cea4",
+        "content": "Review Stage Comment",
+        "mark": "+",
+        "stage": "5b8ab052df6e3a05bb121fec"
+    },
+    { 
+        "$type": "Comment",
+        "id" : "5b8ab052df6e3a05bb12bfe3", 
+        "user" : "5b8ab052df6e3105bb721fdd",
+        "proposal": "5a5deebef5385609a9c9cea5",
+        "content": "Review Stage Comment",
+        "mark": "+",
+        "stage": "5b8ab052df6e3a05bb121fec"
+    },
+    { 
+        "$type": "Ballot",
+        "id" : "5b8ab052df6e3a05bbf2bfe0", 
+        "proposal": "5a5deebeb5385609a9c9cea4",
+        "stage": "5b8ab052df6e3a05bb720fec",
+        "votes": []
+    },
+    { 
+        "$type": "Ballot",
+        "id" : "5b8ab052df6e3a05bbf2bfe1", 
+        "proposal": "5a5deebef5385609a9c9cea5",
+        "stage": "5b8ab052df6e3a05bb121fec",
+        "votes": []
+    },
+    {
+        "$type": "Meeting",
+        "id": "5a5deebeb5385609a9c9face",
+        "title" : "Meeting", 
+        "agenda" : "Meeting for testing purposes", 
+        "proposals" : [
+            "5a5deebeb5385609a9c9cea4",
+            "5a5deebef5385609a9c9cea5"
+        ], 
+        "permissions" : [
+        ], 
+        "start" : "2018-09-30 12:48:06",
+        "end" : "2018-09-30 12:48:06"
+    }
+]
