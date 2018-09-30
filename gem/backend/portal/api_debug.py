@@ -9,7 +9,15 @@ ENTITY_MAP = {
     "workflowStages": db.WorkflowStage,
     "workflowTypes": db.WorkflowType,
     "proposals": db.Proposal,
-    "meetings": db.Meeting
+    "meetings": db.Meeting,
+    "roles": db.Role,
+    "law": db.Law,
+    "user": db.User,
+    "ballot": db.Ballot,
+    "comment": db.Comment,
+    "meeting": db.Meeting,
+    "official": db.Official,
+    "zone": db.Zone
 }
 
 
