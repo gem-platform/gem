@@ -17,87 +17,82 @@
     </div>
 
     <!-- List of days -->
-    <transition-group
-      name="events-list"
-      tag="div">
+
+    <div
+      v-for="(day, di) in view"
+      :key="day.date"
+      :id="'group-'+di"
+      class="box">
+
+      <!-- Date field -->
       <div
-        v-for="(day, di) in view"
-        :key="day.date"
-        :id="'group-'+di"
-        class="box">
+        class="field is-grouped">
+        <b-input
+          :readonly="!editable"
+          v-model="day.newDate"
+          expanded
+          placeholder="Date"
+          size="is-large"
+          data-role="date"
+          @blur="onDateChanged(day.date, day.newDate, day.events)"/>
 
-        <!-- Date field -->
-        <div
-          class="field is-grouped">
-          <b-input
-            :readonly="!editable"
-            v-model="day.newDate"
-            expanded
-            placeholder="Date"
-            size="is-large"
-            data-role="date"
-            @blur="onDateChanged(day.date, day.newDate, day.events)"/>
-
-          <!-- Add new event to current day button -->
-          <button
-            v-if="editable"
-            data-role="add-event"
-            class="button is-large"
-            @click="addEvent(day.date)">+</button>
-        </div>
-
-        <!-- List of events for specified day -->
-        <transition-group
-          name="events-list"
-          tag="div">
-          <div
-            v-for="(event, ei) in day.events"
-            :id="'event-'+di+'-'+ei"
-            :key="event._id"
-            class="field is-grouped">
-
-            <!-- Start time -->
-            <b-input
-              v-model="event.start"
-              :readonly="!editable"
-              placeholder="Start"
-              class="short"
-              data-role="start"
-              @blur="onEventChanged(event)"/>
-
-            <!-- End time -->
-            <b-input
-              v-model="event.end"
-              :readonly="!editable"
-              placeholder="End"
-              class="short"
-              data-role="end"
-              @blur="onEventChanged(event)"/>
-
-            <!-- Title and type field -->
-            <b-input
-              v-model="event.title"
-              :readonly="!editable"
-              class="title"
-              placeholder="Name"
-              data-role="title"
-              expanded
-              @input="onEventChanged(event);"/>
-
-            <!-- Delete event button -->
-            <button
-              v-if="editable"
-              class="button"
-              data-role="delete"
-              @click="removeEvent(event)">
-              <span class="icon">
-                <i class="fa fa-trash"/>
-              </span>
-            </button>
-          </div>
-        </transition-group>
+        <!-- Add new event to current day button -->
+        <button
+          v-if="editable"
+          data-role="add-event"
+          class="button is-large"
+          @click="addEvent(day.date)">+</button>
       </div>
-    </transition-group>
+
+      <!-- List of events for specified day -->
+
+      <div
+        v-for="(event, ei) in day.events"
+        :id="'event-'+di+'-'+ei"
+        :key="event._id"
+        class="field is-grouped">
+
+        <!-- Start time -->
+        <b-input
+          v-model="event.start"
+          :readonly="!editable"
+          placeholder="Start"
+          class="short"
+          data-role="start"
+          @blur="onEventChanged(event)"/>
+
+        <!-- End time -->
+        <b-input
+          v-model="event.end"
+          :readonly="!editable"
+          placeholder="End"
+          class="short"
+          data-role="end"
+          @blur="onEventChanged(event)"/>
+
+        <!-- Title and type field -->
+        <b-input
+          v-model="event.title"
+          :readonly="!editable"
+          class="title"
+          placeholder="Name"
+          data-role="title"
+          expanded
+          @input="onEventChanged(event);"/>
+
+        <!-- Delete event button -->
+        <button
+          v-if="editable"
+          class="button"
+          data-role="delete"
+          @click="removeEvent(event)">
+          <span class="icon">
+            <i class="fa fa-trash"/>
+          </span>
+        </button>
+      </div>
+    </div>
+
 
     <!-- Control buttons -->
     <div
