@@ -1,0 +1,42 @@
+[
+    { 
+        "$type": "WorkflowStage",
+        "id" : "5b8ab052df6e3a05bb720fec", 
+        "name" : "Review", 
+        "actions" : [
+            { "id" : "acquaintance" },
+            { "id" : "comments" },
+            { "id" : "ballot" }
+        ]
+    },
+    {
+        "$type": "WorkflowType",
+        "id" : "5b8ab2a6df6e3a05d98c80a7", 
+        "name" : "General", 
+        "stages" : [
+            "5b8ab052df6e3a05bb720fec"
+        ]
+    },    
+    { 
+        "$type": "Proposal",
+        "id": "5a5deebeb5385609a9c9cea4",
+        "title" : "Proposal",
+        "index" : "P2018/10/01",
+        "content" : "Some content",
+        "workflow": "5b8ab2a6df6e3a05d98c80a7",
+        "stage": "5b8ab052df6e3a05bb720fec"
+    },
+    {
+        "$type": "Meeting",
+        "id": "5a5deebeb5385609a9c9face",
+        "title" : "Meeting", 
+        "agenda" : "Meeting for testing purposes", 
+        "proposals" : [
+            "5a5deebeb5385609a9c9cea4"
+        ], 
+        "permissions" : [
+        ], 
+        "start" : "2018-09-30 12:48:06",
+        "end" : "2018-09-30 12:48:06"
+    }
+]

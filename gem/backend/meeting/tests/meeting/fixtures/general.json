@@ -1,0 +1,16 @@
+[
+    { 
+        "$type": "Role",
+        "id": "5b8ab052df6e3a05bb720fed",
+        "name": "Superuser",
+        "priority": 99,
+        "permissions":
+        ["*"]
+    },
+    {
+        "$type": "User",
+        "name": "root",
+        "password": "root",
+        "roles": ["5b8ab052df6e3a05bb720fed"]
+    }
+]
