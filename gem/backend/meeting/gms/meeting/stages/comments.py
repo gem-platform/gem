@@ -51,7 +51,8 @@ class CommentsMeetingStage(MeetingStage):
         # create new comment
         comment = Comment(
             user=user, proposal=self.group.proposal,
-            content=message, mark=mark)
+            content=message, mark=mark,
+            stage=self.group.proposal.stage)
         comment.save()
 
         self.__comments.append(comment)

@@ -109,7 +109,7 @@ class BallotRecord(EmbeddedDocument):
     role = ReferenceField(Role)
 
 
-class Ballot(Document):
+class Ballot(GemDocument):
     """Stores ballot data."""
     meta = {'collection': 'ballots'}
 
@@ -117,6 +117,7 @@ class Ballot(Document):
     votes = ListField(EmbeddedDocumentField(BallotRecord))
     proposal = ReferenceField(Proposal)
     finished = BooleanField()
+    stage = ReferenceField(WorkflowStage, required=True)
 
     def __init__(self, proposal=None, **data):
         super().__init__(**data)
@@ -145,6 +146,7 @@ class Comment(GemDocument):
     proposal = ReferenceField(Proposal, required=True)
     content = StringField(required=True)
     mark = StringField(required=True)
+    stage = ReferenceField(WorkflowStage, required=True)
 
 
 class MeetingPermission(EmbeddedDocument):
