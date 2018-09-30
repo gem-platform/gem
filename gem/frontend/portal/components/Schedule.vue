@@ -15,11 +15,14 @@
 
     <div
       v-for="(events, date, di) in schedule"
-      :key="date">
+      :key="date"
+      :id="'group-'+di">
 
       <!-- Date header -->
       <div class="notification is-primary has-text-centered">
-        <p class="title">{{ date }}</p>
+        <p
+          class="title"
+          data-role="date">{{ date }}</p>
       </div>
 
       <!-- Events for current date -->

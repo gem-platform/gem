@@ -23,17 +23,21 @@
       <div
         v-for="(day, di) in view"
         :key="day.date"
+        :id="'group-'+di"
         class="box">
 
         <!-- Date field -->
-        <div class="field is-grouped">
+        <div
+          class="field is-grouped">
           <b-input
             :readonly="!editable"
             v-model="day.newDate"
             expanded
             placeholder="Date"
             size="is-large"
+            data-role="date"
             @blur="onDateChanged(day.date, day.newDate, day.events)"/>
+
           <!-- Add new event to current day button -->
           <button
             v-if="editable"
@@ -264,6 +268,9 @@ export default {
      */
     removeEvent(event) {
       const idx = _.findIndex(this.events, x => x._id === event._id);
+
+      console.log(this.events, event, idx);
+
       this.$delete(this.events, idx);
       this.onEventChanged(event, 'delete');
     },
@@ -287,8 +294,11 @@ export default {
             this.$store.dispatch('dashboard/meetings/update', data);
             this.$store.dispatch('dashboard/meetings/save', data);
           } else {
+            delete event._new;
             delete data._id;
-            this.$store.dispatch('dashboard/meetings/save', data);
+            this.$store.dispatch('dashboard/meetings/save', data).then((res) => {
+              event._id = res._id;
+            });
           }
         } else {
           this.$store.dispatch('dashboard/meetings/remove', { id });
@@ -304,7 +314,7 @@ export default {
       }
 
       // Return back to readonly state
-      this.changes = [];
+      this.changes = {};
       this.editable = false;
     }
   },
