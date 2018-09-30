@@ -326,14 +326,4 @@ export default {
   max-width: 75px;
   width: 75px;
 }
-
-.events-list-move {
-  transition: transform .5s;
-}
-.events-list-enter-active, .events-list-leave-active {
-  transition: all .5s;
-}
-.events-list-enter, .events-list-leave-to {
-  opacity: 0;
-}
 </style>
