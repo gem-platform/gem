@@ -5,6 +5,7 @@
         v-if="canCreate"
         class="control">
         <nuxt-link
+          id="create"
           :to="linkToCreate()"
           class="button is-light">
           <span class="icon">
