@@ -30,7 +30,7 @@
         placeholder="Ballot display mode"
         expanded
         @input="changed">
-        <option value="all">All ballots</option>
+        <!--<option value="all">All ballots</option>-->
         <option value="prev-stage">From previous stage only</option>
       </b-select>
     </b-field>
