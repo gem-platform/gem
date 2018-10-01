@@ -1,8 +1,12 @@
 def finalize_ballot(sender, document, **kwargs):
+    # remove any reference to user for secret ballot
     if document.secret:
-        for v in document.votes:
-            v.user = None
-    document.finished = True
+        for vote in document.votes:
+            vote.user = None
+
+    # save as not finished if there is no any vote
+    if document.votes:
+        document.finished = True
 
 
 def update_cached_fields(sender, document, **kwargs):

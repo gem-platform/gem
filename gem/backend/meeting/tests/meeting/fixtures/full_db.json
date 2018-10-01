@@ -14,7 +14,8 @@
                 } 
             },
             { "id" : "comments" },
-            { "id" : "ballot" }
+            { "id" : "ballot" },
+            { "id" : "ballot.results" }
         ]
     },
     { 

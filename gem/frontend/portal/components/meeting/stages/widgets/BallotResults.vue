@@ -1,11 +1,18 @@
 <template>
   <div>
+    <p
+      v-if="header"
+      class="heading has-text-centered">
+      {{ header }}
+    </p>
+
     <b-message
       v-if="secret">
       This is a secret ballot. You can not see the details.
     </b-message>
 
     <b-table
+      v-if="summaryData.length > 0"
       :data="summaryData"
       :columns="summaryColumns"
       :detailed="!secret"
@@ -27,6 +34,12 @@
       </template>
     </b-table>
 
+    <div
+      v-else
+      class="has-text-centered">
+      There is no ballot results.
+    </div>
+
   </div>
 </template>
 
@@ -37,6 +50,12 @@ import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 export default {
   name: 'BallotResults',
   mixins: [StageStateMixin],
+  props: {
+    header: {
+      type: String,
+      default() { return 'Ballot results'; }
+    }
+  },
   computed: {
     summaryData() {
       const state = this.$store.getters['meeting/stage/state'];
