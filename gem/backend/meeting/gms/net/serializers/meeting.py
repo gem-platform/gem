@@ -145,7 +145,6 @@ class BallotResultsMeetingStageSerializer(BallotSerializeMixin):
     def serialize(self, stage):
         return {
             "type": "BallotResultsStage",
-            "votes": self.votes_serialize(stage),
             "summary": self.summary_serialize(stage),
             "proposalId": str(stage.group.proposal.id),
             "config": stage.config
