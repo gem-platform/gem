@@ -4,7 +4,15 @@
         "id" : "5b8ab052df6e3a05bb121fec", 
         "name" : "Final Vote", 
         "actions" : [
-            { "id" : "acquaintance" },
+            { 
+                "id" : "acquaintance", 
+                "config" : {
+                    "duration" : "3", 
+                    "proposalDisplayMode" : "full", 
+                    "commentsDisplayMode" : "prev-stage", 
+                    "ballotDisplayMode" : "prev-stage"
+                } 
+            },
             { "id" : "comments" },
             { "id" : "ballot" }
         ]
@@ -72,5 +80,14 @@
         ], 
         "start" : "2018-09-30 12:48:06",
         "end" : "2018-09-30 12:48:06"
+    },
+    {
+        "$type": "WorkflowType",
+        "id" : "5b8ab2a6df6e3a05d98c80a7", 
+        "name" : "General", 
+        "stages" : [
+            "5b8ab052df6e3a05bb720fec",
+            "5b8ab052df6e3a05bb121fec"
+        ]
     }
 ]

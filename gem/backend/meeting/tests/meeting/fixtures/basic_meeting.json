@@ -4,7 +4,15 @@
         "id" : "5b8ab052df6e3a05bb720fec", 
         "name" : "Review", 
         "actions" : [
-            { "id" : "acquaintance" },
+            { 
+                "id" : "acquaintance", 
+                "config" : {
+                    "duration" : "3", 
+                    "proposalDisplayMode" : "full", 
+                    "commentsDisplayMode" : "prev-stage", 
+                    "ballotDisplayMode" : "prev-stage"
+                } 
+            },
             { "id" : "comments" },
             { "id" : "ballot" }
         ]
