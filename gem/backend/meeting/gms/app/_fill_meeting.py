@@ -89,6 +89,7 @@ def __acquaintance_stage(group, prev_stage, action, proposal):
 def __ballot_stage(group, current_stage, proposal):
     ballots = Ballot.objects(proposal=proposal, stage=current_stage)
     ballot = ballots.first() if ballots else Ballot(proposal=proposal, stage=current_stage)
+    ballot.save()  # save entity to make it possible to find in another stages (ballot.results)
     return BallotMeetingStage(ballot, group=group)
 
 

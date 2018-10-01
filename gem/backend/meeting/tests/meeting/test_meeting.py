@@ -16,6 +16,7 @@ def setup_function():
 
 
 def test_smoke(meeting):
+    """Check entities was loaded properly."""
     assert meeting.proposals[0].title == "Proposal"
     assert meeting.proposals[0].workflow.name == "General"
     assert meeting.proposals[0].stage.name == "Review"
@@ -23,11 +24,13 @@ def test_smoke(meeting):
 
 def test_all_returns_list_of_stages(meeting):
     """'all' property should return list of all stages."""
-    stages_names = map(lambda x: type(x).__name__, meeting.stages.all)
+    all_stages = meeting.stages.all  # get all stages of a meeting
+    stages_names = map(lambda x: type(x).__name__, all_stages)
 
     assert list(stages_names) == [
         "AgendaMeetingStage", "AcquaintanceMeetingStage",
-        "CommentsMeetingStage", "BallotMeetingStage", "FinalMeetingStage"]
+        "CommentsMeetingStage", "BallotMeetingStage",
+        "BallotResultsMeetingStage", "FinalMeetingStage"]
 
 
 def test_switch_to_stage(meeting):
@@ -229,3 +232,8 @@ def test_ballot_stage(meeting, user, proposal):
     ballot = Ballot.objects.first()
     assert ballot.stage == proposal.stage
     assert len(Ballot.objects.all()) == 1
+
+
+def test_ballot_is_not_finished(meeting):
+    ballot_stage = meeting.stages[3]  # ballot stage
+    assert ballot_stage.ballot.finished is not True
