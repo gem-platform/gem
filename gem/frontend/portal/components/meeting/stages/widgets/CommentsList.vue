@@ -1,5 +1,11 @@
 <template>
   <div>
+    <p
+      v-if="header"
+      class="heading has-text-centered">
+      {{ header }}
+    </p>
+
     <!-- Filter -->
     <div
       v-if="filter"
@@ -16,6 +22,7 @@
     </div>
 
     <transition-group
+      v-if="comments"
       name="comments-list"
       tag="article">
       <article
@@ -51,6 +58,12 @@
         </div>
       </article>
     </transition-group>
+
+    <div
+      v-if="comments.length <= 0"
+      class="has-text-centered">
+      There is no comments
+    </div>
   </div>
 </template>
 
@@ -70,7 +83,6 @@ function anyMarkPresent(filter, value) {
 }
 
 export default {
-  name: 'CommentsList',
   components: { Roles, Marks },
   filters: {
     mark(value) {
@@ -85,6 +97,10 @@ export default {
     filter: {
       type: Boolean,
       default: false
+    },
+    header: {
+      type: String,
+      default() { return 'Comments'; }
     }
   },
   data() {

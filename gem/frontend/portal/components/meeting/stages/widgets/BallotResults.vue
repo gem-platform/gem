@@ -1,14 +1,32 @@
 <template>
   <div>
+    <p
+      v-if="header"
+      class="heading has-text-centered">
+      {{ header }}
+    </p>
+
     <b-table
+      v-if="summaryData.length > 0"
       :data="summaryData"
       :columns="summaryColumns"/>
+    <div
+      v-else
+      class="has-text-centered">
+      There is no ballot results.
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'BallotResults',
+  props: {
+    header: {
+      type: String,
+      default() { return 'Ballot results'; }
+    }
+  },
   computed: {
     votes() {
       const votes = this.$store.getters['meeting/stage/state'];
