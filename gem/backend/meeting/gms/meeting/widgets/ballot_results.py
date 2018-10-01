@@ -32,27 +32,21 @@ class BallotSerializeMixin:
         # return calculated percent
         return percent
 
-    def votes_serialize(self, stage):
-        if stage.ballot.secret:
-            return None
-        return [{"user_id": str(v.user.id) if v.user else None, "value": v.value} for v in stage.ballot.votes]
-
     def summary_serialize(self, stage):
         if not stage.ballot:
             return {}
 
-        return self.calculate_votes(stage.ballot.votes)
+        result = {}
+        for vote in stage.ballot.votes:
+            rid = str(vote.role.id)
+            if rid not in result:
+                result[rid] = {"yes": 0, "no": 0, "abstained": 0, "users": []}
+            result[rid][vote.value] += 1
+
+            if vote.user:
+                result[rid]["users"].append({"id": str(vote.user.id), "value": vote.value})
+        return {"secret": stage.ballot.secret, "votes": result}
 
     @staticmethod
     def __users_can_vote(users):
         return list(filter(lambda user: "meeting.vote" in user.permissions, users))
-
-    @staticmethod
-    def calculate_votes(votes):
-        result = {}
-        for vote in votes:
-            rid = str(vote.role.id)
-            if rid not in result:
-                result[rid] = {"yes": 0, "no": 0, "abstained": 0}
-            result[rid][vote.value] += 1
-        return result
