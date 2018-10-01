@@ -42,16 +42,13 @@ def fill_meeting(meeting, meeting_id):
 
 def add_group(meeting, proposal):
     workflow = proposal.workflow
-    stage = proposal.stage
-    stage_idx = workflow.stages.index(stage)
+    cur_stage = proposal.stage
+    stage_idx = workflow.stages.index(cur_stage)
     stage_idx = max(0, stage_idx-1) # don't go to negative side
     prev_stage = workflow.stages[stage_idx]
 
-    ballots = Ballot.objects(proposal=proposal, stage=prev_stage)
-    ballot = ballots[0] if ballots else Ballot(proposal=proposal)
-
     group = StagesGroup(meeting, proposal=proposal)
-    for action in stage.actions:
+    for action in cur_stage.actions:
         stage = None
 
         if "acquaintance" == action.id:
@@ -59,16 +56,23 @@ def add_group(meeting, proposal):
                 comments = Comment.objects(proposal=proposal, stage=prev_stage)
             else:
                 comments = Comment.objects(proposal=proposal)
+            
+            ballot = Ballot.objects(proposal=proposal, stage=prev_stage).first()
+
             stage = AcquaintanceMeetingStage(ballot, list(comments), group=group)
 
         if "ballot" == action.id:
+            ballots = Ballot.objects(proposal=proposal, stage=cur_stage)
+            ballot = ballots[0] if ballots else Ballot(proposal=proposal, stage=cur_stage)
+
             stage = BallotMeetingStage(ballot, group=group)
 
         if "ballot.results" == action.id:
             stage = BallotResultsMeetingStage(ballot, group=group)
 
         if "comments" == action.id:
-            stage = CommentsMeetingStage([], group=group)
+            comments = Comment.objects(proposal=proposal, stage=cur_stage)
+            stage = CommentsMeetingStage(list(comments), group=group)
 
         if "discussion" == action.id:
             stage = DiscussionMeetingStage(group=group)
