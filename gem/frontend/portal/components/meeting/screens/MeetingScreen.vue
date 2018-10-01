@@ -141,7 +141,7 @@ export default {
     showProposalReader() {
       const { config } = this.$stage;
       return this.isPresenter === false // user is not presenter
-        && (config && config.proposalInParts === true);
+        && (config && config.proposalDisplayMode === 'in-parts');
     },
 
     /**

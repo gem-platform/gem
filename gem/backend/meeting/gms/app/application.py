@@ -38,6 +38,7 @@ class MeetingServerApplication(Application):
             return self.__active_meetings.command(event, *data)
         except Exception as exc:
             self.__log.error("Unable to execute command: " + str(exc))
+            self.__log.exception(exc)
             return {"success": False, "message": "Unknown error: " + str(exc)}
 
     def __on_emit(self, event, data, to):

@@ -6,6 +6,10 @@ class BallotSerializeMixin:
         Returns:
             float -- Progress in percents.
         """
+        # Stage have no ballot
+        if not stage.ballot:
+            return 0
+
         # it's impossible to calculate percentage without context
         # (we need: users online) so raise an exception
         if not stage.meeting.context:
@@ -34,6 +38,9 @@ class BallotSerializeMixin:
         return [{"user_id": str(v.user.id) if v.user else None, "value": v.value} for v in stage.ballot.votes]
 
     def summary_serialize(self, stage):
+        if not stage.ballot:
+            return {}
+
         return self.calculate_votes(stage.ballot.votes)
 
     @staticmethod

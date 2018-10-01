@@ -34,6 +34,7 @@ class BallotMeetingStage(MeetingStage):
         """
         Called when stage deactivated.
         """
+        self.__ballot.stage = self.group.proposal.stage
         self.__ballot.save()
 
     def vote(self, user, value):
