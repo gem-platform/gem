@@ -3,7 +3,8 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DictField, ListField, ReferenceField,
                          EmbeddedDocumentField, EmbeddedDocument,
                          DateTimeField, GenericReferenceField,
-                         EmbeddedDocumentListField, IntField, DictField)
+                         EmbeddedDocumentListField, IntField, DictField,
+                         FloatField)
 
 from gem.db.signals import finalize_ballot, update_cached_fields
 
@@ -118,6 +119,8 @@ class Ballot(GemDocument):
     proposal = ReferenceField(Proposal, required=True)
     finished = BooleanField()
     stage = ReferenceField(WorkflowStage, required=True)
+    threshold = FloatField(min_value=0, max_value=1, default=0.5)
+    result = StringField()
 
     def __init__(self, **data):
         super().__init__(**data)

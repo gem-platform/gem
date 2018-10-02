@@ -6,33 +6,44 @@
       {{ header }}
     </p>
 
-    <b-message
-      v-if="secret">
-      This is a secret ballot. You can not see the details.
-    </b-message>
+    <div
+      v-if="summaryData.length > 0">
 
-    <b-table
-      v-if="summaryData.length > 0"
-      :data="summaryData"
-      :columns="summaryColumns"
-      :detailed="!secret"
-      detail-key="role">
-      <template
-        slot="detail"
-        slot-scope="props">
+      <div
+        :class="{'is-success': result=='pass',
+                 'is-danger': result=='fail',
+                 'is-warning': result=='tie'}"
+        class="notification has-text-centered is-size-4">
+        {{ result | ballotResult }}
+      </div>
 
-        <div
-          v-for="(users, vote) in props.row.users"
-          :key="vote">
+      <b-message
+        v-if="secret">
+        This is a secret ballot. You can not see the details.
+      </b-message>
 
-          <p class="heading has-text-centered">{{ vote }}</p>
+      <b-table
+        :data="summaryData"
+        :columns="summaryColumns"
+        :detailed="!secret"
+        detail-key="role">
+        <template
+          slot="detail"
+          slot-scope="props">
+
           <div
-            v-for="user in users"
-            :key="user.id">{{ user.name }}</div>
-        </div>
+            v-for="(users, vote) in props.row.users"
+            :key="vote">
 
-      </template>
-    </b-table>
+            <p class="heading has-text-centered">{{ vote }}</p>
+            <div
+              v-for="user in users"
+              :key="user.id">{{ user.name }}</div>
+          </div>
+
+        </template>
+      </b-table>
+    </div>
 
     <div
       v-else
@@ -49,6 +60,14 @@ import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'BallotResults',
+  filters: {
+    ballotResult(value) {
+      if (value === 'pass') { return 'Pass'; }
+      if (value === 'fail') { return 'Fail'; }
+      if (value === 'tie') { return 'Tie'; }
+      return value;
+    }
+  },
   mixins: [StageStateMixin],
   props: {
     header: {
@@ -62,6 +81,10 @@ export default {
       const summary = (state.summary || state.ballotSummary).votes;
       const roles = this.$store.getters['meeting/roles'];
       const users = this.$store.getters['meeting/users'];
+
+      if (!summary) {
+        return {};
+      }
 
       const roleIds = Object.keys(summary);
       const result = roleIds.map(x => ({
@@ -77,6 +100,9 @@ export default {
       }));
 
       return result;
+    },
+    result() {
+      return (this.$stage.summary || this.$stage.ballotSummary).result;
     },
     secret() {
       return (this.$stage.summary || this.$stage.ballotSummary).secret;

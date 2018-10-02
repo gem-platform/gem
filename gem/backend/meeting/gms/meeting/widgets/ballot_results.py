@@ -33,6 +33,7 @@ class BallotSerializeMixin:
         return percent
 
     def summary_serialize(self, stage):
+        """Serialize."""
         if not stage.ballot:
             return {}
 
@@ -45,7 +46,7 @@ class BallotSerializeMixin:
 
             if vote.user:
                 result[rid]["users"].append({"id": str(vote.user.id), "value": vote.value})
-        return {"secret": stage.ballot.secret, "votes": result}
+        return {"secret": stage.ballot.secret, "votes": result, "result": stage.ballot.result}
 
     @staticmethod
     def __users_can_vote(users):

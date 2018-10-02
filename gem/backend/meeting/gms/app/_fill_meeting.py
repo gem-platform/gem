@@ -49,6 +49,7 @@ def add_group(meeting, proposal):
     stage_idx = max(0, stage_idx-1) # don't go to negative side
     prev_stage = workflow.stages[stage_idx]
     group = StagesGroup(meeting, proposal=proposal)
+    context = {}
 
     __stages = {
         "acquaintance": __acquaintance_stage,
@@ -64,7 +65,7 @@ def add_group(meeting, proposal):
         handler_args = list(signature(handler).parameters)
         handler_params = {
             "group": group, "proposal": proposal, "prev_stage": prev_stage,
-            "current_stage": cur_stage, "action": action
+            "current_stage": cur_stage, "action": action, "context": context
         }
         filtered_args = {k: v for k, v in handler_params.items() if k in handler_args}
 
@@ -86,16 +87,15 @@ def __acquaintance_stage(group, prev_stage, action, proposal):
     return AcquaintanceMeetingStage(ballot, list(comments), group=group)
 
 
-def __ballot_stage(group, current_stage, proposal):
+def __ballot_stage(group, current_stage, proposal, context):
     ballots = Ballot.objects(proposal=proposal, stage=current_stage)
     ballot = ballots.first() if ballots else Ballot(proposal=proposal, stage=current_stage)
-    ballot.save()  # save entity to make it possible to find in another stages (ballot.results)
+    context["ballot"] = ballot # save entity to make it possible to find in another stages (ballot.results)
     return BallotMeetingStage(ballot, group=group)
 
 
-def __ballot_results_stage(group, current_stage, proposal):
-    ballot = Ballot.objects.get(proposal=proposal, stage=current_stage)
-    return BallotResultsMeetingStage(ballot, group=group)
+def __ballot_results_stage(group, context):
+    return BallotResultsMeetingStage(context["ballot"], group=group)
 
 
 def __comments_stage(group, current_stage, proposal):

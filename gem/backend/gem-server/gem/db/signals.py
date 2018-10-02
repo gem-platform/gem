@@ -4,6 +4,18 @@ def finalize_ballot(sender, document, **kwargs):
         for vote in document.votes:
             vote.user = None
 
+    # calculate result:
+    if document.votes and document.finished is not True:
+        yes = len(list(filter(lambda x: x.value == "yes", document.votes)))
+        no = len(list(filter(lambda x: x.value == "no", document.votes)))
+        total = yes + no
+        threshold = document.threshold
+
+        document.result = \
+            "tie" if yes == no and threshold == .5 else \
+            "pass" if yes >= total * threshold else \
+            "fail"
+
     # save as not finished if there is no any vote
     if document.votes:
         document.finished = True

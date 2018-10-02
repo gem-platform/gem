@@ -1,0 +1,53 @@
+[
+    { 
+        "$type": "Role",
+        "id": "5b8ab052df6e3a05bb720fed",
+        "name": "Superuser",
+        "priority": 99,
+        "permissions":
+        ["*"]
+    },
+    { 
+        "$type": "Proposal",
+        "id": "5a5deebeb5385609a9c9cea4",
+        "title" : "Proposal",
+        "index" : "P2018/10/01",
+        "content" : "Some content",
+        "workflow": "5b8ab2a6df6e3a05d98c80a7",
+        "stage": "5b8ab052df6e3a05bb720fec"
+    },
+    {
+        "$type": "WorkflowStage",
+        "id" : "5b8ab052df6e3a05bb720fec", 
+        "name" : "Review", 
+        "actions" : [
+            { 
+                "id" : "acquaintance", 
+                "config" : {
+                    "duration" : "3", 
+                    "proposalDisplayMode" : "full", 
+                    "commentsDisplayMode" : "prev-stage", 
+                    "ballotDisplayMode" : "prev-stage"
+                } 
+            },
+            { "id" : "comments" },
+            { "id" : "ballot" },
+            { "id" : "ballot.results" }
+        ]
+    },
+    {
+        "$type": "WorkflowType",
+        "id" : "5b8ab2a6df6e3a05d98c80a7", 
+        "name" : "General", 
+        "stages" : [
+            "5b8ab052df6e3a05bb720fec"
+        ]
+    },
+    {
+        "$type": "Ballot",
+        "id": "5b8ab052df6e3a05bb720fed",
+        "proposal": "5a5deebeb5385609a9c9cea4",
+        "stage": "5b8ab052df6e3a05bb720fec",
+        "threshold": 1
+    }
+]

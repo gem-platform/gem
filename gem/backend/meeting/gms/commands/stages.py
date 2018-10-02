@@ -29,8 +29,15 @@ def ballot_secret(context, sid, data):
     """Change ballot secret."""
     value = data.get("value", None)
     context.stage.ballot.secret = value
-    return {"success": True, "value": context.stage.ballot.secret}
+    return {"success": True}
 
+
+@permissions_required(["meeting.manage"])
+def ballot_threshold(context, sid, data):
+    """Change ballot threshold."""
+    value = float(data.get("value", None))
+    context.stage.ballot.threshold = value
+    return {"success": True}
 
 # Comments Stage
 
