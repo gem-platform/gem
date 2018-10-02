@@ -10,12 +10,11 @@ connect("gem",
         authentication_mechanism="SCRAM-SHA-1")
 
 users = User.objects.all()
-ballot = Ballot.objects.get(pk="5bb212c13957cb08ddce667d")
+ballot = Ballot.objects.get(pk="5bb33dedf21a6902e6ea5c74")
 ballot.finished = False
 
 for user in users:
         value = choice(["yes", "no", "abstained"])
         ballot.set(user, value)
 
-ballot.secret = True
 ballot.save()
