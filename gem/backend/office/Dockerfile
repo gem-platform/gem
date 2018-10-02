@@ -14,7 +14,7 @@ COPY . .
 EXPOSE 5001
 
 # site should be accesible
-HEALTHCHECK  --interval=30s --timeout=3s \
+HEALTHCHECK  --interval=1m \
   CMD wget --quiet --tries=1 --spider http://localhost:5001/office/health || exit 1
 
 # CMD gunicorn --bind 0.0.0.0:5001 main:app
