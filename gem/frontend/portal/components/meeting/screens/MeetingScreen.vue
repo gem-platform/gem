@@ -46,10 +46,7 @@
           v-if="showProposal"
           class="box content">
           <ProposalReader
-            v-if="showProposalReader"/>
-          <div
-            v-else
-            v-html="proposal.content"/>
+            :mode="proposalReaderMode"/>
         </div>
       </div>
     </div>
@@ -138,10 +135,11 @@ export default {
     /**
      * Show proposal reader or content?
      */
-    showProposalReader() {
+    proposalReaderMode() {
       const { config } = this.$stage;
-      return this.isPresenter === false // user is not presenter
-        && (config && config.proposalDisplayMode === 'in-parts');
+      return this.isPresenter
+        ? 'all' // show whole proposal if user is presenter
+        : config.proposalDisplayMode || 'all';
     },
 
     /**

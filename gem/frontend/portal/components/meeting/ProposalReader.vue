@@ -1,11 +1,14 @@
 <template>
   <div>
     <div
-      id="content"
+      id="proposal-content"
       ref="proposalContent"
+      :class="{'in-parts-reader': mode=='in-parts'}"
       v-html="proposal.content"/>
     <br>
+
     <a
+      v-if="mode == 'in-parts'"
       :class="moreButtonClass()"
       class="button is-fullwidth"
       @click="more">
@@ -20,6 +23,12 @@ import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   mixins: [StageStateMixin, CommunicationMixin],
+  props: {
+    mode: {
+      type: String,
+      default() { return 'all'; }
+    }
+  },
   data() {
     return { reveal: 10 };
   },
@@ -30,6 +39,12 @@ export default {
     proposal() {
       return this.stageProposal;
     }
+  },
+  mounted() {
+    document.addEventListener('selectionchange', this.selectionChange);
+  },
+  beforeDestroy() {
+    document.removeEventListener('selectionchange', this.selectionChange);
   },
   methods: {
     /**
@@ -70,13 +85,18 @@ export default {
       const percents = Math.floor((current / max) * 100);
 
       return percents;
+    },
+
+    selectionChange() {
+      const text = window.getSelection().toString();
+      this.$bus.emit('proposalSelection', { text });
     }
   }
 };
 </script>
 
 <style scoped>
-#content {
+.in-parts-reader {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 100px;

@@ -47,7 +47,8 @@ def comment(context, sid, data):
     user = context.get_user(sid)
     message = data.get("message", None)
     mark = data.get("mark", None)
-    context.stage.comment(user, message, mark)
+    quote = data.get("quote", None)
+    context.stage.comment(user, message, mark, quote)
     return {"success": True}
 
 

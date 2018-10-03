@@ -1,6 +1,14 @@
 <template>
   <div>
     <div v-if="canComment">
+      <!-- Quote -->
+      <b-message
+        :active="quote !== undefined"
+        title="Quote"
+        @close="quote = undefined">
+        {{ quote ? quote.text : '' }}
+      </b-message>
+
       <!-- Textarea -->
       <div
         class="field">
@@ -47,7 +55,8 @@ export default {
   data() {
     return {
       message: '',
-      mark: '+'
+      mark: '+',
+      quote: undefined
     };
   },
   computed: {
@@ -57,6 +66,12 @@ export default {
     canComment() {
       return this.haveAccess('meeting.comment');
     }
+  },
+  mounted() {
+    this.$bus.on('proposalSelection', this.onProposalSelection);
+  },
+  beforeDestroy() {
+    this.$bus.off('proposalSelection', this.onProposalSelection);
   },
   methods: {
     /**
@@ -73,12 +88,19 @@ export default {
 
       // send message
       try {
-        await this.send('comment', { message, mark });
+        await this.send('comment', { message, mark, quote: this.quote });
         this.notify('Your comment has been accepted');
         this.message = '';
       } catch (err) {
         this.notify(err.message, 'is-danger');
       }
+    },
+
+    /**
+     * User selected something in proposal
+     */
+    onProposalSelection(data) {
+      this.quote = data;
     }
   }
 };

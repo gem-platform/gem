@@ -140,6 +140,8 @@ class Ballot(GemDocument):
         return votes_of_user[0] if votes_of_user else None
 
 
+class ProposalQuote(EmbeddedDocument):
+    text = StringField()
 class Comment(GemDocument):
     """Comment"""
     meta = {'collection': 'comments'}
@@ -149,6 +151,7 @@ class Comment(GemDocument):
     content = StringField(required=True)
     mark = StringField(required=True)
     stage = ReferenceField(WorkflowStage, required=True)
+    quote = EmbeddedDocumentField(ProposalQuote)
 
 
 class MeetingPermission(EmbeddedDocument):
