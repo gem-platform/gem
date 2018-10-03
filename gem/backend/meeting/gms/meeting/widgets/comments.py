@@ -8,5 +8,8 @@ class CommentsSerializeMixin:
             "_id": str(comment.id),
             "user_id": str(comment.user.id),
             "content": comment.content,
-            "mark": comment.mark
+            "mark": comment.mark,
+            "quote": {
+                "text": comment.quote.text
+            }
         }

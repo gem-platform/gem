@@ -47,6 +47,10 @@
 
               <!-- Content -->
               <br>
+              <b-message
+                v-if="comment.quote">
+                {{ comment.quote.text }}
+              </b-message>
               {{ comment.content }}
             </p>
           </div>
@@ -123,7 +127,8 @@ export default {
           role_ids: users[c.user_id].roles,
           mark: c.mark,
           content: c.content,
-          type: cssType[c.mark]
+          type: cssType[c.mark],
+          quote: c.quote
         }))
         // Filter out comments of users whose roles were not in the filter
         .filter(c => anyRolePresent(this.filterRoles, c.role_ids))

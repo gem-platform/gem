@@ -307,6 +307,30 @@ COMMENTS = {
             "type": "string",
             "required": True,
             "empty": False
+        },
+        "quote": {
+            "type": "dict",
+            "schema": {
+                "text": {
+                    "type": "string"
+                },
+                "begin": {
+                    "type": "dict",
+                    "schema": {
+                        "node": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "end": {
+                    "type": "dict",
+                    "schema": {
+                        "node": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -1,7 +1,7 @@
 <template>
   <div>
-    {{ mode }}
     <div
+      id="proposal-content"
       ref="proposalContent"
       :class="{'in-parts-reader': mode=='in-parts'}"
       v-html="proposal.content"/>
@@ -39,6 +39,12 @@ export default {
     proposal() {
       return this.stageProposal;
     }
+  },
+  mounted() {
+    document.addEventListener('selectionchange', this.selectionChange);
+  },
+  beforeDestroy() {
+    document.removeEventListener('selectionchange', this.selectionChange);
   },
   methods: {
     /**
@@ -79,6 +85,11 @@ export default {
       const percents = Math.floor((current / max) * 100);
 
       return percents;
+    },
+
+    selectionChange() {
+      const text = window.getSelection().toString();
+      this.$bus.emit('proposalSelection', { text });
     }
   }
 };
