@@ -33,8 +33,8 @@ services:
     expose:
       - 9306
       - 9312
-    links:
-      - db:db
+    depends_on:
+      - db
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
@@ -47,7 +47,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    links:
+    depends_on:
       - meeting-server
       - portal-server
       - office-server
@@ -72,7 +72,6 @@ services:
 
   # Meeting server
   meeting-server:
-    image: meeting-server:latest
     restart: on-failure:5
     build: ./gem/backend/meeting
     expose:
@@ -80,12 +79,11 @@ services:
       - 8099
     env_file:
       - environment.${GEM_ENV-dev}.env
-    links:
-      - db:db
     volumes:
       - ./gem/backend/meeting:/usr/src/app
     depends_on:
       - gem-server
+      - db
 
   # Meeting server
   portal-server:
@@ -95,12 +93,11 @@ services:
       - 5000
     env_file:
       - environment.${GEM_ENV-dev}.env
-    links:
-      - db:db
     volumes:
       - ./gem/backend/portal:/usr/src/app
     depends_on:
       - gem-server
+      - db
 
   # Office server
   office-server:
@@ -110,14 +107,13 @@ services:
       - 5001
     env_file:
       - environment.${GEM_ENV-dev}.env
-    links:
-      - db:db
-      - pdf-printer
     volumes:
       - ./gem/backend/office:/usr/src/app
       - ./.data/shared/downloads:/usr/shared/downloads
     depends_on:
       - gem-server
+      - db
+      - pdf-printer
 
   # PDF Printer
   pdf-printer:
@@ -135,10 +131,12 @@ services:
     command: npm run dev
     expose:
       - 3000
-    links:
-      - meeting-server:meeting-server
     volumes:
       - ./gem/frontend/portal:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - environment.${GEM_ENV-dev}.env
+    depends_on:
+      - portal-server
+      - meeting-server
+      - office-server
