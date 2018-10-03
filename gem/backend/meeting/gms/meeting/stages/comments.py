@@ -31,7 +31,7 @@ class CommentsMeetingStage(MeetingStage):
         """
         return self.__comments
 
-    def comment(self, user, message, mark, quote):
+    def comment(self, user, message, mark, quote=None):
         """
         Add comment using specified user, message and mark.
 
