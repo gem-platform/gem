@@ -3,10 +3,10 @@
     <div v-if="canComment">
       <!-- Quote -->
       <b-message
-        :active="quote !== undefined"
+        :active="showQuote"
         title="Quote"
         @close="quote = undefined">
-        {{ quote ? quote.text : '' }}
+        {{ quote ? quote.text : '' | truncate(256) }}
       </b-message>
 
       <!-- Textarea -->
@@ -65,6 +65,15 @@ export default {
      */
     canComment() {
       return this.haveAccess('meeting.comment');
+    },
+
+    /**
+     * Show quote block or not?
+     */
+    showQuote() {
+      return this.quote
+        ? this.quote.text !== undefined && this.quote.text !== ''
+        : false;
     }
   },
   mounted() {
@@ -91,6 +100,7 @@ export default {
         await this.send('comment', { message, mark, quote: this.quote });
         this.notify('Your comment has been accepted');
         this.message = '';
+        this.quote = undefined;
       } catch (err) {
         this.notify(err.message, 'is-danger');
       }

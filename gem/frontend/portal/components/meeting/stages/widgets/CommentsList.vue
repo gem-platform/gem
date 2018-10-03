@@ -48,7 +48,8 @@
               <!-- Content -->
               <br>
               <b-message
-                v-if="comment.quote">
+                v-if="comment.quote"
+                size="is-small">
                 {{ comment.quote.text }}
               </b-message>
               {{ comment.content }}

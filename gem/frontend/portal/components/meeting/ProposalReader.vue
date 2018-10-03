@@ -4,6 +4,7 @@
       id="proposal-content"
       ref="proposalContent"
       :class="{'in-parts-reader': mode=='in-parts'}"
+      @mouseup="selectionChange"
       v-html="proposal.content"/>
     <br>
 
@@ -39,12 +40,6 @@ export default {
     proposal() {
       return this.stageProposal;
     }
-  },
-  mounted() {
-    document.addEventListener('selectionchange', this.selectionChange);
-  },
-  beforeDestroy() {
-    document.removeEventListener('selectionchange', this.selectionChange);
   },
   methods: {
     /**

@@ -142,6 +142,8 @@ class Ballot(GemDocument):
 
 class ProposalQuote(EmbeddedDocument):
     text = StringField()
+
+
 class Comment(GemDocument):
     """Comment"""
     meta = {'collection': 'comments'}
