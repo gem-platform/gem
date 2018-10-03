@@ -1,11 +1,14 @@
 <template>
   <div>
+    {{ mode }}
     <div
-      id="content"
       ref="proposalContent"
+      :class="{'in-parts-reader': mode=='in-parts'}"
       v-html="proposal.content"/>
     <br>
+
     <a
+      v-if="mode == 'in-parts'"
       :class="moreButtonClass()"
       class="button is-fullwidth"
       @click="more">
@@ -20,6 +23,12 @@ import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   mixins: [StageStateMixin, CommunicationMixin],
+  props: {
+    mode: {
+      type: String,
+      default() { return 'all'; }
+    }
+  },
   data() {
     return { reveal: 10 };
   },
@@ -76,7 +85,7 @@ export default {
 </script>
 
 <style scoped>
-#content {
+.in-parts-reader {
   overflow: hidden;
   text-overflow: ellipsis;
   max-height: 100px;
