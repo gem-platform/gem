@@ -30,9 +30,9 @@ services:
       - ./.data/search/logs:/var/log/sphinx
     env_file:
       - environment.${GEM_ENV-dev}.env
-    ports:
-      - 9306:9306
-      - 9312:9312
+    expose:
+      - 9306
+      - 9312
     links:
       - db:db
 
@@ -75,12 +75,9 @@ services:
     image: meeting-server:latest
     restart: on-failure:5
     build: ./gem/backend/meeting
-    ports:
-      - "8090:8090"
-      - "8099:8099"
     expose:
-      - "8090"
-      - "8099"
+      - 8090
+      - 8099
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
@@ -94,10 +91,8 @@ services:
   portal-server:
     restart: on-failure:5
     build: ./gem/backend/portal
-    ports:
-      - "5000:5000"
     expose:
-      - "5000"
+      - 5000
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
@@ -111,10 +106,8 @@ services:
   office-server:
     restart: on-failure:5
     build: ./gem/backend/office
-    ports:
-      - "5001:5001"
     expose:
-      - "5001"
+      - 5001
     env_file:
       - environment.${GEM_ENV-dev}.env
     links:
@@ -130,10 +123,8 @@ services:
   pdf-printer:
     restart: on-failure:5
     build: ./gem/backend/pdf-printer
-    ports:
-      - "4999:4999"
     expose:
-      - "4999"
+      - 4999
 
   ##
   ## APPS: FRONTEND
@@ -142,10 +133,8 @@ services:
     restart: on-failure:5
     build: ./gem/frontend/portal
     command: npm run dev
-    ports:
-      - "3000:3000"
     expose:
-      - "3000"
+      - 3000
     links:
       - meeting-server:meeting-server
     volumes:
