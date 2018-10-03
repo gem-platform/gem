@@ -7,9 +7,6 @@ COPY ./requirements.txt ./
 RUN pip3 install --no-cache-dir -r requirements.txt
 COPY . .
 
-EXPOSE 8090
-EXPOSE 8099
-
 # site should be accesible
 HEALTHCHECK  --interval=1m \
   CMD wget --quiet --tries=1 --spider http://localhost:8099 || exit 1

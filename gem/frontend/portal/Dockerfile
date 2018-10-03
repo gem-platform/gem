@@ -11,10 +11,7 @@ RUN npm install && \
 WORKDIR /usr/src/app
 COPY . /usr/src/app
 
-RUN npm run build
-
 ENV HOST 0.0.0.0
-EXPOSE 3000
 
 # site should be accesible
 HEALTHCHECK  --interval=5m --timeout=3s \
