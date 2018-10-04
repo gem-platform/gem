@@ -38,9 +38,9 @@ context('Dashboard / Proposals', () => {
     cy.get('#index').type('PRP-001')
     cy.get('#title').type('New Proposal')
     cy.get('#workflow > .control > .input').type('General')
-    cy.get('#workflow > .dropdown-menu > .dropdown-content > .dropdown-item').first().click()
+    cy.get('#workflow > .dropdown-menu > .dropdown-content > .dropdown-item :not(.is-disabled)').first().click()
     cy.get('#stage > .control > .input').type('Initial')
-    cy.get('#stage > .dropdown-menu > .dropdown-content > .dropdown-item').first().click()
+    cy.get('#stage > .dropdown-menu > .dropdown-content > .dropdown-item :not(.is-disabled)').first().click()
     cy.get('#content > .ql-editor').type('Content')
     cy.get('#save').click()
     
