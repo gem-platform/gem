@@ -21,6 +21,8 @@ services:
       - "27017:27017"
     env_file:
       - environment.${GEM_ENV-dev}.env
+    healthcheck:
+      test: sh /usr/src/app/health-check.sh
 
   search:
     restart: "no"
@@ -35,6 +37,8 @@ services:
       - 9312
     depends_on:
       - db
+    healthcheck:
+      test: python3 /usr/app/healtcheck.py
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
@@ -55,7 +59,9 @@ services:
     volumes:
       - ./.data/shared/downloads:/usr/shared/downloads
       - ./.keys:/etc/nginx/ssl
-    
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost/ || exit 1
+  
 
   ##
   ## IMAGES
@@ -84,6 +90,8 @@ services:
     depends_on:
       - gem-server
       - db
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:8099 || exit 1
 
   # Meeting server
   portal-server:
@@ -98,6 +106,8 @@ services:
     depends_on:
       - gem-server
       - db
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:5000/api/health || exit 1
 
   # Office server
   office-server:
@@ -114,6 +124,8 @@ services:
       - gem-server
       - db
       - pdf-printer
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:5001/office/health || exit 1
 
   # PDF Printer
   pdf-printer:
@@ -121,6 +133,8 @@ services:
     build: ./gem/backend/pdf-printer
     expose:
       - 4999
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:4999/health || exit 1
 
   ##
   ## APPS: FRONTEND
@@ -140,3 +154,5 @@ services:
       - portal-server
       - meeting-server
       - office-server
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://0.0.0.0:3000/ || exit 1

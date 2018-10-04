@@ -8,7 +8,3 @@ COPY ./configs /etc/nginx
 
 # copy custom error pages
 COPY ./maintenance /usr/share/nginx/html
-
-# site should be accesible
-HEALTHCHECK  --interval=5m --timeout=3s \
-  CMD wget --quiet --tries=1 --spider http://localhost/ || exit 1
