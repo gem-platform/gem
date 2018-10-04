@@ -58,6 +58,10 @@
 		]
 	  },
 	  "settings": {
+		"python.unitTest.pyTestArgs": [
+			"--dbhost=localhost",
+			"--disable-warnings"
+		],
 		"python.pythonPath": "/usr/local/bin/python3",
 		"python.linting.enabled": true,
 		"prettier.eslintIntegration": true,
