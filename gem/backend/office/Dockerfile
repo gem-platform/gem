@@ -11,5 +11,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # copy sources
 COPY . .
 
-# CMD gunicorn --bind 0.0.0.0:5001 main:app
-CMD [ "python", "-u", "/usr/src/gem-server-common/_runner.py" ]
+CMD [ "gunicorn", "main:app" ]
