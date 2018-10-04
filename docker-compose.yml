@@ -78,6 +78,7 @@ services:
 
   # Meeting server
   meeting-server:
+    image: meeting-server:latest
     restart: on-failure:5
     build: ./gem/backend/meeting
     expose:
