@@ -9,6 +9,8 @@ services:
       driver: none
   
   portal-server:
+    ports:
+      - 9876:9876
     command: python -u /usr/src/gem-server-common/_runner.py
 
   office-server:
