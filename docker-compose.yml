@@ -21,6 +21,8 @@ services:
       - "27017:27017"
     env_file:
       - environment.${GEM_ENV-dev}.env
+    healthcheck:
+      test: sh /usr/src/app/health-check.sh
 
   search:
     restart: "no"
@@ -30,11 +32,13 @@ services:
       - ./.data/search/logs:/var/log/sphinx
     env_file:
       - environment.${GEM_ENV-dev}.env
-    ports:
-      - 9306:9306
-      - 9312:9312
-    links:
-      - db:db
+    expose:
+      - 9306
+      - 9312
+    depends_on:
+      - db
+    healthcheck:
+      test: python3 /usr/app/healtcheck.py
 
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
@@ -47,7 +51,7 @@ services:
     ports:
       - "80:80"
       - "443:443"
-    links:
+    depends_on:
       - meeting-server
       - portal-server
       - office-server
@@ -55,7 +59,9 @@ services:
     volumes:
       - ./.data/shared/downloads:/usr/shared/downloads
       - ./.keys:/etc/nginx/ssl
-    
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost/ || exit 1
+  
 
   ##
   ## IMAGES
@@ -75,65 +81,65 @@ services:
     image: meeting-server:latest
     restart: on-failure:5
     build: ./gem/backend/meeting
-    ports:
-      - "8090:8090"
-      - "8099:8099"
     expose:
-      - "8090"
-      - "8099"
+      - 8090
+      - 8099
     env_file:
       - environment.${GEM_ENV-dev}.env
-    links:
-      - db:db
     volumes:
       - ./gem/backend/meeting:/usr/src/app
     depends_on:
       - gem-server
+      - db
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:8099 || exit 1
 
   # Meeting server
   portal-server:
     restart: on-failure:5
     build: ./gem/backend/portal
-    ports:
-      - "5000:5000"
     expose:
-      - "5000"
+      - 5000
+    environment:
+      - GUNICORN_CMD_ARGS=--bind=0.0.0.0:5000 --workers=1
     env_file:
       - environment.${GEM_ENV-dev}.env
-    links:
-      - db:db
     volumes:
       - ./gem/backend/portal:/usr/src/app
     depends_on:
       - gem-server
+      - db
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:5000/api/health || exit 1
 
   # Office server
   office-server:
     restart: on-failure:5
     build: ./gem/backend/office
-    ports:
-      - "5001:5001"
     expose:
-      - "5001"
+      - 5001
+    environment:
+      - GUNICORN_CMD_ARGS=--bind=0.0.0.0:5001 --workers=1
     env_file:
       - environment.${GEM_ENV-dev}.env
-    links:
-      - db:db
-      - pdf-printer
     volumes:
       - ./gem/backend/office:/usr/src/app
       - ./.data/shared/downloads:/usr/shared/downloads
     depends_on:
       - gem-server
+      - db
+      - pdf-printer
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:5001/office/health || exit 1
 
   # PDF Printer
   pdf-printer:
     restart: on-failure:5
     build: ./gem/backend/pdf-printer
-    ports:
-      - "4999:4999"
     expose:
-      - "4999"
+      - 4999
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://localhost:4999/health || exit 1
 
   ##
   ## APPS: FRONTEND
@@ -142,14 +148,16 @@ services:
     restart: on-failure:5
     build: ./gem/frontend/portal
     command: npm run dev
-    ports:
-      - "3000:3000"
     expose:
-      - "3000"
-    links:
-      - meeting-server:meeting-server
+      - 3000
     volumes:
       - ./gem/frontend/portal:/usr/src/app
       - /usr/src/app/node_modules
     env_file:
       - environment.${GEM_ENV-dev}.env
+    depends_on:
+      - portal-server
+      - meeting-server
+      - office-server
+    healthcheck:
+      test: wget --quiet --tries=1 --spider http://0.0.0.0:3000/ || exit 1

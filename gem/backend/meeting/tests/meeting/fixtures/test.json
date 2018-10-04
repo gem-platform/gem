@@ -1,0 +1,38 @@
+[
+    { 
+        "$type": "Role",
+        "id": "5bb5f311bff2ff000001fa5f",
+        "name": "Guest",
+        "priority": 20,
+        "permissions": []
+    },
+    {
+        "$type": "User",
+        "id": "5bb5f311bff2ff000001fa62",
+        "name": "guest",
+        "password": "guest",
+        "roles": ["5bb5f311bff2ff000001fa5f"]
+    },
+    { 
+        "$type": "Comment",
+        "id" : "5bb5f311bff2ff000001fa78", 
+        "user" : "5bb5f311bff2ff000001fa62",
+        "proposal": "5a5deebeb5385609a9c9cea4",
+        "content": "Review Stage Comment",
+        "mark": "+",
+        "stage": "5b8ab052df6e3a05bb720fec"
+    },
+    { 
+        "$type": "Ballot",
+        "id" : "5b8ab052df6e3a05bbf2bfe0", 
+        "proposal": "5a5deebeb5385609a9c9cea4",
+        "stage": "5b8ab052df6e3a05bb720fec",
+        "votes": [
+            { 
+                "user": "5bb5f311bff2ff000001fa62",
+                "role": "5bb5f311bff2ff000001fa5f",
+                "value": "yes"
+            }
+        ]
+    }
+]

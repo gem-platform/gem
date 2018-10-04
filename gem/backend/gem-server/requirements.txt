@@ -1,3 +1,5 @@
 watchdog
 mongoengine
 blinker
+gunicorn
+ptvsd
