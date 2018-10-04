@@ -39,6 +39,10 @@
 		{
 			"name": "Integrational Tests",
 			"path": "gem/tests"
+		},
+		{
+			"name": "Documentation",
+			"path": "doc"
 		}
 	],
 	"extensions": {
