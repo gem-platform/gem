@@ -116,7 +116,9 @@ class ActiveMeetings:
 
     def __on_handshake(self, sid, data):
         command_data = data[1]  # todo: data may not be specified
-        meeting_id = command_data.get("meeting")
+        meeting_id = command_data.get("meeting", None)
+        if not meeting_id:
+            raise Exception("No meeting ID provided")
 
         # user already connected to some meeting
         # disconnect him from previous one first

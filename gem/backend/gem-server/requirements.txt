@@ -3,3 +3,4 @@ mongoengine
 blinker
 gunicorn
 ptvsd
+mongomock
