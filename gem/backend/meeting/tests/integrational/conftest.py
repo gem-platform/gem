@@ -22,7 +22,7 @@ class TestSession:
 
             # execute command and return result
             res = self.api.command(attr, self.name, args)
-            return Munch(res)
+            return Munch(res) if res else None
 
         return handler
 

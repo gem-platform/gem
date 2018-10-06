@@ -51,6 +51,12 @@ def test_access_wrong_meeting_id(db, session):
     assert response.success is False
 
 
+def test_meeting_should_open_after_handshake_command(db, session, meetings):
+    """New meeting should open after handshake command."""
+    session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    assert len(meetings.active.keys()) == 1
+
+
 def test_empty_meeting_shoud_close(db, session, meetings):
     """Meeting should be closed if there is no personos any more."""
     session.handshake(token=db.superuser.id, meeting=db.meeting.id)
@@ -73,3 +79,20 @@ def test_meeting_with_users_should_close(db, session, session2, meetings):
     assert len(meetings.active.keys()) == 2
     assert str(db.meeting.id) in ids
     assert str(db.meeting2.id) in ids
+
+
+def test_meeting_should_close_if_last_user_disconnects(db, session, meetings):
+    """Meeting should be closed if there is no personos any more."""
+    session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    session.disconnect()
+
+    assert len(meetings.active.keys()) == 0  # list should be empty
+
+
+def test_meeting_should_close_after_close_command(db, session, meetings):
+    """Meeting should be closed if there is no personos any more."""
+    session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    assert len(meetings.active.keys()) == 1  # list should be empty
+
+    session.close()
+    assert len(meetings.active.keys()) == 0  # list should be empty
