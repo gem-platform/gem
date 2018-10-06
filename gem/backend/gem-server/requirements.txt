@@ -5,4 +5,3 @@ gunicorn
 ptvsd
 mongomock
 munch
-coveralls
