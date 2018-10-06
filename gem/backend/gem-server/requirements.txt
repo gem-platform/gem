@@ -4,3 +4,4 @@ blinker
 gunicorn
 ptvsd
 mongomock
+munch

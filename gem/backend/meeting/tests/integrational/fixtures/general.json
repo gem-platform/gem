@@ -45,6 +45,7 @@
     },
     {
         "$type": "User",
+        "$alias": "superuser",
         "id": "5bb73d70206d3a000059bb85",
         "name": "root",
         "password": "root",
@@ -52,6 +53,7 @@
     },
     {
         "$type": "User",
+        "$alias": "gbc_user",
         "id": "5bb73d70206d3a000059bb86",
         "name": "GBC 01",
         "password": "pass",
@@ -59,6 +61,7 @@
     },
     {
         "$type": "User",
+        "$alias": "deputy_user",
         "id": "5bb73cac20847c0000da8293",
         "name": "Deputy 01",
         "password": "pass",
@@ -73,6 +76,7 @@
     },
     {
         "$type": "User",
+        "$alias": "guest",
         "id": "5bb73cac20847c0000da8295",
         "name": "Guest 01",
         "password": "pass",
@@ -120,6 +124,7 @@
     },
     {
         "$type": "Meeting",
+        "$alias": "meeting",
         "id": "5a5deebeb5385609a9c9face",
         "title" : "Meeting", 
         "agenda" : "Meeting for testing purposes", 
@@ -127,7 +132,24 @@
             "5a5deebeb5385609a9c9cea4"
         ], 
         "permissions" : [
-            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8292" },
+            { "scope": "meeting.join", "user":  "5bb73d70206d3a000059bb86" },
+            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8293" },
+            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8294" }
+        ], 
+        "start" : "2018-09-30 12:48:06",
+        "end" : "2018-09-30 12:48:06"
+    },
+    {
+        "$type": "Meeting",
+        "$alias": "meeting2",
+        "id": "5a5deebeb5385609a9c9fac1",
+        "title" : "Meeting 02", 
+        "agenda" : "Meeting for testing purposes", 
+        "proposals" : [
+            "5a5deebeb5385609a9c9cea4"
+        ], 
+        "permissions" : [
+            { "scope": "meeting.join", "user":  "5bb73d70206d3a000059bb86" },
             { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8293" },
             { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8294" }
         ], 

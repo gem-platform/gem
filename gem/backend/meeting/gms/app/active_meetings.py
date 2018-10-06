@@ -17,8 +17,13 @@ class ActiveMeetings:
         self.__connection = {}  # session_id -> active meeting
         self.__status_changed = Event()
 
+        self.__log = getLogger("root")
         self.__comm_log = getLogger('communication')
         self.__meetings_log = getLogger('meetings')
+
+    @property
+    def active(self):
+        return self.__active
 
     @property
     def status_changed(self):
@@ -51,37 +56,42 @@ class ActiveMeetings:
         return {"active": status, "online": online}
 
     def command(self, event, *data):
-        sid = data[0]
-        result = None
+        try:
+            sid = data[0]
+            result = None
 
-        self.__comm_log.debug("%s => %s %s", sid, event, data)
+            self.__comm_log.debug("%s => %s %s", sid, event, data)
 
-        if event == "meetings_status":
-            return self.status()
+            if event == "meetings_status":
+                return self.status()
 
-        # handshake command received, so open meeting (if not)
-        # and join user to specified room
-        if event == "handshake":
-            self.__on_handshake(sid, data)
+            # handshake command received, so open meeting (if not)
+            # and join user to specified room
+            if event == "handshake":
+                self.__on_handshake(sid, data)
 
-        # get meeting of specified user and
-        # pass command to it
-        meeting = self.__connection.get(sid, None)
-        if meeting:
-            result = meeting.command(event, *data)
+            # get meeting of specified user and
+            # pass command to it
+            meeting = self.__connection.get(sid, None)
+            if meeting:
+                result = meeting.command(event, *data)
 
-        # Meeting for specified SID closed already
-        if not meeting and event not in ["disconnect", "handshake"]:
-            return {"success": False, "message": "Your sessions is outdated"}
+            # Meeting for specified SID closed already
+            if not meeting and event not in ["disconnect", "handshake"]:
+                return {"success": False, "message": "Your sessions is outdated"}
 
-        # process meeting "disconnect" command first
-        if event == "disconnect":
-            self.__on_disconnect(sid)
+            # process meeting "disconnect" command first
+            if event == "disconnect":
+                self.__on_disconnect(sid)
 
-        if event in ["handshake", "disconnect"]:
-            self.status_changed.notify()
+            if event in ["handshake", "disconnect"]:
+                self.status_changed.notify()
 
-        return result
+            return result
+        except Exception as exc:
+            self.__log.error("Unable to execute command: " + str(exc))
+            self.__log.exception(exc)
+            return {"success": False, "message": "Unknown error: " + str(exc)}
 
     def __open_meeting(self, meeting_id):
         # lookup for open meetings
@@ -145,7 +155,7 @@ class ActiveMeetings:
     def __close_empty_meetings(self):
         # stop active meetings if no connections
         meetings_to_close = [m for m in self.__active.values()
-                             if not m.context.sessions.online] 
+                             if not m.context.sessions.online]
 
         # nothing to close. quit
         if not meetings_to_close:
@@ -153,13 +163,13 @@ class ActiveMeetings:
 
         # filter out connections associated with closing meeting
         self.__connection = {
-            k: v for k, v in self.__connection.items() 
+            k: v for k, v in self.__connection.items()
             if v not in meetings_to_close
         }
 
         # filter out closing meetings
         self.__active = {
-            k: v for k, v in self.__active.items() 
+            k: v for k, v in self.__active.items()
             if v not in meetings_to_close
         }
 

@@ -1,43 +1,75 @@
 from tools import import_db, drop_db
 
 
-def setup_function():
-    """Setup tests environment."""
-    drop_db()
-    import_db("tests/integrational/fixtures/general.json")
-
-
-def test_access_meeting_with_superusers_privileges(meetings):
+def test_access_meeting_with_superusers_privileges(db, session):
     """User with '*' permissions should be able to join meeting."""
-    data = {"token": "5bb73d70206d3a000059bb85", "meeting": "5a5deebeb5385609a9c9face"}
-    response = meetings.command("handshake", "session01", data)
-    assert response["success"] is True
+    response = session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    assert response.success is True
 
 
-def test_access_with_join_permissions(meetings):
+def test_access_with_join_permissions(db, session):
     """User listed in permissions should be able to access meeting."""
-    data = {"token": "5bb73d70206d3a000059bb86", "meeting": "5a5deebeb5385609a9c9face"}
-    response = meetings.command("handshake", "session01", data)
-    assert response["success"] is True
+    response = session.handshake(token=db.gbc_user.id, meeting=db.meeting.id)
+    assert response.success is True
 
 
-def test_access_with_join_role_permissions(meetings):
+def test_access_with_join_role_permissions(db, session):
     """User listed role in permissions should be able to access meeting."""
-    data = {"token": "5bb73cac20847c0000da8293", "meeting": "5a5deebeb5385609a9c9face"}
-    response = meetings.command("handshake", "session01", data)
-    assert response["success"] is True
+    response = session.handshake(token=db.deputy_user.id, meeting=db.meeting.id)
+    assert response.success is True
 
 
-def test_access_with_no_join_permissions(meetings):
+def test_access_with_no_join_permissions(db, session):
     """User listed role in permissions should be able to access meeting."""
-    data = {"token": "5bb73cac20847c0000da8295", "meeting": "5a5deebeb5385609a9c9face"}
-    response = meetings.command("handshake", "session01", data)
-    assert response["success"] is False
+    response = session.handshake(token=db.guest.id, meeting=db.meeting.id)
+    assert response.success is False
 
 
-# def test_access_wrong_meeting(meetings):
-#     """User listed role in permissions should be able to access meeting."""
-#     data = {"token": "5bb73cac20847c0000da8295", "meeting": "5a5deebeb5385609a9c9facf"}
-#     response = meetings.command("handshake", "session01", data)
-#     assert response["success"] is False
-#     assert response["message"] == "Meeting not found"
+def test_access_request(db, meetings, session, session2):
+    """User listed role in permissions should be able to access meeting."""
+    meeting_id = str(db.meeting.id)
+
+    session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    assert db.guest not in meetings.active[meeting_id].allowed_users
+
+    session2.handshake(token=db.guest.id, meeting=db.meeting.id)
+    session2.request_access(token=db.guest.id)
+    session.grant_access(token=db.guest.id, value=True)
+
+    assert db.guest in meetings.active[meeting_id].allowed_users
+
+
+def test_access_wrong_meeting(db, session):
+    """User listed role in permissions should be able to access meeting."""
+    response = session.handshake(token=db.superuser.id, meeting="5a5deebeb53856badbadffff")
+    assert response.success is False
+
+
+def test_access_wrong_meeting_id(db, session):
+    """User listed role in permissions should be able to access meeting."""
+    response = session.handshake(token=db.superuser.id, meeting="ololo alala")
+    assert response.success is False
+
+
+def test_empty_meeting_shoud_close(db, session, meetings):
+    """Meeting should be closed if there is no personos any more."""
+    session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    session.handshake(token=db.superuser.id, meeting=db.meeting2.id)
+
+    ids = list(map(str, meetings.active.keys()))
+
+    assert len(meetings.active.keys()) == 1
+    assert ids[0] == str(db.meeting2.id)
+
+
+def test_meeting_with_users_should_close(db, session, session2, meetings):
+    """Meeting should be closed if there is no personos any more."""
+    session.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    session2.handshake(token=db.superuser.id, meeting=db.meeting.id)
+    session2.handshake(token=db.superuser.id, meeting=db.meeting2.id)
+
+    ids = list(meetings.active.keys())
+
+    assert len(meetings.active.keys()) == 2
+    assert str(db.meeting.id) in ids
+    assert str(db.meeting2.id) in ids
