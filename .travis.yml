@@ -13,5 +13,5 @@ before_install:
 
 script:
   - docker run --network gem_default -e TARGETS=portal:3000 -e TIMEOUT=180 waisbrot/wait
-  - docker run --network gem_default meeting-server /bin/sh -c "PYTHONPATH=. pytest --disable-warnings && coveralls" -e COVERALLS_REPO_TOKEN=${COVERALLS_REPO_TOKEN}
+  - docker run --network gem_default meeting-server /bin/sh -c "env && PYTHONPATH=. pytest --disable-warnings && coveralls" --env COVERALLS_REPO_TOKEN
   - cd ./gem/tests && cypress run --record --key $CYPRESS
