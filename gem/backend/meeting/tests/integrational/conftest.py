@@ -10,6 +10,7 @@ class TestSession:
     def __init__(self, api, name):
         self.api = api
         self.name = name
+        self.meeting = None
 
     def __getattr__(self, attr):
         def handler(**data):
@@ -22,6 +23,11 @@ class TestSession:
 
             # execute command and return result
             res = self.api.command(attr, self.name, args)
+
+            # save meeting for easy access
+            if attr == "handshake":
+                self.meeting = self.api.active.get(args["meeting"], None)
+
             return Munch(res) if res else None
 
         return handler

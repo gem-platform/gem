@@ -69,6 +69,7 @@
     },
     {
         "$type": "User",
+        "$alias": "secretary",
         "id": "5bb73cac20847c0000da8294",
         "name": "Secretary",
         "password": "pass",
