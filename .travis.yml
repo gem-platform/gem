@@ -12,8 +12,9 @@ before_install:
   - sudo docker-compose up -d
 
 script:
+  - mkdir shared
   - ci_env=`bash <(curl -s https://codecov.io/env)`
   - docker run --network gem_default -e TARGETS=portal:3000 -e TIMEOUT=180 waisbrot/wait
-  - docker run $ci_env -v "$PWD/shared:/shared" --network gem_default meeting-server /bin/bash -c "env && PYTHONPATH=. pytest --cov=gms --cov-report xml:coverage.xml --disable-warnings && bash <(wget -q -O - https://codecov.io/bash) && mv coverage.xml shared"
+  - docker run $ci_env -v "$PWD/shared:/shared" --network gem_default meeting-server /bin/bash -c "env && PYTHONPATH=. pytest --cov=gms --cov-report xml:coverage.xml --disable-warnings && bash <(curl -s https://codecov.io/bash) && mv coverage.xml /shared"
   - bash <(curl -s https://codecov.io/bash)
   - cd ./gem/tests && cypress run --record --key $CYPRESS
