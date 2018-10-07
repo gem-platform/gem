@@ -2,3 +2,4 @@ python-socketio
 aiohttp
 aiohttp-utils
 pytest
+pytest-cov

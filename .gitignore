@@ -11,3 +11,6 @@ __pycache__
 node_modules
 
 *.log
+cov.xml
+.coverage
+htmlcov

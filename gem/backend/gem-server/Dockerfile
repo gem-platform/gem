@@ -1,7 +1,7 @@
 FROM python:slim
 
 # install wget
-RUN apt-get update && apt-get install -y wget
+RUN apt-get update && apt-get install -y wget curl
 
 # install basic requirements
 WORKDIR /usr/src/app
