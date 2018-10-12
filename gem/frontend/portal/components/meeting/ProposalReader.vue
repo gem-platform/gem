@@ -82,9 +82,9 @@ export default {
       return percents;
     },
 
-    selectionChange() {
+    selectionChange(event) {
       const text = window.getSelection().toString();
-      this.$bus.emit('proposalSelection', { text });
+      this.$bus.emit('proposalSelection', { text, event });
     }
   }
 };
