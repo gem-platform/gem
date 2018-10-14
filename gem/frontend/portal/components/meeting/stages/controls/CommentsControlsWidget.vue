@@ -1,17 +1,17 @@
 <template>
-  <div class="speech-bubble">
+  <div>
     <!-- Textarea -->
     <div
       class="field">
       <textarea
         v-model="message"
-        class="textarea is-dark"
+        class="textarea"
         placeholder="Write your comment here"/>
     </div>
 
     <!-- Mark -->
     <div class="field is-grouped">
-      <div class="select control is-small is-dark">
+      <div class="select control is-small">
         <select v-model="mark">
           <option value="+">Plus</option>
           <option value="-">Minus</option>
@@ -21,7 +21,7 @@
 
       <!-- Send comment -->
       <button
-        class="button control is-expanded is-small is-dark"
+        class="button control is-expanded is-small"
         @click="sendComment">Send</button>
     </div>
   </div>

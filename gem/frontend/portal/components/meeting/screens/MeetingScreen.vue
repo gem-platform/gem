@@ -49,7 +49,8 @@
           v-if="showProposal"
           class="box content">
           <ProposalReader
-            :mode="proposalReaderMode"/>
+            :mode="proposalReaderMode"
+            :comments="proposalComments"/>
         </div>
       </div>
     </div>
@@ -126,6 +127,10 @@ export default {
      */
     proposal() {
       return this.stageProposal;
+    },
+
+    proposalComments() {
+      return this.$stage.comments || [];
     },
 
     /**

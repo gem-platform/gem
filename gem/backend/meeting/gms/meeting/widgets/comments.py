@@ -13,7 +13,8 @@ class CommentsSerializeMixin:
 
         if comment.quote:
             result["quote"] = {
-                "text": comment.quote.text
+                "text": comment.quote.text,
+                "begin": comment.quote.begin.node
             }
 
         return result

@@ -39,6 +39,9 @@
 
               <!-- User's roles -->
               <span class="tags">
+                <b-tag :type="comment.type">
+                  {{ comment.mark | mark }}
+                </b-tag>
                 <b-tag
                   v-for="(role, idx) in comment.roles"
                   :key="idx">{{ role }}
@@ -55,11 +58,6 @@
               {{ comment.content }}
             </p>
           </div>
-        </div>
-
-        <!-- Mark -->
-        <div class="media-right">
-          <b-tag :type="comment.type">{{ comment.mark | mark }}</b-tag>
         </div>
       </article>
     </transition-group>

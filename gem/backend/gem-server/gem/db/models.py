@@ -140,8 +140,15 @@ class Ballot(GemDocument):
         return votes_of_user[0] if votes_of_user else None
 
 
+class ProposalQuoteAnchor(EmbeddedDocument):
+    node = StringField(required=True)
+    offset = IntField()
+
+
 class ProposalQuote(EmbeddedDocument):
     text = StringField()
+    begin = EmbeddedDocumentField(ProposalQuoteAnchor)
+    end = EmbeddedDocumentField(ProposalQuoteAnchor)
 
 
 class Comment(GemDocument):
