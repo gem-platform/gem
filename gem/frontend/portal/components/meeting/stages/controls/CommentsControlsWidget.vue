@@ -46,6 +46,7 @@ export default {
         message: this.message,
         mark: this.mark
       });
+      this.message = '';
     }
   }
 };
