@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ message }}
     <!-- Commenting popup -->
     <div
       v-show="showCommentingPopup"
@@ -41,7 +42,7 @@
         <!-- Send comment -->
         <button
           class="button control is-expanded"
-          @click="sendComment">Send</button>
+          @click="onButtonSendComment">Send</button>
       </div>
     </div>
 
@@ -103,7 +104,7 @@ export default {
      * Send a comment
      */
     async sendComment(data) {
-      const { message, mark, quote } = data || this;
+      const { message, mark, quote } = data;
 
       // validate message
       if (!message) {
@@ -120,6 +121,14 @@ export default {
       } catch (err) {
         this.notify(err.message, 'is-danger');
       }
+    },
+
+    onButtonSendComment() {
+      this.sendComment({
+        message: this.message,
+        mark: this.mark,
+        quote: this.quote
+      });
     },
 
     onWidgetComment(data) {
