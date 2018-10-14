@@ -6,43 +6,55 @@
     <hr>
     <div class="title">Comments</div>
 
-    <article
-      v-for="comment in comments"
-      :key="comment._id"
-      class="media">
+    <div
+      v-for="(comments, stage) in comments"
+      :key="stage">
 
-      <div class="media-content">
-        <!-- Content of the comment -->
-        <div class="content">
-          <!-- User's name -->
-          <strong>{{ comment.user }}</strong>&nbsp;
+      <h1>{{ stage }}</h1>
 
-          <!-- User's roles -->
-          <span class="tags">
-            <b-tag
-              v-for="(role, idx) in comment.roles"
-              :key="idx">{{ role }}
-            </b-tag>
+      <article
+        v-for="comment in comments"
+        :key="comment._id"
+        class="media">
 
-            <b-tag>
-              <nuxt-link :to="comment.urlEdit">Edit</nuxt-link>
-            </b-tag>
-            <b-tag>
-              <nuxt-link :to="comment.urlDelete">Delete</nuxt-link>
-            </b-tag>
-          </span>
+        <div class="media-content">
+          <!-- Content of the comment -->
+          <div class="content">
+            <!-- User's name -->
+            <strong>{{ comment.user }}</strong>&nbsp;
 
-          <!-- Content -->
-          <br>
-          {{ comment.content }}
+            <!-- User's roles -->
+            <span class="tags">
+              <b-tag
+                v-for="(role, idx) in comment.roles"
+                :key="idx">{{ role }}
+              </b-tag>
+
+              <b-tag>
+                <nuxt-link :to="comment.urlEdit">Edit</nuxt-link>
+              </b-tag>
+              <b-tag>
+                <nuxt-link :to="comment.urlDelete">Delete</nuxt-link>
+              </b-tag>
+            </span>
+
+            <!-- Content -->
+            <br>
+            <blockquote
+              v-if="comment.quote">
+              {{ comment.quote.text }}
+            </blockquote>
+            {{ comment.content }}
+          </div>
         </div>
-      </div>
 
-      <!-- Mark -->
-      <div class="media-right">
-        <b-tag :type="comment.type">{{ comment.mark | mark }}</b-tag>
-      </div>
-    </article>
+        <!-- Mark -->
+        <div class="media-right">
+          <b-tag :type="comment.type">{{ comment.mark | mark }}</b-tag>
+        </div>
+      </article>
+
+    </div>
 
     <hr>
     <PrintReport
@@ -80,8 +92,10 @@ export default {
       const comments = this.$store.getters['dashboard/comments/list'];
       const users = this.$store.getters['dashboard/users/keyed'];
       const roles = this.$store.getters['dashboard/roles/keyed'];
+      const workflowStages = this.$store.getters['dashboard/workflowStages/keyed'];
 
-      return comments
+      return _
+        .chain(comments)
         .filter(x => x.proposal === this.$route.params.id)
         .map(x => ({
           _id: x._id,
@@ -89,9 +103,13 @@ export default {
           user: users[x.user].name,
           roles: users[x.user].roles.map(r => roles[r].name),
           mark: x.mark,
+          quote: x.quote,
+          stage: workflowStages[x.stage].name,
           urlEdit: `/dashboard/comments/${x._id}/edit`,
           urlDelete: `/dashboard/comments/${x._id}/delete`
-        }));
+        }))
+        .groupBy('stage')
+        .value();
     }
   },
   async fetch(opt) {
@@ -104,6 +122,7 @@ export default {
       { where: { proposal: pid } }
     );
     const userIds = _.chain(comments._items).map(x => x.user).uniq().value();
+    const workflowStageIds = _.chain(comments._items).map(x => x.stage).uniq().value();
 
     // Fetch users
     if (userIds.length > 0) {
@@ -112,6 +131,11 @@ export default {
         .value();
 
       await opt.store.dispatch('dashboard/roles/fetchList', { ids: roleIds });
+    }
+
+    // Fetch workflow stages
+    if (workflowStageIds.length > 0) {
+      await opt.store.dispatch('dashboard/workflowStages/fetchList', { ids: workflowStageIds });
     }
   }
 };

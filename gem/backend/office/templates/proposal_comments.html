@@ -14,7 +14,10 @@
 
 <h1>{{proposal.title}}</h1>
 
-{% for comment in comments %}
+{% for stage, stage_comments in comments %}
+    <h2>{{stage}}</h2>
+
+    {% for comment in stage_comments %}
     <p>
         <span class="user">
             {{ comment.user.name }}
@@ -27,4 +30,5 @@
         </span>
         <p class="content">{{ comment.content }}</p>
     </p>
+    {% endfor %}
 {% endfor %}
