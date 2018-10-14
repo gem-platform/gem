@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ message }}
     <!-- Commenting popup -->
     <div
       v-show="showCommentingPopup"
