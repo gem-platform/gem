@@ -159,7 +159,7 @@ export default {
         content: c.content,
         type: cssType[c.mark],
         quote: c.quote
-      }));
+      })).filter(c => c.quote && c.quote.begin);
 
       // step 3:
       const nodeIds = get(this.$refs.proposalContent, {}, '');
