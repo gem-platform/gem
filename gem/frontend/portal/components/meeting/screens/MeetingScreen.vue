@@ -18,10 +18,13 @@
           class="box">
           <ControlPanel/>
         </div>
+
+        <!-- Additional controll widgets -->
         <div
-          v-if="showStageControls"
+          v-for="(control, index) in controls"
+          :key="index"
           class="box">
-          <StageControlsPresenter/>
+          <component :is="control"/>
         </div>
 
         <!-- Users online -->
@@ -46,7 +49,8 @@
           v-if="showProposal"
           class="box content">
           <ProposalReader
-            :mode="proposalReaderMode"/>
+            :mode="proposalReaderMode"
+            :comments="proposalComments"/>
         </div>
       </div>
     </div>
@@ -77,6 +81,13 @@ import BallotResultsView from '@/components/meeting/stages/views/BallotResultsVi
 import CommentsView from '@/components/meeting/stages/views/CommentsView.vue';
 import DiscussionView from '@/components/meeting/stages/views/DiscussionView.vue';
 import FinalView from '@/components/meeting/stages/views/FinalView.vue';
+
+// controlls components
+
+import BallotControls from '@/components/meeting/stages/controls/BallotControls.vue';
+import CommentsControls from '@/components/meeting/stages/controls/CommentsControls.vue';
+import DiscussionControls from '@/components/meeting/stages/controls/DiscussionControls.vue';
+import FinalControls from '@/components/meeting/stages/controls/FinalControls.vue';
 
 // view vidgets
 
@@ -118,18 +129,15 @@ export default {
       return this.stageProposal;
     },
 
+    proposalComments() {
+      return this.$stage.comments || [];
+    },
+
     /**
      * Show proposal or not?
      */
     showProposal() {
       return this.stageProposal !== undefined;
-    },
-
-    /**
-     * Show stage controls or not?
-     */
-    showStageControls() {
-      return this.stageConfig.controls === true;
     },
 
     /**
@@ -163,6 +171,10 @@ export default {
       return this.$store.state.meeting.closed;
     },
 
+    controls() {
+      return this.stageConfig.controls;
+    },
+
     widgets() {
       return this.stageConfig.widgets;
     },
@@ -178,14 +190,15 @@ export default {
         },
         AgendaStage: {
           title: 'Agenda',
+          controls: [],
           widgets: [
             AgendaView
           ]
         },
         AcquaintanceStage: {
           title: 'Acquaintance',
-          controls: false,
           type: true,
+          controls: [],
           widgets: [
             AcquaintanceView,
             BallotResults,
@@ -194,8 +207,10 @@ export default {
         },
         BallotStage: {
           title: 'Ballot',
-          controls: true,
           type: true,
+          controls: [
+            BallotControls
+          ],
           widgets: [
             BallotView
           ]
@@ -203,29 +218,34 @@ export default {
         BallotResultsStage: {
           title: 'Ballot results',
           type: true,
+          controls: [],
           widgets: [
             BallotResultsView
           ]
         },
         DiscussionStage: {
           title: 'Discussion',
-          controls: true,
           type: true,
+          controls: [
+            DiscussionControls
+          ],
           widgets: [
             DiscussionView
           ]
         },
         CommentsStage: {
           title: 'Comments',
-          controls: true,
           type: true,
-          widgets: [
+          controls: [
+            CommentsControls,
             CommentsView
           ]
         },
         FinalStage: {
           title: 'Final',
-          controls: true,
+          controls: [
+            FinalControls
+          ],
           widgets: [
             FinalView
           ]

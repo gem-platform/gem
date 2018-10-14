@@ -298,6 +298,13 @@ COMMENTS = {
                 "embeddable": True
             }
         },
+        "stage": {
+            "type": "objectid",
+            "data_relation": {
+                "resource": "workflowStages",
+                "embeddable": True
+            }
+        },
         "content": {
             "type": "string",
             "required": True,
