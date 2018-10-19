@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ order }}
     <div class="columns is-multiline">
       <div
         v-for="item in items"
