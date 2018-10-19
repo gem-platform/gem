@@ -1,10 +1,12 @@
 import crudStore from '@/lib/crud/store';
 
 export default crudStore({
-  collection: 'zones',
+  collection: 'barItems',
   empty() {
     return {
-      name: '', parent: undefined, officials: []
+      name: '',
+      description: '',
+      image: ''
     };
   }
 });

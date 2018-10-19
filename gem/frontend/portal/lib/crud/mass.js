@@ -7,6 +7,8 @@ export default {
         promise = store.dispatch(`dashboard/${r.resource}/fetchOne`, r.one);
       } else if (r.list && r.list.length > 0) {
         promise = store.dispatch(`dashboard/${r.resource}/fetchList`, { ids: r.list });
+      } else {
+        promise = store.dispatch(`dashboard/${r.resource}/fetchList`);
       }
       promises.push(promise);
     });

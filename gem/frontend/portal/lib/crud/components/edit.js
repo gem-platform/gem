@@ -8,6 +8,7 @@ import officials from '@/components/dashboard/edit/officials.vue';
 import comments from '@/components/dashboard/edit/comments.vue';
 import workflowTypes from '@/components/dashboard/edit/workflowTypes.vue';
 import workflowStages from '@/components/dashboard/edit/workflowStages.vue';
+import barItems from '@/components/dashboard/edit/barItems.vue';
 
 
 export default {
@@ -20,5 +21,6 @@ export default {
   officials,
   comments,
   workflowTypes,
-  workflowStages
+  workflowStages,
+  barItems
 };

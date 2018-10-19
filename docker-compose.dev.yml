@@ -18,3 +18,7 @@ services:
 
   meeting-server:
     command: python -u /usr/src/gem-server-common/_runner.py
+
+  bar-server:
+    command: python -u /usr/src/gem-server-common/_runner.py
+  

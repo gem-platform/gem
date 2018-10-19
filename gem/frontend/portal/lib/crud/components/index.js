@@ -195,5 +195,19 @@ export default {
     searchColumn: 'name',
     defaultSort: ['name', 'asc'],
     canCreate: true
+  },
+
+  barItems: {
+    columns: [
+      {
+        field: 'name',
+        label: 'Name',
+        sortable: true
+      }
+    ],
+    indexLinkToEdit: true,
+    searchColumn: 'name',
+    defaultSort: ['name', 'asc'],
+    canCreate: true
   }
 };
