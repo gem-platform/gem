@@ -91,7 +91,7 @@ import FinalControls from '@/components/meeting/stages/controls/FinalControls.vu
 
 // view vidgets
 
-import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
+// import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
 import BallotResults from '@/components/meeting/stages/widgets/BallotResults.vue';
 
 
@@ -198,11 +198,12 @@ export default {
         AcquaintanceStage: {
           title: 'Acquaintance',
           type: true,
-          controls: [],
+          controls: [
+            CommentsView
+          ],
           widgets: [
             AcquaintanceView,
-            BallotResults,
-            CommentsList
+            BallotResults
           ]
         },
         BallotStage: {
