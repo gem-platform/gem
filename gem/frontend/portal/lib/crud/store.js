@@ -86,6 +86,10 @@ export default (options) => {
        * @param {Number} id Id of object to fetch
        */
       async fetchList({ commit }, options) {
+        if (options === undefined) {
+          return []; // nothing to fetch
+        }
+
         if (options.ids === undefined) {
           throw Error('Unable to fetch list: IDs is not defined');
         }

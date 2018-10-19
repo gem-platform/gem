@@ -54,6 +54,14 @@
               <i class="fa fa-exclamation blink_me"/>
             </span>
           </nuxt-link>
+
+          <nuxt-link
+            v-if="haveAccess('bar')"
+            to="/bar"
+            class="navbar-item"
+            active-class="is-active">
+            Bar
+          </nuxt-link>
         </div>
 
         <div class="navbar-end">

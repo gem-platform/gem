@@ -114,6 +114,22 @@
           active-class="is-active">Zonal Assignments</nuxt-link>
       </li>
     </ul>
+
+    <p
+      v-if="showAdministrationSection"
+      class="menu-label">
+      Bar
+    </p>
+
+    <ul
+      v-if="showAdministrationSection"
+      class="menu-list">
+      <li v-if="haveAccess('bar.manage')">
+        <nuxt-link
+          to="/dashboard/barItems"
+          active-class="is-active">Bar</nuxt-link>
+      </li>
+    </ul>
   </aside>
 </template>
 

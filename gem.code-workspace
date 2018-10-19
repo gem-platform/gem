@@ -21,6 +21,10 @@
 			"path": "gem/backend/office"
 		},
 		{
+			"name": "Bar Server",
+			"path": "gem/backend/bar"
+		},
+		{
 			"name": "PDF Printer Service",
 			"path": "gem/backend/pdf-printer"
 		},

@@ -79,6 +79,14 @@ export default {
         this.readers.length > 0 && // there are some users still reading
         this.haveAccess('meeting.manage') &&
         config && config.proposalDisplayMode === 'in-parts'); // it is a secretary
+    },
+
+    /**
+     * Show reading progress?
+     */
+    showReadingProgress() {
+      const { config } = this.$stage;
+      return config && config.proposalDisplayMode === 'in-parts';
     }
   }
 };

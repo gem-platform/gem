@@ -55,6 +55,7 @@ services:
       - meeting-server
       - portal-server
       - office-server
+      - bar-server
       - portal
     volumes:
       - ./.data/shared/downloads:/usr/shared/downloads
@@ -93,6 +94,21 @@ services:
       - db
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost:8099 || exit 1
+
+  # Bar server
+  bar-server:
+    restart: on-failure:5
+    build: ./gem/backend/bar
+    expose:
+      - 8190
+    env_file:
+      - environment.${GEM_ENV-dev}.env
+    volumes:
+      - ./gem/backend/bar:/usr/src/app
+      - ./.data/shared/downloads:/usr/shared/downloads
+    depends_on:
+      - gem-server
+      - db
 
   # Meeting server
   portal-server:

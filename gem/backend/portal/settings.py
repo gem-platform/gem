@@ -393,6 +393,22 @@ WORKFLOW_TYPES = {
     }
 }
 
+BAR_ITEMS = {
+    "schema": {
+        "name": {
+            "type": "string",
+            "required": True,
+            "empty": False
+        },
+        "image": {
+            "type": "string"
+        },
+        "description": {
+            "type": "string"
+        }
+    }
+}
+
 DOMAIN = {
     "proposals": PROPOSALS,
     "users": USERS,
@@ -403,5 +419,6 @@ DOMAIN = {
     "zones": ZONES,
     "comments": COMMENTS,
     "workflowStages": WORKFLOW_STAGES,
-    "workflowTypes": WORKFLOW_TYPES
+    "workflowTypes": WORKFLOW_TYPES,
+    "barItems": BAR_ITEMS
 }
