@@ -1,8 +1,9 @@
 """GEM Meeting Server Entry point"""
-import os
+from os import environ
 from eve import Eve
 from flask_cors import CORS
-from mongoengine import connect
+
+from gem.utils.db import connect_db
 
 from api_search import api_search
 from api_login import api_login
@@ -12,24 +13,16 @@ from api_health import api_health
 
 import model_hooks as mh
 
-debug = os.environ.get('DEBUG', 'false') == 'true'
+debug = environ.get("DEBUG", "false") == "true"
 
-db_host = os.environ.get('DB_HOST', "localhost")
-db_username = os.environ.get('MONGO_USERNAME')
-db_password = os.environ.get('MONGO_PASSWORD')
-db_auth_source = os.environ.get('MONGO_AUTH_SOURCE')
-db_auth_mechanism = os.environ.get('MONGO_AUTH_MECHANISM')
-connect("gem",
-        host=db_host, username=db_username, password=db_password,
-        authentication_source=db_auth_source,
-        authentication_mechanism=db_auth_mechanism)
+connect_db()
 
 app = Eve()
 app.register_blueprint(api_search)
 app.register_blueprint(api_login)
 app.register_blueprint(api_autocomplete)
 app.register_blueprint(api_health)
-if (debug):
+if debug:
     app.register_blueprint(API_DEBUG)
 CORS(app)
 
@@ -39,5 +32,5 @@ app.on_replaced_zones += mh.zone_update_path
 app.on_inserted_zones += mh.zone_update_path_items
 
 # run as standard script, not by gunicorn
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)

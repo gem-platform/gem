@@ -3,23 +3,13 @@ from io import BytesIO
 from uuid import uuid4
 from requests import post
 from flask import Flask, jsonify, request
-from mongoengine import connect
+
+from gem.utils.db import connect_db
 
 from reports.za import zonal_assignments_report
 from reports.proposals import proposal_comments_report
 
-# get variables
-DB_HOST = environ.get("DB_HOST", "localhost")
-DB_USERNAME = environ.get("MONGO_USERNAME")
-DB_PASSWORD = environ.get("MONGO_PASSWORD")
-DB_AUTH_SOURCE = environ.get("MONGO_AUTH_SOURCE")
-DB_AUTH_MECHANISM = environ.get("MONGO_AUTH_MECHANISM")
-
-connect("gem",
-        host=DB_HOST, username=DB_USERNAME, password=DB_PASSWORD,
-        authentication_source=DB_AUTH_SOURCE,
-        authentication_mechanism=DB_AUTH_MECHANISM)
-
+connect_db()
 app = Flask("office")
 
 

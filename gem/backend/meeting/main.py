@@ -5,7 +5,7 @@ import logging
 import logging.config
 import ptvsd
 
-from mongoengine import connect
+from gem.utils.db import connect_db
 
 from gms.app import MeetingServerApplication
 from gms.net import SocketIoEndpoint, HealthEndpoint
@@ -23,16 +23,7 @@ if DEBUG:
 # we are starting
 logging.getLogger("root").info("GEM Meeting Server is starting")
 
-# connect to DB
-DB_HOST = os.environ.get("DB_HOST", "localhost")
-DB_USERNAME = os.environ.get("MONGO_USERNAME")
-DB_PASSWORD = os.environ.get("MONGO_PASSWORD")
-DB_AUTH_SOURCE = os.environ.get("MONGO_AUTH_SOURCE")
-DB_AUTH_MECHANISM = os.environ.get("MONGO_AUTH_MECHANISM")
-connect("gem",
-        host=DB_HOST, username=DB_USERNAME, password=DB_PASSWORD,
-        authentication_source=DB_AUTH_SOURCE,
-        authentication_mechanism=DB_AUTH_MECHANISM)
+connect_db()
 
 # configure application endpoints
 MEETING_ENDPOINT = SocketIoEndpoint("0.0.0.0", 8090)
