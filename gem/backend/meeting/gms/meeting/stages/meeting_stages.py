@@ -93,6 +93,8 @@ class MeetingStages:
         self.current.on_enter()
         self.__switched.notify(index, self.current)
 
+        return self.current
+
     def append(self, stage):
         """
         Appends stage to the meeting.
@@ -127,3 +129,6 @@ class MeetingStages:
             stage {MeetingStage} -- Stage.
         """
         self.__changed.notify(index, stage)
+
+    def __getitem__(self, key):
+        return self.__stages[key]

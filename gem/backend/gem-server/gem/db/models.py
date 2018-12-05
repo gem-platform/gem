@@ -3,7 +3,8 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          DictField, ListField, ReferenceField,
                          EmbeddedDocumentField, EmbeddedDocument,
                          DateTimeField, GenericReferenceField,
-                         EmbeddedDocumentListField, IntField, DictField)
+                         EmbeddedDocumentListField, IntField, DictField,
+                         FloatField)
 
 from gem.db.signals import finalize_ballot, update_cached_fields
 
@@ -109,18 +110,20 @@ class BallotRecord(EmbeddedDocument):
     role = ReferenceField(Role)
 
 
-class Ballot(Document):
+class Ballot(GemDocument):
     """Stores ballot data."""
     meta = {'collection': 'ballots'}
 
     secret = BooleanField()
     votes = ListField(EmbeddedDocumentField(BallotRecord))
-    proposal = ReferenceField(Proposal)
+    proposal = ReferenceField(Proposal, required=True)
     finished = BooleanField()
+    stage = ReferenceField(WorkflowStage, required=True)
+    threshold = FloatField(min_value=0, max_value=1, default=0.5)
+    result = StringField()
 
-    def __init__(self, proposal=None, **data):
+    def __init__(self, **data):
         super().__init__(**data)
-        self.proposal = proposal
 
     def set(self, user, value):
         if self.finished:
@@ -137,6 +140,17 @@ class Ballot(Document):
         return votes_of_user[0] if votes_of_user else None
 
 
+class ProposalQuoteAnchor(EmbeddedDocument):
+    node = StringField(required=True)
+    offset = IntField()
+
+
+class ProposalQuote(EmbeddedDocument):
+    text = StringField()
+    begin = EmbeddedDocumentField(ProposalQuoteAnchor)
+    end = EmbeddedDocumentField(ProposalQuoteAnchor)
+
+
 class Comment(GemDocument):
     """Comment"""
     meta = {'collection': 'comments'}
@@ -145,6 +159,8 @@ class Comment(GemDocument):
     proposal = ReferenceField(Proposal, required=True)
     content = StringField(required=True)
     mark = StringField(required=True)
+    stage = ReferenceField(WorkflowStage, required=True)
+    quote = EmbeddedDocumentField(ProposalQuote)
 
 
 class MeetingPermission(EmbeddedDocument):

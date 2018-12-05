@@ -1,5 +1,11 @@
 <template>
   <div>
+    <p
+      v-if="header"
+      class="heading has-text-centered">
+      {{ header }}
+    </p>
+
     <!-- Filter -->
     <div
       v-if="filter"
@@ -16,6 +22,7 @@
     </div>
 
     <transition-group
+      v-if="comments"
       name="comments-list"
       tag="article">
       <article
@@ -32,6 +39,9 @@
 
               <!-- User's roles -->
               <span class="tags">
+                <b-tag :type="comment.type">
+                  {{ comment.mark | mark }}
+                </b-tag>
                 <b-tag
                   v-for="(role, idx) in comment.roles"
                   :key="idx">{{ role }}
@@ -40,17 +50,23 @@
 
               <!-- Content -->
               <br>
+              <b-message
+                v-if="comment.quote"
+                size="is-small">
+                {{ comment.quote.text }}
+              </b-message>
               {{ comment.content }}
             </p>
           </div>
         </div>
-
-        <!-- Mark -->
-        <div class="media-right">
-          <b-tag :type="comment.type">{{ comment.mark | mark }}</b-tag>
-        </div>
       </article>
     </transition-group>
+
+    <div
+      v-if="comments.length <= 0"
+      class="has-text-centered">
+      There is no comments
+    </div>
   </div>
 </template>
 
@@ -70,7 +86,6 @@ function anyMarkPresent(filter, value) {
 }
 
 export default {
-  name: 'CommentsList',
   components: { Roles, Marks },
   filters: {
     mark(value) {
@@ -85,6 +100,10 @@ export default {
     filter: {
       type: Boolean,
       default: false
+    },
+    header: {
+      type: String,
+      default() { return 'Comments'; }
     }
   },
   data() {
@@ -107,7 +126,8 @@ export default {
           role_ids: users[c.user_id].roles,
           mark: c.mark,
           content: c.content,
-          type: cssType[c.mark]
+          type: cssType[c.mark],
+          quote: c.quote
         }))
         // Filter out comments of users whose roles were not in the filter
         .filter(c => anyRolePresent(this.filterRoles, c.role_ids))

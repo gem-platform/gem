@@ -4,7 +4,7 @@ export default crudStore({
   collection: 'zones',
   empty() {
     return {
-      name: '', parent: '', officials: []
+      name: '', parent: undefined, officials: []
     };
   }
 });

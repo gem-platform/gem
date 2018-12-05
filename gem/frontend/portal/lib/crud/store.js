@@ -86,6 +86,10 @@ export default (options) => {
        * @param {Number} id Id of object to fetch
        */
       async fetchList({ commit }, options) {
+        if (options === undefined) {
+          return []; // nothing to fetch
+        }
+
         if (options.ids === undefined) {
           throw Error('Unable to fetch list: IDs is not defined');
         }
@@ -129,17 +133,20 @@ export default (options) => {
 
       async save({ commit }, entity) {
         const data = omit(entity, ['_created', '_updated', '_links']);
+        let result;
 
-        if (entity._id !== '@new') {
+        if (entity._id && entity._id !== '@new') {
           const url = `${api}/${entity._id}`;
-          await this.$axios.$put(url, data);
+          result = await this.$axios.$put(url, data);
         } else {
-          await this.$axios.$post(api, omit(data, ['_id']));
+          result = await this.$axios.$post(api, omit(data, ['_id']));
 
           // make @new clean again
           const empty = options.empty ? options.empty() : {};
           commit('update', { _id: '@new', ...empty });
         }
+
+        return result;
       },
 
       async remove({ commit }, data) {

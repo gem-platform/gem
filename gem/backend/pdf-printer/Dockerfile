@@ -8,7 +8,3 @@ WORKDIR /usr/src/app
 COPY . .
 
 CMD gunicorn --bind 0.0.0.0:4999 app:APP
-
-# site should be accesible
-HEALTHCHECK  --interval=30s --timeout=3s \
-  CMD wget --quiet --tries=1 --spider http://localhost:4999/health || exit 1

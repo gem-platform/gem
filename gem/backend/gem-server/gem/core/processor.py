@@ -45,13 +45,13 @@ class Processor:
     def exec(self, command, *data):
         """
         Executes command with specified data.
-        
+
         Arguments:
             command {str} -- Command to execute.
-        
+
         Raises:
             Exception -- If command is not registered.
-        
+
         Returns:
             obj -- Result of execution.
         """

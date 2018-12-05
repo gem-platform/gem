@@ -17,10 +17,5 @@ RUN mkdir -p /var/lib/sphinx/data && \
 COPY reindex /etc/periodic/15min
 RUN chmod a+x /etc/periodic/15min/reindex
 
-EXPOSE 9306 9312
-
-HEALTHCHECK --interval=30s --start-period=15s --retries=3 \
-    CMD [ "python3", "/usr/app/healtcheck.py" ]
-
 ENTRYPOINT ["/usr/app/entrypoint.sh"]
 CMD ["searchd", "--nodetach"]

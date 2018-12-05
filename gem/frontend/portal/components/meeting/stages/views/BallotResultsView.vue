@@ -1,5 +1,6 @@
 <template>
-  <BallotResults/>
+  <BallotResults
+    :header="null"/>
 </template>
 
 <script>

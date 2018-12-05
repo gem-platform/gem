@@ -3,14 +3,13 @@ from itertools import chain
 from gms.meeting.widgets.ballot_results import BallotSerializeMixin
 from gms.meeting.widgets.comments import CommentsSerializeMixin
 
+
 class MeetingSerializer:
     """Meeting model serializer."""
 
     def __init__(self):
         """Initializes new instance of the MeetingSerializer class."""
         self.__stage_serializer = MeetingStageSerializer()
-        # todo: proposal serializer
-        # todo: user serializer
 
     def serialize(self, meeting):
         """
@@ -37,12 +36,20 @@ class MeetingSerializer:
         proposals = {str(p.id): p for p in meeting.proposals}
         proposals = {k: self.__map_proposal(v) for k, v in proposals.items()}
 
-        # convert array of users to dict keyed by user id
-        users = {str(u.id): self.__map_user(u) for u in meeting.allowed_users}
+        # collect all the related objects from all the stages
+        depends_on = map(self.__stage_serializer.depends_on, meeting.stages.all)
+        depends_users = set()
+        depends_roles = set()
+        for objects in depends_on:
+            depends_users |= objects.get("users", set())
+            depends_roles |= objects.get("roles", set())
 
         # convert array of roles to dict keyed by role id:
         roles = chain.from_iterable([u.roles for u in meeting.allowed_users])
-        roles = {str(r.id): self.__map_role(r) for r in roles}
+        roles = {str(r.id): self.__map_role(r) for r in set(roles) | depends_roles}
+
+        # convert array of users to dict keyed by user id
+        users = {str(u.id): self.__map_user(u) for u in set(meeting.allowed_users) | depends_users}
 
         # return list of all stages with theirs current states
         # list of proposals used in current meeting
@@ -56,9 +63,6 @@ class MeetingSerializer:
             "roles": roles,
             "start": meeting.start.isoformat(),
             "end": meeting.end.isoformat()
-            # todo: list of users allowed to present at meeting
-            #       including their meta (roles, permissions)
-            # todo: list of online users
         }
 
     def __map_proposal(self, proposal):
@@ -106,6 +110,14 @@ class MeetingStageSerializer:
             return serializer.serialize(stage)
         return None
 
+    def depends_on(self, stage):
+        stage_type = stage.__class__.__name__
+        serializer = self.__serializers.get(stage_type, None)
+        if serializer and hasattr(serializer, "depends_on"):
+            return serializer.depends_on(stage)
+        return {}
+
+
 
 class AcquaintanceMeetingStageSerializer(BallotSerializeMixin, CommentsSerializeMixin):
     """Acquaintance stage serializer."""
@@ -119,6 +131,11 @@ class AcquaintanceMeetingStageSerializer(BallotSerializeMixin, CommentsSerialize
             "proposalId": str(stage.group.proposal.id),
             "config": stage.config
         }
+
+    def depends_on(self, stage):
+        users = set(map(lambda x: x.user, stage.comments))
+        roles = set(chain.from_iterable(map(lambda x: x.roles, users)))
+        return {"users": users, "roles": roles}
 
 
 class AgendaMeetingStageSerializer:
@@ -135,6 +152,7 @@ class BallotMeetingStageSerializer(BallotSerializeMixin):
             "type": "BallotStage",
             "progress": self.progress(stage),
             "secret": stage.ballot.secret,
+            "threshold": stage.ballot.threshold,
             "proposalId": str(stage.group.proposal.id),
             "finished": stage.ballot.finished,
             "config": stage.config
@@ -145,11 +163,15 @@ class BallotResultsMeetingStageSerializer(BallotSerializeMixin):
     def serialize(self, stage):
         return {
             "type": "BallotResultsStage",
-            "votes": self.votes_serialize(stage),
             "summary": self.summary_serialize(stage),
             "proposalId": str(stage.group.proposal.id),
             "config": stage.config
         }
+
+    def depends_on(self, stage):
+        users = set(map(lambda x: x.user, stage.ballot.votes))
+        roles = set(map(lambda x: x.role, stage.ballot.votes))
+        return {"users": users, "roles": roles}
 
 
 
@@ -161,6 +183,11 @@ class CommentsMeetingStageSerializer(CommentsSerializeMixin):
             "proposalId": str(stage.group.proposal.id),
             "config": stage.config
         }
+
+    def depends_on(self, stage):
+        users = set(map(lambda x: x.user, stage.comments))
+        roles = set(chain.from_iterable(map(lambda x: x.roles, users)))
+        return {"users": users, "roles": roles}
 
 
 class DiscussionMeetingStageSerializer:

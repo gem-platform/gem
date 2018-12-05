@@ -143,6 +143,24 @@ export default {
       name: 'Presenter',
       desc: 'Hide all controls',
       group: 'Meeting'
+    },
+    {
+      _id: 'bar.manage',
+      name: 'Manage Bar',
+      desc: 'Manage Bar',
+      group: 'Bar'
+    },
+    {
+      _id: 'bar.orders',
+      name: 'Vew bar orders',
+      desc: 'Vew bar orders',
+      group: 'Bar'
+    },
+    {
+      _id: 'bar',
+      name: 'Access Bar',
+      desc: 'Access Bar',
+      group: 'Bar'
     }
   ]
 };

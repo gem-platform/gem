@@ -31,5 +31,6 @@ app.on_replace_users += mh.user_replace_password
 app.on_replaced_zones += mh.zone_update_path
 app.on_inserted_zones += mh.zone_update_path_items
 
+# run as standard script, not by gunicorn
 if __name__ == "__main__":
-    app.run(host="0.0.0.0")
+    app.run(host="0.0.0.0", port=5000)

@@ -17,7 +17,7 @@ def connect(context, sid, environ):
     LOG.info("Client %s connected", sid)
 
 
-def disconnect(context, sid):
+def disconnect(context, sid, data=None):
     """Client disconnected from server."""
     # socket connection with specified
     # session id is closed

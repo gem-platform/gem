@@ -1,6 +1,8 @@
 <template>
   <div>
-    <CommentsList :filter="!isPresenter"/>
+    <CommentsList
+      :filter="!isPresenter"
+      :header="null"/>
   </div>
 </template>
 

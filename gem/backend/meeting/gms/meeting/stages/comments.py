@@ -31,7 +31,7 @@ class CommentsMeetingStage(MeetingStage):
         """
         return self.__comments
 
-    def comment(self, user, message, mark):
+    def comment(self, user, message, mark, quote=None):
         """
         Add comment using specified user, message and mark.
 
@@ -39,6 +39,7 @@ class CommentsMeetingStage(MeetingStage):
             user {User} -- User.
             message {str} -- Message.
             mark {str} -- Mark (+, -, i, etc).
+            quote {dict} -- Quotation data.
         """
         # no proposal provided for stage
         if not (self.group and self.group.proposal):
@@ -51,7 +52,9 @@ class CommentsMeetingStage(MeetingStage):
         # create new comment
         comment = Comment(
             user=user, proposal=self.group.proposal,
-            content=message, mark=mark)
+            content=message, mark=mark,
+            stage=self.group.proposal.stage,
+            quote=quote)
         comment.save()
 
         self.__comments.append(comment)
