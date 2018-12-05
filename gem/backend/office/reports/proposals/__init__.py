@@ -1,1 +1,1 @@
-from .comments import proposal_comments_report
+from .artifacts import proposal_artifacts_report

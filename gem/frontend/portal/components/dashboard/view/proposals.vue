@@ -59,9 +59,9 @@
     <hr>
     <PrintReport
       :params="{'proposal': entity._id}"
-      title="Proposal Comments"
-      url="office/proposals/comments"
-      filename="Proposal Comments.pdf"/>
+      title="Proposal Artifacts"
+      url="office/proposals/artifacts"
+      filename="Proposal.pdf"/>
   </div>
 </template>
 

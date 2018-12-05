@@ -11,4 +11,4 @@ RUN pip3 install --no-cache-dir -r requirements.txt
 # copy sources
 COPY . .
 
-CMD [ "gunicorn", "main:app" ]
+CMD [ "gunicorn", "main:APP" ]

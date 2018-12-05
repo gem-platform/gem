@@ -1,5 +1,5 @@
 from itertools import groupby
-from jinja2 import Template, Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader
 from gem.db.models import Comment, Proposal
 
 def mark(value):
@@ -11,7 +11,7 @@ def mark(value):
         return ""
     return value
 
-def proposal_comments_report(proposal_id):
+def proposal_artifacts_report(proposal_id):
     # get all the comments for specified proposal
     proposal = Proposal.objects.get(id=proposal_id)
     comments = Comment.objects(proposal=proposal_id)

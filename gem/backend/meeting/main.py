@@ -18,7 +18,7 @@ with open("logging.json", "r", encoding="utf-8") as fd:
 DEBUG = os.environ.get("DEBUG", None) in [1, "true"]
 if DEBUG:
     logging.getLogger("root").critical("Debugging is enabled")
-    ptvsd.enable_attach(('0.0.0.0', 9876))
+    ptvsd.enable_attach(("0.0.0.0", 9876))
 
 # we are starting
 logging.getLogger("root").info("GEM Meeting Server is starting")
