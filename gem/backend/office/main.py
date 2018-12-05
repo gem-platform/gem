@@ -7,7 +7,7 @@ from gem.utils.db import connect_db
 connect_db()
 
 # register blueprints
-API_MODULES = ["api_health", "api_proposal", "api_zonal"]
+API_MODULES = ["api.health", "api.proposal", "api.zonal"]
 APP = Flask("office")
 
 # load all the API modules
