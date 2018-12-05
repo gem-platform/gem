@@ -3,10 +3,10 @@ from reports.za import zonal_assignments_report
 
 from utils import print_and_save
 
-API_ZONAL = Blueprint("api_zonal", __name__)
+API = Blueprint("api_zonal", __name__)
 
 
-@API_ZONAL.route("/zonal/assignments", methods=["GET"])
+@API.route("/zonal/assignments", methods=["GET"])
 def generate_zonal_report():
     hierarchy = request.args.get("hierarchy") in ["true", 1]
     leaves_only = request.args.get("leavesOnly") in ["true", 1]

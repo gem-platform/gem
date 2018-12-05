@@ -1,19 +1,20 @@
+from importlib import import_module
 from flask import Flask
 
 from gem.utils.db import connect_db
-
-from api_proposal import API_PROPOSAL
-from api_zonal import API_ZONAL
-from api_health import API_HEALTH
 
 # connect to db
 connect_db()
 
 # register blueprints
+API_MODULES = ["api_health", "api_proposal", "api_zonal"]
 APP = Flask("office")
-APP.register_blueprint(API_HEALTH)
-APP.register_blueprint(API_PROPOSAL)
-APP.register_blueprint(API_ZONAL)
+
+# load all the API modules
+for module_name in API_MODULES:
+    module = import_module(module_name)
+    var = getattr(module, "API")
+    APP.register_blueprint(var)
 
 # run app
 if __name__ == "__main__":
