@@ -8,14 +8,14 @@ connect_db()
 
 # register blueprints
 API_MODULES = ["api.health", "api.proposal", "api.zonal"]
-APP = Flask("office")
+APPLICATION = Flask("office")
 
 # load all the API modules
 for module_name in API_MODULES:
     module = import_module(module_name)
     var = getattr(module, "API")
-    APP.register_blueprint(var)
+    APPLICATION.register_blueprint(var)
 
 # run app
 if __name__ == "__main__":
-    APP.run(port=5001, host="0.0.0.0")
+    APPLICATION.run(port=5001, host="0.0.0.0")
