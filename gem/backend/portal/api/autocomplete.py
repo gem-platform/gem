@@ -3,10 +3,10 @@ from re import IGNORECASE
 from bson.regex import Regex
 from bson import ObjectId
 
-api_autocomplete = Blueprint('api_autocomplete', __name__)
+API = Blueprint('api_autocomplete', __name__)
 
 
-@api_autocomplete.route("/api/autocomplete", methods=["GET"])
+@API.route("/api/autocomplete", methods=["GET"])
 def app_autocomplete():
     collection = request.args.get("collection", None)
     field = request.args.get("field", None)
@@ -46,7 +46,7 @@ def app_autocomplete():
     return jsonify({"success": True, "suggestions": suggestions})
 
 
-@api_autocomplete.route("/api/names", methods=["GET"])
+@API.route("/api/names", methods=["GET"])
 def app_names():
     collection = request.args.get("collection", None)
     field = request.args.get("field", None)

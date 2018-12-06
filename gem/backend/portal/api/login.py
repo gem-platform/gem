@@ -2,10 +2,10 @@ from flask import Blueprint, jsonify, request
 from mongoengine import DoesNotExist
 from gem.db import User
 
-api_login = Blueprint('api_login', __name__)
+API = Blueprint('api_login', __name__)
 
 
-@api_login.route("/api/auth/login", methods=["POST"])
+@API.route("/api/auth/login", methods=["POST"])
 def api_auth_login():
     data = request.get_json(force=True)
     login = data.get("login")
@@ -28,12 +28,12 @@ def api_auth_login():
         }), 401
 
 
-@api_login.route("/api/auth/logout", methods=["POST"])
+@API.route("/api/auth/logout", methods=["POST"])
 def api_auth_logout():
     return jsonify({"success": True})
 
 
-@api_login.route("/api/auth/user", methods=["GET"])
+@API.route("/api/auth/user", methods=["GET"])
 def api_auth_user():
     cookie = request.cookies.get('auth._token.local', None)
     if not cookie:

@@ -4,13 +4,13 @@ from flask import Blueprint, jsonify, request, current_app
 import sphinxapi
 
 
-api_search = Blueprint('api_search', __name__)
+API = Blueprint('api_search', __name__)
 db_host = os.environ.get('ES_HOST', "localhost")
 c = sphinxapi.SphinxClient()
 c.SetServer(db_host)
 c.SetMatchMode(sphinxapi.SPH_MATCH_EXTENDED)
 
-@api_search.route("/api/laws/search", methods=["GET"])
+@API.route("/api/laws/search", methods=["GET"])
 def laws_search():
     response = []
     query = request.args.get("query", "")
@@ -37,7 +37,7 @@ def laws_search():
     return jsonify(response)
 
 
-@api_search.route("/api/search", methods=["GET"])
+@API.route("/api/search", methods=["GET"])
 def search():
     response = []
     query = request.args.get("query", "")
@@ -55,4 +55,3 @@ def search():
         })
 
     return jsonify(response)
-

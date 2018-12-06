@@ -3,7 +3,7 @@ from inspect import getmembers, isclass
 from flask import Blueprint, jsonify, request
 import gem.db as db
 
-API_DEBUG = Blueprint('api_debug', __name__)
+API = Blueprint('api_debug', __name__)
 
 ENTITY_MAP = {
     "workflowStages": db.WorkflowStage,
@@ -21,7 +21,7 @@ ENTITY_MAP = {
 }
 
 
-@API_DEBUG.route("/api/debug/reset", methods=["POST"])
+@API.route("/api/debug/reset", methods=["POST"])
 def api_debug_reset():
     """Clean all the collections and fill DB with specified data."""
     # clean all the collections
