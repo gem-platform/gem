@@ -1,42 +1,44 @@
-import logging
-from uuid import uuid4
 from socketio import AsyncServer
 from aiohttp import web
+
+from bar_controller import BarController
 
 sio = AsyncServer()
 app = web.Application()
 sio.attach(app)
-
-ORDERS_QUEUE = []
+controller = BarController()
 
 
 @sio.on("orders")
-async def orders_msg(sid):
+async def orders(sid):
     """Return list of orders"""
-    return ORDERS_QUEUE
+    # pylint: disable=W0613
+    return controller.orders
+
 
 @sio.on("order")
 async def order(sid, data):
     """Make an order"""
+    # pylint: disable=W0613
     user = data.get("name", "<Unknown>")
     items = data.get("items", [])
 
-    new_order = {
-        "id": str(uuid4()),
-        "name": user,
-        "items": [{"name": item["name"]} for item in items]
-    }
+    # add new order
+    new_order = controller.add(
+        user=user,
+        items=[{"name": item["name"]} for item in items])
 
-    ORDERS_QUEUE.append(new_order)
+    # response
     await sio.emit("add_order", new_order)
     return {"success": True}
+
 
 @sio.on("done")
 async def done(sid, data):
     """Order completed"""
-    global ORDERS_QUEUE
+    # pylint: disable=W0613
     order_id = data.get("id")
-    ORDERS_QUEUE = list(filter(lambda x: x["id"] != order_id, ORDERS_QUEUE))
+    controller.done(order_id)
     return {"success": True}
 
 if __name__ == "__main__":
