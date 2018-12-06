@@ -11,18 +11,6 @@
         }
     },
     "loggers": {
-        "communication": {
-            "handlers": ["h"],
-            "level": "DEBUG"
-        },
-        "meetings": {
-            "handlers": ["h"],
-            "level": "DEBUG"
-        },
-        "sessions": {
-            "handlers": ["h"],
-            "level": "DEBUG"
-        },
         "root": {
             "handlers": ["h"],
             "level": "DEBUG"
