@@ -9,19 +9,6 @@ sio.attach(app)
 
 orders = []
 
-async def store_image(request):
-    data = await request.post()
-    mp3 = data['file']
-    filename = str(uuid.uuid4()) + mp3.filename
-    mp3_file = data['file'].file
-    content = mp3_file.read()
-
-    file = open("/usr/shared/downloads/"+filename, "wb")
-    file.write(content)
-    file.close()
-
-    return web.json_response({"success": True, "path": filename})
-
 
 @sio.on('orders')
 async def orders_msg(sid):
@@ -55,5 +42,4 @@ async def message_done(sid, data):
 
 
 if __name__ == '__main__':
-    app.router.add_post('/image', store_image)
     web.run_app(app, port=8090)

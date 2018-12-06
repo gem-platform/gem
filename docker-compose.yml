@@ -95,6 +95,20 @@ services:
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost:8099 || exit 1
 
+  # Media server
+  media-server:
+    restart: on-failure:5
+    build: ./gem/backend/media
+    expose:
+      - 8090
+    env_file:
+      - environment.${GEM_ENV-dev}.env
+    volumes:
+      - ./gem/backend/media:/usr/src/app
+      - ./.data/shared/downloads:/usr/shared/downloads
+    depends_on:
+      - gem-server
+
   # Bar server
   bar-server:
     restart: on-failure:5
