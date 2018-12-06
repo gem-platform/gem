@@ -100,7 +100,7 @@ services:
     restart: on-failure:5
     build: ./gem/backend/bar
     expose:
-      - 8190
+      - 8090
     env_file:
       - environment.${GEM_ENV-dev}.env
     volumes:

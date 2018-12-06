@@ -28,6 +28,11 @@
 </template>
 
 <script>
+import io from 'socket.io-client';
+
+const bar = io('/', { path: '/bar/socket.io' });
+
+
 export default {
   layout: 'portal',
   filters: {
@@ -53,7 +58,7 @@ export default {
     }
   },
   mounted() {
-    this.$bar.on('add_order', (data) => {
+    bar.on('add_order', (data) => {
       this.orders.push(data);
     });
 
@@ -61,12 +66,12 @@ export default {
   },
   methods: {
     refresh() {
-      this.$bar.emit('orders', (data) => {
+      bar.emit('orders', (data) => {
         this.orders = data;
       });
     },
     done(id) {
-      this.$bar.emit('done', { id }, (res) => {
+      bar.emit('done', { id }, (res) => {
         if (res.success) {
           this.orders = this.orders.filter(x => x.id !== id);
         }

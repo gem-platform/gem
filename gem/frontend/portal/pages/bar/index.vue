@@ -54,6 +54,10 @@
 </template>
 
 <script>
+import io from 'socket.io-client';
+
+const bar = io('/', { path: '/bar/socket.io' });
+
 export default {
   layout: 'portal',
   data() {
@@ -96,7 +100,7 @@ export default {
       }
     },
     sendOrder() {
-      this.$bar.emit('order', {
+      bar.emit('order', {
         name: this.name,
         items: this.order
       }, (res) => {

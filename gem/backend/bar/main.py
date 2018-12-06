@@ -1,10 +1,9 @@
 import uuid
-from multidict import MultiDict
-from aiohttp import web
-import socketio
 import logging
+from socketio import AsyncServer
+from aiohttp import web
 
-sio = socketio.AsyncServer()
+sio = AsyncServer()
 app = web.Application()
 sio.attach(app)
 
@@ -22,14 +21,7 @@ async def store_image(request):
     file.close()
 
     return web.json_response({"success": True, "path": filename})
-    #return web.Response(body={"path": "1234.ololo"}, headers=MultiDict(
-    #        {'CONTENT-DISPOSITION': filename}))
 
-
-@sio.on('connect')
-def connect(sid, environ):
-    logging.getLogger("root").critical("connect")
-    print("connect ", sid)
 
 @sio.on('orders')
 async def orders_msg(sid):
@@ -64,4 +56,4 @@ async def message_done(sid, data):
 
 if __name__ == '__main__':
     app.router.add_post('/image', store_image)
-    web.run_app(app, port=8190)
+    web.run_app(app, port=8090)
