@@ -4,7 +4,7 @@ from aiohttp import web
 app = web.Application()
 
 
-async def store_image(request):
+async def upload(request):
     data = await request.post()
     mp3 = data["file"]
     filename = str(uuid4()) + mp3.filename
@@ -18,5 +18,5 @@ async def store_image(request):
     return web.json_response({"success": True, "path": filename})
 
 if __name__ == "__main__":
-    app.router.add_post("/upload", store_image)
+    app.router.add_post("/upload", upload)
     web.run_app(app, port=8090)
