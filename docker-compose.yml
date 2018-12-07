@@ -71,7 +71,7 @@ services:
   # Base image for all python-based backend cantainers
   gem-server:
     image: gem-server:latest
-    build: ./gem/backend/gem-server
+    build: ./gem/images/gem-server
 
   ##
   ## APPS: BACKEND
