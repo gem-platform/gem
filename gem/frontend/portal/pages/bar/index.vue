@@ -12,7 +12,7 @@
           <div class="card-image">
             <figure class="image is-4by3 cover">
               <img
-                :src="'/downloads/'+item.image"
+                :src="'/media/'+item.image"
                 class="cover"
                 alt="Placeholder image">
             </figure>

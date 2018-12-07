@@ -58,7 +58,7 @@ services:
       - bar-server
       - portal
     volumes:
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.data/shared/media:/usr/shared/media
       - ./.keys:/etc/nginx/ssl
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost/ || exit 1
@@ -105,7 +105,7 @@ services:
       - environment.${GEM_ENV-dev}.env
     volumes:
       - ./gem/services/media:/usr/src/app
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.data/shared/media:/usr/shared/media
     depends_on:
       - gem-server
 
@@ -119,7 +119,7 @@ services:
       - environment.${GEM_ENV-dev}.env
     volumes:
       - ./gem/services/bar:/usr/src/app
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.data/shared/media:/usr/shared/media
     depends_on:
       - gem-server
       - db
@@ -154,7 +154,7 @@ services:
       - environment.${GEM_ENV-dev}.env
     volumes:
       - ./gem/services/office:/usr/src/app
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.data/shared/media:/usr/shared/media
     depends_on:
       - gem-server
       - db

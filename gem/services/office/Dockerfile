@@ -1,7 +1,7 @@
 FROM gem-server:latest
 
 # make shared folder for generated reports
-RUN mkdir -p /usr/shared/downloads
+RUN mkdir -p /usr/shared/media
 
 # install all the requirements
 WORKDIR /usr/src/app

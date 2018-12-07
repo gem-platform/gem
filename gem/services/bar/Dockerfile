@@ -1,7 +1,7 @@
 FROM gem-server:latest
 
 # make shared folder for images
-RUN mkdir -p /usr/shared/downloads
+RUN mkdir -p /usr/shared/media
 
 # copy requirements.txt
 WORKDIR /usr/src/app

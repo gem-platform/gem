@@ -14,7 +14,7 @@ def print_and_save(content):
 
     # get filename
     filename = str(uuid4()) + ".pdf"
-    full_path = join("/", "usr", "shared", "downloads", filename)
+    full_path = join("/", "usr", "shared", "media", filename)
 
     # write response to file
     with open(full_path, "wb") as file:

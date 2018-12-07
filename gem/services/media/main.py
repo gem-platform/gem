@@ -11,7 +11,7 @@ async def upload(request):
     mp3_file = data["file"].file
     content = mp3_file.read()
 
-    file = open("/usr/shared/downloads/"+filename, "wb")
+    file = open("/usr/shared/media/"+filename, "wb")
     file.write(content)
     file.close()
 

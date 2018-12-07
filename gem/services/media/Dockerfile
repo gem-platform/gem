@@ -1,7 +1,7 @@
 FROM gem-server:latest
 
 # make shared folder for files
-RUN mkdir -p /usr/shared/downloads
+RUN mkdir -p /usr/shared/media
 
 WORKDIR /usr/src/app
 COPY ./requirements.txt ./
