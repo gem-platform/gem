@@ -2,39 +2,39 @@
 	"folders": [
 		{
 			"name": "Database",
-			"path": "gem/backend/db"
+			"path": "gem/services/db"
 		},
 		{
 			"name": "GEM Server Common",
-			"path": "gem/backend/gem-server"
+			"path": "gem/services/gem-server"
 		},
 		{
 			"name": "Meeting Server",
-			"path": "gem/backend/meeting"
+			"path": "gem/services/meeting"
 		},
 		{
 			"name": "Portal Server",
-			"path": "gem/backend/portal"
+			"path": "gem/services/portal"
 		},
 		{
 			"name": "Office Server",
-			"path": "gem/backend/office"
+			"path": "gem/services/office"
 		},
 		{
 			"name": "Bar Server",
-			"path": "gem/backend/bar"
+			"path": "gem/services/bar"
 		},
 		{
 			"name": "PDF Printer Service",
-			"path": "gem/backend/pdf-printer"
+			"path": "gem/services/pdf-printer"
 		},
 		{
 			"name": "Search Service",
-			"path": "gem/backend/search"
+			"path": "gem/services/search"
 		},
 		{
 			"name": "Web Server",
-			"path": "gem/backend/web"
+			"path": "gem/services/web"
 		},
 		{
 			"name": "Portal Client",
