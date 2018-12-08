@@ -1,3 +1,4 @@
+from os.path import join
 from uuid import uuid4
 from aiohttp import web
 
@@ -11,10 +12,12 @@ async def upload(request):
     mp3_file = data["file"].file
     content = mp3_file.read()
 
-    file = open("/usr/shared/media/"+filename, "wb")
-    file.write(content)
-    file.close()
+    # save file content
+    full_path = join("/", "usr", "shared", "media", filename)
+    with open(full_path, "wb") as file:
+        file.write(content)
 
+    # response
     return web.json_response({"success": True, "path": filename})
 
 if __name__ == "__main__":
