@@ -1,0 +1,1 @@
+from .artifacts import proposal_artifacts_report

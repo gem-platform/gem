@@ -6,11 +6,27 @@
       class="field">
 
       <!-- Secret ballot switch -->
-      <b-switch
-        v-model="isSecret"
-        @input="changeSecret">
-        Secret ballot
-      </b-switch>
+      <b-field label="Secret mode">
+        <b-switch
+          v-model="isSecret"
+          @input="changeSecret">
+          Secret ballot
+        </b-switch>
+      </b-field>
+
+      <!-- Ballot threshold -->
+      <b-field label="Threshold">
+        <b-select
+          v-model="threshold"
+          placeholder="Ballot threshold"
+          expanded
+          @input="changeThreshold">
+          <option value="0.5">Majority</option>
+          <option value="0.66">2/3</option>
+          <option value="0.8">4/5</option>
+          <option value="1">Unanimous</option>
+        </b-select>
+      </b-field>
     </div>
 
     <!-- Voting controls -->
@@ -18,6 +34,7 @@
       <transition
         name="fade"
         mode="out-in">
+
         <!-- Vote buttons -->
         <div
           v-if="!voteCommited"
@@ -72,7 +89,8 @@ export default {
   data() {
     return {
       voteCommited: false,
-      isSecret: this.$store.getters['meeting/stage/state'].secret
+      isSecret: this.$store.getters['meeting/stage/state'].secret,
+      threshold: this.$store.getters['meeting/stage/state'].threshold
     };
   },
   computed: {
@@ -122,6 +140,18 @@ export default {
       try {
         await this.send('ballot_secret', { value });
         this.notify('Ballot secret state changed');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
+    },
+
+    /**
+     * Set ballot threshold value
+     */
+    async changeThreshold(value) {
+      try {
+        await this.send('ballot_threshold', { value });
+        this.notify('Ballot threshold changed');
       } catch (err) {
         this.notify(err.message, 'is-danger');
       }

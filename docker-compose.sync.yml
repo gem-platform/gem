@@ -14,7 +14,7 @@ services:
   # Meeting server
   portal-server:
     volumes:
-      - ./gem/backend/portal:/usr/src/app
+      - ./gem/services/portal:/usr/src/app
 
   # Web client for meeting
   portal:

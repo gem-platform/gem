@@ -18,10 +18,13 @@
           class="box">
           <ControlPanel/>
         </div>
+
+        <!-- Additional controll widgets -->
         <div
-          v-if="showStageControls"
+          v-for="(control, index) in controls"
+          :key="index"
           class="box">
-          <StageControlsPresenter/>
+          <component :is="control"/>
         </div>
 
         <!-- Users online -->
@@ -46,10 +49,8 @@
           v-if="showProposal"
           class="box content">
           <ProposalReader
-            v-if="showProposalReader"/>
-          <div
-            v-else
-            v-html="proposal.content"/>
+            :mode="proposalReaderMode"
+            :comments="proposalComments"/>
         </div>
       </div>
     </div>
@@ -81,9 +82,16 @@ import CommentsView from '@/components/meeting/stages/views/CommentsView.vue';
 import DiscussionView from '@/components/meeting/stages/views/DiscussionView.vue';
 import FinalView from '@/components/meeting/stages/views/FinalView.vue';
 
+// controlls components
+
+import BallotControls from '@/components/meeting/stages/controls/BallotControls.vue';
+import CommentsControls from '@/components/meeting/stages/controls/CommentsControls.vue';
+import DiscussionControls from '@/components/meeting/stages/controls/DiscussionControls.vue';
+import FinalControls from '@/components/meeting/stages/controls/FinalControls.vue';
+
 // view vidgets
 
-import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
+// import CommentsList from '@/components/meeting/stages/widgets/CommentsList.vue';
 import BallotResults from '@/components/meeting/stages/widgets/BallotResults.vue';
 
 
@@ -121,6 +129,10 @@ export default {
       return this.stageProposal;
     },
 
+    proposalComments() {
+      return this.$stage.comments || [];
+    },
+
     /**
      * Show proposal or not?
      */
@@ -129,19 +141,13 @@ export default {
     },
 
     /**
-     * Show stage controls or not?
-     */
-    showStageControls() {
-      return this.stageConfig.controls === true;
-    },
-
-    /**
      * Show proposal reader or content?
      */
-    showProposalReader() {
+    proposalReaderMode() {
       const { config } = this.$stage;
-      return this.isPresenter === false // user is not presenter
-        && (config && config.proposalInParts === true);
+      return this.isPresenter
+        ? 'all' // show whole proposal if user is presenter
+        : config.proposalDisplayMode || 'all';
     },
 
     /**
@@ -165,6 +171,10 @@ export default {
       return this.$store.state.meeting.closed;
     },
 
+    controls() {
+      return this.stageConfig.controls;
+    },
+
     widgets() {
       return this.stageConfig.widgets;
     },
@@ -180,24 +190,28 @@ export default {
         },
         AgendaStage: {
           title: 'Agenda',
+          controls: [],
           widgets: [
             AgendaView
           ]
         },
         AcquaintanceStage: {
           title: 'Acquaintance',
-          controls: false,
           type: true,
+          controls: [
+            CommentsView
+          ],
           widgets: [
             AcquaintanceView,
-            BallotResults,
-            CommentsList
+            BallotResults
           ]
         },
         BallotStage: {
           title: 'Ballot',
-          controls: true,
           type: true,
+          controls: [
+            BallotControls
+          ],
           widgets: [
             BallotView
           ]
@@ -205,29 +219,34 @@ export default {
         BallotResultsStage: {
           title: 'Ballot results',
           type: true,
+          controls: [],
           widgets: [
             BallotResultsView
           ]
         },
         DiscussionStage: {
           title: 'Discussion',
-          controls: true,
           type: true,
+          controls: [
+            DiscussionControls
+          ],
           widgets: [
             DiscussionView
           ]
         },
         CommentsStage: {
           title: 'Comments',
-          controls: true,
           type: true,
-          widgets: [
+          controls: [
+            CommentsControls,
             CommentsView
           ]
         },
         FinalStage: {
           title: 'Final',
-          controls: true,
+          controls: [
+            FinalControls
+          ],
           widgets: [
             FinalView
           ]

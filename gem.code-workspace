@@ -1,0 +1,95 @@
+{
+	"folders": [
+		{
+			"name": "Database",
+			"path": "gem/services/db"
+		},
+		{
+			"name": "GEM Server Common",
+			"path": "gem/services/gem-server"
+		},
+		{
+			"name": "Meeting Server",
+			"path": "gem/services/meeting"
+		},
+		{
+			"name": "Portal Server",
+			"path": "gem/services/portal"
+		},
+		{
+			"name": "Office Server",
+			"path": "gem/services/office"
+		},
+		{
+			"name": "Bar Server",
+			"path": "gem/services/bar"
+		},
+		{
+			"name": "PDF Printer Service",
+			"path": "gem/services/pdf-printer"
+		},
+		{
+			"name": "Search Service",
+			"path": "gem/services/search"
+		},
+		{
+			"name": "Web Server",
+			"path": "gem/services/web"
+		},
+		{
+			"name": "Portal Client",
+			"path": "gem/frontend/portal"
+		},
+		{
+			"name": "Integrational Tests",
+			"path": "gem/tests"
+		},
+		{
+			"name": "Documentation",
+			"path": "doc"
+		}
+	],
+	"extensions": {
+		"recommendations": [
+		  "ms-python.python",
+		  "mubaidr.vuejs-extension-pack",
+		  "msjsdiag.debugger-for-chrome",
+		  "mikestead.dotenv",
+		  "PeterJausovec.vscode-docker",
+		  "aaron-bond.better-comments",
+		  "esbenp.prettier-vscode",
+		  "njpwerner.autodocstring"
+		]
+	  },
+	  "settings": {
+		"python.unitTest.pyTestArgs": [
+			"--disable-warnings"
+		],
+		"python.pythonPath": "/usr/local/bin/python3",
+		"python.linting.enabled": true,
+		"prettier.eslintIntegration": true,
+		"prettier.singleQuote": true,
+		"prettier.arrowParens": "avoid",
+		"prettier.trailingComma": "none",
+		"eslint.autoFixOnSave": true,
+		"eslint.validate": [
+		  {
+			"autoFix": true,
+			"language": "javascript"
+		  },
+		  {
+			"autoFix": true,
+			"language": "vue"
+		  }
+		],
+		"python.linting.pylintArgs": [
+			"--disable=E0401,E0611"
+		],
+		"files.exclude": {
+			"__pycache__": true,
+			".pytest_cache": true,
+			".vscode": true,
+			"node_modules": true
+		}
+	}
+}

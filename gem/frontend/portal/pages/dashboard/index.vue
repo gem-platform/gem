@@ -9,82 +9,90 @@
 
     <!-- Editable switch -->
     <div class="field">
-      <b-switch v-model="editable">
+      <b-switch
+        id="editable"
+        v-model="editable">
         Editable
       </b-switch>
     </div>
 
     <!-- List of days -->
-    <transition-group
-      name="events-list"
-      tag="div">
+
+    <div
+      v-for="(day, di) in view"
+      :key="day.date"
+      :id="'group-'+di"
+      class="box">
+
+      <!-- Date field -->
       <div
-        v-for="day in view"
-        :key="day.date"
-        class="box">
+        class="field is-grouped">
+        <b-input
+          :readonly="!editable"
+          v-model="day.newDate"
+          expanded
+          placeholder="Date"
+          size="is-large"
+          data-role="date"
+          @blur="onDateChanged(day.date, day.newDate, day.events)"/>
 
-        <!-- Date field -->
-        <div class="field is-grouped">
-          <b-input
-            :readonly="!editable"
-            v-model="day.newDate"
-            expanded
-            placeholder="Date"
-            size="is-large"
-            @blur="onDateChanged(day.date, day.newDate, day.events)"/>
-          <!-- Add new event to current day button -->
-          <button
-            v-if="editable"
-            class="button is-large"
-            @click="addEvent(day.date)">+</button>
-        </div>
-
-        <!-- List of events for specified day -->
-        <transition-group
-          name="events-list"
-          tag="div">
-          <div
-            v-for="event in day.events"
-            :key="event._id"
-            class="field is-grouped">
-
-            <!-- Start time -->
-            <b-input
-              v-model="event.start"
-              :readonly="!editable"
-              placeholder="Start"
-              class="short"
-              @blur="onEventChanged(event)"/>
-
-            <!-- End time -->
-            <b-input
-              v-model="event.end"
-              :readonly="!editable"
-              placeholder="End"
-              class="short"
-              @blur="onEventChanged(event)"/>
-
-            <!-- Title and type field -->
-            <b-input
-              v-model="event.title"
-              :readonly="!editable"
-              placeholder="Name"
-              expanded
-              @input="onEventChanged(event);"/>
-
-            <!-- Delete event button -->
-            <button
-              v-if="editable"
-              class="button"
-              @click="removeEvent(event)">
-              <span class="icon">
-                <i class="fa fa-trash"/>
-              </span>
-            </button>
-          </div>
-        </transition-group>
+        <!-- Add new event to current day button -->
+        <button
+          v-if="editable"
+          data-role="add-event"
+          class="button is-large"
+          @click="addEvent(day.date)">+</button>
       </div>
-    </transition-group>
+
+      <!-- List of events for specified day -->
+
+      <div
+        v-for="(event, ei) in day.events"
+        :id="'event-'+di+'-'+ei"
+        :key="event._id"
+        class="field is-grouped">
+
+        <!-- Start time -->
+        <b-input
+          v-model="event.start"
+          :readonly="!editable"
+          placeholder="Start"
+          class="short"
+          data-role="start"
+          @blur="onEventChanged(event)"/>
+
+        <!-- End time -->
+        <b-input
+          v-model="event.end"
+          :readonly="!editable"
+          placeholder="End"
+          class="short"
+          data-role="end"
+          @blur="onEventChanged(event)"/>
+
+        <!-- Title and type field -->
+        <b-input
+          v-model="event.title"
+          :readonly="!editable"
+          class="title"
+          placeholder="Name"
+          data-role="title"
+          expanded
+          @input="onEventChanged(event);"/>
+
+        <!-- Delete event button -->
+        <button
+          v-if="editable"
+          class="button"
+          data-role="delete"
+          @click="removeEvent(event)">
+          <span class="icon">
+            <i class="fa fa-trash"/>
+          </span>
+        </button>
+      </div>
+    </div>
+
 
     <!-- Control buttons -->
     <div
@@ -93,6 +101,7 @@
       <!-- Add new day button -->
       <p class="control">
         <button
+          id="add-day"
           class="button is-light"
           @click="addDay">Add day</button>
       </p>
@@ -100,6 +109,7 @@
       <!-- Save changes button -->
       <p class="control">
         <button
+          id="save"
           :disabled="!hasChanges"
           class="button is-light"
           @click="save">Save</button>
@@ -254,6 +264,9 @@ export default {
      */
     removeEvent(event) {
       const idx = _.findIndex(this.events, x => x._id === event._id);
+
+      console.log(this.events, event, idx);
+
       this.$delete(this.events, idx);
       this.onEventChanged(event, 'delete');
     },
@@ -277,8 +290,11 @@ export default {
             this.$store.dispatch('dashboard/meetings/update', data);
             this.$store.dispatch('dashboard/meetings/save', data);
           } else {
+            delete event._new;
             delete data._id;
-            this.$store.dispatch('dashboard/meetings/save', data);
+            this.$store.dispatch('dashboard/meetings/save', data).then((res) => {
+              event._id = res._id;
+            });
           }
         } else {
           this.$store.dispatch('dashboard/meetings/remove', { id });
@@ -294,7 +310,7 @@ export default {
       }
 
       // Return back to readonly state
-      this.changes = [];
+      this.changes = {};
       this.editable = false;
     }
   },
@@ -309,15 +325,5 @@ export default {
 .short {
   max-width: 75px;
   width: 75px;
-}
-
-.events-list-move {
-  transition: transform .5s;
-}
-.events-list-enter-active, .events-list-leave-active {
-  transition: all .5s;
-}
-.events-list-enter, .events-list-leave-to {
-  opacity: 0;
 }
 </style>

@@ -1,0 +1,160 @@
+[
+    { 
+        "$type": "Role",
+        "id": "5bb73cac20847c0000da8291",
+        "name": "Superuser",
+        "priority": 99,
+        "permissions": ["*"]
+    },
+    { 
+        "$type": "Role",
+        "id": "5bb73cac20847c0000da8292",
+        "name": "GBC",
+        "priority": 1,
+        "permissions": [
+            "meeting.join", "meeting.vote", "meeting.comment",
+            "meeting.discuss"
+        ]
+    },
+    { 
+        "$type": "Role",
+        "id": "5bb73cac20847c0000da8293",
+        "name": "Deputy",
+        "priority": 2,
+        "permissions": [
+            "meeting.join", "meeting.vote", "meeting.comment",
+            "meeting.discuss"
+        ]
+    },
+    { 
+        "$type": "Role",
+        "id": "5bb73cac20847c0000da8294",
+        "name": "Secretary",
+        "priority": 3,
+        "permissions": [
+            "meeting.join", "meeting.vote", "meeting.comment",
+            "meeting.discuss", "meeting.manage"
+        ]
+    },
+    { 
+        "$type": "Role",
+        "id": "5bb73cac20847c0000da8295",
+        "name": "Guest",
+        "priority": 50,
+        "permissions": []
+    },
+    {
+        "$type": "User",
+        "$alias": "superuser",
+        "id": "5bb73d70206d3a000059bb85",
+        "name": "root",
+        "password": "root",
+        "roles": ["5bb73cac20847c0000da8291"]
+    },
+    {
+        "$type": "User",
+        "$alias": "gbc_user",
+        "id": "5bb73d70206d3a000059bb86",
+        "name": "GBC 01",
+        "password": "pass",
+        "roles": ["5bb73cac20847c0000da8292"]
+    },
+    {
+        "$type": "User",
+        "$alias": "deputy_user",
+        "id": "5bb73cac20847c0000da8293",
+        "name": "Deputy 01",
+        "password": "pass",
+        "roles": ["5bb73cac20847c0000da8293"]
+    },
+    {
+        "$type": "User",
+        "$alias": "secretary",
+        "id": "5bb73cac20847c0000da8294",
+        "name": "Secretary",
+        "password": "pass",
+        "roles": ["5bb73cac20847c0000da8294"]
+    },
+    {
+        "$type": "User",
+        "$alias": "guest",
+        "id": "5bb73cac20847c0000da8295",
+        "name": "Guest 01",
+        "password": "pass",
+        "roles": ["5bb73cac20847c0000da8295"]
+    },
+    { 
+        "$type": "WorkflowStage",
+        "id" : "5bb73e15499bf20000e9b196", 
+        "name" : "Review", 
+        "actions" : [
+            { "id" : "acquaintance" },
+            { "id" : "comments" },
+            { "id" : "discussion" },
+            { "id" : "ballot" },
+            { "id" : "ballot.results" }
+        ]
+    },
+    { 
+        "$type": "WorkflowStage",
+        "id" : "5bb73e15499bf20000e9b197", 
+        "name" : "Final Vote", 
+        "actions" : [
+            { "id" : "acquaintance" },
+            { "id" : "ballot" },
+            { "id" : "ballot.results" }
+        ]
+    },
+    {
+        "$type": "WorkflowType",
+        "id" : "5b8ab2a6df6e3a05d98c80a7", 
+        "name" : "General", 
+        "stages" : [
+            "5bb73e15499bf20000e9b196",
+            "5bb73e15499bf20000e9b197"
+        ]
+    },    
+    { 
+        "$type": "Proposal",
+        "id": "5a5deebeb5385609a9c9cea4",
+        "title" : "Proposal",
+        "index" : "P2018/10/01",
+        "content" : "Some content",
+        "workflow": "5b8ab2a6df6e3a05d98c80a7",
+        "stage": "5bb73e15499bf20000e9b196"
+    },
+    {
+        "$type": "Meeting",
+        "$alias": "meeting",
+        "id": "5a5deebeb5385609a9c9face",
+        "title" : "Meeting", 
+        "agenda" : "Meeting for testing purposes", 
+        "proposals" : [
+            "5a5deebeb5385609a9c9cea4"
+        ], 
+        "permissions" : [
+            { "scope": "meeting.join", "user":  "5bb73d70206d3a000059bb86" },
+            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8293" },
+            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8294" }
+        ], 
+        "start" : "2018-09-30 12:48:06",
+        "end" : "2018-09-30 12:48:06"
+    },
+    {
+        "$type": "Meeting",
+        "$alias": "meeting2",
+        "id": "5a5deebeb5385609a9c9fac1",
+        "title" : "Meeting 02", 
+        "agenda" : "Meeting for testing purposes", 
+        "proposals" : [
+            "5a5deebeb5385609a9c9cea4"
+        ], 
+        "permissions" : [
+            { "scope": "meeting.join", "user":  "5bb73d70206d3a000059bb86" },
+            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8293" },
+            { "scope": "meeting.join", "role":  "5bb73cac20847c0000da8294" }
+        ], 
+        "start" : "2018-09-30 12:48:06",
+        "end" : "2018-09-30 12:48:06"
+    }
+]

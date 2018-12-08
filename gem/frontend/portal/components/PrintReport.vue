@@ -73,7 +73,7 @@ export default {
         this.busy = true;
         const res = await this.$axios.$get(this.url, { params: this.params });
 
-        this.downloadUrl = `/downloads/${res.filename}`;
+        this.downloadUrl = `/media/${res.filename}`;
         this.downloadName = this.filename || res.filename;
       } catch (err) {
         this.notify('Report is not generated', 'is-danger');

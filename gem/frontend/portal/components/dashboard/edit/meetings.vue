@@ -3,6 +3,7 @@
     <!-- Name of the meeting -->
     <b-field label="Name">
       <b-input
+        id="title"
         v-model="title"
         placeholder="Title"
         size="is-large"/>
@@ -11,6 +12,7 @@
     <!-- Date and time of the meeting -->
     <b-field label="Select a date">
       <b-datepicker
+        id="date"
         v-model="date"
         placeholder="Click to select..."
         icon="calendar"
@@ -20,6 +22,7 @@
     <div class="columns">
       <div class="column">
         <b-field
+          id="start"
           label="Start time">
           <b-timepicker
             :readonly="false"
@@ -31,8 +34,10 @@
 
       <div class="column">
         <b-field
+          id="end"
           label="End time">
           <b-timepicker
+            id="end"
             :readonly="false"
             v-model="endTime"
             placeholder="Type or select a time..."
@@ -44,6 +49,7 @@
     <!-- Agenda -->
     <b-field label="Agenda">
       <b-input
+        id="agenda"
         v-model="agenda"
         type="textarea"
         placeholder="Agenda"/>
@@ -52,12 +58,14 @@
     <!-- Permissions -->
     <b-field label="Join permissions">
       <RolesAndUsers
+        id="join-permissions"
         v-model="permissionsJoin"
         @input="test" />
     </b-field>
 
     <b-field label="Vote permissions">
       <RolesAndUsers
+        id="vote-permissions"
         v-model="permissionsVote"
         @input="test"/>
     </b-field>
@@ -65,6 +73,7 @@
     <!-- Proposals -->
     <b-field label="Proposals">
       <Proposals
+        id="proposals"
         v-model="proposals" />
     </b-field>
   </div>

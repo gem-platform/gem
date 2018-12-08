@@ -1,0 +1,3 @@
+eve
+flask_cors
+sphinxapi-py3
