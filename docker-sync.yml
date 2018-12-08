@@ -15,4 +15,4 @@ syncs:
     monit_high_cpu_cycles: 2
 
   meeting-server-sync:
-    src: './gem/backend/meeting'
+    src: './gem/services/meeting'

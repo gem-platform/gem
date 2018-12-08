@@ -14,7 +14,7 @@ services:
   # all the GEM data
   db:
     restart: on-failure:5
-    build: ./gem/backend/db
+    build: ./gem/services/db
     volumes:
       - ./.data/db:/data/db
     ports:
@@ -26,7 +26,7 @@ services:
 
   search:
     restart: "no"
-    build: ./gem/backend/search
+    build: ./gem/services/search
     volumes:
       - ./.data/search/data:/var/lib/sphinx/data
       - ./.data/search/logs:/var/log/sphinx
@@ -45,7 +45,7 @@ services:
   web:
     restart: on-failure:5
     build: 
-      context: ./gem/backend/web
+      context: ./gem/services/web
       args:
         env: ${GEM_ENV-dev}
     ports:
@@ -58,7 +58,7 @@ services:
       - bar-server
       - portal
     volumes:
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./.data/shared/media:/usr/shared/media
       - ./.keys:/etc/nginx/ssl
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost/ || exit 1
@@ -71,41 +71,55 @@ services:
   # Base image for all python-based backend cantainers
   gem-server:
     image: gem-server:latest
-    build: ./gem/backend/gem-server
+    build: ./gem/images/gem-server
 
   ##
-  ## APPS: BACKEND
+  ## APPS: SERVICES
   ##
 
   # Meeting server
   meeting-server:
     image: meeting-server:latest
     restart: on-failure:5
-    build: ./gem/backend/meeting
+    build: ./gem/services/meeting
     expose:
       - 8090
       - 8099
     env_file:
       - environment.${GEM_ENV-dev}.env
     volumes:
-      - ./gem/backend/meeting:/usr/src/app
+      - ./gem/services/meeting:/usr/src/app
     depends_on:
       - gem-server
       - db
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost:8099 || exit 1
 
-  # Bar server
-  bar-server:
+  # Media server
+  media-server:
     restart: on-failure:5
-    build: ./gem/backend/bar
+    build: ./gem/services/media
     expose:
-      - 8190
+      - 8090
     env_file:
       - environment.${GEM_ENV-dev}.env
     volumes:
-      - ./gem/backend/bar:/usr/src/app
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./gem/services/media:/usr/src/app
+      - ./.data/shared/media:/usr/shared/media
+    depends_on:
+      - gem-server
+
+  # Bar server
+  bar-server:
+    restart: on-failure:5
+    build: ./gem/services/bar
+    expose:
+      - 8090
+    env_file:
+      - environment.${GEM_ENV-dev}.env
+    volumes:
+      - ./gem/services/bar:/usr/src/app
+      - ./.data/shared/media:/usr/shared/media
     depends_on:
       - gem-server
       - db
@@ -113,7 +127,7 @@ services:
   # Meeting server
   portal-server:
     restart: on-failure:5
-    build: ./gem/backend/portal
+    build: ./gem/services/portal
     expose:
       - 5000
     environment:
@@ -121,7 +135,7 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     volumes:
-      - ./gem/backend/portal:/usr/src/app
+      - ./gem/services/portal:/usr/src/app
     depends_on:
       - gem-server
       - db
@@ -131,7 +145,7 @@ services:
   # Office server
   office-server:
     restart: on-failure:5
-    build: ./gem/backend/office
+    build: ./gem/services/office
     expose:
       - 5001
     environment:
@@ -139,8 +153,8 @@ services:
     env_file:
       - environment.${GEM_ENV-dev}.env
     volumes:
-      - ./gem/backend/office:/usr/src/app
-      - ./.data/shared/downloads:/usr/shared/downloads
+      - ./gem/services/office:/usr/src/app
+      - ./.data/shared/media:/usr/shared/media
     depends_on:
       - gem-server
       - db
@@ -151,7 +165,7 @@ services:
   # PDF Printer
   pdf-printer:
     restart: on-failure:5
-    build: ./gem/backend/pdf-printer
+    build: ./gem/services/pdf-printer
     expose:
       - 4999
     healthcheck:

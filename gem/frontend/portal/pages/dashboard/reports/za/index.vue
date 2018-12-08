@@ -19,7 +19,7 @@
       <PrintReport
         :params="params"
         title="Zonal Assignments Report"
-        url="office/zonal/report"
+        url="office/zonal/assignments"
         filename="Zonal Assignments Report.pdf"/>
     </b-field>
   </div>

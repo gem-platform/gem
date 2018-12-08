@@ -57,7 +57,7 @@ export default {
       const formData = new FormData();
       formData.append('file', this.file);
       this.$axios.post(
-        '/bar/image', formData,
+        '/media/upload', formData,
         {
           headers: {
             'Content-Type': 'multipart/form-data'
