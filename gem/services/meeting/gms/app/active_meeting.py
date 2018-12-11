@@ -1,10 +1,13 @@
 from inspect import getmembers, isfunction
 
 from gem.core import Processor, Event
-from gms.app.context import Context
+from gem.db import User
+
 from gms.net.serializers.meeting import MeetingStageSerializer
+from gms.net.serializers.meeting import MeetingSerializer
 from gms.app._fill_meeting import fill_meeting
 from gms.meeting.stages import MeetingStages
+from gms.app.sessions import Sessions
 
 import gms.commands as commands
 
@@ -19,11 +22,11 @@ class ActiveMeeting:
         Arguments:
             meeting_id {str} -- Meeting id.
         """
-        # create execution context
         self.__meeting_id = meeting_id
-        self.__context = Context(meeting=self)
-        self.__context.send_message.subscribe(self.__on_send_message)
-        self.__context.sessions.changed.subscribe(self.__on_sessions_changed)
+
+        # sessions
+        self.__sessions = Sessions()
+        self.__sessions.changed.subscribe(self.__on_sessions_changed)
 
         # configure meeting stages
         self.__stages = MeetingStages()
@@ -40,7 +43,7 @@ class ActiveMeeting:
         processor_handlers = getmembers(commands, isfunction)
 
         # and register them as handler: func_name -> func
-        self.__processor = Processor(self.__context)
+        self.__processor = Processor(self)
         self.__processor.register_handlers(processor_handlers)
 
         # events
@@ -51,14 +54,8 @@ class ActiveMeeting:
             fill_meeting(self, meeting_id)
 
     @property
-    def context(self):
-        """
-        Returns meeting context.
-
-        Returns:
-            Object -- User defined context.
-        """
-        return self.__context
+    def stage(self):
+        return self.__stages.current
 
     @property
     def stages(self):
@@ -73,7 +70,6 @@ class ActiveMeeting:
     def allowed_users(self):
         # todo: return readonly
         return self.__allowed_users
-
 
     # Events
 
@@ -119,6 +115,109 @@ class ActiveMeeting:
         """
         return self.__processor.exec(event, *data)
 
+    @property
+    def sessions(self):
+        """
+        Return sessions.
+
+        Returns:
+            Sessions -- Sessions.
+        """
+        return self.__sessions
+
+    # User section
+
+    def find_user(self, id):
+        return User.objects.get(pk=id)
+
+    def get_user(self, sid):
+        return self.__sessions.get(sid)
+
+    def get_user_by_token(self, token):
+        """
+        Return user by specified credentials.
+
+        Arguments:
+            token {str} -- Authentication token.
+
+        Returns:
+            User -- User associated with specified token.
+        """
+        # todo: token != user_id
+        allowed_users = self.allowed_users
+        users = filter(lambda x: str(x.id) == token, allowed_users)
+        users = list(users)
+        if len(users) == 1:
+            return users[0]
+        return None
+
+    def get_user_by_id(self, user_id):
+        """
+        Return user by specified id.
+
+        Arguments:
+            user_id {str} -- User id.
+
+        Returns:
+            User -- User associated with specified id.
+        """
+        users = filter(lambda x: str(x.id) == user_id,
+                       self.allowed_users)
+        users = list(users)
+        return users[0] if len(users) == 1 else None
+
+    def login_user(self, sid, user):
+        """
+        Turn user to authenticated state.
+
+        Arguments:
+            sid {str} -- Session id.
+            user {User} -- User to authenticate.
+        """
+        self.__sessions.save(sid, user)
+
+    def logout_user(self, sid):
+        """
+        Turn user to unauthenticated state.
+
+        Arguments:
+            sid {str} -- Session id.
+        """
+        self.__sessions.delete(sid)
+
+    # actions
+
+    def close_meeting(self):
+        # move all proposals to the next stage
+        for proposal in self.proposals:
+            # skip if no workflow or workflow stages specified
+            if not (proposal.workflow and proposal.workflow.stages):
+                continue
+
+            # get workflow data
+            stages = proposal.workflow.stages
+            stage = proposal.stage
+
+            try:
+                # calculate index
+                current_index = stages.index(stage)
+                next_index = current_index + 1
+
+                # set next stage from workflow
+                if next_index <= len(stages) - 1:
+                    proposal.stage = stages[next_index]
+                    proposal.save()
+            except ValueError:
+                pass
+
+    def send(self, message, data, to=None):
+        self.send_message.notify(message, data, to)
+
+    def full_sync(self):
+        serializer = MeetingSerializer()
+        meeting_state = serializer.serialize(self)
+        self.send_message.notify("full_sync", meeting_state)
+
     def __on_stage_changed(self, index, stage):
         """
         State of the a stage has been changed.
@@ -140,9 +239,4 @@ class ActiveMeeting:
         List of active sessions are changed.
         Update list of online users for clients.
         """
-        state = self.__context.sessions.state
-        self.send_message.notify("meeting_users_online", state)
-
-    def __on_send_message(self, message, data, to=None):
-        """Send message requested."""
-        self.send_message.notify(message, data, to)
+        self.send("meeting_users_online", self.sessions.state)

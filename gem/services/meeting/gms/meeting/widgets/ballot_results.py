@@ -10,14 +10,8 @@ class BallotSerializeMixin:
         if not stage.ballot:
             return 0
 
-        # it's impossible to calculate percentage without context
-        # (we need: users online) so raise an exception
-        if not stage.meeting.context:
-            raise Exception("No context provided")
-
-        # gets list of online users using meeting context
-        context = stage.meeting.context
-        users_online = context.sessions.online
+        # gets list of online users
+        users_online = stage.meeting.sessions.online
         users_can_vote = self.__users_can_vote(users_online)
 
         # no one user can vote here

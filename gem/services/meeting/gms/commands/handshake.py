@@ -7,7 +7,7 @@ from ._aux import permissions_required
 LOG = getLogger("meetings")
 
 
-def connect(context, sid, environ):
+def connect(meeting, sid, environ):
     """New client connected to server."""
     # new socket connection received
     # with specified session id (sid)
@@ -17,22 +17,22 @@ def connect(context, sid, environ):
     LOG.info("Client %s connected", sid)
 
 
-def disconnect(context, sid, data=None):
+def disconnect(meeting, sid, data=None):
     """Client disconnected from server."""
     # socket connection with specified
     # session id is closed
     # todo: remove from "spectators" list (if present)
     LOG.info("Client %s disconnected", sid)
-    context.logout_user(sid)
+    meeting.logout_user(sid)
 
 
-def handshake(context, sid, data):
+def handshake(meeting, sid, data):
     """Handshake message received."""
     LOG.info("Handshake received from '%s'", sid)
 
     # find user using specified credentials
     token = data.get("token", None)
-    user = context.get_user_by_token(token)
+    user = meeting.get_user_by_token(token)
 
     # no user found using specified credentails
     # send response with meaningful info
@@ -44,17 +44,17 @@ def handshake(context, sid, data):
         }
 
     # no meeting found (wrong ID, exception while loading meeting)
-    if not context.meeting:
+    if not meeting:
         return {"success": False, "message": "Meeting not found"}
 
     # user found by specified credentials, so login
     # him by associating sessionId (sid) with model (user)
-    context.login_user(sid, user)
+    meeting.login_user(sid, user)
 
     # serialize whole meeting state and return
     # it as response to the "handshake" request
     serializer = MeetingSerializer()
-    meeting_state = serializer.serialize(context.meeting)
+    meeting_state = serializer.serialize(meeting)
 
     # send response
     return {
@@ -63,18 +63,18 @@ def handshake(context, sid, data):
         "state": meeting_state
     }
 
-def request_access(context, sid, data):
+def request_access(meeting, sid, data):
     """The user does not have permission to access the meeting,
        and he is requesting access rights."""
     token = data.get("token", None)
-    user = context.find_user(token)
+    user = meeting.find_user(token)
 
     # no user found to grant access to
     if not user:
         return {"success": False, "message": "No user found"}
 
     # request access
-    context.sessions.requests.add(sid, user)
+    meeting.sessions.requests.add(sid, user)
 
     # send response
     return {
@@ -84,24 +84,24 @@ def request_access(context, sid, data):
     }
 
 @permissions_required(["meeting.manage"])
-def grant_access(context, sid, data):
+def grant_access(meeting, sid, data):
     """Grant access rights."""
     token = data.get("token", None)
     value = data.get("value", False)
-    user = context.find_user(token)
-    response_sid = context.sessions.requests.sid(user)
+    user = meeting.find_user(token)
+    response_sid = meeting.sessions.requests.sid(user)
 
     # session ID was not found
     if not response_sid:
         return {"success": False, "message": "Session ID was not found"}
 
     if value:  # access granted
-        response = {"success": True, "id": context.meeting.meeting_id}
-        context.meeting.allowed_users.append(user)
-        context.full_sync()
-        context.send("open_meeting", response, response_sid)
+        response = {"success": True, "id": meeting.meeting_id}
+        meeting.allowed_users.append(user)
+        meeting.full_sync()
+        meeting.send("open_meeting", response, response_sid)
     else:  # request was rejected
         response = {"success": False, "message": "Your access request has been rejected"}
-        context.send("open_meeting", response, response_sid)
+        meeting.send("open_meeting", response, response_sid)
 
     return {"success": True}

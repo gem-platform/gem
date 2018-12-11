@@ -18,17 +18,17 @@ class ActiveMeetings:
         self.__status_changed = Event()
 
         self.__log = getLogger("root")
-        self.__comm_log = getLogger('communication')
-        self.__meetings_log = getLogger('meetings')
+        self.__comm_log = getLogger("communication")
+        self.__meetings_log = getLogger("meetings")
 
-    @property
-    def active(self):
-        return self.__active
+    # @property
+    # def active(self):
+    #     return self.__active
 
     @property
     def status_changed(self):
         """
-        Status of active meetings changes.
+        Status of active meetings changed.
 
         Returns:
             Event -- Event.
@@ -52,7 +52,7 @@ class ActiveMeetings:
 
     def status(self):
         status = list(self.__active.keys())
-        online = {k: len(v.context.sessions.online) for k, v in self.__active.items()}
+        online = {k: len(v.sessions.online) for k, v in self.__active.items()}
         return {"active": status, "online": online}
 
     def command(self, event, *data):
@@ -99,13 +99,12 @@ class ActiveMeetings:
         if exist:
             return exist
 
-        # no active meetings with specified id found
-        # open new one
+        # no active meetings with specified ID found, so open new one
         self.__meetings_log.debug("Opening new meeting %s", meeting_id)
         new_meeting = ActiveMeeting(meeting_id)
         # todo: unsubscribe then meeting closed in __close_empty_meetings
         new_meeting.state_changed.subscribe(self.__state_changed(meeting_id))
-        new_meeting.context.sessions.changed.subscribe(self.__on_sessions_changed)
+        new_meeting.sessions.changed.subscribe(self.__on_sessions_changed)
         new_meeting.send_message.subscribe(self.__send_message(meeting_id))
         self.__active[meeting_id] = new_meeting
         return new_meeting
@@ -135,7 +134,7 @@ class ActiveMeetings:
         if sid in self.__connection:
             self.__meetings_log.debug("Remove %s from previous meeting.", sid)
             prev_meeting = self.__connection[sid]
-            prev_meeting.context.sessions.delete(sid)
+            prev_meeting.sessions.delete(sid)
             self.__leave.notify(sid, prev_meeting.meeting_id)
 
         # get meeting by specified id
@@ -155,7 +154,7 @@ class ActiveMeetings:
     def __close_empty_meetings(self):
         # stop active meetings if no connections
         meetings_to_close = [m for m in self.__active.values()
-                             if not m.context.sessions.online]
+                             if not m.sessions.online]
 
         # nothing to close. quit
         if not meetings_to_close:
