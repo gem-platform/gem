@@ -30,7 +30,7 @@ class AcquaintanceMeetingStage(MeetingStage):
         Returns:
             dict -- Progress { count: NUM, values: { USER_ID: 0-1 } }
         """
-        readers_count = len(self.meeting.context.sessions.online)
+        readers_count = len(self.meeting.sessions.online)
         return {
             "count": readers_count,
             "values": self.__progress

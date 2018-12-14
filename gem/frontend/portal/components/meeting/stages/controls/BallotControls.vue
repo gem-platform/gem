@@ -15,7 +15,9 @@
       </b-field>
 
       <!-- Ballot threshold -->
-      <b-field label="Threshold">
+      <b-field
+        v-if="showThreshold"
+        label="Threshold">
         <b-select
           v-model="threshold"
           placeholder="Ballot threshold"
@@ -110,6 +112,14 @@ export default {
      */
     canManage() {
       return this.haveAccess('meeting.manage') && !this.finished;
+    },
+
+    /**
+     * Show threshold dropdown?
+     */
+    showThreshold() {
+      const { config } = this.$stage;
+      return config ? !!config.enableThreshold : false;
     }
   },
   methods: {
