@@ -95,6 +95,8 @@ import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 
 import BasicActionConfig from '@/components/dashboard/edit/actions/BasicActionConfig.vue';
 import AcquaintanceActionConfig from '@/components/dashboard/edit/actions/AcquaintanceActionConfig.vue';
+import BallotActionConfig from '@/components/dashboard/edit/actions/BallotActionConfig.vue';
+import BallotResultsActionConfig from '@/components/dashboard/edit/actions/BallotResultsActionConfig.vue';
 
 export default {
   filters: {
@@ -112,6 +114,8 @@ export default {
   components: {
     Draggable,
     AcquaintanceActionConfig,
+    BallotActionConfig,
+    BallotResultsActionConfig,
     BasicActionConfig
   },
   mixins: [
@@ -142,6 +146,8 @@ export default {
   methods: {
     control(id) {
       if (id === 'acquaintance') return AcquaintanceActionConfig;
+      if (id === 'ballot') return BallotActionConfig;
+      if (id === 'ballot.results') return BallotResultsActionConfig;
       return undefined;
     },
     actionChanged({ index, value }) {

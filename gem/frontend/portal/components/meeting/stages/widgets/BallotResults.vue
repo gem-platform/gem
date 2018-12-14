@@ -10,6 +10,7 @@
       v-if="summaryData.length > 0">
 
       <div
+        v-if="showResult"
         :class="{'is-success': result=='pass',
                  'is-danger': result=='fail',
                  'is-warning': result=='tie'}"
@@ -73,6 +74,10 @@ export default {
     header: {
       type: String,
       default() { return 'Ballot results'; }
+    },
+    showResult: {
+      type: Boolean,
+      default() { return false; }
     }
   },
   computed: {
