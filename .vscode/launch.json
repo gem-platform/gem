@@ -1,0 +1,18 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: GEM Meeting Server",
+            "type": "python",
+            "request": "attach",
+            "port": 9876,
+            "host": "localhost",
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder}/gem/services/meeting",
+                    "remoteRoot": "/usr/src/app/"
+                }
+            ],
+        }
+    ]
+}
