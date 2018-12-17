@@ -75,10 +75,10 @@
 
     <p class="heading has-text-centered">Utils</p>
     <div class="field is-grouped is-grouped-multiline">
-      <p class="control ">
-        <a
-          class="button"
-          @click="requestQuickBallot">Quick ballot</a>
+      <p class="control is-expanded">
+        <button
+          class="button is-fullwidth"
+          @click="requestQuickBallot">Quick ballot</button>
       </p>
     </div>
   </div>
