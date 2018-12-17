@@ -1,5 +1,5 @@
 <template>
-  <form action="">
+  <form>
     <div
       class="modal-card"
       style="width: auto">
@@ -8,12 +8,20 @@
       </header>
 
       <section class="modal-card-body">
+        <b-field label="Question">
+          <b-input
+            v-model="question"
+            size="is-large"
+            placeholder="Question" />
+        </b-field>
+
+        <label class="label">Options</label>
         <b-field
           v-for="(option, idx) in options"
-          :key="option">
+          :key="idx">
           <b-input
-            :value="option"
-            :placeholder="'Option ' + idx" />
+            v-model="options[idx]"
+            :placeholder="'Option ' + (idx + 1)" />
         </b-field>
       </section>
 
@@ -50,7 +58,8 @@ export default {
   mixins: [CommunicationMixin, NotificationMixin],
   data() {
     return {
-      options: [undefined, undefined]
+      options: ['', ''],
+      question: ''
     };
   },
   methods: {
@@ -59,7 +68,17 @@ export default {
      */
     async create() {
       try {
-        await this.request({ command: 'quick_ballot', data: this.options });
+        // Request a new Quick Ballot.
+        await this.request({
+          command: 'request_quick_ballot',
+          data: {
+            question: this.question,
+            options: this.options
+          }
+        });
+
+        // New Quick Baloot has been requested. So close dialog,
+        this.$parent.close();
       } catch (e) {
         this.notify(e.message, 'is-danger');
       }

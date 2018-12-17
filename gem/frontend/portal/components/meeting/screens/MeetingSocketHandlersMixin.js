@@ -1,3 +1,5 @@
+import QuickBallot from '@/components/meeting/QuickBallot.vue';
+
 export default {
   mounted() {
     this.$socket.on('disconnect', this.disconnect);
@@ -7,6 +9,7 @@ export default {
     this.$socket.on('stage_timer', this.stage_timer);
     this.$socket.on('close', this.close);
     this.$socket.on('full_sync', this.fullSync);
+    this.$socket.on('quick_ballot', this.quickBallot);
 
     this.sendHandshake();
   },
@@ -18,6 +21,7 @@ export default {
     this.$socket.off('stage_timer', this.stage_timer);
     this.$socket.off('close', this.close);
     this.$socket.off('full_sync', this.fullSync);
+    this.$socket.off('quick_ballot', this.quickBallot);
   },
   methods: {
     disconnect(reason) {
@@ -79,6 +83,14 @@ export default {
     },
     fullSync(data) {
       this.$store.dispatch('meeting/meetingState', data);
+    },
+    quickBallot(data) {
+      this.$modal.open({
+        parent: this,
+        component: QuickBallot,
+        hasModalCard: true,
+        props: data
+      });
     }
   }
 };

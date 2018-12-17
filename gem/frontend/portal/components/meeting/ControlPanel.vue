@@ -176,7 +176,7 @@ export default {
     },
 
     /**
-     *
+     * Open dialog to create a new Quick Ballot.
      */
     requestQuickBallot() {
       this.$modal.open({
