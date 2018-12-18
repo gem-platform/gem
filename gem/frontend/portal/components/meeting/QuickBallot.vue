@@ -28,7 +28,7 @@
             {{ option }}
             <span v-if="isVoteCommited">
               &nbsp;
-              ({{ (results[idx] || 0) / onlineCount * 100 }}% /
+              ({{ Math.floor((results[idx] || 0) / onlineCount) * 100 }}% /
               {{ results[idx] || 0 }} votes)
             </span>
           </button>
