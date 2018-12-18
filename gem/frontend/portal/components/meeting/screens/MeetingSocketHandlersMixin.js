@@ -1,4 +1,5 @@
 import QuickBallot from '@/components/meeting/QuickBallot.vue';
+import QuorumChange from '@/components/meeting/QuorumChange.vue';
 
 export default {
   mounted() {
@@ -10,6 +11,7 @@ export default {
     this.$socket.on('close', this.close);
     this.$socket.on('full_sync', this.fullSync);
     this.$socket.on('quick_ballot', this.quickBallot);
+    this.$socket.on('quorum_change', this.quorumChange);
 
     this.sendHandshake();
   },
@@ -22,6 +24,7 @@ export default {
     this.$socket.off('close', this.close);
     this.$socket.off('full_sync', this.fullSync);
     this.$socket.off('quick_ballot', this.quickBallot);
+    this.$socket.off('quorum_change', this.quorumChange);
   },
   methods: {
     disconnect(reason) {
@@ -91,6 +94,24 @@ export default {
         hasModalCard: true,
         props: data
       });
+    },
+    quorumChange(data) {
+      if (data.stage === 'request') {
+        // Quorum change request has been received
+        this.$modal.open({
+          parent: this,
+          component: QuorumChange,
+          hasModalCard: true,
+          props: data
+        });
+      } else if (data.stage === 'final') {
+        // Quorum change results has been received
+        this.$dialog.alert({
+          title: 'Quorum',
+          message: `Quorum has been changed to <b>${data.value}</b>`,
+          confirmText: 'Ok'
+        });
+      }
     }
   }
 };

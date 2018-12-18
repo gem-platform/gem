@@ -38,6 +38,7 @@ class ActiveMeeting:
         self.start = None
         self.end = None
         self.quick_ballot = QuickBallot()
+        self.quorum = Quorum()
 
         # configure processor:
         # get list of all functions in module
@@ -266,3 +267,23 @@ class QuickBallot():
         else:
             self.__result[value] = 1  # this is a first vote
         return self.results
+
+class Quorum:
+    def __init__(self):
+        self.__value = 19
+        self.__new_value = -1
+        self.__votes = {}
+
+    @property
+    def value(self):
+        return self.__value
+
+    def request_change(self, value):
+        self.__new_value = value
+
+    def vote_change(self, user, value) -> bool:
+        self.__votes[str(user.id)] = value
+
+        # change is approved (for now)
+        self.__value = self.__new_value
+        return True

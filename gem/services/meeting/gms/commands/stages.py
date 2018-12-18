@@ -134,6 +134,30 @@ def quick_ballot_vote(meeting, sid, data):
     return {"success": True}
 
 
+def request_quorum_change(meeting, sid, data):
+    """Change quorum request received."""
+    value = int(data.get("value", None))
+    meeting.quorum.request_change(value)
+    meeting.send("quorum_change", {
+        "value": value, "stage": "request"
+    })
+    return {"success": True}
+
+
+def vote_quorum_change(meeting, sid, data):
+    """Commit a vote for change a quorum."""
+    value = data.get("value", None)
+    user = meeting.get_user(sid)
+    result = meeting.quorum.vote_change(user, value)
+
+    # quorum change is approved -> notify users
+    if result:
+        meeting.send("quorum_change", {
+            "value": meeting.quorum.value, "stage": "final"
+        })
+
+    return {"success": True}
+
 # Info
 
 def user_inactive(meeting, sid, data):
