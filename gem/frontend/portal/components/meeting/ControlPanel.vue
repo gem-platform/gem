@@ -80,6 +80,11 @@
           class="button is-fullwidth"
           @click="requestQuickBallot">Quick ballot</button>
       </p>
+      <p class="control is-expanded">
+        <button
+          class="button is-fullwidth"
+          @click="requestQuorumChange">Change Quorum</button>
+      </p>
     </div>
   </div>
 </template>
@@ -87,6 +92,7 @@
 <script>
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 import RequestQuickBallot from '@/components/meeting/RequestQuickBallot.vue';
+import RequestQuorumChange from '@/components/meeting/RequestQuorumChange.vue';
 import NotificationMixin from '@/components/NotificationMixin';
 import CommunicationMixin from '@/components/CommunicationMixin';
 
@@ -182,6 +188,17 @@ export default {
       this.$modal.open({
         parent: this,
         component: RequestQuickBallot,
+        hasModalCard: true
+      });
+    },
+
+    /**
+     * Open dialog to request of qourum changing
+     */
+    requestQuorumChange() {
+      this.$modal.open({
+        parent: this,
+        component: RequestQuorumChange,
         hasModalCard: true
       });
     }

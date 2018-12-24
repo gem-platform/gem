@@ -8,7 +8,8 @@ export const state = () => ({
   start: undefined,
   end: undefined,
   attentionRequired: false,
-  closed: false
+  closed: false,
+  quorum: {}
 });
 
 export const mutations = {
@@ -47,6 +48,9 @@ export const mutations = {
   },
   setClose(state, value) {
     state.closed = value;
+  },
+  setQuorum(state, value) {
+    state.quorum = value;
   }
 };
 
@@ -71,6 +75,7 @@ export const actions = {
     context.commit('setStageIndex', data.stages.index);
     context.commit('setMeetingStart', data.start);
     context.commit('setMeetingEnd', data.end);
+    context.commit('setQuorum', data.quorum);
   },
   attentionRequired({ commit }, value) {
     commit('setAttentionRequired', value);
@@ -92,5 +97,8 @@ export const getters = {
   },
   proposals(state) {
     return state.proposals;
+  },
+  quorum(state) {
+    return state.quorum;
   }
 };

@@ -139,11 +139,21 @@ export default {
       group: 'Meeting'
     },
     {
+      _id: 'meeting.quorum_change',
+      name: 'Change quorum',
+      desc: 'Change quorum',
+      group: 'Meeting'
+    },
+
+    // Presenter
+    {
       _id: 'meeting.presenter',
       name: 'Presenter',
       desc: 'Hide all controls',
       group: 'Meeting'
     },
+
+    // Bar
     {
       _id: 'bar.manage',
       name: 'Manage Bar',

@@ -51,12 +51,19 @@ class MeetingSerializer:
         # convert array of users to dict keyed by user id
         users = {str(u.id): self.__map_user(u) for u in set(meeting.allowed_users) | depends_users}
 
+        # quorum
+        users_can_change_quorum = list(map(lambda x: str(x.id), meeting.quorum.users_can_change))
+
         # return list of all stages with theirs current states
         # list of proposals used in current meeting
         return {
             "stages": {
                 "list": stages,
                 "index": meeting.stages.index,
+            },
+            "quorum": {
+                "value": meeting.quorum.value,
+                "users_can_change": users_can_change_quorum
             },
             "proposals": proposals,
             "users": users,
@@ -157,6 +164,11 @@ class BallotMeetingStageSerializer(BallotSerializeMixin):
             "finished": stage.ballot.finished,
             "config": stage.config
         }
+
+    def depends_on(self, stage):
+        users = set(meeting.quorum.users_can_change)
+        roles = set(chain.from_iterable(map(lambda x: x.roles, users)))
+        return {"users": users, "roles": roles}
 
 
 class BallotResultsMeetingStageSerializer(BallotSerializeMixin):

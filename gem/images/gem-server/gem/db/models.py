@@ -99,8 +99,10 @@ class User(GemDocument):
         permissions = chain.from_iterable([r.permissions for r in self.roles])
         return list(set(permissions))
 
-    def have_permission(self, permission):
-        return (permission in self.permissions) or ("*" in self.permissions)
+    def have_permission(self, permission, accept_superuser=True):
+        return \
+            (permission in self.permissions) or \
+            (("*" in self.permissions) and accept_superuser)
 
 
 class BallotRecord(EmbeddedDocument):
@@ -260,4 +262,3 @@ def update_cached_fields_of(sender, document, **kwargs):
 signals.pre_save.connect(finalize_ballot, sender=Ballot)
 signals.pre_save.connect(update_cached_fields, sender=Zone)
 signals.pre_save.connect(update_cached_fields_of, sender=Official)
-

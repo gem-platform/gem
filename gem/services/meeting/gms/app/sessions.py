@@ -93,6 +93,12 @@ class Sessions:
         """
         return self.__sessions.get(sid, None)
 
+    def get_session(self, user):
+        filtered = {sid: user for sid, s_user in self.__sessions.items() if user == s_user}
+        filtered = list(filtered.keys())
+        if len(filtered) == 1:
+            return filtered[0]
+
     def save(self, session_id, user):
         """
         Sets association between session id and user.
