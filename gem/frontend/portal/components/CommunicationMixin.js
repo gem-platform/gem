@@ -1,3 +1,11 @@
+class CommunicationError extends Error {
+  constructor(message, data) {
+    super(message);
+    this.name = 'CommunicationError';
+    this.data = data;
+  }
+}
+
 export default {
   methods: {
     send(command, data) {
@@ -17,11 +25,12 @@ export default {
           (success) => {
             resolve({
               message: success.message || options.success || 'Success',
-              success: true
+              success: true,
+              data: success
             });
           },
           (error) => {
-            reject(new Error(error.message || options.fail || 'Fail'));
+            reject(new CommunicationError(error.message || options.fail || 'Fail', error));
           }
         );
       });

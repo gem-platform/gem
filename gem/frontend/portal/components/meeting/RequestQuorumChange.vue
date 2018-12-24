@@ -8,11 +8,39 @@
       </header>
 
       <section class="modal-card-body">
+        <b-message
+          v-if="error"
+          type="is-danger">
+          {{ error }}
+        </b-message>
+
+        <b-message
+          v-if="users.length == 0"
+          type="is-danger">
+          No one can approve quorum change.
+        </b-message>
+
         <b-field label="Quorum value">
           <b-input
             v-model="value"
             size="is-large"
             placeholder="New quorum value" />
+        </b-field>
+
+        <b-field
+          v-if="users && users.length > 0"
+          label="Approval required from:">
+          <div
+            class="tags are-medium users-list">
+            <b-tag
+              v-for="user in users"
+              :key="user._id"
+              :class="{'is-success': isApprovedBy(user.id)}"
+              rounded
+              size="is-medium">
+              {{ user.name }}
+            </b-tag>
+          </div>
         </b-field>
       </section>
 
@@ -36,14 +64,27 @@
 
 <script>
 import CommunicationMixin from '@/components/CommunicationMixin';
-import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
-  mixins: [CommunicationMixin, NotificationMixin],
+  mixins: [CommunicationMixin],
   data() {
+    const usersCanChange = this.$store.getters['meeting/quorum'].users_can_change;
+    const usersStore = this.$store.getters['meeting/users'];
+
     return {
-      value: 19
+      value: 19,
+      users: usersCanChange.map(x => usersStore[x]),
+      approvedBy: [],
+      error: undefined
     };
+  },
+  mounted() {
+    this.$socket.on('quorum_change', this.quorumChange);
+    this.$socket.on('vote_quorum_change', this.voteQuorumChange);
+  },
+  beforeDestroy() {
+    this.$socket.off('quorum_change', this.quorumChange);
+    this.$socket.off('vote_quorum_change', this.voteQuorumChange);
   },
   methods: {
     /**
@@ -56,12 +97,26 @@ export default {
           command: 'request_quorum_change',
           data: { value: this.value }
         });
-
-        this.$parent.close();
       } catch (e) {
-        this.notify(e.message, 'is-danger');
+        this.error = e.message;
       }
+    },
+    quorumChange(data) {
+      if (data.stage === 'final' || data.stage === 'failed') {
+        this.$parent.close();
+      } else if (data.stage === 'progress') {
+        this.approvedBy = data.approved_by;
+      }
+    },
+    isApprovedBy(id) {
+      return this.approvedBy.includes(id);
     }
   }
 };
 </script>
+
+<style scoped>
+.users-list {
+  max-width: 350px;
+}
+</style>

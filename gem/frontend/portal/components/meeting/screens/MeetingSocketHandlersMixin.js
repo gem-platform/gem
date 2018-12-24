@@ -105,11 +105,20 @@ export default {
           props: data
         });
       } else if (data.stage === 'final') {
-        // Quorum change results has been received
         this.$dialog.alert({
           title: 'Quorum',
           message: `Quorum has been changed to <b>${data.value}</b>`,
-          confirmText: 'Ok'
+          confirmText: 'Ok',
+          type: 'is-success',
+          hasIcon: true
+        });
+      } else if (data.stage === 'failed') {
+        this.$dialog.alert({
+          title: 'Quorum',
+          message: 'Quorum change failed',
+          confirmText: 'Ok',
+          type: 'is-danger',
+          hasIcon: true
         });
       }
     }

@@ -134,27 +134,62 @@ def quick_ballot_vote(meeting, sid, data):
     return {"success": True}
 
 
+@permissions_required(["meeting.manage"])
 def request_quorum_change(meeting, sid, data):
     """Change quorum request received."""
     value = int(data.get("value", None))
+    users_can_change = meeting.quorum.users_can_change
+    names = list(map(lambda x: x.name, users_can_change))
+
+    # get online of users who can change a quorum
+    users = list(filter(lambda user: user in meeting.sessions.online,
+                        users_can_change))
+
+    # qourom not met
+    if len(users) < len(users_can_change):
+        return {
+            "success": False,
+            "users": names,
+            "message": "Only {} of {} GBC EC members present"
+                       .format(len(users), len(users_can_change))
+        }
+
+    # send for each allowed user
+    for user in users:
+        session_id = meeting.sessions.get_session(user)
+        meeting.send("quorum_change", {
+            "value": value, "stage": "request"
+        }, to=session_id)
+
+    # request change
     meeting.quorum.request_change(value)
-    meeting.send("quorum_change", {
-        "value": value, "stage": "request"
-    })
+
+    # success
     return {"success": True}
 
 
+@permissions_required(["meeting.quorum_change"])
 def vote_quorum_change(meeting, sid, data):
     """Commit a vote for change a quorum."""
     value = data.get("value", None)
     user = meeting.get_user(sid)
+    managers = filter(lambda user: user.have_permission("meeting.manage") or
+                      user.have_permission("meeting.quorum_change"),
+                      meeting.sessions.online)
+
+    # commit a vote
     result = meeting.quorum.vote_change(user, value)
+    br = result.value  # ballot result
 
     # quorum change is approved -> notify users
-    if result:
+    for user in managers:
+        session_id = meeting.sessions.get_session(user)
         meeting.send("quorum_change", {
-            "value": meeting.quorum.value, "stage": "final"
-        })
+            "value": meeting.quorum.value,
+            "stage": "final" if br is True else \
+                    "failed" if br is False else \
+                    "progress"
+        }, to=session_id)
 
     return {"success": True}
 
