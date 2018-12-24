@@ -114,6 +114,26 @@ def stage_timer(meeting, sid, data):
     return {"success": True}
 
 
+@permissions_required(["meeting.manage"])
+def request_quick_ballot(meeting, sid, data):
+    """Create new quick ballot."""
+    meeting.quick_ballot.start_new()
+    meeting.send("quick_ballot", data)
+    return {"success": True}
+
+
+def quick_ballot_vote(meeting, sid, data):
+    """Commit a vote for quick ballot."""
+    value = data.get("vote", None)
+    results = meeting.quick_ballot.vote(value)
+    online_users_count = len(meeting.sessions.online)
+    meeting.send("quick_ballot_results", {
+        "results": results,
+        "online_count": online_users_count
+    })
+    return {"success": True}
+
+
 # Info
 
 def user_inactive(meeting, sid, data):

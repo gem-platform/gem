@@ -72,11 +72,21 @@
           @click="setStageTime(300, timerMode)">5 min</a>
       </p>
     </div>
+
+    <p class="heading has-text-centered">Utils</p>
+    <div class="field is-grouped is-grouped-multiline">
+      <p class="control is-expanded">
+        <button
+          class="button is-fullwidth"
+          @click="requestQuickBallot">Quick ballot</button>
+      </p>
+    </div>
   </div>
 </template>
 
 <script>
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
+import RequestQuickBallot from '@/components/meeting/RequestQuickBallot.vue';
 import NotificationMixin from '@/components/NotificationMixin';
 import CommunicationMixin from '@/components/CommunicationMixin';
 
@@ -163,6 +173,17 @@ export default {
       } catch (err) {
         this.notify(err.message, 'is-danger');
       }
+    },
+
+    /**
+     * Open dialog to create a new Quick Ballot.
+     */
+    requestQuickBallot() {
+      this.$modal.open({
+        parent: this,
+        component: RequestQuickBallot,
+        hasModalCard: true
+      });
     }
   }
 };
