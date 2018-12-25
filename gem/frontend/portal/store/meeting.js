@@ -9,7 +9,11 @@ export const state = () => ({
   end: undefined,
   attentionRequired: false,
   closed: false,
-  quorum: {}
+  quorum: {},
+  usersOnline: {
+    online: [],
+    requests: []
+  }
 });
 
 export const mutations = {
@@ -51,6 +55,12 @@ export const mutations = {
   },
   setQuorum(state, value) {
     state.quorum = value;
+  },
+  setQuorumValue(state, value) {
+    state.quorum.value = value;
+  },
+  setUsersOnline(state, value) {
+    state.usersOnline = value;
   }
 };
 

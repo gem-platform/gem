@@ -162,11 +162,12 @@ class BallotMeetingStageSerializer(BallotSerializeMixin):
             "threshold": stage.ballot.threshold,
             "proposalId": str(stage.group.proposal.id),
             "finished": stage.ballot.finished,
-            "config": stage.config
+            "config": stage.config,
+            "isQuorumMet": stage.is_quorum_met
         }
 
     def depends_on(self, stage):
-        users = set(meeting.quorum.users_can_change)
+        users = set(stage.meeting.quorum.users_can_change)
         roles = set(chain.from_iterable(map(lambda x: x.roles, users)))
         return {"users": users, "roles": roles}
 

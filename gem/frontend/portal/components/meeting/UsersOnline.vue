@@ -79,32 +79,20 @@ import NotificationMixin from '@/components/NotificationMixin';
 
 export default {
   mixins: [AuthMixin, NotificationMixin],
-  data() {
-    return {
-      requests: [],
-      users: []
-    };
-  },
   computed: {
     canManage() {
       return this.haveAccess('meeting.manage');
+    },
+    users() {
+      const { usersOnline } = this.$store.state.meeting;
+      return _.groupBy(usersOnline.online, u => u.role);
+    },
+    requests() {
+      const { usersOnline } = this.$store.state.meeting;
+      return usersOnline.requests;
     }
   },
-  mounted() {
-    this.$socket.on('meeting_users_online', this.onlineUsersData);
-  },
-  beforeDestroy() {
-    this.$socket.off('meeting_users_online', this.onlineUsersData);
-  },
   methods: {
-    /**
-     * List of online users have arrived
-     */
-    onlineUsersData(data) {
-      this.users = _.groupBy(data.online, u => u.role);
-      this.requests = data.requests;
-    },
-
     /**
      * Grant access rights to specified user
      */
@@ -114,7 +102,6 @@ export default {
         : `Access request from ${user.name} rejected`);
 
       this.$socket.emit('grant_access', { token: user.id, value });
-      this.requests = this.requests.filter(x => x.id !== user.id);
     }
   }
 };

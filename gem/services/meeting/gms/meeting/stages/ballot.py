@@ -19,6 +19,12 @@ class BallotMeetingStage(MeetingStage):
         """
         super().__init__(group=group)
         self.__ballot = ballot
+        self.meeting.quorum.changed.subscribe(self.__check_quorum)
+        self.meeting.sessions.changed.subscribe(self.__check_quorum)
+
+    @property
+    def is_quorum_met(self):
+        return len(self.meeting.sessions.online) >= self.meeting.quorum.value
 
     @property
     def ballot(self):
@@ -45,9 +51,15 @@ class BallotMeetingStage(MeetingStage):
             user {User} -- User
             value {str} -- Value
         """
+        if not self.is_quorum_met:
+            return (False, "Quorum is not met")
+
         try:
             self.__ballot.set(user, value)
             self.changed.notify()
             return (True, "Accepted")
         except OpForbidden as exc:
             return (False, str(exc))
+
+    def __check_quorum(self):
+        self.changed.notify()
