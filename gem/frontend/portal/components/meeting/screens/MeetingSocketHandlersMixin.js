@@ -12,6 +12,7 @@ export default {
     this.$socket.on('full_sync', this.fullSync);
     this.$socket.on('quick_ballot', this.quickBallot);
     this.$socket.on('quorum_change', this.quorumChange);
+    this.$socket.on('meeting_users_online', this.onlineUsersData);
 
     this.sendHandshake();
   },
@@ -25,6 +26,7 @@ export default {
     this.$socket.off('full_sync', this.fullSync);
     this.$socket.off('quick_ballot', this.quickBallot);
     this.$socket.off('quorum_change', this.quorumChange);
+    this.$socket.off('meeting_users_online', this.onlineUsersData);
   },
   methods: {
     disconnect(reason) {
@@ -105,6 +107,8 @@ export default {
           props: data
         });
       } else if (data.stage === 'final') {
+        this.$store.commit('meeting/setQuorumValue', data.value);
+
         this.$dialog.alert({
           title: 'Quorum',
           message: `Quorum has been changed to <b>${data.value}</b>`,
@@ -121,6 +125,12 @@ export default {
           hasIcon: true
         });
       }
+    },
+    /**
+     * List of online users have arrived
+     */
+    onlineUsersData(data) {
+      this.$store.commit('meeting/setUsersOnline', data);
     }
   }
 };

@@ -276,6 +276,11 @@ class Quorum:
         self.__new_value = -1
         self.__votes = {}
         self.__meeting = meeting
+        self.__changed = Event()
+
+    @property
+    def changed(self):
+        return self.__changed
 
     @property
     def users_can_change(self):
@@ -308,6 +313,7 @@ class Quorum:
         votes_required = len(self.users_can_change)
         if users_voted == votes_required:
             self.__value = self.__new_value
+            self.changed.notify()
             return Tribool(True)
 
         # indeterminate

@@ -67,16 +67,14 @@ class MeetingStage(metaclass=ABCMeta):
         Sets user defined configuration.
         """
         self.__config = value
-    
+
 
     def on_enter(self):
         """
         Called when stage activated.
         """
-        pass
 
     def on_leave(self):
         """
         Called when stage deactivated.
         """
-        pass
