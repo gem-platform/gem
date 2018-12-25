@@ -83,7 +83,7 @@
       <p class="control is-expanded">
         <button
           class="button is-fullwidth"
-          @click="requestQuorumChange">Change Quorum</button>
+          @click="requestQuorumChange">Change Quorum ({{ quorum }})</button>
       </p>
     </div>
   </div>
@@ -147,6 +147,10 @@ export default {
         differentProposal: nextProposal !== currentProposal,
         final: stage.type === 'FinalStage'
       };
+    },
+
+    quorum() {
+      return this.$store.getters['meeting/quorum'].value;
     }
   },
   methods: {
