@@ -140,10 +140,12 @@ export default (options) => {
           result = await this.$axios.$put(url, data);
         } else {
           result = await this.$axios.$post(api, omit(data, ['_id']));
+          entity._id = result._id;
 
           // make @new clean again
           const empty = options.empty ? options.empty() : {};
           commit('update', { _id: '@new', ...empty });
+          commit('set', { entities: [entity] });
         }
 
         return result;
