@@ -9,27 +9,28 @@
     <article
       v-for="comment in comments"
       :key="comment._id"
-      :class="{
-        'is-danger': comment.mark === '-',
-        'is-success': comment.mark === '+',
-        'is-info': comment.mark === 'i'
-      }"
+      :class="commentType(comment.mark)"
       class="message">
 
       <div class="message-header">
-        <span class="user-name">{{ user(comment.user).name }}</span>
+        <b-checkbox
+          :type="commentType(comment.mark)"
+          v-model="selectedIds"
+          :native-value="comment._id" />
+
+        <span class="user-name">
+          {{ user(comment.user).name }}
+        </span>
         <!--<span
           v-for="(roleId, idx) in user(comment.user).roles"
           :key="idx">{{ role(roleId).name }}
         </span>-->
-        <b-checkbox
-          :type="{
-            'is-danger': comment.mark === '-',
-            'is-success': comment.mark === '+',
-            'is-info': comment.mark === 'i'
-          }"
-          v-model="selectedIds"
-          :native-value="comment._id" />
+        <button
+          :class="commentType(comment.mark)"
+          class="button is-small is-inverted"
+          @click="setEditMode(comment._id, true)">
+          Edit
+        </button>
       </div>
 
       <div class="message-body">
@@ -39,7 +40,13 @@
           {{ comment.quote.text }}
         </blockquote>
 
-        {{ comment.content }}
+        <textarea
+          v-if="isInEditMode(comment._id)"
+          :value="comment.content"
+          class="textarea inline-textarea"
+          @input="onContentEdit(comment, $event.target.value)"
+          @blur="setEditMode(comment._id, false)"/>
+        <span v-else>{{ comment.content }}</span>
       </div>
     </article>
 
@@ -70,7 +77,8 @@ export default {
   layout: 'dashboard',
   data() {
     return {
-      selectedIds: []
+      selectedIds: [],
+      editingIds: {}
     };
   },
   computed: {
@@ -94,6 +102,13 @@ export default {
     },
     role(id) {
       return this.$store.getters['dashboard/roles/keyed'][id];
+    },
+
+    commentType(mark) {
+      if (mark === 'i') return 'is-info';
+      if (mark === '+') return 'is-success';
+      if (mark === '-') return 'is-danger';
+      return '';
     },
 
     /**
@@ -181,6 +196,18 @@ export default {
         hasIcon: true,
         onConfirm: () => this.$toast.open('Account deleted!')
       });
+    },
+
+    isInEditMode(commentId) {
+      return this.editingIds[commentId] === true;
+    },
+
+    setEditMode(commentId, value) {
+      this.$set(this.editingIds, commentId, value);
+    },
+
+    onContentEdit(comment, value) {
+      this.$store.dispatch('dashboard/comments/update', { _id: comment._id, content: value });
     }
   },
   async fetch(context) {
