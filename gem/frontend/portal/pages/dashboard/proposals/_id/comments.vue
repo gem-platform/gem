@@ -19,7 +19,7 @@
           :native-value="comment._id" />
 
         <span class="user-name">
-          {{ user(comment.user).name }}
+          {{ getUser(comment.user).name }}
         </span>
         <!--<span
           v-for="(roleId, idx) in user(comment.user).roles"
@@ -93,12 +93,13 @@
 </template>
 
 <script>
+import AuthMixin from '@/components/AuthMixin';
 import NotificationMixin from '@/components/NotificationMixin';
 import _ from 'lodash';
 
 
 export default {
-  mixins: [NotificationMixin],
+  mixins: [AuthMixin, NotificationMixin],
   layout: 'dashboard',
   data() {
     return {
@@ -122,10 +123,10 @@ export default {
     }
   },
   methods: {
-    user(id) {
+    getUser(id) {
       return this.$store.getters['dashboard/users/keyed'][id];
     },
-    role(id) {
+    getRole(id) {
       return this.$store.getters['dashboard/roles/keyed'][id];
     },
 
@@ -178,48 +179,53 @@ export default {
       }
 
       // get list of authors
+      const currentUserName = this.user.name;
       const comments = _.chain(this.selectedComments);
       const authors = comments.map(x => x.user).uniq().value();
       const mergedContent = comments.map(c => c.content).value().join('\n \n ');
-      const authorNames = _.chain(authors).map(id => this.user(id)).map(user => user.name).join(', ')
+      const authorNames = _.chain(authors).map(id => this.getUser(id)).map(user => user.name).join(', ')
         .value();
       const isOneAuthor = authors.length === 1;
       const isSameMark = comments.map(x => x.mark).uniq().value().length === 1;
       const errors = [];
 
-      if (!isOneAuthor) { errors.push(`These comments are of multiple authors: ${authorNames}.`); }
+      if (!isOneAuthor) { errors.push(`These comments are of multiple authors: ${authorNames}. Author will be set to ${currentUserName}.`); }
       if (!isSameMark) { errors.push('These comments have different marks.'); }
+
+      const perfomMerge = () => {
+        // create new comment based on selected
+        this.$store.dispatch('dashboard/comments/save', {
+          user: isOneAuthor ? authors[0] : this.user.id,
+          mark: this.selectedComments[0].mark, // todo: how to merge content with different marks?
+          stage: this.selectedComments[0].stage, // todo: ... commments of different stages?
+          proposal: proposalId,
+          content: mergedContent
+        });
+
+        // remove selected one by one
+        this.selectedIds.forEach((x) => {
+          this.$store.dispatch('dashboard/comments/remove', { id: x });
+        });
+
+        this.clearSelection();
+      };
 
       if (errors.length > 0) {
         const errorsString = errors.join('\n');
-        this.showMergeWarning(`${errorsString}\n Merge it anyway?`);
+        this.showMergeWarning(`${errorsString}\n Merge it anyway?`, perfomMerge);
+      } else {
+        perfomMerge();
       }
-
-      // create new comment based on selected
-      this.$store.dispatch('dashboard/comments/save', {
-        user: authors[0], // todo: how to merge comments of multiple authors?
-        mark: this.selectedComments[0].mark, // todo: how to merge content with different marks?
-        stage: this.selectedComments[0].stage, // todo: how to merge commments of different stages?
-        proposal: proposalId,
-        content: mergedContent
-      });
-
-      // remove selected one by one
-      this.selectedIds.forEach((x) => {
-        this.$store.dispatch('dashboard/comments/remove', { id: x });
-      });
-
-      this.clearSelection();
     },
 
-    showMergeWarning(message) {
+    showMergeWarning(message, callback) {
       this.$dialog.confirm({
         title: 'Merge comments',
         message,
         confirmText: 'Merge',
         type: 'is-danger',
         hasIcon: true,
-        onConfirm: () => this.$toast.open('Account deleted!')
+        onConfirm: () => callback()
       });
     },
 
