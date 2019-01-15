@@ -26,6 +26,14 @@
           :key="idx">{{ role(roleId).name }}
         </span>-->
         <button
+          v-if="isInEditMode(comment._id)"
+          :class="commentType(comment.mark)"
+          class="button is-small is-inverted"
+          @click="setEditMode(comment._id, false)">
+          Save
+        </button>
+        <button
+          v-else
           :class="commentType(comment.mark)"
           class="button is-small is-inverted"
           @click="setEditMode(comment._id, true)">
@@ -39,14 +47,31 @@
           class="is-italic quote">
           {{ comment.quote.text }}
         </blockquote>
+        <span
+          v-if="!isInEditMode(comment._id)">
+          {{ comment.content }}
+        </span>
 
-        <textarea
-          v-if="isInEditMode(comment._id)"
-          :value="comment.content"
-          class="textarea inline-textarea"
-          @input="onContentEdit(comment, $event.target.value)"
-          @blur="setEditMode(comment._id, false)"/>
-        <span v-else>{{ comment.content }}</span>
+        <div v-if="isInEditMode(comment._id)">
+          <b-field label="Mood">
+            <b-select
+              :value="comment.mark"
+              placeholder="Select a mood"
+              expanded
+              @input="onMarkEdit(comment, $event)">
+              <option value="+">Plus</option>
+              <option value="-">Minus</option>
+              <option value="i">Info</option>
+            </b-select>
+          </b-field>
+
+          <b-field label="Content">
+            <textarea
+              :value="comment.content"
+              class="textarea inline-textarea"
+              @input="onContentEdit(comment, $event.target.value)" />
+          </b-field>
+        </div>
       </div>
     </article>
 
@@ -208,6 +233,10 @@ export default {
 
     onContentEdit(comment, value) {
       this.$store.dispatch('dashboard/comments/update', { _id: comment._id, content: value });
+    },
+
+    onMarkEdit(comment, value) {
+      this.$store.dispatch('dashboard/comments/update', { _id: comment._id, mark: value });
     }
   },
   async fetch(context) {
