@@ -231,8 +231,8 @@ export default {
       const proposalId = this.$route.params.id;
 
       // nothing selected to merge
-      if (this.selectedIds.length === 0) {
-        this.notify('Nothing selected to merge');
+      if (this.selectedIds.length < 2) {
+        this.notify('Select at least two comments to merge.');
         return;
       }
 
@@ -240,22 +240,26 @@ export default {
       const currentUserName = this.user.name;
       const comments = _.chain(this.selectedComments);
       const authors = comments.map(x => x.user).uniq().value();
-      const mergedContent = comments.map(c => c.content).value().join('\n \n ');
+      const firstCommentMark = this.selectedComments[0].mark;
+      const firstCommentStage = this.getWorkflowStage(this.selectedComments[0].stage);
+      const mergedContent = comments.map(c => c.content).value().join('\n\n');
       const authorNames = _.chain(authors).map(id => this.getUser(id)).map(user => user.name).join(', ')
         .value();
       const isOneAuthor = authors.length === 1;
       const isSameMark = comments.map(x => x.mark).uniq().value().length === 1;
+      const isSameStage = comments.map(x => x.stage).uniq().value().length === 1;
       const errors = [];
 
-      if (!isOneAuthor) { errors.push(`These comments are of multiple authors: ${authorNames}. Author will be set to ${currentUserName}.`); }
-      if (!isSameMark) { errors.push('These comments have different marks.'); }
+      if (!isOneAuthor) { errors.push(`Are of multiple authors: ${authorNames}. Author will be set to ${currentUserName}.`); }
+      if (!isSameMark) { errors.push(`Have different moods. Mood will be set to: ${firstCommentMark}`); }
+      if (!isSameStage) { errors.push(`Have different stages. Stage will be set to: ${firstCommentStage.name}`); }
 
       const perfomMerge = () => {
         // create new comment based on selected
         this.$store.dispatch('dashboard/comments/save', {
           user: isOneAuthor ? authors[0] : this.user.id,
-          mark: this.selectedComments[0].mark, // todo: how to merge content with different marks?
-          stage: this.selectedComments[0].stage, // todo: ... commments of different stages?
+          mark: firstCommentMark,
+          stage: firstCommentStage._id,
           proposal: proposalId,
           content: mergedContent
         });
@@ -269,8 +273,8 @@ export default {
       };
 
       if (errors.length > 0) {
-        const errorsString = errors.join('\n');
-        this.showMergeWarning(`${errorsString}\n Merge it anyway?`, perfomMerge);
+        const errorsString = errors.map(x => `<li>${x}</li>`).join('\n');
+        this.showMergeWarning(`These comments: <ul class='errors'>${errorsString}</ul> Merge it anyway?`, perfomMerge);
       } else {
         perfomMerge();
       }
