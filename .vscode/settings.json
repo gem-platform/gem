@@ -1,3 +1,11 @@
 {
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "files.exclude": {
+        ".data": true,
+        ".docker-sync": true,
+        ".keys": true,
+        ".vscode": true,
+        "**/.nuxt": true,
+        "**/node_modules": true
+    }
 }
