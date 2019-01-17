@@ -29,13 +29,6 @@
                 v-for="(role, idx) in comment.roles"
                 :key="idx">{{ role }}
               </b-tag>
-
-              <b-tag>
-                <nuxt-link :to="comment.urlEdit">Edit</nuxt-link>
-              </b-tag>
-              <b-tag>
-                <nuxt-link :to="comment.urlDelete">Delete</nuxt-link>
-              </b-tag>
             </span>
 
             <!-- Content -->
@@ -57,11 +50,19 @@
     </div>
 
     <hr>
-    <PrintReport
-      :params="{'proposal': entity._id}"
-      title="Proposal Artifacts"
-      url="office/proposals/artifacts"
-      filename="Proposal.pdf"/>
+    <div class="buttons is-centered">
+      <print-report
+        :params="{'proposal': entity._id}"
+        title="Proposal Artifacts"
+        url="office/proposals/artifacts"
+        filename="Proposal.pdf"/>
+
+      <nuxt-link
+        :to="editCommentsUrl"
+        class="button is-fullwidth">
+        Edit Comments
+      </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -88,6 +89,11 @@ export default {
     }
   },
   computed: {
+    editCommentsUrl() {
+      const { id } = this.$route.params;
+      return `${id}/comments`;
+    },
+
     comments() {
       const comments = this.$store.getters['dashboard/comments/list'];
       const users = this.$store.getters['dashboard/users/keyed'];
@@ -104,9 +110,7 @@ export default {
           roles: users[x.user].roles.map(r => roles[r].name),
           mark: x.mark,
           quote: x.quote,
-          stage: workflowStages[x.stage].name,
-          urlEdit: `/dashboard/comments/${x._id}/edit`,
-          urlDelete: `/dashboard/comments/${x._id}/delete`
+          stage: workflowStages[x.stage].name
         }))
         .groupBy('stage')
         .value();
