@@ -1,5 +1,39 @@
 <template>
   <div>
+    <div class="field">
+      <b-dropdown>
+        <a
+          slot="trigger"
+          class="button">
+          <span class="icon">
+            <i class="fa fa-user"/>
+          </span>
+          <span>Stages: {{ filteredWorkflowStageName }}</span>
+        </a>
+
+        <!-- Show comments from all the stages -->
+        <b-dropdown-item has-link>
+          <a
+            class="navbar-item"
+            @click.prevent="selectWorkflowStage(undefined)">All
+          </a>
+        </b-dropdown-item>
+
+        <!-- Show comment from specified stage of workflow -->
+        <b-dropdown-item
+          v-for="ws in workflowStages"
+          :key="ws._id"
+          has-link>
+          <a
+            class="navbar-item"
+            @click.prevent="selectWorkflowStage(ws._id)">
+            {{ ws.name }}
+          </a>
+        </b-dropdown-item>
+      </b-dropdown>
+    </div>
+
+    <!-- There is no comment for proposal -->
     <b-message
       v-if="comments.length == 0"
       type="is-info">
@@ -104,12 +138,16 @@ export default {
   data() {
     return {
       selectedIds: [],
-      editingIds: {}
+      editingIds: {},
+      workflowStage: undefined
     };
   },
   computed: {
     comments() {
-      return this.$store.getters['dashboard/comments/list'];
+      return _
+        .chain(this.$store.getters['dashboard/comments/list'])
+        .filter(c => c.stage === this.workflowStage || this.workflowStage === undefined)
+        .value();
     },
 
     /**
@@ -120,14 +158,34 @@ export default {
         this.comments,
         x => _.includes(this.selectedIds, x._id)
       );
+    },
+
+    workflowStages() {
+      return this.$store.getters['dashboard/workflowStages/list'];
+    },
+
+    filteredWorkflowStageName() {
+      if (this.workflowStage === undefined) { return 'All'; }
+      return this.getWorkflowStage(this.workflowStage).name;
     }
   },
   methods: {
+    /**
+     * Get user model by ID.
+     */
     getUser(id) {
       return this.$store.getters['dashboard/users/keyed'][id];
     },
+
+    /**
+     * Get role model by ID.
+     */
     getRole(id) {
       return this.$store.getters['dashboard/roles/keyed'][id];
+    },
+
+    getWorkflowStage(id) {
+      return this.$store.getters['dashboard/workflowStages/keyed'][id];
     },
 
     commentType(mark) {
@@ -229,12 +287,22 @@ export default {
       });
     },
 
+    selectWorkflowStage(stage) {
+      this.workflowStage = stage;
+    },
+
     isInEditMode(commentId) {
       return this.editingIds[commentId] === true;
     },
 
     setEditMode(commentId, value) {
       this.$set(this.editingIds, commentId, value);
+
+      // Really save object
+      if (value === false) {
+        const entity = this.$store.getters['dashboard/comments/keyed'][commentId];
+        this.$store.dispatch('dashboard/comments/save', entity);
+      }
     },
 
     onContentEdit(comment, value) {
@@ -245,6 +313,7 @@ export default {
       this.$store.dispatch('dashboard/comments/update', { _id: comment._id, mark: value });
     }
   },
+
   async fetch(context) {
     const pid = context.params.id;
 
