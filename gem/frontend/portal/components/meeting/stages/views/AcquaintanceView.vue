@@ -42,7 +42,7 @@ export default {
      * Returns the average percentage of reading the proposal
      */
     progress() {
-      const { count, values } = this.$stage.progress;
+      const { count, values } = this.$stage.readingProgress;
       const percentages = Object.values(values);
 
       if (count > 0) {
@@ -58,7 +58,7 @@ export default {
      */
     readers() {
       const users = Object.entries(this.users);
-      const progress = this.$stage.progress.values;
+      const progress = this.$stage.readingProgress.values;
 
       return users
         .map(x => ({

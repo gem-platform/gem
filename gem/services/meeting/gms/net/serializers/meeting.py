@@ -107,7 +107,8 @@ class MeetingStageSerializer:
             "BallotResultsMeetingStage": BallotResultsMeetingStageSerializer(),
             "CommentsMeetingStage": CommentsMeetingStageSerializer(),
             "DiscussionMeetingStage": DiscussionMeetingStageSerializer(),
-            "FinalMeetingStage": FinalMeetingStageSerializer()
+            "FinalMeetingStage": FinalMeetingStageSerializer(),
+            "FeedbackMeetingStage": FeedbackMeetingStageSerializer()
         }
 
     def serialize(self, stage):
@@ -115,7 +116,7 @@ class MeetingStageSerializer:
         serializer = self.__serializers.get(stage_type, None)
         if serializer:
             return serializer.serialize(stage)
-        return None
+        raise Exception("No serializer found for '{}' stage".format(stage_type))
 
     def depends_on(self, stage):
         stage_type = stage.__class__.__name__
@@ -132,7 +133,7 @@ class AcquaintanceMeetingStageSerializer(BallotSerializeMixin, CommentsSerialize
     def serialize(self, stage):
         return {
             "type": "AcquaintanceStage",
-            "progress": stage.progress,
+            "readingProgress": stage.progress,
             "comments": self.comments_serialize(stage),
             "ballotSummary": self.summary_serialize(stage),
             "proposalId": str(stage.group.proposal.id),
@@ -224,3 +225,16 @@ class FinalMeetingStageSerializer:
         return {
             "type": "FinalStage",
         }
+
+
+class FeedbackMeetingStageSerializer:
+    def __init__(self):
+        self.__acquaintance = AcquaintanceMeetingStageSerializer()
+        self.__ballot = BallotMeetingStageSerializer()
+        self.__comments = CommentsMeetingStageSerializer()
+
+    def serialize(self, stage):
+        a = self.__acquaintance.serialize(stage)
+        b = self.__ballot.serialize(stage)
+        c = self.__comments.serialize(stage)
+        return {**a, **b, **c, "type": "FeedbackStage"}

@@ -8,3 +8,4 @@ from .discussion import DiscussionMeetingStage
 from .final import FinalMeetingStage
 from .group import StagesGroup
 from .meeting_stages import MeetingStages
+from .feedback import FeedbackMeetingStage

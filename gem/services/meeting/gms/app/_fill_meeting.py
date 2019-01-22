@@ -1,13 +1,12 @@
 """Provides function to fill meeting with testing data."""
-from bson import ObjectId
 from inspect import signature
+from bson import ObjectId
 
-from gem.db import (Proposal, Ballot, User, Meeting,
-                    Comment, Role, MeetingPermission)
+from gem.db import (Ballot, User, Meeting, Comment, Role)
 from gms.meeting.stages import (
     StagesGroup, AgendaMeetingStage, AcquaintanceMeetingStage,
     BallotMeetingStage, BallotResultsMeetingStage, CommentsMeetingStage,
-    DiscussionMeetingStage, FinalMeetingStage
+    DiscussionMeetingStage, FinalMeetingStage, FeedbackMeetingStage
 )
 
 
@@ -56,12 +55,16 @@ def add_group(meeting, proposal):
         "ballot": __ballot_stage,
         "ballot.results": __ballot_results_stage,
         "comments": __comments_stage,
-        "discussion": __discussion_stage
+        "discussion": __discussion_stage,
+        "feedback": __feedback_stage
     }
 
     # add meeting stages based on current stage actions
     for action in cur_stage.actions:
-        handler = __stages[action.id]
+        handler = __stages.get(action.id, None)
+        if not handler:
+            raise Exception("Unknown action type '{}'".format(action.id))
+
         handler_args = list(signature(handler).parameters)
         handler_params = {
             "group": group, "proposal": proposal, "prev_stage": prev_stage,
@@ -105,3 +108,14 @@ def __comments_stage(group, current_stage, proposal):
 
 def __discussion_stage(group):
     return DiscussionMeetingStage(group=group)
+
+
+def __feedback_stage(group, current_stage, proposal, context):
+    ballots = Ballot.objects(proposal=proposal, stage=current_stage)
+    ballot = ballots.first() if ballots else Ballot(proposal=proposal, stage=current_stage)
+    comments = Comment.objects(proposal=proposal, stage=current_stage)
+
+    # save entity to make it possible to find in another stages (ballot.results)
+    context["ballot"] = ballot
+
+    return FeedbackMeetingStage(ballot, list(comments), group=group)
