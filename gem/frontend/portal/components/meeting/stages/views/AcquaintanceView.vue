@@ -75,7 +75,6 @@ export default {
           name: x[1].name,
           progress: Math.floor((progress[x[0]] || 0) * 100)
         }))
-        .filter(x => x.progress < 100)
         .sort((a, b) => (a.progress < b.progress ? 1 : -1));
     },
 
