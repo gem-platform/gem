@@ -137,6 +137,10 @@ export default {
     },
 
     restoreReadingProgress() {
+      if (!this.$stage.readingProgress) {
+        return; // there is no reading progress for this stage
+      }
+
       const progress = this.$stage.readingProgress.values;
       const { user } = this.$auth;
       const myProgress = progress[user.id];
