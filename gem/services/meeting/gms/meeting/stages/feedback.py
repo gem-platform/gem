@@ -19,6 +19,10 @@ class FeedbackMeetingStage(MeetingStage):
         self.__comments = CommentsMeetingStage(comments, group=group)
         self.__ballot = BallotMeetingStage(ballot, group=group)
 
+        self.__acquaintance.changed.subscribe(self.__on_internal_stage_changed)
+        self.__comments.changed.subscribe(self.__on_internal_stage_changed)
+        self.__ballot.changed.subscribe(self.__on_internal_stage_changed)
+
     def comment(self, user, message, mark, quote=None):
         return self.__comments.comment(user, message, mark, quote=quote)
 
@@ -83,3 +87,6 @@ class FeedbackMeetingStage(MeetingStage):
         """
         self.__ballot.ballot.stage = self.group.proposal.stage
         self.__ballot.ballot.save()
+
+    def __on_internal_stage_changed(self):
+        self.changed.notify()
