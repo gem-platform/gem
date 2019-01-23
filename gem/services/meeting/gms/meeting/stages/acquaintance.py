@@ -67,3 +67,16 @@ class AcquaintanceMeetingStage(MeetingStage):
         user_id = str(user.id)
         self.__progress[user_id] = quantity
         self.changed.notify()
+
+    def get_progress(self, user):
+        """
+        Get reading progress for specified user.
+
+        Arguments:
+            user {User} -- User to get reading progress of.
+
+        Returns:
+            float -- Progress (0-1)
+        """
+        user_id = str(user.id)
+        return self.__progress.get(user_id, 0)

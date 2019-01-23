@@ -17,7 +17,7 @@ class FeedbackMeetingStage(MeetingStage):
         super().__init__(group=group)
         self.__acquaintance = AcquaintanceMeetingStage(ballot, comments, group=group)
         self.__comments = CommentsMeetingStage(comments, group=group)
-        self.__ballot = BallotMeetingStage(ballot, group=group)
+        self.__ballot = BallotMeetingStage(ballot, group=group, check_quorum=False)
 
         self.__acquaintance.changed.subscribe(self.__on_internal_stage_changed)
         self.__comments.changed.subscribe(self.__on_internal_stage_changed)
@@ -69,6 +69,12 @@ class FeedbackMeetingStage(MeetingStage):
 
     @property
     def is_quorum_met(self):
+        """
+        Is quorum met?
+
+        Returns:
+            bool -- True of quorum is met.
+        """
         return True
 
     def vote(self, user, value):
@@ -79,7 +85,13 @@ class FeedbackMeetingStage(MeetingStage):
             user {User} -- User
             value {str} -- Value
         """
-        self.__ballot.vote(user, value)
+        # prevent a user from voting before he finishes reading
+        user_progress = self.__acquaintance.get_progress(user)
+        if user_progress < 1:
+            return (False, "You must first read the document to the end.")
+
+        # user has finished reading, let him vote
+        return self.__ballot.vote(user, value)
 
     def on_leave(self):
         """
