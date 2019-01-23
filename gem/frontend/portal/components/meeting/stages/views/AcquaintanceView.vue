@@ -10,16 +10,26 @@
       max="100"/>
 
     <!-- List of users still reading the proposal -->
-    <div
+    <b-table
       v-if="showReaders"
-      class="tags">
-      <div
-        v-for="user in readers"
-        :key="user.name"
-        class="tag">
-        {{ user.name }}: {{ user.progress }}%
-      </div>
-    </div>
+      :data="readers">
+
+      <template slot-scope="props">
+        <b-table-column
+          label="Name"
+          sortable
+          field="name">
+          {{ props.row.name }}
+        </b-table-column>
+        <b-table-column
+          label="Progress"
+          sortable
+          numeric
+          field="progress">
+          {{ props.row.progress }}%
+        </b-table-column>
+      </template>
+    </b-table>
   </div>
 </template>
 
