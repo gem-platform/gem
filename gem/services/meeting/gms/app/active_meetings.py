@@ -1,3 +1,4 @@
+from datetime import datetime
 from logging import getLogger
 from gem.core import Event
 from gms.app.active_meeting import ActiveMeeting
@@ -20,10 +21,6 @@ class ActiveMeetings:
         self.__log = getLogger("root")
         self.__comm_log = getLogger("communication")
         self.__meetings_log = getLogger("meetings")
-
-    # @property
-    # def active(self):
-    #     return self.__active
 
     @property
     def status_changed(self):
@@ -89,9 +86,9 @@ class ActiveMeetings:
 
             return result
         except Exception as exc:
-            self.__log.error("Unable to execute command: " + str(exc))
+            self.__log.error("Unable to execute command: %s", str(exc))
             self.__log.exception(exc)
-            return {"success": False, "message": "Unknown error: " + str(exc)}
+            return {"success": False, "message": "Unknown error: {}".format(str(exc))}
 
     def __open_meeting(self, meeting_id):
         # lookup for open meetings
@@ -104,13 +101,10 @@ class ActiveMeetings:
         new_meeting = ActiveMeeting(meeting_id)
         # todo: unsubscribe then meeting closed in __close_empty_meetings
         new_meeting.state_changed.subscribe(self.__state_changed(meeting_id))
-        new_meeting.sessions.changed.subscribe(self.__on_sessions_changed)
         new_meeting.send_message.subscribe(self.__send_message(meeting_id))
+        new_meeting.closed.subscribe(self.__on_meeting_closed)
         self.__active[meeting_id] = new_meeting
         return new_meeting
-
-    def __on_sessions_changed(self):
-        self.__close_empty_meetings()
 
     def __state_changed(self, meeting_id):
         def handler(data):
@@ -148,30 +142,9 @@ class ActiveMeetings:
         if sid in self.__connection:
             del self.__connection[sid]
 
-        # close meetings with no users
-        self.__close_empty_meetings()
-
-    def __close_empty_meetings(self):
-        # stop active meetings if no connections
-        meetings_to_close = [m for m in self.__active.values()
-                             if not m.sessions.online]
-
-        # nothing to close. quit
-        if not meetings_to_close:
-            return
-
-        # filter out connections associated with closing meeting
+    def __on_meeting_closed(self, meeting):
+        del self.__active[meeting.meeting_id]
         self.__connection = {
             k: v for k, v in self.__connection.items()
-            if v not in meetings_to_close
+            if v is not meeting
         }
-
-        # filter out closing meetings
-        self.__active = {
-            k: v for k, v in self.__active.items()
-            if v not in meetings_to_close
-        }
-
-        # status changes. notify all
-        self.status_changed.notify()
-        

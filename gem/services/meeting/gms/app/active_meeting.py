@@ -52,6 +52,7 @@ class ActiveMeeting:
         # events
         self.__state_changed = Event()
         self.__send_message = Event()
+        self.__closed = Event()
 
         if meeting_id is not None:
             fill_meeting(self, meeting_id)
@@ -85,6 +86,16 @@ class ActiveMeeting:
             Event -- State changed.
         """
         return self.__state_changed
+
+    @property
+    def closed(self) -> Event:
+        """
+        Meeting is closed.
+
+        Returns:
+            Event -- Event
+        """
+        return self.__closed
 
     @property
     def send_message(self):
@@ -210,6 +221,9 @@ class ActiveMeeting:
                 if next_index <= len(stages) - 1:
                     proposal.stage = stages[next_index]
                     proposal.save()
+
+                # meeting is closed
+                self.__closed.notify(self)
             except ValueError:
                 pass
 
