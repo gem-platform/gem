@@ -10,41 +10,47 @@
     </b-field>
 
     <!-- Date and time of the meeting -->
-    <b-field label="Select a date">
-      <b-datepicker
-        id="date"
-        v-model="date"
-        placeholder="Click to select..."
-        icon="calendar"
-        @input="timeChanged"/>
-    </b-field>
+    <b-field label="Start">
+      <div class="columns">
+        <div class="column">
+          <b-datepicker
+            id="startDate"
+            v-model="startDate"
+            placeholder="Click to select..."
+            icon="calendar"
+            @input="timeChanged"/>
+        </div>
 
-    <div class="columns">
-      <div class="column">
-        <b-field
-          id="start"
-          label="Start time">
+        <div class="column">
           <b-timepicker
             :readonly="false"
             v-model="startTime"
             placeholder="Type or select a time..."
             @input="timeChanged"/>
-        </b-field>
+        </div>
       </div>
+    </b-field>
 
-      <div class="column">
-        <b-field
-          id="end"
-          label="End time">
+    <b-field label="End">
+      <div class="columns">
+        <div class="column">
+          <b-datepicker
+            id="endDate"
+            v-model="endDate"
+            placeholder="Click to select..."
+            icon="calendar"
+            @input="timeChanged"/>
+        </div>
+
+        <div class="column">
           <b-timepicker
-            id="end"
             :readonly="false"
             v-model="endTime"
             placeholder="Type or select a time..."
             @input="timeChanged"/>
-        </b-field>
+        </div>
       </div>
-    </div>
+    </b-field>
 
     <!-- Agenda -->
     <b-field label="Agenda">
@@ -112,7 +118,8 @@ export default {
     return {
       permissionsJoin: this.getPermissions('meeting.join'),
       permissionsVote: this.getPermissions('meeting.vote'),
-      date: startTime,
+      startDate: startTime,
+      endDate: endTime,
       startTime,
       endTime
     };
