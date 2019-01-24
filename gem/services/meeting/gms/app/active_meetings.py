@@ -2,6 +2,7 @@ from datetime import datetime
 from logging import getLogger
 from gem.core import Event
 from gms.app.active_meeting import ActiveMeeting
+from gms.app.active_meeting_connections import ActiveMeetingConnections
 
 
 class ActiveMeetings:
@@ -15,7 +16,7 @@ class ActiveMeetings:
         self.__join = Event()
         self.__leave = Event()
         self.__active = {}  # active meetings keyed by meeting_id
-        self.__connection = {}  # session_id -> active meeting
+        self.__connections = ActiveMeetingConnections()
         self.__status_changed = Event()
 
         self.__log = getLogger("root")
@@ -67,9 +68,8 @@ class ActiveMeetings:
             if event == "handshake":
                 self.__on_handshake(sid, data)
 
-            # get meeting of specified user and
-            # pass command to it
-            meeting = self.__connection.get(sid, None)
+            # get meeting of specified user and pass command to it
+            meeting = self.__connections.get_meeting(sid)
             if meeting:
                 result = meeting.command(event, *data)
 
@@ -125,26 +125,21 @@ class ActiveMeetings:
 
         # user already connected to some meeting
         # disconnect him from previous one first
-        if sid in self.__connection:
+        if self.__connections.is_connected(sid):
             self.__meetings_log.debug("Remove %s from previous meeting.", sid)
-            prev_meeting = self.__connection[sid]
+            prev_meeting = self.__connections.get_meeting(sid)
             prev_meeting.sessions.delete(sid)
             self.__leave.notify(sid, prev_meeting.meeting_id)
 
         # get meeting by specified id
         # open new one of not exist
         meeting = self.__open_meeting(meeting_id)
-        self.__connection[sid] = meeting
+        self.__connections.connect(sid, meeting)
         self.__join.notify(sid, meeting_id)
 
     def __on_disconnect(self, sid):
-        # remove user connection
-        if sid in self.__connection:
-            del self.__connection[sid]
+        self.__connections.disconnect(sid)
 
     def __on_meeting_closed(self, meeting):
         del self.__active[meeting.meeting_id]
-        self.__connection = {
-            k: v for k, v in self.__connection.items()
-            if v is not meeting
-        }
+        self.__connections.close_meeting(meeting)
