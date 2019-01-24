@@ -11,7 +11,7 @@ services:
     volumes:
       - meeting-server-sync:/usr/src/app:nocopy
 
-  # Meeting server
+  # Portal server
   portal-server:
     volumes:
       - ./gem/services/portal:/usr/src/app
