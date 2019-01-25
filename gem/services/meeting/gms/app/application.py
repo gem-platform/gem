@@ -53,8 +53,8 @@ class MeetingServerApplication(Application):
             )
 
         # send email to all the users invited to the meeting
-        for user in meeting.allowed_users:
-            self.__postman.send("test@ya.com", "Meeting is started")
+        for user in filter(lambda x: x.email, meeting.allowed_users):
+            self.__postman.send(user.email, "Meeting is started")
 
         # all done
         self.__postman.close()

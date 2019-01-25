@@ -109,7 +109,8 @@ USERS = {
                 }
             }
         },
-        "password": {"type": "string"}
+        "password": {"type": "string"},
+        "email": {"type": "string"}
     }
 }
 
