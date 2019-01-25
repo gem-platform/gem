@@ -1,0 +1,20 @@
+version: '3'
+services:
+  db:
+    logging:
+      driver: none
+
+  web:
+    logging:
+      driver: none
+
+  # Start a fake mail server for a staging environment.
+  # We do not want to send real letters to real people
+  # by mistake.
+  postman:
+    image: schickling/mailcatcher
+    expose:
+      - 25
+    ports:
+      - 1025:1025
+      - 1080:1080
