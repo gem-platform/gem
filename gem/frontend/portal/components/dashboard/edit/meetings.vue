@@ -23,6 +23,7 @@
 
         <div class="column">
           <b-timepicker
+            id="startTime"
             :readonly="false"
             v-model="startTime"
             placeholder="Type or select a time..."
@@ -44,6 +45,7 @@
 
         <div class="column">
           <b-timepicker
+            id="endTime"
             :readonly="false"
             v-model="endTime"
             placeholder="Type or select a time..."
