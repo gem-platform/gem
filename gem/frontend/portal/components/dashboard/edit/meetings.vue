@@ -177,14 +177,15 @@ export default {
     },
 
     timeChanged() {
-      if (this.date && this.startTime && this.endTime) {
-        const start = moment(this.date)
+      if (this.startDate && this.endDate && this.startTime && this.endTime) {
+        const start = moment(this.startDate)
           .startOf('day')
           .add(this.startTime.getHours(), 'hours')
           .add(this.startTime.getMinutes(), 'minutes')
           .utcOffset(-0, true)
           .toISOString();
-        const end = moment(this.date)
+
+        const end = moment(this.endDate)
           .startOf('day')
           .add(this.endTime.getHours(), 'hours')
           .add(this.endTime.getMinutes(), 'minutes')
