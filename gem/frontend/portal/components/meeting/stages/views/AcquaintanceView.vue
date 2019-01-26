@@ -10,16 +10,26 @@
       max="100"/>
 
     <!-- List of users still reading the proposal -->
-    <div
+    <b-table
       v-if="showReaders"
-      class="tags">
-      <div
-        v-for="user in readers"
-        :key="user.name"
-        class="tag">
-        {{ user.name }}: {{ user.progress }}%
-      </div>
-    </div>
+      :data="readers">
+
+      <template slot-scope="props">
+        <b-table-column
+          label="Name"
+          sortable
+          field="name">
+          {{ props.row.name }}
+        </b-table-column>
+        <b-table-column
+          label="Progress"
+          sortable
+          numeric
+          field="progress">
+          {{ props.row.progress }}%
+        </b-table-column>
+      </template>
+    </b-table>
   </div>
 </template>
 
@@ -42,7 +52,7 @@ export default {
      * Returns the average percentage of reading the proposal
      */
     progress() {
-      const { count, values } = this.$stage.progress;
+      const { count, values } = this.$stage.readingProgress;
       const percentages = Object.values(values);
 
       if (count > 0) {
@@ -58,14 +68,13 @@ export default {
      */
     readers() {
       const users = Object.entries(this.users);
-      const progress = this.$stage.progress.values;
+      const progress = this.$stage.readingProgress.values;
 
       return users
         .map(x => ({
           name: x[1].name,
           progress: Math.floor((progress[x[0]] || 0) * 100)
         }))
-        .filter(x => x.progress < 100)
         .sort((a, b) => (a.progress < b.progress ? 1 : -1));
     },
 

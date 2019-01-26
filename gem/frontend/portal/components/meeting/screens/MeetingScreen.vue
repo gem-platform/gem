@@ -250,9 +250,24 @@ export default {
           widgets: [
             FinalView
           ]
+        },
+        FeedbackStage: {
+          title: 'Feedback',
+          type: true,
+          controls: [
+            CommentsControls,
+            BallotControls
+          ],
+          widgets: [
+            AcquaintanceView
+          ]
         }
       };
-      return stages[type];
+      const result = stages[type];
+      if (!result) {
+        throw Error(`No stage configuration found for '${type}' stage.`);
+      }
+      return result;
     }
   },
   watch: {

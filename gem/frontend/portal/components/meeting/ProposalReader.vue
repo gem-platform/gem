@@ -46,6 +46,8 @@
 import CommunicationMixin from '@/components/CommunicationMixin';
 import StageStateMixin from '@/components/meeting/stages/StageStateMixin';
 
+const REVEAL_SIZE = 150;
+
 function get(node, result, level) {
   const levelpad = String(level).padStart(3, '0');
   if (level !== '') { result[levelpad] = node; }
@@ -91,13 +93,14 @@ export default {
   },
   mounted() {
     this.injectComments();
+    this.restoreReadingProgress();
   },
   methods: {
     /**
      * Reveal more content
      */
     more() {
-      this.reveal += 150;
+      this.reveal += REVEAL_SIZE;
       this.$refs.proposalContent.style.maxHeight = `${this.reveal}px`;
 
       const percents = this.percents();
@@ -131,6 +134,21 @@ export default {
       const percents = Math.floor((current / max) * 100);
 
       return percents;
+    },
+
+    restoreReadingProgress() {
+      if (!this.$stage.readingProgress) {
+        return; // there is no reading progress for this stage
+      }
+
+      const progress = this.$stage.readingProgress.values;
+      const { user } = this.$auth;
+      const myProgress = progress[user.id];
+
+      while (this.percents() < (myProgress * 100)) {
+        this.reveal += REVEAL_SIZE;
+        this.$refs.proposalContent.style.maxHeight = `${this.reveal}px`;
+      }
     },
 
     /**

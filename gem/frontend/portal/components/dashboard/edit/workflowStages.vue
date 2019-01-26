@@ -97,6 +97,7 @@ import BasicActionConfig from '@/components/dashboard/edit/actions/BasicActionCo
 import AcquaintanceActionConfig from '@/components/dashboard/edit/actions/AcquaintanceActionConfig.vue';
 import BallotActionConfig from '@/components/dashboard/edit/actions/BallotActionConfig.vue';
 import BallotResultsActionConfig from '@/components/dashboard/edit/actions/BallotResultsActionConfig.vue';
+import FeedbackActionConfig from '@/components/dashboard/edit/actions/FeedbackActionConfig.vue';
 
 export default {
   filters: {
@@ -106,6 +107,7 @@ export default {
         discussion: 'Discussion',
         comments: 'Comments',
         ballot: 'Ballot',
+        feedback: 'Quick Feedback',
         'ballot.results': 'Ballot Results'
       };
       return map[id];
@@ -116,7 +118,8 @@ export default {
     AcquaintanceActionConfig,
     BallotActionConfig,
     BallotResultsActionConfig,
-    BasicActionConfig
+    BasicActionConfig,
+    FeedbackActionConfig
   },
   mixins: [
     CrudEditComponentMixin({
@@ -137,10 +140,11 @@ export default {
           { id: 'discussion' },
           { id: 'comments' },
           { id: 'ballot' },
-          { id: 'ballot.results' }
+          { id: 'ballot.results' },
+          { id: 'feedback' }
         ];
       },
-      set() { /* keep liist unmodified */ }
+      set() { /* keep list unmodified */ }
     }
   },
   methods: {
@@ -148,6 +152,7 @@ export default {
       if (id === 'acquaintance') return AcquaintanceActionConfig;
       if (id === 'ballot') return BallotActionConfig;
       if (id === 'ballot.results') return BallotResultsActionConfig;
+      if (id === 'feedback') return FeedbackActionConfig;
       return undefined;
     },
     actionChanged({ index, value }) {
