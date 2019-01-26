@@ -13,6 +13,7 @@ class ActiveMeetings:
     def __init__(self):
         """Initialize new instance of the ActiveMeetings class."""
         self.__open = Event()
+        self.__close = Event()
         self.__emit = Event()
         self.__join = Event()
         self.__leave = Event()
@@ -27,6 +28,10 @@ class ActiveMeetings:
     @property
     def open(self) -> Event:
         return self.__open
+
+    @property
+    def close(self) -> Event:
+        return self.__close
 
     @property
     def status_changed(self):
@@ -149,3 +154,4 @@ class ActiveMeetings:
     def __on_meeting_closed(self, meeting):
         del self.__active[meeting.meeting_id]
         self.__connections.close_meeting(meeting)
+        self.__close.notify(meeting)
