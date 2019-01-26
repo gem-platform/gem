@@ -240,6 +240,7 @@ export default {
     startDate: {
       required,
       isBefore(date) {
+        // TODO compare datetimes, not just dates
         return moment(date).isBefore(moment(this.endDate));
       }
     },
@@ -247,6 +248,7 @@ export default {
       required,
       minLength: minLength(1),
       isAfter(date) {
+        // TODO compare datetimes, not just dates
         return moment(date).isAfter(moment(this.startDate));
       }
     },
