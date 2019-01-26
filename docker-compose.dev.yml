@@ -8,6 +8,16 @@ services:
     logging:
       driver: none
 
+  # Start dev email server to be able to catch them.
+  postman:
+    image: schickling/mailcatcher
+    expose:
+      - 25
+    ports:
+      - 1025:1025
+      - 1080:1080
+
+  # Enable debugging for meeting server
   meeting-server:
     expose:
       - 9876

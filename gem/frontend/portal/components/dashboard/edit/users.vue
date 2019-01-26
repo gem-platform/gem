@@ -8,6 +8,13 @@
         size="is-large"/>
     </b-field>
 
+    <!-- User's email -->
+    <b-field label="Email">
+      <b-input
+        v-model="email"
+        placeholder="Email"/>
+    </b-field>
+
     <!-- Users password -->
     <b-field label="Password">
       <b-input
@@ -42,6 +49,7 @@ export default {
     CrudEditComponentMixin({
       properties: [
         'name',
+        'email',
         'password'
       ]
     })

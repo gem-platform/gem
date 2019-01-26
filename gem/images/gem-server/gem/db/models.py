@@ -4,7 +4,7 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          EmbeddedDocumentField, EmbeddedDocument,
                          DateTimeField, GenericReferenceField,
                          EmbeddedDocumentListField, IntField, DictField,
-                         FloatField)
+                         FloatField, EmailField)
 
 from gem.db.signals import finalize_ballot, update_cached_fields
 
@@ -81,6 +81,7 @@ class User(GemDocument):
     name = StringField(required=True)
     roles = ListField(ReferenceField(Role))
     password = StringField(required=True)
+    email = EmailField(required=False)
 
     @property
     def main_role(self):

@@ -40,6 +40,17 @@ services:
     healthcheck:
       test: python3 /usr/app/healtcheck.py
 
+  # SMTP server
+  postman:
+    image: catatnight/postfix
+    restart: on-failure:5
+    env_file:
+      - environment.${GEM_ENV-dev}.env
+    expose:
+      - 25
+    ports:
+      - "25:25"
+
   # Provides NGINX web serwer to tight all
   # the web application all together in one app
   web:

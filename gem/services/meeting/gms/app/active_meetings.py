@@ -12,6 +12,8 @@ class ActiveMeetings:
 
     def __init__(self):
         """Initialize new instance of the ActiveMeetings class."""
+        self.__open = Event()
+        self.__close = Event()
         self.__emit = Event()
         self.__join = Event()
         self.__leave = Event()
@@ -22,6 +24,14 @@ class ActiveMeetings:
         self.__log = getLogger("root")
         self.__comm_log = getLogger("communication")
         self.__meetings_log = getLogger("meetings")
+
+    @property
+    def open(self) -> Event:
+        return self.__open
+
+    @property
+    def close(self) -> Event:
+        return self.__close
 
     @property
     def status_changed(self):
@@ -104,6 +114,7 @@ class ActiveMeetings:
         new_meeting.send_message.subscribe(self.__send_message(meeting_id))
         new_meeting.closed.subscribe(self.__on_meeting_closed)
         self.__active[meeting_id] = new_meeting
+        self.__open.notify(new_meeting)
         return new_meeting
 
     def __state_changed(self, meeting_id):
@@ -143,3 +154,4 @@ class ActiveMeetings:
     def __on_meeting_closed(self, meeting):
         del self.__active[meeting.meeting_id]
         self.__connections.close_meeting(meeting)
+        self.__close.notify(meeting)
