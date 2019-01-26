@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- Name of the meeting -->
-    <b-field label="Name">
+    <b-field
+      :type="validationHasError($v.title)"
+      :message="validationMessages($v.title)"
+      label="Name">
       <b-input
         id="title"
         v-model="title"
@@ -13,21 +16,30 @@
     <b-field label="Start">
       <div class="columns">
         <div class="column">
-          <b-datepicker
-            id="startDate"
-            v-model="startDate"
-            placeholder="Click to select..."
-            icon="calendar"
-            @input="timeChanged"/>
+          <b-field
+            :type="validationHasError($v.startDate)"
+            :message="validationMessages($v.startDate)">
+            <b-datepicker
+              id="startDate"
+              v-model="startDate"
+              placeholder="Click to select..."
+              icon="calendar"
+              editable
+              @input="startDateChanged"/>
+          </b-field>
         </div>
 
         <div class="column">
-          <b-timepicker
-            id="startTime"
-            :readonly="false"
-            v-model="startTime"
-            placeholder="Type or select a time..."
-            @input="timeChanged"/>
+          <b-field
+            :type="validationHasError($v.startTime)"
+            :message="validationMessages($v.startTime)">
+            <b-timepicker
+              id="startTime"
+              v-model="startTime"
+              :readonly="false"
+              placeholder="Type or select a time..."
+              @input="startTimeChanged"/>
+          </b-field>
         </div>
       </div>
     </b-field>
@@ -35,21 +47,28 @@
     <b-field label="End">
       <div class="columns">
         <div class="column">
-          <b-datepicker
-            id="endDate"
-            v-model="endDate"
-            placeholder="Click to select..."
-            icon="calendar"
-            @input="timeChanged"/>
+          <b-field
+            :type="validationHasError($v.endDate)"
+            :message="validationMessages($v.endDate)">
+            <b-datepicker
+              id="endDate"
+              v-model="endDate"
+              placeholder="Click to select..."
+              icon="calendar"
+              @input="endDateChanged"/>
+          </b-field>
         </div>
 
         <div class="column">
-          <b-timepicker
-            id="endTime"
-            :readonly="false"
-            v-model="endTime"
-            placeholder="Type or select a time..."
-            @input="timeChanged"/>
+          <b-field
+            :type="validationHasError($v.endTime)"
+            :message="validationMessages($v.endTime)">
+            <b-timepicker
+              id="endTime"
+              v-model="endTime"
+              placeholder="Type or select a time..."
+              @input="endTimeChanged"/>
+          </b-field>
         </div>
       </div>
     </b-field>
@@ -88,15 +107,18 @@
 </template>
 
 <script>
+import ValidationMixin from '@/components/ValidationMixin';
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 import RolesAndUsers from '@/components/RolesAndUsers.vue';
 import Proposals from '@/components/Proposals.vue';
+import { required, minLength } from 'vuelidate/lib/validators';
 import moment from 'moment';
 import _ from 'lodash';
 
 export default {
   components: { RolesAndUsers, Proposals },
   mixins: [
+    ValidationMixin,
     CrudEditComponentMixin({
       properties: ['title', 'proposals', 'agenda']
     })
@@ -146,7 +168,7 @@ export default {
   mounted() {
     // update model "end" and "start" based on
     // "endTime" and "startTime"
-    this.timeChanged();
+    this.dateTimeRangeChanged();
   },
   methods: {
     /**
@@ -167,7 +189,6 @@ export default {
         }))
         .value();
     },
-
     test() {
       if (this.entity._id === undefined) {
         Object.assign(this.entity, { permissions: this.permissionsDatabaseView });
@@ -177,8 +198,19 @@ export default {
         _id: this.entity._id, ...{ permissions: this.permissionsDatabaseView }
       });
     },
-
-    timeChanged() {
+    startDateChanged() {
+      this.$v.startDate.$touch();
+    },
+    endDateChanged() {
+      this.$v.endDate.$touch();
+    },
+    startTimeChanged() {
+      this.$v.startTime.$touch();
+    },
+    endTimeChanged() {
+      this.$v.endTime.$touch();
+    },
+    dateTimeRangeChanged() {
       if (this.startDate && this.endDate && this.startTime && this.endTime) {
         const start = moment(this.startDate)
           .startOf('day')
@@ -198,6 +230,35 @@ export default {
           start, end
         });
       }
+    }
+  },
+  validations: {
+    title: {
+      required,
+      minLength: minLength(1)
+    },
+    startDate: {
+      required,
+      isBefore(date) {
+        return moment(date).isBefore(moment(this.endDate));
+      }
+    },
+    endDate: {
+      required,
+      minLength: minLength(1),
+      isAfter(date) {
+        return moment(date).isAfter(moment(this.startDate));
+      }
+    },
+    startTime: {
+      required
+    },
+    endTime: {
+      required
+    },
+    agenda: {
+      required,
+      minLength: minLength(1)
     }
   },
   async fetch({
