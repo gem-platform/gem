@@ -20,6 +20,10 @@ services:
       - 25:25
 
   web:
+    build: 
+      context: ./gem/services/web
+      args:
+        env: prod
     env_file:
       - environment.prod.env
 
