@@ -1,0 +1,55 @@
+version: '3'
+services:
+  db:
+    env_file:
+      - environment.prod.env
+
+  search:
+    env_file:
+      - environment.prod.env
+
+  # Start real SMTP server
+  postman:
+    image: catatnight/postfix
+    restart: on-failure:5
+    env_file:
+      - environment.prod.env
+    expose:
+      - 25
+    ports:
+      - 25:25
+
+  web:
+    env_file:
+      - environment.prod.env
+
+  gem-server:
+    image: gem-server:latest
+
+  meeting-server:
+    env_file:
+      - environment.prod.env
+
+  media-server:
+    env_file:
+      - environment.prod.env
+
+  bar-server:
+    env_file:
+      - environment.prod.env
+
+  portal-server:
+    env_file:
+      - environment.prod.env
+
+  office-server:
+    env_file:
+      - environment.prod.env
+
+  pdf-printer:
+    env_file:
+      - environment.prod.env
+
+  portal:
+    env_file:
+      - environment.prod.env

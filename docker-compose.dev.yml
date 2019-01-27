@@ -1,21 +1,14 @@
 version: '3'
 services:
   db:
+    # switch logging off
     logging:
       driver: none
 
   web:
+    # switch logging off
     logging:
       driver: none
-
-  # Start dev email server to be able to catch them.
-  postman:
-    image: schickling/mailcatcher
-    expose:
-      - 25
-    ports:
-      - 1025:1025
-      - 1080:1080
 
   # Enable debugging for meeting server
   meeting-server:
@@ -24,13 +17,3 @@ services:
     ports:
       - 9876:9876
     command: python -u /usr/src/gem-server-common/_runner.py
-
-  # office-server:
-  #   command: python -u /usr/src/gem-server-common/_runner.py
-
-  # meeting-server:
-  #   command: python -u /usr/src/gem-server-common/_runner.py
-
-  # bar-server:
-  #   command: python -u /usr/src/gem-server-common/_runner.py
-  

@@ -1,20 +1,48 @@
 version: '3'
 services:
   db:
-    logging:
-      driver: none
+    env_file:
+      - environment.staging.env
+
+  search:
+    env_file:
+      - environment.staging.env
+
+  postman:
+    env_file:
+      - environment.staging.env
 
   web:
-    logging:
-      driver: none
+    env_file:
+      - environment.staging.env
 
-  # Start a fake mail server for a staging environment.
-  # We do not want to send real letters to real people
-  # by mistake.
-  postman:
-    image: schickling/mailcatcher
-    expose:
-      - 25
-    ports:
-      - 1025:1025
-      - 1080:1080
+  gem-server:
+    image: gem-server:latest
+
+  meeting-server:
+    env_file:
+      - environment.staging.env
+
+  media-server:
+    env_file:
+      - environment.staging.env
+
+  bar-server:
+    env_file:
+      - environment.staging.env
+
+  portal-server:
+    env_file:
+      - environment.staging.env
+
+  office-server:
+    env_file:
+      - environment.staging.env
+
+  pdf-printer:
+    env_file:
+      - environment.staging.env
+
+  portal:
+    env_file:
+      - environment.staging.env
