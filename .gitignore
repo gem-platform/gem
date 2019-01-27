@@ -13,3 +13,4 @@ node_modules
 cov.xml
 .coverage
 htmlcov
+.keys
