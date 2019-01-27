@@ -60,7 +60,7 @@ class MeetingServerApplication(Application):
         )
 
         # return generated html
-        template_html = env.get_template("meeting_started.jinja2")
+        template_html = env.get_template("meeting_started.html.jinja2")
         template_plain = env.get_template("meeting_started.plain.jinja2")
 
         # send email to all the users invited to the meeting
