@@ -55,7 +55,15 @@ class ActiveMeeting:
         self.__closed = Event()
 
         if meeting_id is not None:
-            fill_meeting(self, meeting_id)
+            self.__meeting_db_obj = fill_meeting(self, meeting_id)
+
+    @property
+    def title(self) -> str:
+        return self.__meeting_db_obj.title
+
+    @property
+    def agenda(self) -> str:
+        return self.__meeting_db_obj.agenda
 
     @property
     def stage(self):

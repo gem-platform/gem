@@ -1,6 +1,8 @@
 """Meeting server application class."""
 from os import getenv
 
+from jinja2 import Environment, FileSystemLoader
+
 from gem.core import Application
 from gem.postman import Postman
 from gms.app.active_meetings import ActiveMeetings
@@ -41,20 +43,32 @@ class MeetingServerApplication(Application):
     def __on_open_meeting(self, meeting: ActiveMeeting):
         # connect to SMTP server
         self.__postman.connect(
-            getenv('SMTP_HOST', 'localhost'),
-            int(getenv('SMTP_PORT', '25'))
+            getenv("SMTP_HOST", "localhost"),
+            int(getenv("SMTP_PORT", "25"))
         )
 
         # login if login/password is provided
-        if getenv('SMTP_LOGIN'):
+        if getenv("SMTP_LOGIN"):
             self.__postman.login(
-                getenv('SMTP_LOGIN'),
-                getenv('SMTP_PASSWORD'),
+                getenv("SMTP_LOGIN"),
+                getenv("SMTP_PASSWORD"),
             )
+
+        # configure jijna
+        env = Environment(
+            loader=FileSystemLoader("templates")
+        )
+
+        # return generated html
+        template_html = env.get_template("meeting_started.jinja2")
+        template_plain = env.get_template("meeting_started.plain.jinja2")
 
         # send email to all the users invited to the meeting
         for user in filter(lambda x: x.email, meeting.allowed_users):
-            self.__postman.send(user.email, "Meeting is started")
+            msg_plain = template_plain.render(user=user, meeting=meeting)
+            msg_html = template_html.render(user=user, meeting=meeting)
+            self.__postman.send(user.email, "Meeting is started",
+                                msg_html, plain_message=msg_plain)
 
         # all done
         self.__postman.close()
