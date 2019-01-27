@@ -15,6 +15,8 @@ export default {
       if (value.minLength === false) { errors.push('Value is too short'); }
       if (value.maxLength === false) { errors.push('Value is too long'); }
       if (value.belongToStage === false) { errors.push('Does not belong to workflow'); }
+      if (value.isStartDateBefore === false) { errors.push('Start date must be earlier than the end date'); }
+      if (value.isDifferentDayOrStartTimeBefore === false) { errors.push('Start time must be earlier than the end time'); }
 
       return errors;
     },

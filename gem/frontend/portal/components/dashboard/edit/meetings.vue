@@ -1,7 +1,10 @@
 <template>
   <div>
     <!-- Name of the meeting -->
-    <b-field label="Name">
+    <b-field
+      :type="validationHasError($v.title)"
+      :message="validationMessages($v.title)"
+      label="Name">
       <b-input
         id="title"
         v-model="title"
@@ -10,41 +13,64 @@
     </b-field>
 
     <!-- Date and time of the meeting -->
-    <b-field label="Select a date">
-      <b-datepicker
-        id="date"
-        v-model="date"
-        placeholder="Click to select..."
-        icon="calendar"
-        @input="timeChanged"/>
+    <b-field
+      label="Start">
+      <div class="columns">
+        <div class="column">
+          <b-field
+            :message="validationMessages($v.startDate)"
+            :type="validationHasError($v.startDate)">
+            <b-datepicker
+              id="startDate"
+              v-model="startDate"
+              placeholder="Click to select..."
+              icon="calendar"
+              @input="dateTimeRangeChanged"/>
+          </b-field>
+        </div>
+
+        <div class="column">
+          <b-field
+            :message="validationMessages($v.startTime)"
+            :type="validationHasError($v.startTime)">
+            <b-timepicker
+              id="startTime"
+              v-model="startTime"
+              placeholder="Type or select a time..."
+              @input="dateTimeRangeChanged"/>
+          </b-field>
+        </div>
+      </div>
     </b-field>
 
-    <div class="columns">
-      <div class="column">
-        <b-field
-          id="start"
-          label="Start time">
-          <b-timepicker
-            :readonly="false"
-            v-model="startTime"
-            placeholder="Type or select a time..."
-            @input="timeChanged"/>
-        </b-field>
-      </div>
+    <b-field label="End">
+      <div class="columns">
+        <div class="column">
+          <b-field
+            :message="validationMessages($v.endDate)"
+            :type="validationHasError($v.endDate)">
+            <b-datepicker
+              id="endDate"
+              v-model="endDate"
+              placeholder="Click to select..."
+              icon="calendar"
+              @input="dateTimeRangeChanged"/>
+          </b-field>
+        </div>
 
-      <div class="column">
-        <b-field
-          id="end"
-          label="End time">
-          <b-timepicker
-            id="end"
-            :readonly="false"
-            v-model="endTime"
-            placeholder="Type or select a time..."
-            @input="timeChanged"/>
-        </b-field>
+        <div class="column">
+          <b-field
+            :message="validationMessages($v.endTime)"
+            :type="validationHasError($v.endTime)">
+            <b-timepicker
+              id="endTime"
+              v-model="endTime"
+              placeholder="Type or select a time..."
+              @input="dateTimeRangeChanged"/>
+          </b-field>
+        </div>
       </div>
-    </div>
+    </b-field>
 
     <!-- Agenda -->
     <b-field label="Agenda">
@@ -80,15 +106,19 @@
 </template>
 
 <script>
+import ValidationMixin from '@/components/ValidationMixin';
 import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 import RolesAndUsers from '@/components/RolesAndUsers.vue';
 import Proposals from '@/components/Proposals.vue';
+import { required, minLength } from 'vuelidate/lib/validators';
+import { getDateTime, isStartDateBefore, isDifferentDayOrStartTimeBefore } from '@/lib/datetime';
 import moment from 'moment';
 import _ from 'lodash';
 
 export default {
   components: { RolesAndUsers, Proposals },
   mixins: [
+    ValidationMixin,
     CrudEditComponentMixin({
       properties: ['title', 'proposals', 'agenda']
     })
@@ -112,8 +142,9 @@ export default {
     return {
       permissionsJoin: this.getPermissions('meeting.join'),
       permissionsVote: this.getPermissions('meeting.vote'),
-      date: startTime,
+      startDate: startTime,
       startTime,
+      endDate: endTime,
       endTime
     };
   },
@@ -137,7 +168,7 @@ export default {
   mounted() {
     // update model "end" and "start" based on
     // "endTime" and "startTime"
-    this.timeChanged();
+    this.dateTimeRangeChanged();
   },
   methods: {
     /**
@@ -158,7 +189,6 @@ export default {
         }))
         .value();
     },
-
     test() {
       if (this.entity._id === undefined) {
         Object.assign(this.entity, { permissions: this.permissionsDatabaseView });
@@ -168,26 +198,61 @@ export default {
         _id: this.entity._id, ...{ permissions: this.permissionsDatabaseView }
       });
     },
+    dateTimeRangeChanged() {
+      this.$v.startDate.$touch();
+      this.$v.endDate.$touch();
+      this.$v.startTime.$touch();
+      this.$v.endTime.$touch();
 
-    timeChanged() {
-      if (this.date && this.startTime && this.endTime) {
-        const start = moment(this.date)
-          .startOf('day')
-          .add(this.startTime.getHours(), 'hours')
-          .add(this.startTime.getMinutes(), 'minutes')
-          .utcOffset(-0, true)
-          .toISOString();
-        const end = moment(this.date)
-          .startOf('day')
-          .add(this.endTime.getHours(), 'hours')
-          .add(this.endTime.getMinutes(), 'minutes')
-          .utcOffset(-0, true)
-          .toISOString();
-
+      if (this.startDate && this.endDate && this.startTime && this.endTime) {
         this.update({
-          start, end
+          start: getDateTime(this.startDate, this.startTime),
+          end: getDateTime(this.endDate, this.endTime)
+        });
+      } else {
+        this.update({
+          start: undefined,
+          end: undefined
         });
       }
+    }
+  },
+  validations: {
+    title: {
+      required,
+      minLength: minLength(1)
+    },
+    startDate: {
+      required,
+      isStartDateBefore(startDate) {
+        return isStartDateBefore({
+          startDate,
+          startTime: this.startTime,
+          endDate: this.endDate,
+          endTime: this.endTime
+        });
+      }
+    },
+    endDate: {
+      required
+    },
+    startTime: {
+      required,
+      isDifferentDayOrStartTimeBefore(startTime) {
+        return isDifferentDayOrStartTimeBefore({
+          startDate: this.startDate,
+          startTime,
+          endDate: this.endDate,
+          endTime: this.endTime
+        });
+      }
+    },
+    endTime: {
+      required
+    },
+    agenda: {
+      required,
+      minLength: minLength(1)
     }
   },
   async fetch({

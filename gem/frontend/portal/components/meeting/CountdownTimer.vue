@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import time from '@/lib/time';
+import { diff } from '@/lib/datetime';
 
 export default {
   props: {
@@ -85,7 +85,7 @@ export default {
   },
   methods: {
     countdown() {
-      this.diff = time.diff(new Date(), this.to);
+      this.diff = diff(new Date(), this.to);
     }
   }
 };
