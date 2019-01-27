@@ -40,6 +40,8 @@ def fill_meeting(meeting, meeting_id):
     meeting.start = db_meeting.start
     meeting.end = db_meeting.end
 
+    return db_meeting
+
 
 def add_group(meeting, proposal):
     workflow = proposal.workflow

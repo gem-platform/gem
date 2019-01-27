@@ -14,7 +14,8 @@
       "PeterJausovec.vscode-docker",
       "aaron-bond.better-comments",
       "esbenp.prettier-vscode",
-      "njpwerner.autodocstring"
+      "njpwerner.autodocstring",
+      "samuelcolvin.jinjaht"
     ]
   },
   "settings": {

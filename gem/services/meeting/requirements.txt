@@ -3,3 +3,4 @@ aiohttp
 aiohttp-utils
 pytest
 pytest-cov
+jinja2

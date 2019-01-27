@@ -1,0 +1,22 @@
+{# Welcome #}
+Hare Krishna, {{ user.name }}!
+Meeting "{{ meeting.title }}" is started.
+
+{# Meeting agenda if any #}
+{% if meeting.agenda %}
+Agenda
+~~~~~~
+{{ meeting.agenda }}
+{% endif %}
+
+{# List of proposals if any #}
+{% if meeting.proposals %}
+Proposals to review
+~~~~~~~~~~~~~~~~~~~
+{% for proposal in meeting.proposals %}
+* {{ proposal.title }}
+{% endfor %}
+{% endif %}
+
+{# Join to meeting #}
+Join a meeting by link: http://localhost/meeting/{{meeting.meeting_id}}

@@ -1,0 +1,36 @@
+<style>
+</style>
+
+{# Brand #}
+<h1>GEM</h1>
+
+{# Welcome #}
+<p>
+    Hare Krishna, {{ user.name }}!
+</p>
+<p>
+    Meeting "{{ meeting.title }}" is started.
+</p>
+
+{# Meeting agenda if any #}
+{% if meeting.agenda %}
+    <h2>Agenda</h2>
+    <p>{{ meeting.agenda }}</p>
+{% endif %}
+
+{# List of proposals if any #}
+{% if meeting.proposals %}
+    <h2>List of proposals to review:</h2>
+    <p>
+        <ul>
+        {% for proposal in meeting.proposals %}
+            <li>{{ proposal.title }}</li>
+        {% endfor %}
+        </ul>
+    </p>
+{% endif %}
+
+{# Join to meeting #}
+<p>
+    <a href="http://localhost/meeting/{{meeting.meeting_id}}">Join to a meeting</a>
+</p>
