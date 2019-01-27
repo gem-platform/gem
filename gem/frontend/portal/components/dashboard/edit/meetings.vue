@@ -13,32 +13,31 @@
     </b-field>
 
     <!-- Date and time of the meeting -->
-    <b-field label="Start">
+    <b-field
+      label="Start">
       <div class="columns">
         <div class="column">
           <b-field
-            :type="validationHasError($v.startDate)"
-            :message="validationMessages($v.startDate)">
+            :message="validationMessages($v.startDate)"
+            :type="validationHasError($v.startDate)">
             <b-datepicker
               id="startDate"
               v-model="startDate"
               placeholder="Click to select..."
               icon="calendar"
-              editable
-              @input="startDateChanged"/>
+              @input="dateTimeRangeChanged"/>
           </b-field>
         </div>
 
         <div class="column">
           <b-field
-            :type="validationHasError($v.startTime)"
-            :message="validationMessages($v.startTime)">
+            :message="validationMessages($v.startTime)"
+            :type="validationHasError($v.startTime)">
             <b-timepicker
               id="startTime"
               v-model="startTime"
-              :readonly="false"
               placeholder="Type or select a time..."
-              @input="startTimeChanged"/>
+              @input="dateTimeRangeChanged"/>
           </b-field>
         </div>
       </div>
@@ -48,26 +47,26 @@
       <div class="columns">
         <div class="column">
           <b-field
-            :type="validationHasError($v.endDate)"
-            :message="validationMessages($v.endDate)">
+            :message="validationMessages($v.endDate)"
+            :type="validationHasError($v.endDate)">
             <b-datepicker
               id="endDate"
               v-model="endDate"
               placeholder="Click to select..."
               icon="calendar"
-              @input="endDateChanged"/>
+              @input="dateTimeRangeChanged"/>
           </b-field>
         </div>
 
         <div class="column">
           <b-field
-            :type="validationHasError($v.endTime)"
-            :message="validationMessages($v.endTime)">
+            :message="validationMessages($v.endTime)"
+            :type="validationHasError($v.endTime)">
             <b-timepicker
               id="endTime"
               v-model="endTime"
               placeholder="Type or select a time..."
-              @input="endTimeChanged"/>
+              @input="dateTimeRangeChanged"/>
           </b-field>
         </div>
       </div>
@@ -112,6 +111,7 @@ import CrudEditComponentMixin from '@/components/CrudEditComponentMixin';
 import RolesAndUsers from '@/components/RolesAndUsers.vue';
 import Proposals from '@/components/Proposals.vue';
 import { required, minLength } from 'vuelidate/lib/validators';
+import { getDateTime, isStartDateBefore, isDifferentDayOrStartTimeBefore } from '@/lib/datetime';
 import moment from 'moment';
 import _ from 'lodash';
 
@@ -143,8 +143,8 @@ export default {
       permissionsJoin: this.getPermissions('meeting.join'),
       permissionsVote: this.getPermissions('meeting.vote'),
       startDate: startTime,
-      endDate: endTime,
       startTime,
+      endDate: endTime,
       endTime
     };
   },
@@ -198,36 +198,21 @@ export default {
         _id: this.entity._id, ...{ permissions: this.permissionsDatabaseView }
       });
     },
-    startDateChanged() {
-      this.$v.startDate.$touch();
-    },
-    endDateChanged() {
-      this.$v.endDate.$touch();
-    },
-    startTimeChanged() {
-      this.$v.startTime.$touch();
-    },
-    endTimeChanged() {
-      this.$v.endTime.$touch();
-    },
     dateTimeRangeChanged() {
+      this.$v.startDate.$touch();
+      this.$v.endDate.$touch();
+      this.$v.startTime.$touch();
+      this.$v.endTime.$touch();
+
       if (this.startDate && this.endDate && this.startTime && this.endTime) {
-        const start = moment(this.startDate)
-          .startOf('day')
-          .add(this.startTime.getHours(), 'hours')
-          .add(this.startTime.getMinutes(), 'minutes')
-          .utcOffset(-0, true)
-          .toISOString();
-
-        const end = moment(this.endDate)
-          .startOf('day')
-          .add(this.endTime.getHours(), 'hours')
-          .add(this.endTime.getMinutes(), 'minutes')
-          .utcOffset(-0, true)
-          .toISOString();
-
         this.update({
-          start, end
+          start: getDateTime(this.startDate, this.startTime),
+          end: getDateTime(this.endDate, this.endTime)
+        });
+      } else {
+        this.update({
+          start: undefined,
+          end: undefined
         });
       }
     }
@@ -239,21 +224,28 @@ export default {
     },
     startDate: {
       required,
-      isBefore(date) {
-        // TODO compare datetimes, not just dates
-        return moment(date).isBefore(moment(this.endDate));
+      isStartDateBefore(startDate) {
+        return isStartDateBefore({
+          startDate,
+          startTime: this.startTime,
+          endDate: this.endDate,
+          endTime: this.endTime
+        });
       }
     },
     endDate: {
-      required,
-      minLength: minLength(1),
-      isAfter(date) {
-        // TODO compare datetimes, not just dates
-        return moment(date).isAfter(moment(this.startDate));
-      }
+      required
     },
     startTime: {
-      required
+      required,
+      isDifferentDayOrStartTimeBefore(startTime) {
+        return isDifferentDayOrStartTimeBefore({
+          startDate: this.startDate,
+          startTime,
+          endDate: this.endDate,
+          endTime: this.endTime
+        });
+      }
     },
     endTime: {
       required
