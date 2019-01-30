@@ -1,15 +1,18 @@
 FROM gem-server:latest
 
-RUN apt-get install -y cron
 
-# Install python3 to run scripts
+# Install dependencies
 COPY requirements.txt /usr/app/requirements.txt
-RUN pip3 install --no-cache-dir -r /usr/app/requirements.txt
+RUN apt-get install -y cron rsyslog && \
+    pip3 install --no-cache-dir -r /usr/app/requirements.txt
 
 # Copy scripts
-COPY templates templates
-COPY /15min/deadline.py /etc/periodic/15min/deadline
-RUN chmod a+x /etc/periodic/15min/deadline
+ADD . /usr/app
+RUN chmod a+x /usr/app/15min/deadline.py && \
+    chmod a+x /usr/app/entrypoint.sh
 
-#
-CMD [ "cron", "-f" ]
+# Copy crontab
+COPY crontab /etc/crontab
+
+# Run
+ENTRYPOINT [ "/usr/app/entrypoint.sh" ]

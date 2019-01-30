@@ -12,6 +12,10 @@
     {% else %}
     Meeting "{{ meeting.title }}" is about {{ (meeting.end - meeting.start).days }} days to end.
     {% endif %}
+
+    {% if progress %}
+    Your progress is: {{ progress }}%
+    {% endif %}
 </p>
 
 {# Meeting agenda if any #}
@@ -34,5 +38,5 @@
 
 {# Join to meeting #}
 <p>
-    <a href="http://localhost/meeting/{{meeting.meeting_id}}">Join to a meeting</a>
+    <a href="http://{{domain}}/meeting/{{meeting.meeting_id}}">Join to a meeting</a>
 </p>

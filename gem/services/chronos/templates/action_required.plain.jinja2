@@ -7,6 +7,10 @@ Meeting "{{ meeting.title }}" is started.
 Meeting "{{ meeting.title }}" is about {{ (meeting.end - meeting.start).days }} days to end.
 {% endif %}
 
+{% if progress %}
+Your progress is: {{ progress }}%
+{% endif %}
+
 {# Meeting agenda if any #}
 {% if meeting.agenda %}
 Agenda
@@ -24,4 +28,4 @@ Proposals to review
 {% endif %}
 
 {# Join to meeting #}
-Join a meeting by link: http://localhost/meeting/{{meeting.meeting_id}}
+Join a meeting by link: http://{{domain}}/meeting/{{meeting.meeting_id}}

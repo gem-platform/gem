@@ -76,6 +76,8 @@ services:
       context: ./gem/services/chronos
     env_file:
       - environment.dev.env
+    volumes:
+      - ./.data/chronos:/usr/app/state
 
   ##
   ## IMAGES
