@@ -7,14 +7,14 @@ from gms.meeting.stages import (MeetingStage, AcquaintanceMeetingStage, BallotMe
 class FeedbackMeetingStage(MeetingStage):
     """Feedback stage of the meeting."""
 
-    def __init__(self, ballot, comments, group=None):
+    def __init__(self, ballot, comments, group=None, state=None):
         """
         Initialize new instance of the FeedbackMeetingStage class.
 
         Keyword Arguments:
-            group {StageGroup} -- Group of the stage. (default: {None})
+            group {StagesGroup} -- Group of the stage. (default: {None})
         """
-        super().__init__(group=group)
+        super().__init__(state=state, group=group)
         self.__acquaintance = AcquaintanceMeetingStage(ballot, comments, group=group)
         self.__comments = CommentsMeetingStage(comments, group=group)
         self.__ballot = BallotMeetingStage(ballot, group=group, check_quorum=False)
@@ -65,7 +65,9 @@ class FeedbackMeetingStage(MeetingStage):
             quantity {float} -- Progress (0-1)
         """
         self.__acquaintance.set_progress(user, quantity)
-        # self.changed.notify() ???
+
+        self.__state["progress"] = self.progress
+        self.__state.save()
 
     @property
     def is_quorum_met(self):

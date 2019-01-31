@@ -7,7 +7,7 @@ from gem.db import OpForbidden
 class BallotMeetingStage(MeetingStage):
     """Ballot stage of the meeting."""
 
-    def __init__(self, ballot, group=None, check_quorum=True):
+    def __init__(self, ballot, group=None, check_quorum=True, state=None):
         """
         Initialize new instance of the BallotMeetingStage.
 
@@ -15,9 +15,9 @@ class BallotMeetingStage(MeetingStage):
             ballot {Ballot} -- Ballot model to store results in.
 
         Keyword Arguments:
-            group {StageGroup} -- Group of the stage (default: {None})
+            group {StagesGroup} -- Group of the stage (default: {None})
         """
-        super().__init__(group=group)
+        super().__init__(state=state, group=group)
         self.__check_quorum = check_quorum
         self.__ballot = ballot
         self.meeting.quorum.changed.subscribe(self.__on_check_quorum)

@@ -11,6 +11,6 @@ class FinalMeetingStage(MeetingStage):
         Initialize new instance of the FinalMeetingStage class.
 
         Keyword Arguments:
-            group {StageGroup} -- Group of the stage. (default: {None})
+            group {StagesGroup} -- Group of the stage. (default: {None})
         """
         super().__init__(group=group)

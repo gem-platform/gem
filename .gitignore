@@ -14,3 +14,7 @@ cov.xml
 .coverage
 htmlcov
 .keys
+PKG-INFO
+SOURCES.txt
+dependency_links.txt
+top_level.txt

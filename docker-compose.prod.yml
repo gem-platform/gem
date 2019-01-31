@@ -27,6 +27,10 @@ services:
     env_file:
       - environment.prod.env
 
+  chronos:
+    env_file:
+      - environment.prod.env
+
   gem-server:
     image: gem-server:latest
 

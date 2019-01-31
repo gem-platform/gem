@@ -12,7 +12,7 @@ class AgendaMeetingStage(MeetingStage):
 
         Keyword Arguments:
             content {str} -- Content of agenda. (default: {None})
-            group {StageGroup} -- Group of the stage. (default: {None})
+            group {StagesGroup} -- Group of the stage. (default: {None})
         """
         super().__init__(group=group)
         self.__content = content
