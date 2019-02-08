@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Enable listening on 1025 port
+echo "1025      inet  n       -       -       -       -       smtpd" >> /etc/postfix/master.cf
+
 #judgement
 if [[ -a /etc/supervisor/conf.d/supervisord.conf ]]; then
   exit 0
