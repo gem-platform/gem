@@ -51,6 +51,14 @@ def event_id(meeting, event):
     return "{}-{}".format(meeting.id, event)
 
 
+def get_values(stage):
+    if "progress" not in stage:
+        return {}
+    if "values" not in stage["progress"]:
+        return {}
+    return stage["progress"]["values"]
+
+
 for meeting in Meeting.objects.all():
     # search for a "feedback" stages:
     # 1. get list of actions of proposals for current meeting
@@ -93,12 +101,13 @@ for meeting in Meeting.objects.all():
         already_done.append(eid)
 
         for user in users:
-            progress = list(map(lambda s: str(s["progress"]["values"].get(str(user.id), 0) * 100), stages))
+            progress = list(map(lambda s: str(get_values(s).get(str(user.id), 0) * 100), stages))
             progress = ", ".join(progress)
 
             msg_plain = template_plain.render(event=event, user=user, meeting=meeting, progress=progress, domain=GEM_DOMAIN)
             msg_html = template_html.render(event=event, user=user, meeting=meeting, progress=progress, domain=GEM_DOMAIN)
-            postman.send(user.email, "Meeting Notification", msg_html, msg_plain)
+            if user.email:
+                postman.send(user.email, "Meeting Notification", msg_html, msg_plain)
 
 
 # save done events
