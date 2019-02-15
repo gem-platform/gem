@@ -20,6 +20,8 @@ services:
     ports:
       - 25:25
       - 1025:1025
+    volumes:
+      - ./.keys/dkim:/etc/opendkim/domainkeys
 
   web:
     build: 

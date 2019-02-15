@@ -65,7 +65,7 @@ services:
       - portal
     volumes:
       - ./.data/shared/media:/usr/shared/media
-      - ./.keys:/etc/nginx/ssl
+      - ./.keys/ssl:/etc/nginx/ssl
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost/ || exit 1
   
