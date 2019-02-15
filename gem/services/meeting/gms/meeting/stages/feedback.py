@@ -15,9 +15,9 @@ class FeedbackMeetingStage(MeetingStage):
             group {StagesGroup} -- Group of the stage. (default: {None})
         """
         super().__init__(state=state, group=group)
-        self.__acquaintance = AcquaintanceMeetingStage(ballot, comments, group=group)
+        self.__acquaintance = AcquaintanceMeetingStage(ballot, comments, group=group, state=state)
         self.__comments = CommentsMeetingStage(comments, group=group)
-        self.__ballot = BallotMeetingStage(ballot, group=group, check_quorum=False)
+        self.__ballot = BallotMeetingStage(ballot, group=group, check_quorum=False, state=state)
 
         self.__acquaintance.changed.subscribe(self.__on_internal_stage_changed)
         self.__comments.changed.subscribe(self.__on_internal_stage_changed)
