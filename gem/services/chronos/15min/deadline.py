@@ -21,11 +21,17 @@ TEMPLATES_PATH = "/usr/app/templates"
 GEM_DOMAIN = environ.get("GEM_DOMAIN", "localhost")
 
 connect_db()
-postman = Postman("info@gem.iskcon.com")
+postman = Postman("info@gemapp.in")
 postman.connect(
     environ.get("SMTP_HOST", "postman"),
     environ.get("SMTP_PORT", 25)
 )
+if environ.get("SMTP_LOGIN"):
+    postman.login(
+        environ.get("SMTP_LOGIN", "user"),
+        environ.get("SMTP_PASSWORD", "pwd")
+    )
+
 jinja = Environment(
     loader=FileSystemLoader(TEMPLATES_PATH)
 )
