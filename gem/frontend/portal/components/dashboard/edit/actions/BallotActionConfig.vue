@@ -7,6 +7,19 @@
         Enable threshold
       </b-checkbox>
     </b-field>
+    <b-field label="Quorum">
+      <b-checkbox
+        v-model="checkQuorum"
+        @input="changed">
+        Check quorum
+      </b-checkbox>
+    </b-field>
+    <b-field label="Quorum value">
+      <b-input
+        v-model="quorum"
+        placeholder="Quorum value"
+        @input="changed"/>
+    </b-field>
   </div>
 </template>
 
@@ -20,13 +33,17 @@ export default {
   },
   data() {
     return {
-      enableThreshold: this.value.enableThreshold || false
+      enableThreshold: this.value.enableThreshold || false,
+      checkQuorum: this.value.checkQuorum || false,
+      quorum: this.value.quorum || 19
     };
   },
   methods: {
     changed() {
       this.$emit('change', {
-        enableThreshold: this.enableThreshold
+        enableThreshold: this.enableThreshold,
+        checkQuorum: this.checkQuorum,
+        quorum: this.quorum
       });
     }
   }

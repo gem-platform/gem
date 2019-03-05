@@ -92,11 +92,14 @@ def __acquaintance_stage(group, prev_stage, action, proposal):
     return AcquaintanceMeetingStage(ballot, list(comments), group=group)
 
 
-def __ballot_stage(group, current_stage, proposal, context):
+def __ballot_stage(group, current_stage, proposal, action, context):
+    check_quorum = action.config.get("checkQuorum", False)
+    quorum_value = action.config.get("quorum", 19)
+
     ballots = Ballot.objects(proposal=proposal, stage=current_stage)
     ballot = ballots.first() if ballots else Ballot(proposal=proposal, stage=current_stage)
     context["ballot"] = ballot # save entity to make it possible to find in another stages (ballot.results)
-    return BallotMeetingStage(ballot, group=group)
+    return BallotMeetingStage(ballot, group=group, check_quorum=check_quorum)
 
 
 def __ballot_results_stage(group, context):
