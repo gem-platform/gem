@@ -39,10 +39,10 @@ class DiscussionMeetingStage(MeetingStage):
 
     def request_floor(self, user):
         """
-        Request a floor.
+        Request the floor.
 
         Arguments:
-            user {User} -- Request a floor.
+            user {User} -- Request the floor.
         """
         # user already in the queue
         if user in self.__queue:

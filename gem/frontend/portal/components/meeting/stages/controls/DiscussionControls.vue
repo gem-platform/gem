@@ -1,12 +1,12 @@
 <template>
   <div>
     <div v-if="canDiscuss">
-      <!-- "Request a floor" / "Withdaw from queue" buttons -->
+      <!-- "Request the floor" / "Withdaw from queue" buttons -->
       <div class="buttons is-centered">
         <a
           v-if="!selfInQueue"
           class="button is-fullwidth"
-          @click="requestFloor()">Request a floor</a>
+          @click="requestFloor()">Request the floor</a>
         <a
           v-else
           class="button is-fullwidth"
@@ -39,9 +39,9 @@
             v-if="canManage"
             label="Actions">
 
-            <!-- Give a voice -->
+            <!-- Give the floor -->
             <b-tooltip
-              label="Give a voice"
+              label="Give the floor"
               position="is-left">
               <a
                 class="button is-white is-small"
@@ -129,7 +129,7 @@ export default {
   },
   methods: {
     /**
-     * Request a floor
+     * Request the floor
      */
     async requestFloor() {
       try {
@@ -165,7 +165,7 @@ export default {
     },
 
     /**
-     * Give a voice to specified user
+     * Give the floor to specified user
      */
     async giveVoice(to) {
       const { name } = this.$store.getters['meeting/users'][to];
