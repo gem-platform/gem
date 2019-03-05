@@ -10,12 +10,14 @@
           active-class="is-active"
           exact>Search</nuxt-link>
       </li>
+      <!--
       <li>
         <nuxt-link
           to="/dashboard"
           active-class="is-active"
           exact>Schedule</nuxt-link>
       </li>
+      -->
       <li v-if="haveAccess('dashboard.proposals')">
         <nuxt-link
           to="/dashboard/proposals"
