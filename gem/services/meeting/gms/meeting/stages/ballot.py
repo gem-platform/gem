@@ -51,7 +51,7 @@ class BallotMeetingStage(MeetingStage):
         Returns:
             bool -- True of quorum is met.
         """
-        return self.__check_quorum is False or\
+        return self.__check_quorum is False or \
             len(self.meeting.sessions.online) >= self.meeting.quorum.value
 
     @property
