@@ -1,0 +1,8 @@
+version: '3'
+services:
+  # DNSMasq
+  dnsmasq:
+    build: ./gem/services/dnsmasq
+    ports:
+      - 53:53
+      - 5380:8080
