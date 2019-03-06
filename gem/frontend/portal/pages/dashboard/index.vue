@@ -265,8 +265,6 @@ export default {
     removeEvent(event) {
       const idx = _.findIndex(this.events, x => x._id === event._id);
 
-      console.log(this.events, event, idx);
-
       this.$delete(this.events, idx);
       this.onEventChanged(event, 'delete');
     },
