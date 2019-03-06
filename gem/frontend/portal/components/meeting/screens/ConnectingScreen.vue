@@ -95,18 +95,10 @@ export default {
     }
   },
   mounted() {
-    this.$socket.on('open_meeting', (res) => {
-      // this.$router.push({ path: `/meeting/${res}#reload` });
-      if (res.success) {
-        window.location = `/meeting/${res.id}`; // todo: do it more VUE-way
-      } else {
-        this.actionHelpClass = 'is-danger';
-        this.actionHelpMessage = res.message;
-      }
-    });
+    this.$socket.on('open_meeting', this.onOpenMeeting);
   },
   beforeDestroy() {
-    this.$socket.off('open_meeting');
+    this.$socket.off('open_meeting', this.onOpenMeeting);
   },
   methods: {
     /**
@@ -121,6 +113,12 @@ export default {
       } catch (err) {
         this.actionHelpClass = 'is-danger';
         this.actionHelpMessage = err.message;
+      }
+    },
+    onOpenMeeting(res) {
+      if (!res.success) {
+        this.actionHelpClass = 'is-danger';
+        this.actionHelpMessage = res.message;
       }
     }
   }

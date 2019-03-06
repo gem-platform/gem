@@ -74,17 +74,16 @@
     </div>
 
     <p class="heading has-text-centered">Utils</p>
-    <div class="field is-grouped is-grouped-multiline">
-      <p class="control is-expanded">
-        <button
-          class="button is-fullwidth"
-          @click="requestQuickBallot">Quick ballot</button>
-      </p>
-      <p class="control is-expanded">
-        <button
-          class="button is-fullwidth"
-          @click="requestQuorumChange">Change Quorum ({{ quorum }})</button>
-      </p>
+    <div class="buttons">
+      <button
+        class="button"
+        @click="requestQuickBallot">Quick ballot</button>
+      <button
+        class="button"
+        @click="requestQuorumChange">Change Quorum ({{ quorum }})</button>
+      <button
+        class="button"
+        @click="forceUsersJoin">Join all</button>
     </div>
   </div>
 </template>
@@ -205,6 +204,18 @@ export default {
         component: RequestQuorumChange,
         hasModalCard: true
       });
+    },
+
+    /**
+     * Force users join meeting.
+     */
+    async forceUsersJoin() {
+      try {
+        await this.send('force_join', { });
+        this.notify('All users have been joined a meeting by force');
+      } catch (err) {
+        this.notify(err.message, 'is-danger');
+      }
     }
   }
 };

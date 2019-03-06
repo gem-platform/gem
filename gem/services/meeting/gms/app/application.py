@@ -1,6 +1,5 @@
 """Meeting server application class."""
 from gem.core import Application
-from gem.postman import Postman
 from gms.app.active_meetings import ActiveMeetings
 
 
@@ -10,8 +9,6 @@ class MeetingServerApplication(Application):
     def __init__(self):
         """Initialize new instance of the MeetingServerApplication class."""
         super().__init__()
-
-        self.__postman = Postman(sender="info@gem.iskcon.com")
 
         self.__active_meetings = ActiveMeetings()
         self.__active_meetings.emit.subscribe(self.__on_emit)
@@ -32,6 +29,12 @@ class MeetingServerApplication(Application):
         Returns:
             obj -- Result of the event.
         """
+        # add all sockets to "connected" room to be
+        # able to send all connected sockets
+        if event == "connect":
+            for endpoint in self.endpoints.all:
+                endpoint.join(data[0], "connected")
+
         return self.__active_meetings.command(event, *data)
 
     def __on_emit(self, event, data, to):
