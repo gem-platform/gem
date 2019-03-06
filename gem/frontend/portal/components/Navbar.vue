@@ -29,7 +29,7 @@
           <nuxt-link
             v-if="haveAccess('dashboard')"
             class="navbar-item"
-            to="/dashboard"
+            to="/dashboard/meetings"
             active-class="is-active">
             Dashboard
           </nuxt-link>
