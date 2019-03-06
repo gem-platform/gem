@@ -15,7 +15,6 @@
 
 <script>
 import Schedule from '@/components/Schedule.vue';
-import * as moment from 'moment';
 import _ from 'lodash';
 
 export default {
@@ -27,14 +26,9 @@ export default {
     }
   },
   async fetch({ store }) {
-    const now = moment.utc().subtract(1, 'h');
-
     // Fetch list of meetings to be displayed at page
     const meetings = await store.dispatch('dashboard/meetings/fetchPage', {
-      max_results: 50,
-      where: {
-        start: { $gte: now.toISOString() }
-      }
+      max_results: 50
     });
 
     // Fetch related proposals if required
