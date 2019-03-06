@@ -9,9 +9,10 @@ export default () => {
     // to any meeting
     Vue.prototype.$socket.on('open_meeting', (res) => {
       const newLocation = `/meeting/${res.meeting}`;
+      const isLocationNotSame = window.location.pathname !== newLocation;
+      const forceReload = res.force || false;
 
-      // do not go to a new location if we are already there
-      if (window.location.pathname !== newLocation) {
+      if (res.success && (isLocationNotSame || forceReload)) {
         window.location = newLocation; // todo: do it more VUE-way
       }
     });

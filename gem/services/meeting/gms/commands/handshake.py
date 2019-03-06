@@ -96,12 +96,12 @@ def grant_access(meeting, sid, data):
         return {"success": False, "message": "Session ID was not found"}
 
     if value:  # access granted
-        response = {"success": True, "meeting": meeting.meeting_id}
+        response = {"success": True, "meeting": meeting.meeting_id, "force": True}
         meeting.allowed_users.append(user)
         meeting.full_sync()
-        meeting.send("open_meeting", response, response_sid)
+        meeting.send("open_meeting", response, to=response_sid)
     else:  # request was rejected
         response = {"success": False, "message": "Your access request has been rejected"}
-        meeting.send("open_meeting", response, response_sid)
+        meeting.send("open_meeting", response, to=response_sid)
 
     return {"success": True}
