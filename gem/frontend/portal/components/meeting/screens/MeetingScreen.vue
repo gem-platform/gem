@@ -5,6 +5,9 @@
       :title="title"
       :type="type" />
 
+    <UsersOnlineTopPanel
+      v-if="isPresenter" />
+
     <!-- Stage controls and view -->
     <div class="columns">
       <!-- Stage controls -->
@@ -19,7 +22,7 @@
           <ControlPanel/>
         </div>
 
-        <!-- Additional controll widgets -->
+        <!-- Additional control widgets -->
         <div
           v-for="(control, index) in controls"
           :key="index"
@@ -71,6 +74,7 @@ import ControlPanel from '@/components/meeting/ControlPanel.vue';
 import StageControlsPresenter from '@/components/meeting/StageControlsPresenter.vue';
 import StageInfo from '@/components/meeting/stages/StageInfo.vue';
 import UsersOnline from '@/components/meeting/UsersOnline.vue';
+import UsersOnlineTopPanel from '@/components/meeting/UsersOnlineTopPanel.vue';
 
 // view components
 
@@ -102,7 +106,8 @@ export default {
     ControlPanel,
     StageControlsPresenter,
     StageInfo,
-    UsersOnline
+    UsersOnline,
+    UsersOnlineTopPanel
   },
   mixins: [AuthMixin, StageStateMixin, UserInactiveMixin],
   computed: {
