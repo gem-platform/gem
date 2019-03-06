@@ -40,13 +40,11 @@ export default {
       this.sendHandshake();
     },
     stage(data) {
-      console.log('stage ', data);
       // information about the state of the stage has arrived.
       // { index: stageIndex, state: {} }
       this.$store.dispatch('meeting/meetingStage', data);
     },
     stageSwitched(data) {
-      console.log('stageSwitched', data);
       this.$store.commit('meeting/setStageIndex', data.index);
     },
     stage_timer(data) {
