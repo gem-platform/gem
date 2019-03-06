@@ -31,7 +31,7 @@ class ActiveMeeting:
 
         # configure meeting stages
         self.__stages = MeetingStages()
-        self.__stages.switched.subscribe(self.__on_stage_changed)
+        self.__stages.switched.subscribe(self.__on_stage_switched)
         self.__stages.changed.subscribe(self.__on_stage_changed)
 
         self.__proposals = []
@@ -51,6 +51,7 @@ class ActiveMeeting:
 
         # events
         self.__state_changed = Event()
+        self.__stage_switched = Event()
         self.__send_message = Event()
         self.__closed = Event()
 
@@ -94,6 +95,16 @@ class ActiveMeeting:
             Event -- State changed.
         """
         return self.__state_changed
+
+    @property
+    def stage_switched(self):
+        """
+        Retrun state changed event.
+
+        Returns:
+            Event -- State changed.
+        """
+        return self.__stage_switched
 
     @property
     def closed(self) -> Event:
@@ -258,6 +269,9 @@ class ActiveMeeting:
         # send serialized data to all connected
         # clients using all endpoints
         self.state_changed.notify({"index": index, "state": stage_state})
+
+    def __on_stage_switched(self, index, stage):
+        self.stage_switched.notify({"index": index})
 
     def __on_sessions_changed(self):
         """

@@ -111,6 +111,7 @@ class ActiveMeetings:
         new_meeting = ActiveMeeting(meeting_id)
         # todo: unsubscribe then meeting closed in __close_empty_meetings
         new_meeting.state_changed.subscribe(self.__state_changed(meeting_id))
+        new_meeting.stage_switched.subscribe(self.__stage_switched(meeting_id))
         new_meeting.send_message.subscribe(self.__send_message(meeting_id))
         new_meeting.closed.subscribe(self.__on_meeting_closed)
         self.__active[meeting_id] = new_meeting
@@ -119,7 +120,14 @@ class ActiveMeetings:
 
     def __state_changed(self, meeting_id):
         def handler(data):
+            self.__log.critical("SEND STATE" + str(data))
             self.emit.notify("stage", data, meeting_id)
+        return handler
+
+    def __stage_switched(self, meeting_id):
+        def handler(data):
+            self.__log.critical("SEND INDEX" + str(data))
+            self.emit.notify("stage_switched", data, meeting_id)
         return handler
 
     def __send_message(self, meeting_id):

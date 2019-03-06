@@ -7,6 +7,7 @@ export default {
     this.$socket.on('connect_error', this.disconnect);
     this.$socket.on('reconnect', this.reconnect);
     this.$socket.on('stage', this.stage);
+    this.$socket.on('stage_switched', this.stageSwitched);
     this.$socket.on('stage_timer', this.stage_timer);
     this.$socket.on('close', this.close);
     this.$socket.on('full_sync', this.fullSync);
@@ -21,6 +22,7 @@ export default {
     this.$socket.off('connect_error', this.disconnect);
     this.$socket.off('reconnect', this.reconnect);
     this.$socket.off('stage', this.stage);
+    this.$socket.off('stage_switched', this.stageSwitched);
     this.$socket.off('stage_timer', this.stage_timer);
     this.$socket.off('close', this.close);
     this.$socket.off('full_sync', this.fullSync);
@@ -38,9 +40,14 @@ export default {
       this.sendHandshake();
     },
     stage(data) {
+      console.log('stage ', data);
       // information about the state of the stage has arrived.
       // { index: stageIndex, state: {} }
       this.$store.dispatch('meeting/meetingStage', data);
+    },
+    stageSwitched(data) {
+      console.log('stageSwitched', data);
+      this.$store.commit('meeting/setStageIndex', data.index);
     },
     stage_timer(data) {
       if (data.mode === '=') {
