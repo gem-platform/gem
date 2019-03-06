@@ -59,6 +59,7 @@ export default {
   },
   mounted() {
     bar.on('add_order', (data) => {
+      this.playSound();
       this.orders.push(data);
     });
 
@@ -76,6 +77,11 @@ export default {
           this.orders = this.orders.filter(x => x.id !== id);
         }
       });
+    },
+    playSound() {
+      const sound = '/bar/order.mp3';
+      const audio = new Audio(sound);
+      audio.play();
     }
   },
   async fetch({ store }) {
