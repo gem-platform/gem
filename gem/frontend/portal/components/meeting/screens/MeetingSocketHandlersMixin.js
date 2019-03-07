@@ -45,6 +45,7 @@ export default {
       this.$store.dispatch('meeting/meetingStage', data);
     },
     stageSwitched(data) {
+      this.$store.dispatch('meeting/meetingStage', data);
       this.$store.commit('meeting/setStageIndex', data.index);
     },
     stage_timer(data) {

@@ -271,7 +271,10 @@ class ActiveMeeting:
         self.state_changed.notify({"index": index, "state": stage_state})
 
     def __on_stage_switched(self, index, stage):
-        self.stage_switched.notify({"index": index})
+        # ! TODO: hotfix
+        serializer = MeetingStageSerializer()
+        stage_state = serializer.serialize(stage)
+        self.stage_switched.notify({"index": index, "state": stage_state})
 
     def __on_sessions_changed(self):
         """
