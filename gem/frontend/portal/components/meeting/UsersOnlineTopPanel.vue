@@ -59,7 +59,10 @@ export default {
     users() {
       const { usersOnline } = this.$store.state.meeting;
       const groupedByRole = _.groupBy(usersOnline.online, u => u.role);
-      const result = _.mapValues(groupedByRole, o => o.length);
+      const result = _.chain(groupedByRole)
+        .mapValues(o => o.length)
+        .pickBy((value, key) => key !== 'Presenter') // # todo: hotfix. Use da role permissions instead
+        .value();
 
       return result;
     },
