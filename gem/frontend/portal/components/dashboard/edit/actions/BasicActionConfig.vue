@@ -1,12 +1,20 @@
 <template>
   <div>
     <b-field
-      label="Duration (min)">
+      label="Stage timing">
       <b-input
         v-model="duration"
         placeholder="Duration of the stage in minutes"
         @input="changed"/>
     </b-field>
+
+    <!-- Show stage timer checkbox -->
+    <b-checkbox
+      v-model="showTimer"
+      placeholder="Show stage timer"
+      @input="changed">
+      Show timer
+    </b-checkbox>
   </div>
 </template>
 
@@ -20,12 +28,16 @@ export default {
   },
   data() {
     return {
-      duration: this.value.duration
+      duration: this.value.duration,
+      showTimer: this.value.showTimer
     };
   },
   methods: {
     changed() {
-      this.$emit('change', { duration: this.duration });
+      this.$emit('change', {
+        duration: this.duration,
+        showTimer: this.showTimer
+      });
     }
   }
 };

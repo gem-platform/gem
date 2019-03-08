@@ -1,10 +1,15 @@
 <template>
   <div>
-    <!-- Top panel -->
+    <!-- Stage info top panel -->
     <StageInfo
+      ref="stageInfo"
       :title="title"
-      :type="type" />
+      :type="type"
+      :show-stage-timer="true"
+      :stage-ends="new Date()"
+      :meeting-ends="meetingTime.end" />
 
+    <!-- Users online grouped by role -->
     <UsersOnlineTopPanel
       v-if="isPresenter" />
 
@@ -282,8 +287,11 @@ export default {
     stageIndex() {
       // set stage timer on stage change
       const { config } = this.$stage;
-      const duration = ((config && config.duration) || 2) * 60;
-      this.setStageTimer(duration);
+      if (!config) return;
+
+      const duration = (config.duration || 2) * 60;
+      this.$refs.stageInfo.setStageTimerAhead(duration);
+      this.$refs.stageInfo.setStageTimerVisibility(config.showTimer);
     },
 
     /**
@@ -313,7 +321,12 @@ export default {
     }
   },
   mounted() {
-    this.setStageTimer(120);
+    this.$bus.on('setStageTimer', time => this.$refs.stageInfo.setStageTimer(time));
+    this.$bus.on('addStageTimer', time => this.$refs.stageInfo.addStageTimer(time));
+  },
+  beforeDestroy() {
+    this.$bus.off('setStageTimer');
+    this.$bus.off('addStageTimer');
   }
 };
 </script>

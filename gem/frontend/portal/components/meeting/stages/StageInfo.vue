@@ -6,11 +6,14 @@
       <div class="level-left">
         <div class="level-item">
           <div>
+            <!-- Type of a stage -->
             <p
               id="stage-type"
               class="heading">
               {{ type }}
             </p>
+
+            <!-- Title of a stage -->
             <p class="title">
               {{ title }}
             </p>
@@ -22,7 +25,9 @@
       <div class="level-right">
 
         <!-- Stage timer -->
-        <div class="level-item has-text-centered">
+        <div
+          v-if="stageTimerVisibility"
+          class="level-item has-text-centered">
           <CountdownTimer
             :to="stageEndTime"
             header="Stage"/>
@@ -41,57 +46,96 @@
 
 <script>
 import CountdownTimer from '@/components/meeting/CountdownTimer.vue';
-import StageMixin from '@/components/meeting/stages/StageStateMixin';
 
 export default {
   name: 'StageInfo',
   components: {
     CountdownTimer
   },
-  mixins: [StageMixin],
   props: {
+    /**
+     * Title of a stage.
+     * Shows proposal title in most cases.
+     */
     title: {
       type: String,
       required: true
     },
+
+    /**
+     * Type of a stage.
+     * For example: "Ballot", "Descussion", "Feedback".
+     */
     type: {
       type: String,
       default: ''
+    },
+
+    /**
+     * Show stage timer.
+     * Sometimes it is not required to show stage timer, for example for GEM online.
+     */
+    showStageTimer: {
+      type: Boolean,
+      default: true
+    },
+
+    /**
+     * Stage end time.
+     */
+    stageEnds: {
+      type: Date,
+      required: true
+    },
+
+    /**
+     * Meeting end time.
+     */
+    meetingEnds: {
+      type: Date,
+      required: true
     }
   },
   data() {
     return {
-      stageTime: new Date()
+      stageEndTime: this.stageEnds,
+      meetingEndTime: this.meetingEnds,
+      stageTimerVisibility: true
     };
   },
-  computed: {
+  methods: {
     /**
-     * Return end time of the stage
+     * Set stage timer.
+     * @param date End date to set to stage timer.
      */
-    stageEndTime() {
-      return this.stageTime;
+    setStageTimer(date) {
+      this.stageEndTime = new Date(date);
     },
 
     /**
-     * Return end time of the meeting
+     * Set the stage timer to the specified number of seconds ahead of the current time.
+     * @param seconds Time in seconds.
      */
-    meetingEndTime() {
-      return new Date(this.meetingTime.end);
-    }
-  },
-  mounted() {
-    this.$bus.on('setStageTimer', time => this.onSetStageTimer(time));
-    this.$bus.on('addStageTimer', time => this.onAddStageTimer(time));
-  },
-  beforeDestroy() {
-    this.$bus.off('setStageTimer');
-  },
-  methods: {
-    onSetStageTimer(value) {
-      this.stageTime = value;
+    setStageTimerAhead(seconds) {
+      const now = new Date().getTime();
+      this.stageEndTime = new Date(now + (seconds * 1000));
     },
-    onAddStageTimer(value) {
-      this.stageTime = new Date(this.stageTime.getTime() + (1000 * (value || 0)));
+
+    /**
+     * Add time to stage timer.
+     * @param seconds Time in seconds to add to stage timer.
+     */
+    addStageTimer(seconds) {
+      const current = this.stageEndTime.getTime();
+      this.stageEndTime = new Date(current + (seconds * 1000));
+    },
+
+    /**
+     * Set stage timer visibility.
+     * @param value True - show timer, otherwise hide it.
+     */
+    setStageTimerVisibility(value) {
+      this.stageTimerVisibility = value;
     }
   }
 };

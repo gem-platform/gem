@@ -16,17 +16,13 @@ export default {
       return this.$store.getters['meeting/stage/type'];
     },
     meetingTime() {
-      return { start: this.$store.state.meeting.start, end: this.$store.state.meeting.end };
+      return {
+        start: new Date(this.$store.state.meeting.start),
+        end: new Date(this.$store.state.meeting.end)
+      };
     },
     proposals() {
       return Object.values(this.$store.getters['meeting/proposals']);
-    }
-  },
-  methods: {
-    setStageTimer(seconds) {
-      const now = new Date();
-      const ahead = new Date(now.getTime() + (1000 * seconds));
-      this.$bus.emit('setStageTimer', ahead);
     }
   }
 };
