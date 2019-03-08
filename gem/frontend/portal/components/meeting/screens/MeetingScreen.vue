@@ -285,13 +285,7 @@ export default {
      * Stage changed
      */
     stageIndex() {
-      // set stage timer on stage change
-      const { config } = this.$stage;
-      if (!config) return;
-
-      const duration = (config.duration || 2) * 60;
-      this.$refs.stageInfo.setStageTimerAhead(duration);
-      this.$refs.stageInfo.setStageTimerVisibility(config.showTimer);
+      this.onStageIndexChanged();
     },
 
     /**
@@ -323,10 +317,22 @@ export default {
   mounted() {
     this.$bus.on('setStageTimer', time => this.$refs.stageInfo.setStageTimer(time));
     this.$bus.on('addStageTimer', time => this.$refs.stageInfo.addStageTimer(time));
+    this.onStageIndexChanged();
   },
   beforeDestroy() {
     this.$bus.off('setStageTimer');
     this.$bus.off('addStageTimer');
+  },
+  methods: {
+    onStageIndexChanged() {
+      // set stage timer on stage change
+      const { config } = this.$stage;
+      if (!config) return;
+
+      const duration = (config.duration || 2) * 60;
+      this.$refs.stageInfo.setStageTimerAhead(duration);
+      this.$refs.stageInfo.setStageTimerVisibility(config.showTimer);
+    }
   }
 };
 </script>
