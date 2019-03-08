@@ -185,6 +185,8 @@ services:
       - 4999
     healthcheck:
       test: wget --quiet --tries=1 --spider http://localhost:4999/health || exit 1
+    depends_on:
+      - gem-server
 
   ##
   ## APPS: FRONTEND
