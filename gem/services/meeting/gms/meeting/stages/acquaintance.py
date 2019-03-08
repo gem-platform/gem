@@ -6,7 +6,7 @@ from gms.meeting.stages import MeetingStage
 class AcquaintanceMeetingStage(MeetingStage):
     """Acquaintance stage of the meeting."""
 
-    def __init__(self, ballot, comments, group=None):
+    def __init__(self, ballot, comments, state=None, group=None):
         """
         Initialize new instance of the AcquaintanceMeetingStage class.
 
@@ -15,12 +15,16 @@ class AcquaintanceMeetingStage(MeetingStage):
             comments {list[Comments]} -- List of comments to display.
 
         Keyword Arguments:
-            group {StageGroup} -- Group of the stage. (default: {None})
+            state {MeetingStageState} –– Persistent state.
+            group {StagesGroup} -- Group of the stage. (default: {None})
         """
-        super().__init__(group=group)
-        self.__progress = {}
+        super().__init__(state=state, group=group)
         self.__ballot = ballot
         self.__comments = comments
+
+        # seed state if empty
+        if not hasattr(self.state, "progress"):
+            self.state.progress = {}
 
     @property
     def progress(self):
@@ -30,10 +34,10 @@ class AcquaintanceMeetingStage(MeetingStage):
         Returns:
             dict -- Progress { count: NUM, values: { USER_ID: 0-1 } }
         """
-        readers_count = len(self.meeting.sessions.online)
+        readers_count = len(self.meeting.allowed_users)
         return {
             "count": readers_count,
-            "values": self.__progress
+            "values": self.state.progress
         }
 
     @property
@@ -58,14 +62,14 @@ class AcquaintanceMeetingStage(MeetingStage):
 
     def set_progress(self, user, quantity):
         """
-        Set reading progress for specified user
+        Set reading progress for specified user.
 
         Arguments:
             user {User} -- User to set progress of
             quantity {float} -- Progress (0-1)
         """
-        user_id = str(user.id)
-        self.__progress[user_id] = quantity
+        self.state.progress[str(user.id)] = quantity
+        self.state.save()
         self.changed.notify()
 
     def get_progress(self, user):
@@ -78,5 +82,4 @@ class AcquaintanceMeetingStage(MeetingStage):
         Returns:
             float -- Progress (0-1)
         """
-        user_id = str(user.id)
-        return self.__progress.get(user_id, 0)
+        return self.state.progress.get(str(user.id), 0)

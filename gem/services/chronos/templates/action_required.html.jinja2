@@ -1,6 +1,3 @@
-<style>
-</style>
-
 {# Brand #}
 <h1>GEM</h1>
 
@@ -9,7 +6,16 @@
     Hare Krishna, {{ user.name }}!
 </p>
 <p>
+    {% if event == "start" %}
     Meeting "{{ meeting.title }}" is started.
+    ({{meeting.start}} – {{meeting.end}})
+    {% else %}
+    Meeting "{{ meeting.title }}" is about {{ (meeting.end - meeting.start).days }} days to end.
+    {% endif %}
+
+    {% if progress %}
+    Your progress is: {{ progress }}%
+    {% endif %}
 </p>
 
 {# Meeting agenda if any #}
@@ -32,5 +38,5 @@
 
 {# Join to meeting #}
 <p>
-    <a href="http://localhost/meeting/{{meeting.meeting_id}}">Join a meeting</a>
+    <a href="http://{{domain}}/meeting/{{meeting.id}}">Click here to join the meeting</a>
 </p>

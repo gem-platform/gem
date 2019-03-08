@@ -16,7 +16,7 @@ class CommentsMeetingStage(MeetingStage):
             comments {list(Comment)} -- Comments.
 
         Keyword Arguments:
-            group {StageGroup} -- Group of the stage. (default: {None})
+            group {StagesGroup} -- Group of the stage. (default: {None})
         """
         super().__init__(group=group)
         self.__comments = comments

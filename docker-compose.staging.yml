@@ -20,6 +20,10 @@ services:
     env_file:
       - environment.staging.env
 
+  chronos:
+    env_file:
+      - environment.staging.env
+
   gem-server:
     image: gem-server:latest
 

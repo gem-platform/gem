@@ -1,0 +1,31 @@
+{# Welcome #}
+Hare Krishna, {{ user.name }}!
+{% if event == "start" %}
+Meeting "{{ meeting.title }}" is started.
+({{meeting.start}} – {{meeting.end}})
+{% else %}
+Meeting "{{ meeting.title }}" is about {{ (meeting.end - meeting.start).days }} days to end.
+{% endif %}
+
+{% if progress %}
+Your progress is: {{ progress }}%
+{% endif %}
+
+{# Meeting agenda if any #}
+{% if meeting.agenda %}
+Agenda
+~~~~~~
+{{ meeting.agenda }}
+{% endif %}
+
+{# List of proposals if any #}
+{% if meeting.proposals %}
+Proposals to review
+~~~~~~~~~~~~~~~~~~~
+{% for proposal in meeting.proposals %}
+* {{ proposal.title }}
+{% endfor %}
+{% endif %}
+
+{# Join to meeting #}
+Join a meeting by link: http://{{domain}}/meeting/{{meeting.id}}

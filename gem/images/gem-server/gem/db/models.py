@@ -4,7 +4,7 @@ from mongoengine import (signals, Document, StringField, BooleanField,
                          EmbeddedDocumentField, EmbeddedDocument,
                          DateTimeField, GenericReferenceField,
                          EmbeddedDocumentListField, IntField, DictField,
-                         FloatField, EmailField)
+                         FloatField, EmailField, DynamicEmbeddedDocument)
 
 from gem.db.signals import finalize_ballot, update_cached_fields
 
@@ -173,6 +173,12 @@ class MeetingPermission(EmbeddedDocument):
     role = ReferenceField(Role, required=False)
 
 
+class MeetingStageState(DynamicEmbeddedDocument):
+    """State of a meeting stage."""
+    proposal = ReferenceField(Proposal, required=True)
+    stage = StringField(required=True)
+
+
 class Meeting(GemDocument):
     """Meeting document"""
     meta = {'collection': 'meetings'}
@@ -183,6 +189,7 @@ class Meeting(GemDocument):
     permissions = EmbeddedDocumentListField(MeetingPermission)
     start = DateTimeField()
     end = DateTimeField()
+    state = EmbeddedDocumentListField(MeetingStageState)
 
     def resolve(self, permission):
         result = set()

@@ -1,33 +1,46 @@
 """Abstract meeting stage to inherit all meeting stages from."""
 
 from abc import ABCMeta
+from gem.db import MeetingStageState
 from gem.core import Event
+from gms.meeting.stages.group import StagesGroup
 
 
 class MeetingStage(metaclass=ABCMeta):
     """Meeting stage."""
 
-    def __init__(self, group=None):
+    def __init__(self, state: MeetingStageState = None, group: StagesGroup = None):
         """
         Initialize new instance of the MeetingStage class.
 
-        Arguments:
-            meeting {Meeting} -- Meeting.
-
         Keyword Arguments:
-            group {StageGroup} -- Group of the stage. (default: {None})
+            state {MeetingStageState} –– Persistent state.
+            group {StagesGroup} -- Group of the stage. (default: {None})
         """
         self.__group = group
-        self.__changed = Event()
         self.__config = {}
+        self.__state = state
+
+        # Events
+        self.__changed = Event()
 
     @property
-    def group(self):
+    def state(self) -> MeetingStageState:
+        """
+        Returns persistent state.
+
+        Returns:
+            MeetingStageState -- Persistent state.
+        """
+        return self.__state
+
+    @property
+    def group(self) -> StagesGroup:
         """
         Return group of the stage.
 
         Returns:
-            StageGroup -- Group.
+            StagesGroup -- Group.
         """
         return self.__group
 
@@ -42,7 +55,7 @@ class MeetingStage(metaclass=ABCMeta):
         return self.__group.meeting
 
     @property
-    def changed(self):
+    def changed(self) -> Event:
         """
         Raise when stage changed.
 

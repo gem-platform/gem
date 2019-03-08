@@ -4,7 +4,7 @@ from gem.db import Role, User
 
 connect("gem",
         host="127.0.0.1", username="bhagavan",
-        password="UZz5dGzZn@R*j\9%",
+        password="UZz5dGzZn@R*jj9%",
         authentication_source="admin",
         authentication_mechanism="SCRAM-SHA-1")
 

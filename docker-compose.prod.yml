@@ -10,20 +10,28 @@ services:
 
   # Start real SMTP server
   postman:
-    image: catatnight/postfix
+    build: ./gem/services/postman
     restart: on-failure:5
     env_file:
       - environment.prod.env
     expose:
       - 25
+      - 1025
     ports:
       - 25:25
+      - 1025:1025
+    volumes:
+      - ./.keys/dkim:/etc/opendkim/domainkeys
 
   web:
     build: 
       context: ./gem/services/web
       args:
         env: prod
+    env_file:
+      - environment.prod.env
+
+  chronos:
     env_file:
       - environment.prod.env
 
