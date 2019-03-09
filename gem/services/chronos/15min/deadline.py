@@ -19,6 +19,7 @@ from gem.postman import Postman
 DONE_PATH = "/usr/app/state/deadline.json"
 TEMPLATES_PATH = "/usr/app/templates"
 GEM_DOMAIN = environ.get("GEM_DOMAIN", "localhost")
+EMAILS_SENT = 0
 
 connect_db()
 postman = Postman("info@gemapp.in")
@@ -87,13 +88,22 @@ for meeting in Meeting.objects.all():
 
     # get list of users allowed to join meeting
     users = meeting.resolve("meeting.join")
+    users_names = list(map(lambda u: u.name, users))
 
     # filter out events that have already been reported
     days_to_send = {event: date for event, date in days.items()
                     if date <= now and event_id(meeting, event) not in already_done}
 
+    if not days_to_send:
+        continue
+
     # get progress
     stages = list(filter(lambda s: s.stage == "feedback", meeting.state))
+
+    # log
+    print("Processing '{}':".format(meeting.title))
+    print("  Sending to: {}".format(users_names))
+    print("  Events    : {}".format(days_to_send))
 
     # send emails
     for event, date in days_to_send.items():
@@ -107,9 +117,17 @@ for meeting in Meeting.objects.all():
             msg_plain = template_plain.render(event=event, user=user, meeting=meeting, progress=progress, domain=GEM_DOMAIN)
             msg_html = template_html.render(event=event, user=user, meeting=meeting, progress=progress, domain=GEM_DOMAIN)
             if user.email:
+                print("  -> Send : {}".format(user.email))
                 postman.send(user.email, "Meeting Notification", msg_html, msg_plain)
+                EMAILS_SENT += 1
+            else:
+                print("  -> Error: {} ({})".format(user.name, "no email"))
 
 
 # save done events
 with open(DONE_PATH, "w+") as outfile:
     json_dump(already_done, outfile)
+
+
+if EMAILS_SENT > 0:
+    print("Emails sent {}".format(EMAILS_SENT))
