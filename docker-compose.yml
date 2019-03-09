@@ -78,6 +78,8 @@ services:
       - environment.dev.env
     volumes:
       - ./.data/chronos:/usr/app/state
+    depends_on:
+      - gem-server
 
   ##
   ## IMAGES
