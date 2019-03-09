@@ -8,7 +8,7 @@ RUN apt-get install -y cron rsyslog && \
 
 # Copy scripts
 ADD . /usr/app
-RUN chmod a+x /usr/app/15min/deadline.py && \
+RUN chmod a+x /usr/app/1min/deadline.py && \
     chmod a+x /usr/app/entrypoint.sh
 
 # Copy crontab
