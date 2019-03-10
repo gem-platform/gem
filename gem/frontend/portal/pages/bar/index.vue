@@ -5,8 +5,8 @@
       <div class="column">
         <button
           :disabled="orderIds.length == 0"
-          class="button is-success is-fullwidth"
-          @click="sendOrder">
+          class="button is-primary is-fullwidth"
+          @click="completeOrder">
           Complete order
         </button>
       </div>
@@ -74,8 +74,7 @@ export default {
   layout: 'portal',
   data() {
     return {
-      order: [],
-      completeOrder: false
+      order: []
     };
   },
   computed: {
@@ -100,20 +99,29 @@ export default {
         this.order = this.order.filter(x => x.id !== item._id);
       }
     },
-    sendOrder() {
+
+    /**
+     * Complete order. Send order to the server.
+     */
+    completeOrder() {
       bar.emit('order', {
         name: this.name,
         items: this.order
       }, (res) => {
         if (res.success) {
           this.$snackbar.open({ message: 'Ordered' });
+        } else {
+          this.$snackbar.open({ message: 'We are unable to process your order, sorry' });
         }
 
-        this.completeOrder = false;
         this.order = [];
       });
     }
   },
+
+  /**
+   * Fetch all the bar items from server.
+   */
   async fetch({ store }) {
     await store.dispatch('dashboard/barItems/fetchPage');
   }
