@@ -97,13 +97,14 @@ for meeting in Meeting.objects.all():
     if not days_to_send:
         continue
 
-    # get progress
-    stages = list(filter(lambda s: s.stage == "feedback", meeting.state))
-
     # log
     print("Processing '{}':".format(meeting.title))
+    print("  State     :", meeting.state)
     print("  Sending to: {}".format(users_names))
     print("  Events    : {}".format(days_to_send))
+
+    # get progress
+    stages = list(filter(lambda s: s.stage == "feedback", meeting.state.values()))
 
     # send emails
     for event, date in days_to_send.items():
@@ -116,12 +117,15 @@ for meeting in Meeting.objects.all():
 
             msg_plain = template_plain.render(event=event, user=user, meeting=meeting, progress=progress, domain=GEM_DOMAIN)
             msg_html = template_html.render(event=event, user=user, meeting=meeting, progress=progress, domain=GEM_DOMAIN)
-            if user.email:
-                print("  -> Send : {}".format(user.email))
-                postman.send(user.email, "Meeting Notification", msg_html, msg_plain)
-                EMAILS_SENT += 1
-            else:
-                print("  -> Error: {} ({})".format(user.name, "no email"))
+            try:
+                if user.email:
+                    print("  -> Send : {}".format(user.email))
+                    postman.send(user.email, "Meeting Notification", msg_html, msg_plain)
+                    EMAILS_SENT += 1
+                else:
+                    print("  -> Error: {} ({})".format(user.name, "no email"))
+            except Exception as ex:
+                print("  X Error: ", ex)
 
 
 # save done events
