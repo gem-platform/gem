@@ -104,7 +104,7 @@ for meeting in Meeting.objects.all():
     print("  Events    : {}".format(days_to_send))
 
     # get progress
-    stages = list(filter(lambda s: s.stage == "feedback", meeting.state.values()))
+    stages = list(filter(lambda s: s.stage == "feedback", meeting.state))
 
     # send emails
     for event, date in days_to_send.items():
