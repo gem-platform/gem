@@ -1,5 +1,17 @@
 <template>
   <div>
+    <!-- Complete order -->
+    <div class="columns">
+      <div class="column">
+        <button
+          :disabled="orderIds.length == 0"
+          class="button is-success is-fullwidth"
+          @click="sendOrder">
+          Complete order
+        </button>
+      </div>
+    </div>
+
     <div class="columns is-multiline">
       <div
         v-for="item in items"
@@ -7,7 +19,7 @@
         class="column is-one-quarter">
 
         <div
-          :class="{'is-success': order.includes(item._id)}"
+          :class="{'is-success': orderIds.includes(item._id)}"
           class="card">
           <div class="card-image">
             <figure class="image is-4by3 cover">
@@ -31,14 +43,14 @@
 
           <footer class="card-footer">
             <a
-              v-if="!order.includes(item._id)"
+              v-if="!orderIds.includes(item._id)"
               href="#"
               class="card-footer-item"
               @click.prevent="add(item)">
               Add
             </a>
             <a
-              v-if="order.includes(item._id)"
+              v-if="orderIds.includes(item._id)"
               href="#"
               class="card-footer-item"
               @click.prevent="remove(item)">
@@ -72,30 +84,19 @@ export default {
     },
     items() {
       return this.$store.getters['dashboard/barItems/list'];
+    },
+    orderIds() {
+      return this.order.map(x => x.id);
     }
   },
   methods: {
     add(item) {
-      if (!this.order.includes(item._id)) {
+      if (!this.orderIds.includes(item._id)) {
         this.order.push({ id: item._id, name: item.name });
-      }
-
-      if (!this.completeOrder) {
-        const { sendOrder } = this;
-        this.completeOrder = true;
-
-        this.$snackbar.open({
-          message: 'Item added',
-          actionText: 'Order',
-          indefinite: true,
-          onAction() {
-            sendOrder();
-          }
-        });
       }
     },
     remove(item) {
-      if (this.order.includes(item._id)) {
+      if (this.orderIds.includes(item._id)) {
         this.order = this.order.filter(x => x.id !== item._id);
       }
     },
@@ -121,7 +122,7 @@ export default {
 
 <style lang="scss" scoped>
 .card.is-success {
-  background-color: lightgreen;
+  background-color:lightyellow;
 }
 .cover {object-fit: cover;}
 </style>
