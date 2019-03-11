@@ -49,7 +49,7 @@ class MeetingSerializer:
         roles = {str(r.id): self.__map_role(r) for r in set(roles) | depends_roles}
 
         # convert array of users to dict keyed by user id
-        users = {str(u.id): self.__map_user(u) for u in set(meeting.allowed_users) | depends_users}
+        users = {str(u.id): self.__map_user(u) for u in set(meeting.allowed_users) | depends_users if u}
 
         # quorum
         users_can_change_quorum = list(map(lambda x: str(x.id), meeting.quorum.users_can_change))
