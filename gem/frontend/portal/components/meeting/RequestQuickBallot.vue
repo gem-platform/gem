@@ -19,9 +19,22 @@
         <b-field
           v-for="(option, idx) in options"
           :key="idx">
-          <b-input
-            v-model="options[idx]"
-            :placeholder="'Option ' + (idx + 1)" />
+          <div class="field is-grouped">
+            <p class="control is-expanded">
+              <input
+                v-model="options[idx]"
+                :placeholder="'Option ' + (idx + 1)"
+                class="input"
+                type="text">
+            </p>
+            <p class="control">
+              <a
+                class="button is-danger is-outlined"
+                @click="removeOption(idx)">
+                X
+              </a>
+            </p>
+          </div>
         </b-field>
       </section>
 
@@ -41,6 +54,7 @@
         </button>
 
         <button
+          :disabled="disableRequest"
           class="button is-primary"
           @click.prevent="create">
           Create
@@ -58,9 +72,14 @@ export default {
   mixins: [CommunicationMixin, NotificationMixin],
   data() {
     return {
-      options: ['', ''],
+      options: ['Yes', 'No', 'Abstained'],
       question: ''
     };
+  },
+  computed: {
+    disableRequest() {
+      return this.options.length === 0 || this.question === '';
+    }
   },
   methods: {
     /**
@@ -89,6 +108,13 @@ export default {
      */
     addOption() {
       this.options.push(undefined);
+    },
+
+    /**
+     * Remove option by index
+     */
+    removeOption(idx) {
+      this.options.splice(idx, 1);
     }
   }
 };
