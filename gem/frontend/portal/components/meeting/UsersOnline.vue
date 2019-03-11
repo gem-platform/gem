@@ -89,7 +89,7 @@ export default {
     },
     requests() {
       const { usersOnline } = this.$store.state.meeting;
-      return usersOnline.requests;
+      return usersOnline.requests || [];
     }
   },
   methods: {

@@ -1,5 +1,4 @@
 from inspect import getmembers, isfunction
-from tribool import Tribool
 
 from gem.core import Processor, Event
 from gem.db import User
@@ -9,14 +8,14 @@ from gms.net.serializers.meeting import MeetingSerializer
 from gms.app._fill_meeting import fill_meeting
 from gms.meeting.stages import MeetingStages
 from gms.app.sessions import Sessions
+from gms.meeting.widgets import QuickBallot, Quorum
 
 import gms.commands as commands
-
 
 class ActiveMeeting:
     """Active meeting."""
 
-    def __init__(self, meeting_id=None):
+    def __init__(self, meeting_id, intercom):
         """
         Initialize new instance of the ActiveMeeting class.
 
@@ -34,12 +33,16 @@ class ActiveMeeting:
         self.__stages.switched.subscribe(self.__on_stage_switched)
         self.__stages.changed.subscribe(self.__on_stage_changed)
 
+        self.__intercom = intercom
         self.__proposals = []
         self.__allowed_users = []
         self.start = None
         self.end = None
         self.quick_ballot = QuickBallot()
         self.quorum = Quorum(self)
+
+        # events
+        self.closed = Event()
 
         # configure processor:
         # get list of all functions in module
@@ -48,12 +51,6 @@ class ActiveMeeting:
         # and register them as handler: func_name -> func
         self.__processor = Processor(self)
         self.__processor.register_handlers(processor_handlers)
-
-        # events
-        self.__state_changed = Event()
-        self.__stage_switched = Event()
-        self.__send_message = Event()
-        self.__closed = Event()
 
         if meeting_id is not None:
             self.__meeting_db_obj = fill_meeting(self, meeting_id)
@@ -84,47 +81,7 @@ class ActiveMeeting:
         # todo: return readonly
         return self.__allowed_users
 
-    # Events
-
-    @property
-    def state_changed(self):
-        """
-        Retrun state changed event.
-
-        Returns:
-            Event -- State changed.
-        """
-        return self.__state_changed
-
-    @property
-    def stage_switched(self):
-        """
-        Retrun state changed event.
-
-        Returns:
-            Event -- State changed.
-        """
-        return self.__stage_switched
-
-    @property
-    def closed(self) -> Event:
-        """
-        Meeting is closed.
-
-        Returns:
-            Event -- Event
-        """
-        return self.__closed
-
-    @property
-    def send_message(self):
-        """
-        Retrun send event.
-
-        Returns:
-            Event -- Send message event.
-        """
-        return self.__send_message
+    # Properties
 
     @property
     def meeting_id(self):
@@ -242,19 +199,32 @@ class ActiveMeeting:
                     proposal.save()
 
                 # meeting is closed
-                self.__closed.notify(self)
+                self.closed.notify(self)
             except ValueError:
                 pass
 
     def send(self, message, data, to=None):
-        self.send_message.notify(message, data, to)
+        self.__intercom.emit(message, data, to)
 
     def full_sync(self):
         serializer = MeetingSerializer()
         meeting_state = serializer.serialize(self)
-        self.send_message.notify("full_sync", meeting_state)
+        self.__intercom.emit("full_sync", meeting_state)
 
     def __on_stage_changed(self, index, stage):
+        self.__update_stage_data(index, stage, follow=False)
+
+    def __on_stage_switched(self, index, stage):
+        self.__update_stage_data(index, stage, follow=True)
+
+    def __on_sessions_changed(self):
+        """
+        List of active sessions are changed.
+        Update list of online users for clients.
+        """
+        self.__intercom.emit("meeting_users_online", self.sessions.state)
+
+    def __update_stage_data(self, index, stage, follow=False):
         """
         State of the a stage has been changed.
 
@@ -266,95 +236,8 @@ class ActiveMeeting:
         serializer = MeetingStageSerializer()
         stage_state = serializer.serialize(stage)
 
-        # send serialized data to all connected
-        # clients using all endpoints
-        self.state_changed.notify({"index": index, "state": stage_state})
-
-    def __on_stage_switched(self, index, stage):
-        # ! TODO: hotfix
-        serializer = MeetingStageSerializer()
-        stage_state = serializer.serialize(stage)
-        self.stage_switched.notify({"index": index, "state": stage_state})
-
-    def __on_sessions_changed(self):
-        """
-        List of active sessions are changed.
-        Update list of online users for clients.
-        """
-        self.send("meeting_users_online", self.sessions.state)
-
-
-class QuickBallot():
-    """Quick Ballot."""
-
-    def __init__(self):
-        """Initializes new instance of a QuickBallot class."""
-        self.__result = {}
-
-    def start_new(self):
-        """Start a new Quick Ballot."""
-        self.__result = {}
-
-    @property
-    def results(self):
-        """Return results of current ballot."""
-        return self.__result
-
-    def vote(self, value):
-        """Commit a vote for specified option."""
-        if value in self.__result:
-            self.__result[value] += 1  # increment count
-        else:
-            self.__result[value] = 1  # this is a first vote
-        return self.results
-
-
-class Quorum:
-    def __init__(self, meeting):
-        self.__value = 19
-        self.__new_value = -1
-        self.__votes = {}
-        self.__meeting = meeting
-        self.__changed = Event()
-
-    @property
-    def changed(self):
-        return self.__changed
-
-    @property
-    def users_can_change(self):
-        return list(filter(lambda x:
-                           x.have_permission("meeting.quorum_change",
-                                             accept_superuser=False),
-                           self.__meeting.allowed_users))
-
-    @property
-    def value(self):
-        return self.__value
-
-    @property
-    def change_approved_by(self):
-        return list(self.__votes.keys())
-
-    def request_change(self, value):
-        self.__votes = {}
-        self.__new_value = value
-
-    def vote_change(self, user, value) -> Tribool:
-        self.__votes[str(user.id)] = value
-
-        if value is False:  # ballot should be unanimous
-            return Tribool(False)
-
-        # change is approved
-        # all of users are voted
-        users_voted = len(self.__votes.keys())
-        votes_required = len(self.users_can_change)
-        if users_voted == votes_required:
-            self.__value = self.__new_value
-            self.changed.notify()
-            return Tribool(True)
-
-        # indeterminate
-        return Tribool(None)
-        
+        # send serialized data to all connected clients
+        self.__intercom.emit(
+            "stage_switched" if follow else "stage", \
+                {"index": index, "state": stage_state}
+            )

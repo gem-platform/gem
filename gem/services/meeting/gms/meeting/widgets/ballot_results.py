@@ -36,6 +36,8 @@ class BallotSerializeMixin:
             rid = str(vote.role.id)
             if rid not in result:
                 result[rid] = {"yes": 0, "no": 0, "abstained": 0, "users": []}
+            if vote.value not in ['yes', 'no', 'abstained']:
+                raise Exception("Unsupported vote value '{}'".format(vote.value))
             result[rid][vote.value] += 1
 
             if vote.user:
