@@ -40,7 +40,7 @@ def handshake(meeting, sid, data):
         return {
             "success": False,
             "message": "You have no rights to join this meeting",
-            "actions": ["request_access"]
+            "actions": ["request_access"]  # provide list of actions user can do
         }
 
     # no meeting found (wrong ID, exception while loading meeting)
@@ -67,7 +67,8 @@ def request_access(meeting, sid, data):
     """The user does not have permission to access the meeting,
        and he is requesting access rights."""
     token = data.get("token", None)
-    user = meeting.find_user(token)
+    user = meeting.find_user(token)  # todo: change to get_user_by_token
+                                     # todo: (with search in list of not allowed users)
 
     # no user found to grant access to
     if not user:
