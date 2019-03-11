@@ -144,5 +144,5 @@ def __get_stage_state(db_meeting, proposal, stage):
     if len(states) == 1:
         return states[0]
 
-    # many states founf for specified arguments
+    # many states found for specified arguments
     raise Exception("Many states for one stage and proposal")
