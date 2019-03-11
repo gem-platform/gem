@@ -45,10 +45,12 @@ class MeetingSerializer:
             depends_roles |= objects.get("roles", set())
 
         # convert array of roles to dict keyed by role id:
+        # final set can contain Null values, so skip them by using "if u"
         roles = chain.from_iterable([u.roles for u in meeting.allowed_users])
-        roles = {str(r.id): self.__map_role(r) for r in set(roles) | depends_roles}
+        roles = {str(r.id): self.__map_role(r) for r in set(roles) | depends_roles if r}
 
         # convert array of users to dict keyed by user id
+        # final set can contain Null values, so skip them by using "if u"
         users = {str(u.id): self.__map_user(u) for u in set(meeting.allowed_users) | depends_users if u}
 
         # quorum
@@ -73,14 +75,18 @@ class MeetingSerializer:
         }
 
     def __map_proposal(self, proposal):
-        #  ! todo: how serialize models right way?
-        #  ! todo: extract to ProposalSerializer
+        if not proposal:
+            raise Exception("Unable to map NULL proposal into dict")
+
         return {
             "title": proposal.title,
             "content": proposal.content
         }
 
     def __map_user(self, user):
+        if not user:
+            raise Exception("Unable to map NULL user into dict")
+
         return {
             "id": str(user.id),
             "name": user.name,
@@ -89,6 +95,9 @@ class MeetingSerializer:
         }
 
     def __map_role(self, role):
+        if not role:
+            raise Exception("Unable to map NULL role into dict")
+
         return {
             "name": role.name,
             "permissions": role.permissions
