@@ -211,8 +211,8 @@ export default {
      */
     async forceUsersJoin() {
       try {
-        await this.send('force_join', { });
-        this.notify('All users have been joined a meeting by force');
+        const res = await this.send('force_join', { });
+        this.notify(res.message);
       } catch (err) {
         this.notify(err.message, 'is-danger');
       }
