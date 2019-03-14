@@ -1,27 +1,9 @@
+"""Active meetings manager."""
 from logging import getLogger
 from gem.core import Event
+from gms.net import Intercom
 from gms.app.active_meeting import ActiveMeeting
 from gms.app.active_meeting_connections import ActiveMeetingConnections
-
-
-CLOG = getLogger("communication")
-
-class Intercom:
-    def __init__(self, meeting_id, endpoint):
-        self.__meeting_id = meeting_id
-        self.__endpoint = endpoint
-
-    def emit(self, event, data, to=None):
-        CLOG.debug("-X-> %s %s to: %s", event, data, to or self.__meeting_id)
-        room_to_send = None if to == "@all" else to or self.__meeting_id
-        self.__endpoint.emit(event, data, room_to_send)
-
-
-    def join(self, sid, room):
-        self.__endpoint.join(sid, room)
-
-    def leave(self, sid, room):
-        self.__endpoint.leave(sid, room)
 
 
 class ActiveMeetings:
