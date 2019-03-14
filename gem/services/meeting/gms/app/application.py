@@ -8,10 +8,14 @@ from gms.net import SocketIoEndpoint
 class MeetingServerApplication:
     """GEM Meeting Server application."""
 
-    def __init__(self, host, port):
-        """Initialize new instance of the MeetingServerApplication class."""
-        super().__init__()
+    def __init__(self, host: str, port: int):
+        """
+        Initializes new instance of MeetingServerApplication class.
 
+        Arguments:
+            host {str} -- Host to listen on
+            port {int} -- Port to listen on
+        """
         # get a logger
         self.__log = getLogger("root")
 
@@ -35,12 +39,16 @@ class MeetingServerApplication:
         """
         try:
             return self.__active_meetings.command(event, *data)
-        except Exception as exc:
+        except Exception as exc:  # pylint: disable=broad-except
             message = "Error while processing '{}' event: {}".format(event, str(exc))
             self.__log.error(message)
             self.__log.exception(exc)
             return {"success": False, "message": message}
 
-    def run(self):
-        """Run application."""
+    def start(self):
+        """Start application."""
         self.__endpoint.open()
+
+    def stop(self):
+        """Stop application"""
+        self.__endpoint.close()

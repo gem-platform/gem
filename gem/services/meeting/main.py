@@ -26,4 +26,4 @@ connect_db()
 
 # run app
 APP = MeetingServerApplication("0.0.0.0", 8090)
-APP.run()
+APP.start()
