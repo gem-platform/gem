@@ -10,7 +10,7 @@ class MeetingServerApplication:
 
     def __init__(self, host: str, port: int):
         """
-        Initializes new instance of MeetingServerApplication class.
+        Initialize a new instance of the MeetingServerApplication class.
 
         Arguments:
             host {str} -- Host to listen on

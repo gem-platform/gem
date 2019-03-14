@@ -8,7 +8,7 @@ class Intercom:
 
     def __init__(self, meeting_id: str, endpoint: Endpoint):
         """
-        Initialize a new instace of a Intercom class.
+        Initialize a new instance of an Intercom class.
 
         Arguments:
             meeting_id {str} -- Meeting Id.
