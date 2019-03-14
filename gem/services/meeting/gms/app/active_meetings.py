@@ -11,8 +11,8 @@ class Intercom:
         self.__meeting_id = meeting_id
         self.__endpoint = endpoint
 
-    def emit(self, event, *data, to=None):
-        CLOG.debug("-X-> %s %s %s", event, data, to or self.__meeting_id)
+    def emit(self, event, data, to=None):
+        CLOG.debug("-X-> %s %s to: %s", event, data, to or self.__meeting_id)
         self.__endpoint.emit(event, data, to or self.__meeting_id)
 
 
