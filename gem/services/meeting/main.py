@@ -25,5 +25,5 @@ logging.getLogger("root").info("GEM Meeting Server is starting")
 connect_db()
 
 # run app
-APP = MeetingServerApplication()
+APP = MeetingServerApplication("0.0.0.0", 8090)
 APP.run()
