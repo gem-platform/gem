@@ -13,7 +13,8 @@ class Intercom:
 
     def emit(self, event, data, to=None):
         CLOG.debug("-X-> %s %s to: %s", event, data, to or self.__meeting_id)
-        self.__endpoint.emit(event, data, to or self.__meeting_id)
+        room_to_send = None if to == "@all" else to or self.__meeting_id
+        self.__endpoint.emit(event, data, room_to_send)
 
 
     def join(self, sid, room):

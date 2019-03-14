@@ -34,11 +34,6 @@ class MeetingServerApplication:
             obj -- Result of the event.
         """
         try:
-            # add all sockets to "connected" room to be
-            # able to send all connected sockets
-            if event == "connect":
-                self.__endpoint.join(data[0], "connected")
-
             return self.__active_meetings.command(event, *data)
         except Exception as exc:
             message = "Error while processing '{}' event: {}".format(event, str(exc))
